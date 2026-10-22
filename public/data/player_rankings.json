@@ -1,10 +1,30 @@
 {
-  "updated_at": "2026-10-22T02:40:24.291611+00:00",
+  "updated_at": "2026-10-22T17:10:15.336668+00:00",
   "season": 2026,
   "requested_season": 2026,
   "fallback_used": false,
   "fallback_reason": "Primary requested season loaded successfully",
+  "season_coverage": {
+    "preseason_excluded": true,
+    "season_types": [
+      "REG",
+      "POST"
+    ],
+    "games_monitored": 93,
+    "weeks_included": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "total_plays": 16380,
+    "competitive_plays": 14708,
+    "garbage_time_plays_excluded": 1672
+  },
   "methodology": {
+    "preseason_rule": "Excluye el 100% de partidos de Pretemporada (season_type != PRE); analiza todos los partidos de Temporada Regular (REG) y Postemporada (POST).",
     "garbage_time_rule": "Excluye jugadas con qtr == 4 y (wp < 0.05 o wp > 0.95)",
     "min_opportunities_per_week": {
       "QB": 15,
