@@ -58,6 +58,9 @@ def filter_garbage_time(pbp_df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFram
         return empty.copy(), empty.copy()
 
     raw_df = pbp_df.copy()
+    if "season_type" in raw_df.columns:
+        non_pre = raw_df["season_type"].fillna("REG").astype(str).str.upper() != "PRE"
+        raw_df = raw_df.loc[non_pre].copy()
     qtr = pd.to_numeric(raw_df.get("qtr", pd.Series(1, index=raw_df.index)), errors="coerce").fillna(1)
     wp = pd.to_numeric(raw_df.get("wp", pd.Series(0.5, index=raw_df.index)), errors="coerce").fillna(0.5)
 
@@ -882,13 +885,35 @@ def run_valuation_pipeline(
             ),
         )
 
+    comp_df_meta, raw_df_meta = filter_garbage_time(pbp_df)
+    weeks_included = (
+        sorted(pd.to_numeric(raw_df_meta["week"], errors="coerce").dropna().astype(int).unique().tolist())
+        if not raw_df_meta.empty and "week" in raw_df_meta.columns
+        else meta.get("weeks_included", [])
+    )
+    games_monitored = (
+        int(raw_df_meta["game_id"].dropna().nunique())
+        if not raw_df_meta.empty and "game_id" in raw_df_meta.columns
+        else int(meta.get("games_monitored", 0))
+    )
+
     payload: dict[str, Any] = {
         "updated_at": datetime.now(timezone.utc).isoformat(),
         "season": season,
         "requested_season": requested_season,
         "fallback_used": fallback_used,
         "fallback_reason": fallback_reason,
+        "season_coverage": {
+            "preseason_excluded": True,
+            "season_types": ["REG", "POST"],
+            "games_monitored": games_monitored,
+            "weeks_included": weeks_included,
+            "total_plays": int(len(raw_df_meta)),
+            "competitive_plays": int(len(comp_df_meta)),
+            "garbage_time_plays_excluded": int(len(raw_df_meta) - len(comp_df_meta)),
+        },
         "methodology": {
+            "preseason_rule": "Excluye el 100% de partidos de Pretemporada (season_type != PRE); analiza todos los partidos de Temporada Regular (REG) y Postemporada (POST).",
             "garbage_time_rule": "Excluye jugadas con qtr == 4 y (wp < 0.05 o wp > 0.95)",
             "min_opportunities_per_week": MIN_OPPORTUNITIES_PER_WEEK,
             "formulas": {
