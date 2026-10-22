@@ -1,0 +1,1374 @@
+{
+  "updated_at": "2026-10-22T02:38:41.266931+00:00",
+  "source": "ESPN JSON API",
+  "season": 2026,
+  "week": 7,
+  "games": [
+    {
+      "event_id": "401872995",
+      "name": "Seattle Seahawks at Denver Broncos",
+      "short_name": "SEA @ DEN",
+      "date": "2026-10-16T00:15Z",
+      "status": {
+        "state": "post",
+        "detail": "Final/OT",
+        "period": 5,
+        "clock": "0:00",
+        "completed": true
+      },
+      "home_team": {
+        "id": "7",
+        "abbreviation": "DEN",
+        "name": "Denver Broncos",
+        "score": 17,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/den.png"
+      },
+      "away_team": {
+        "id": "26",
+        "abbreviation": "SEA",
+        "name": "Seattle Seahawks",
+        "score": 14,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/sea.png"
+      },
+      "win_probability": {
+        "home_wp": 1.0,
+        "away_wp": 0.0
+      },
+      "critical_moments": [
+        {
+          "play_id": "4018729954092",
+          "qtr": 4,
+          "clock": "1:31",
+          "description": "(No Huddle) S.Darnold pass short left intended for T.Horton INTERCEPTED by K.Abrams-Draine at DEN 31. K.Abrams-Draine to DEN 31 for no gain (T.Horton).",
+          "home_wp_before": 0.5323,
+          "home_wp_after": 0.9111,
+          "delta_wp": 0.3788,
+          "abs_delta_wp": 0.3788
+        },
+        {
+          "play_id": "4018729954819",
+          "qtr": 5,
+          "clock": "4:53",
+          "description": "END GAME",
+          "home_wp_before": 0.7447,
+          "home_wp_after": 1.0,
+          "delta_wp": 0.2553,
+          "abs_delta_wp": 0.2553
+        },
+        {
+          "play_id": "4018729954013",
+          "qtr": 4,
+          "clock": "2:42",
+          "description": "(Shotgun) S.Darnold pass deep middle to J.Smith-Njigba to DEN 48 for 32 yards (B.Jones).",
+          "home_wp_before": 0.7849,
+          "home_wp_after": 0.6018,
+          "delta_wp": -0.1831,
+          "abs_delta_wp": 0.1831
+        }
+      ],
+      "hinge_play": {
+        "play_id": "4018729954092",
+        "qtr": 4,
+        "clock": "1:31",
+        "description": "(No Huddle) S.Darnold pass short left intended for T.Horton INTERCEPTED by K.Abrams-Draine at DEN 31. K.Abrams-Draine to DEN 31 for no gain (T.Horton).",
+        "home_wp_before": 0.5323,
+        "home_wp_after": 0.9111,
+        "delta_wp": 0.3788,
+        "abs_delta_wp": 0.3788,
+        "exceeds_threshold": true
+      }
+    },
+    {
+      "event_id": "401872996",
+      "name": "Houston Texans at Jacksonville Jaguars",
+      "short_name": "HOU VS JAX",
+      "date": "2026-10-18T13:30Z",
+      "status": {
+        "state": "post",
+        "detail": "Final",
+        "period": 4,
+        "clock": "0:00",
+        "completed": true
+      },
+      "home_team": {
+        "id": "30",
+        "abbreviation": "JAX",
+        "name": "Jacksonville Jaguars",
+        "score": 31,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/jax.png"
+      },
+      "away_team": {
+        "id": "34",
+        "abbreviation": "HOU",
+        "name": "Houston Texans",
+        "score": 34,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/hou.png"
+      },
+      "win_probability": {
+        "home_wp": 0.0,
+        "away_wp": 1.0
+      },
+      "critical_moments": [
+        {
+          "play_id": "4018729964024",
+          "qtr": 4,
+          "clock": "3:59",
+          "description": "(Shotgun) B.Fisher reported in as eligible.  C.Stroud pass short right intended for X.Hutchinson INTERCEPTED by T.Hunter at JAX -5. Touchback.Penalty on HST-A.Ersery, Ineligible Downfield Pass, declined.",
+          "home_wp_before": 0.1153,
+          "home_wp_after": 0.3059,
+          "delta_wp": 0.1906,
+          "abs_delta_wp": 0.1906
+        },
+        {
+          "play_id": "4018729964431",
+          "qtr": 4,
+          "clock": "0:47",
+          "description": "B.Fisher reported in as eligible. Direct snap to C.Stover.  C.Stover right guard to JAX 32 for no gain (F.Oluokun; T.Walker).  (Virtual Measurement).The Replay Official reviewed the short of the line to gain ruling, and the play was Upheld. The ruling on the field stands.",
+          "home_wp_before": 0.1458,
+          "home_wp_after": 0.3259,
+          "delta_wp": 0.1801,
+          "abs_delta_wp": 0.1801
+        },
+        {
+          "play_id": "4018729964465",
+          "qtr": 4,
+          "clock": "0:00",
+          "description": "K.Fairbairn 49 yard field goal is GOOD, Center-A.Brinkman, Holder-K.Kroeger.",
+          "home_wp_before": 0.1744,
+          "home_wp_after": 0.0,
+          "delta_wp": -0.1744,
+          "abs_delta_wp": 0.1744
+        }
+      ],
+      "hinge_play": {
+        "play_id": "4018729964024",
+        "qtr": 4,
+        "clock": "3:59",
+        "description": "(Shotgun) B.Fisher reported in as eligible.  C.Stroud pass short right intended for X.Hutchinson INTERCEPTED by T.Hunter at JAX -5. Touchback.Penalty on HST-A.Ersery, Ineligible Downfield Pass, declined.",
+        "home_wp_before": 0.1153,
+        "home_wp_after": 0.3059,
+        "delta_wp": 0.1906,
+        "abs_delta_wp": 0.1906,
+        "exceeds_threshold": true
+      }
+    },
+    {
+      "event_id": "401872999",
+      "name": "Chicago Bears at Atlanta Falcons",
+      "short_name": "CHI @ ATL",
+      "date": "2026-10-18T17:00Z",
+      "status": {
+        "state": "post",
+        "detail": "Final",
+        "period": 4,
+        "clock": "0:00",
+        "completed": true
+      },
+      "home_team": {
+        "id": "1",
+        "abbreviation": "ATL",
+        "name": "Atlanta Falcons",
+        "score": 23,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/atl.png"
+      },
+      "away_team": {
+        "id": "3",
+        "abbreviation": "CHI",
+        "name": "Chicago Bears",
+        "score": 31,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/chi.png"
+      },
+      "win_probability": {
+        "home_wp": 0.0,
+        "away_wp": 1.0
+      },
+      "critical_moments": [
+        {
+          "play_id": "4018729991",
+          "qtr": 0,
+          "clock": "0:00",
+          "description": "Jugada sin descripción",
+          "home_wp_before": 0.5,
+          "home_wp_after": 0.3381,
+          "delta_wp": -0.1619,
+          "abs_delta_wp": 0.1619
+        }
+      ],
+      "hinge_play": {
+        "play_id": "4018729991",
+        "qtr": 0,
+        "clock": "0:00",
+        "description": "Jugada sin descripción",
+        "home_wp_before": 0.5,
+        "home_wp_after": 0.3381,
+        "delta_wp": -0.1619,
+        "abs_delta_wp": 0.1619,
+        "exceeds_threshold": true
+      }
+    },
+    {
+      "event_id": "401872997",
+      "name": "Baltimore Ravens at Cleveland Browns",
+      "short_name": "BAL @ CLE",
+      "date": "2026-10-18T17:00Z",
+      "status": {
+        "state": "post",
+        "detail": "Final",
+        "period": 4,
+        "clock": "0:00",
+        "completed": true
+      },
+      "home_team": {
+        "id": "5",
+        "abbreviation": "CLE",
+        "name": "Cleveland Browns",
+        "score": 13,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/cle.png"
+      },
+      "away_team": {
+        "id": "33",
+        "abbreviation": "BAL",
+        "name": "Baltimore Ravens",
+        "score": 10,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/bal.png"
+      },
+      "win_probability": {
+        "home_wp": 1.0,
+        "away_wp": 0.0
+      },
+      "critical_moments": [
+        {
+          "play_id": "4018729973905",
+          "qtr": 4,
+          "clock": "0:42",
+          "description": "(Shotgun) D.Watson pass deep middle to J.Jeudy to BLT 29 for 33 yards (M.Starks).",
+          "home_wp_before": 0.5619,
+          "home_wp_after": 0.8546,
+          "delta_wp": 0.2927,
+          "abs_delta_wp": 0.2927
+        },
+        {
+          "play_id": "4018729973559",
+          "qtr": 4,
+          "clock": "3:44",
+          "description": "A.Szmyt 48 yard field goal is No Good, Wide Left, Center-R.Sunahara, Holder-C.Bojorquez.",
+          "home_wp_before": 0.5934,
+          "home_wp_after": 0.4078,
+          "delta_wp": -0.1856,
+          "abs_delta_wp": 0.1856
+        },
+        {
+          "play_id": "4018729972960",
+          "qtr": 4,
+          "clock": "12:45",
+          "description": "D.Henry left tackle to BLT 33 for 5 yards (C.Schwesinger; T.Campbell). FUMBLES (C.Schwesinger), RECOVERED by CLV-T.Campbell at BLT 35.",
+          "home_wp_before": 0.1508,
+          "home_wp_after": 0.2779,
+          "delta_wp": 0.1271,
+          "abs_delta_wp": 0.1271
+        }
+      ],
+      "hinge_play": {
+        "play_id": "4018729973905",
+        "qtr": 4,
+        "clock": "0:42",
+        "description": "(Shotgun) D.Watson pass deep middle to J.Jeudy to BLT 29 for 33 yards (M.Starks).",
+        "home_wp_before": 0.5619,
+        "home_wp_after": 0.8546,
+        "delta_wp": 0.2927,
+        "abs_delta_wp": 0.2927,
+        "exceeds_threshold": true
+      }
+    },
+    {
+      "event_id": "401873003",
+      "name": "Tennessee Titans at Indianapolis Colts",
+      "short_name": "TEN @ IND",
+      "date": "2026-10-18T17:00Z",
+      "status": {
+        "state": "post",
+        "detail": "Final",
+        "period": 4,
+        "clock": "0:00",
+        "completed": true
+      },
+      "home_team": {
+        "id": "11",
+        "abbreviation": "IND",
+        "name": "Indianapolis Colts",
+        "score": 20,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/ind.png"
+      },
+      "away_team": {
+        "id": "10",
+        "abbreviation": "TEN",
+        "name": "Tennessee Titans",
+        "score": 26,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/ten.png"
+      },
+      "win_probability": {
+        "home_wp": 0.0,
+        "away_wp": 1.0
+      },
+      "critical_moments": [
+        {
+          "play_id": "4018730032893",
+          "qtr": 3,
+          "clock": "1:21",
+          "description": "(Shotgun) D.Jones pass short middle to J.Downs to IND 36 for 5 yards (T.Adams).",
+          "home_wp_before": 0.8499,
+          "home_wp_after": 0.3049,
+          "delta_wp": -0.545,
+          "abs_delta_wp": 0.545
+        },
+        {
+          "play_id": "4018730032918",
+          "qtr": 3,
+          "clock": "0:40",
+          "description": "(Shotgun) D.Jones sacked at IND 29 for -7 yards (J.Simmons).",
+          "home_wp_before": 0.3049,
+          "home_wp_after": 0.8324,
+          "delta_wp": 0.5275,
+          "abs_delta_wp": 0.5275
+        },
+        {
+          "play_id": "4018730033284",
+          "qtr": 4,
+          "clock": "10:17",
+          "description": "R.Sanchez punt is BLOCKED by J.Chestnut, Center-L.Rhodes, RECOVERED by TEN-O.Oladejo at IND 14. O.Oladejo for 14 yards, TOUCHDOWN. IND-R.Sanchez was injured during the play. PENALTY on TEN, Unsportsmanlike Conduct, 15 yards, enforced between downs. J.Slye extra point is GOOD, Center-M.Cox, Holder-T.Townsend.",
+          "home_wp_before": 0.5589,
+          "home_wp_after": 0.2611,
+          "delta_wp": -0.2978,
+          "abs_delta_wp": 0.2978
+        }
+      ],
+      "hinge_play": {
+        "play_id": "4018730032893",
+        "qtr": 3,
+        "clock": "1:21",
+        "description": "(Shotgun) D.Jones pass short middle to J.Downs to IND 36 for 5 yards (T.Adams).",
+        "home_wp_before": 0.8499,
+        "home_wp_after": 0.3049,
+        "delta_wp": -0.545,
+        "abs_delta_wp": 0.545,
+        "exceeds_threshold": true
+      }
+    },
+    {
+      "event_id": "401873001",
+      "name": "New York Jets at New England Patriots",
+      "short_name": "NYJ @ NE",
+      "date": "2026-10-18T17:00Z",
+      "status": {
+        "state": "post",
+        "detail": "Final",
+        "period": 4,
+        "clock": "0:00",
+        "completed": true
+      },
+      "home_team": {
+        "id": "17",
+        "abbreviation": "NE",
+        "name": "New England Patriots",
+        "score": 26,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/ne.png"
+      },
+      "away_team": {
+        "id": "20",
+        "abbreviation": "NYJ",
+        "name": "New York Jets",
+        "score": 19,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/nyj.png"
+      },
+      "win_probability": {
+        "home_wp": 1.0,
+        "away_wp": 0.0
+      },
+      "critical_moments": [
+        {
+          "play_id": "4018730011",
+          "qtr": 0,
+          "clock": "0:00",
+          "description": "Jugada sin descripción",
+          "home_wp_before": 0.5,
+          "home_wp_after": 0.7953,
+          "delta_wp": 0.2953,
+          "abs_delta_wp": 0.2953
+        }
+      ],
+      "hinge_play": {
+        "play_id": "4018730011",
+        "qtr": 0,
+        "clock": "0:00",
+        "description": "Jugada sin descripción",
+        "home_wp_before": 0.5,
+        "home_wp_after": 0.7953,
+        "delta_wp": 0.2953,
+        "abs_delta_wp": 0.2953,
+        "exceeds_threshold": true
+      }
+    },
+    {
+      "event_id": "401873000",
+      "name": "New Orleans Saints at New York Giants",
+      "short_name": "NO @ NYG",
+      "date": "2026-10-18T17:00Z",
+      "status": {
+        "state": "post",
+        "detail": "Final",
+        "period": 4,
+        "clock": "0:00",
+        "completed": true
+      },
+      "home_team": {
+        "id": "19",
+        "abbreviation": "NYG",
+        "name": "New York Giants",
+        "score": 27,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/nyg.png"
+      },
+      "away_team": {
+        "id": "18",
+        "abbreviation": "NO",
+        "name": "New Orleans Saints",
+        "score": 34,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/no.png"
+      },
+      "win_probability": {
+        "home_wp": 0.0,
+        "away_wp": 1.0
+      },
+      "critical_moments": [
+        {
+          "play_id": "4018730005010",
+          "qtr": 4,
+          "clock": "0:24",
+          "description": "(Shotgun) J.McCarthy pass short middle to M.Nabers to NO 14 for 9 yards (J.Reid).",
+          "home_wp_before": 0.1261,
+          "home_wp_after": 0.3393,
+          "delta_wp": 0.2132,
+          "abs_delta_wp": 0.2132
+        },
+        {
+          "play_id": "4018730005035",
+          "qtr": 4,
+          "clock": "0:13",
+          "description": "J.McCarthy spiked the ball to stop the clock.",
+          "home_wp_before": 0.3393,
+          "home_wp_after": 0.132,
+          "delta_wp": -0.2073,
+          "abs_delta_wp": 0.2073
+        },
+        {
+          "play_id": "4018730002138",
+          "qtr": 2,
+          "clock": "0:01",
+          "description": "(Shotgun) T.Shough pass short middle to B.Lance for 2 yards, TOUCHDOWN. D.Carlson extra point is GOOD, Center-Z.Wood, Holder-R.Wright.",
+          "home_wp_before": 0.5947,
+          "home_wp_after": 0.469,
+          "delta_wp": -0.1257,
+          "abs_delta_wp": 0.1257
+        }
+      ],
+      "hinge_play": {
+        "play_id": "4018730005010",
+        "qtr": 4,
+        "clock": "0:24",
+        "description": "(Shotgun) J.McCarthy pass short middle to M.Nabers to NO 14 for 9 yards (J.Reid).",
+        "home_wp_before": 0.1261,
+        "home_wp_after": 0.3393,
+        "delta_wp": 0.2132,
+        "abs_delta_wp": 0.2132,
+        "exceeds_threshold": true
+      }
+    },
+    {
+      "event_id": "401872998",
+      "name": "Carolina Panthers at Philadelphia Eagles",
+      "short_name": "CAR @ PHI",
+      "date": "2026-10-18T17:00Z",
+      "status": {
+        "state": "post",
+        "detail": "Final",
+        "period": 4,
+        "clock": "0:00",
+        "completed": true
+      },
+      "home_team": {
+        "id": "21",
+        "abbreviation": "PHI",
+        "name": "Philadelphia Eagles",
+        "score": 14,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/phi.png"
+      },
+      "away_team": {
+        "id": "29",
+        "abbreviation": "CAR",
+        "name": "Carolina Panthers",
+        "score": 25,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/car.png"
+      },
+      "win_probability": {
+        "home_wp": 0.0,
+        "away_wp": 1.0
+      },
+      "critical_moments": [],
+      "hinge_play": {
+        "play_id": "4018729981794",
+        "qtr": 2,
+        "clock": "8:33",
+        "description": "(Shotgun) B.Young pass short middle to T.McMillan to PHI 24 for 16 yards (Z.Baun; J.Campbell).PENALTY on PHI-J.Davis, Roughing the Passer, 12 yards, enforced at PHI 24.",
+        "home_wp_before": 0.3397,
+        "home_wp_after": 0.2357,
+        "delta_wp": -0.104,
+        "abs_delta_wp": 0.104,
+        "exceeds_threshold": false
+      }
+    },
+    {
+      "event_id": "401873002",
+      "name": "Pittsburgh Steelers at Tampa Bay Buccaneers",
+      "short_name": "PIT @ TB",
+      "date": "2026-10-18T17:00Z",
+      "status": {
+        "state": "post",
+        "detail": "Final/OT",
+        "period": 5,
+        "clock": "0:00",
+        "completed": true
+      },
+      "home_team": {
+        "id": "27",
+        "abbreviation": "TB",
+        "name": "Tampa Bay Buccaneers",
+        "score": 19,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/tb.png"
+      },
+      "away_team": {
+        "id": "23",
+        "abbreviation": "PIT",
+        "name": "Pittsburgh Steelers",
+        "score": 26,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/pit.png"
+      },
+      "win_probability": {
+        "home_wp": 0.0,
+        "away_wp": 1.0
+      },
+      "critical_moments": [
+        {
+          "play_id": "4018730024008",
+          "qtr": 4,
+          "clock": "1:46",
+          "description": "(Shotgun) J.Daniels pass short right intended for E.Egbuka INTERCEPTED by J.Dean at TB 43. J.Dean pushed ob at TB 3 for 40 yards (J.Daniels).",
+          "home_wp_before": 0.5286,
+          "home_wp_after": 0.1215,
+          "delta_wp": -0.4071,
+          "abs_delta_wp": 0.4071
+        },
+        {
+          "play_id": "4018730024264",
+          "qtr": 4,
+          "clock": "0:08",
+          "description": "C.McLaughlin 53 yard field goal is GOOD, Center-E.Deckers, Holder-R.Dixon.",
+          "home_wp_before": 0.2514,
+          "home_wp_after": 0.5453,
+          "delta_wp": 0.2939,
+          "abs_delta_wp": 0.2939
+        },
+        {
+          "play_id": "4018730023905",
+          "qtr": 4,
+          "clock": "2:47",
+          "description": "(Shotgun) A.Rodgers sacked at TB 40 for -9 yards (D.Walker).",
+          "home_wp_before": 0.5218,
+          "home_wp_after": 0.7502,
+          "delta_wp": 0.2284,
+          "abs_delta_wp": 0.2284
+        }
+      ],
+      "hinge_play": {
+        "play_id": "4018730024008",
+        "qtr": 4,
+        "clock": "1:46",
+        "description": "(Shotgun) J.Daniels pass short right intended for E.Egbuka INTERCEPTED by J.Dean at TB 43. J.Dean pushed ob at TB 3 for 40 yards (J.Daniels).",
+        "home_wp_before": 0.5286,
+        "home_wp_after": 0.1215,
+        "delta_wp": -0.4071,
+        "abs_delta_wp": 0.4071,
+        "exceeds_threshold": true
+      }
+    },
+    {
+      "event_id": "401873004",
+      "name": "Arizona Cardinals at Los Angeles Rams",
+      "short_name": "ARI @ LAR",
+      "date": "2026-10-18T20:05Z",
+      "status": {
+        "state": "post",
+        "detail": "Final",
+        "period": 4,
+        "clock": "0:00",
+        "completed": true
+      },
+      "home_team": {
+        "id": "14",
+        "abbreviation": "LAR",
+        "name": "Los Angeles Rams",
+        "score": 16,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/lar.png"
+      },
+      "away_team": {
+        "id": "22",
+        "abbreviation": "ARI",
+        "name": "Arizona Cardinals",
+        "score": 18,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/ari.png"
+      },
+      "win_probability": {
+        "home_wp": 0.0,
+        "away_wp": 1.0
+      },
+      "critical_moments": [
+        {
+          "play_id": "4018730044115",
+          "qtr": 4,
+          "clock": "0:00",
+          "description": "C.Ryland 43 yard field goal is GOOD, Center-C.Kreiter, Holder-B.Gillikin.",
+          "home_wp_before": 0.5013,
+          "home_wp_after": 0.0,
+          "delta_wp": -0.5013,
+          "abs_delta_wp": 0.5013
+        },
+        {
+          "play_id": "4018730043996",
+          "qtr": 4,
+          "clock": "0:47",
+          "description": "(Shotgun) J.Brissett pass deep middle to J.Brooks to LA 44 for 21 yards (J.Wallace).PENALTY on LA-J.Wallace, Unnecessary Roughness, 15 yards, enforced at LA 44.Penalty on LA-J.Stewart, Defensive Offside, declined.",
+          "home_wp_before": 0.7651,
+          "home_wp_after": 0.3891,
+          "delta_wp": -0.376,
+          "abs_delta_wp": 0.376
+        },
+        {
+          "play_id": "4018730041",
+          "qtr": 0,
+          "clock": "0:00",
+          "description": "Jugada sin descripción",
+          "home_wp_before": 0.5,
+          "home_wp_after": 0.8734,
+          "delta_wp": 0.3734,
+          "abs_delta_wp": 0.3734
+        }
+      ],
+      "hinge_play": {
+        "play_id": "4018730044115",
+        "qtr": 4,
+        "clock": "0:00",
+        "description": "C.Ryland 43 yard field goal is GOOD, Center-C.Kreiter, Holder-B.Gillikin.",
+        "home_wp_before": 0.5013,
+        "home_wp_after": 0.0,
+        "delta_wp": -0.5013,
+        "abs_delta_wp": 0.5013,
+        "exceeds_threshold": true
+      }
+    },
+    {
+      "event_id": "401873006",
+      "name": "Los Angeles Chargers at Kansas City Chiefs",
+      "short_name": "LAC @ KC",
+      "date": "2026-10-18T20:25Z",
+      "status": {
+        "state": "post",
+        "detail": "Final",
+        "period": 4,
+        "clock": "0:00",
+        "completed": true
+      },
+      "home_team": {
+        "id": "12",
+        "abbreviation": "KC",
+        "name": "Kansas City Chiefs",
+        "score": 22,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/kc.png"
+      },
+      "away_team": {
+        "id": "24",
+        "abbreviation": "LAC",
+        "name": "Los Angeles Chargers",
+        "score": 6,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/lac.png"
+      },
+      "win_probability": {
+        "home_wp": 1.0,
+        "away_wp": 0.0
+      },
+      "critical_moments": [
+        {
+          "play_id": "4018730061",
+          "qtr": 0,
+          "clock": "0:00",
+          "description": "Jugada sin descripción",
+          "home_wp_before": 0.5,
+          "home_wp_after": 0.7452,
+          "delta_wp": 0.2452,
+          "abs_delta_wp": 0.2452
+        }
+      ],
+      "hinge_play": {
+        "play_id": "4018730061",
+        "qtr": 0,
+        "clock": "0:00",
+        "description": "Jugada sin descripción",
+        "home_wp_before": 0.5,
+        "home_wp_after": 0.7452,
+        "delta_wp": 0.2452,
+        "abs_delta_wp": 0.2452,
+        "exceeds_threshold": true
+      }
+    },
+    {
+      "event_id": "401873005",
+      "name": "Buffalo Bills at Las Vegas Raiders",
+      "short_name": "BUF @ LV",
+      "date": "2026-10-18T20:25Z",
+      "status": {
+        "state": "post",
+        "detail": "Final",
+        "period": 4,
+        "clock": "0:00",
+        "completed": true
+      },
+      "home_team": {
+        "id": "13",
+        "abbreviation": "LV",
+        "name": "Las Vegas Raiders",
+        "score": 30,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/lv.png"
+      },
+      "away_team": {
+        "id": "2",
+        "abbreviation": "BUF",
+        "name": "Buffalo Bills",
+        "score": 33,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/buf.png"
+      },
+      "win_probability": {
+        "home_wp": 0.0,
+        "away_wp": 1.0
+      },
+      "critical_moments": [
+        {
+          "play_id": "4018730051",
+          "qtr": 0,
+          "clock": "0:00",
+          "description": "Jugada sin descripción",
+          "home_wp_before": 0.5,
+          "home_wp_after": 0.2789,
+          "delta_wp": -0.2211,
+          "abs_delta_wp": 0.2211
+        },
+        {
+          "play_id": "4018730053629",
+          "qtr": 4,
+          "clock": "8:07",
+          "description": "(Shotgun) K.Cousins pass short right to T.Tucker for 11 yards, TOUCHDOWN. M.Gay extra point is GOOD, Center-A.Ward, Holder-A.Cole.",
+          "home_wp_before": 0.2231,
+          "home_wp_after": 0.3857,
+          "delta_wp": 0.1626,
+          "abs_delta_wp": 0.1626
+        }
+      ],
+      "hinge_play": {
+        "play_id": "4018730051",
+        "qtr": 0,
+        "clock": "0:00",
+        "description": "Jugada sin descripción",
+        "home_wp_before": 0.5,
+        "home_wp_after": 0.2789,
+        "delta_wp": -0.2211,
+        "abs_delta_wp": 0.2211,
+        "exceeds_threshold": true
+      }
+    },
+    {
+      "event_id": "401873007",
+      "name": "Dallas Cowboys at Green Bay Packers",
+      "short_name": "DAL @ GB",
+      "date": "2026-10-19T00:20Z",
+      "status": {
+        "state": "post",
+        "detail": "Final",
+        "period": 4,
+        "clock": "0:00",
+        "completed": true
+      },
+      "home_team": {
+        "id": "9",
+        "abbreviation": "GB",
+        "name": "Green Bay Packers",
+        "score": 23,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/gb.png"
+      },
+      "away_team": {
+        "id": "6",
+        "abbreviation": "DAL",
+        "name": "Dallas Cowboys",
+        "score": 13,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/dal.png"
+      },
+      "win_probability": {
+        "home_wp": 1.0,
+        "away_wp": 0.0
+      },
+      "critical_moments": [],
+      "hinge_play": {
+        "play_id": "4018730071127",
+        "qtr": 2,
+        "clock": "14:23",
+        "description": "(Shotgun) D.Prescott pass short middle intended for C.Lamb INTERCEPTED by E.Williams at GB 3. E.Williams to GB 20 for 17 yards (J.Ferguson).",
+        "home_wp_before": 0.5949,
+        "home_wp_after": 0.6853,
+        "delta_wp": 0.0904,
+        "abs_delta_wp": 0.0904,
+        "exceeds_threshold": false
+      }
+    },
+    {
+      "event_id": "401873008",
+      "name": "Washington Commanders at San Francisco 49ers",
+      "short_name": "WSH @ SF",
+      "date": "2026-10-20T00:15Z",
+      "status": {
+        "state": "post",
+        "detail": "Final",
+        "period": 4,
+        "clock": "0:00",
+        "completed": true
+      },
+      "home_team": {
+        "id": "25",
+        "abbreviation": "SF",
+        "name": "San Francisco 49ers",
+        "score": 23,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/sf.png"
+      },
+      "away_team": {
+        "id": "28",
+        "abbreviation": "WSH",
+        "name": "Washington Commanders",
+        "score": 17,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/wsh.png"
+      },
+      "win_probability": {
+        "home_wp": 1.0,
+        "away_wp": 0.0
+      },
+      "critical_moments": [
+        {
+          "play_id": "4018730081",
+          "qtr": 0,
+          "clock": "0:00",
+          "description": "Jugada sin descripción",
+          "home_wp_before": 0.5,
+          "home_wp_after": 0.8701,
+          "delta_wp": 0.3701,
+          "abs_delta_wp": 0.3701
+        },
+        {
+          "play_id": "4018730083854",
+          "qtr": 4,
+          "clock": "2:00",
+          "description": "(Shotgun) J.Daniels pass incomplete deep right to T.Burks (M.Mustapha).",
+          "home_wp_before": 0.7918,
+          "home_wp_after": 0.9423,
+          "delta_wp": 0.1505,
+          "abs_delta_wp": 0.1505
+        },
+        {
+          "play_id": "4018730083739",
+          "qtr": 4,
+          "clock": "3:01",
+          "description": "(Shotgun) J.Daniels sacked at SF 40 for -11 yards (sack split by R.Height and J.Dugger).PENALTY on SF-A.Davis, Illegal Contact, 5 yards, enforced at SF 29 - No Play.",
+          "home_wp_before": 0.8987,
+          "home_wp_after": 0.7516,
+          "delta_wp": -0.1471,
+          "abs_delta_wp": 0.1471
+        }
+      ],
+      "hinge_play": {
+        "play_id": "4018730081",
+        "qtr": 0,
+        "clock": "0:00",
+        "description": "Jugada sin descripción",
+        "home_wp_before": 0.5,
+        "home_wp_after": 0.8701,
+        "delta_wp": 0.3701,
+        "abs_delta_wp": 0.3701,
+        "exceeds_threshold": true
+      }
+    },
+    {
+      "event_id": "401873010",
+      "name": "New England Patriots at Chicago Bears",
+      "short_name": "NE @ CHI",
+      "date": "2026-10-23T00:15Z",
+      "status": {
+        "state": "pre",
+        "detail": "10/22 - 8:15 PM EDT",
+        "period": 0,
+        "clock": "0:00",
+        "completed": false
+      },
+      "home_team": {
+        "id": "3",
+        "abbreviation": "CHI",
+        "name": "Chicago Bears",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/chi.png"
+      },
+      "away_team": {
+        "id": "17",
+        "abbreviation": "NE",
+        "name": "New England Patriots",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/ne.png"
+      },
+      "win_probability": {
+        "home_wp": 0.5,
+        "away_wp": 0.5
+      },
+      "critical_moments": [],
+      "hinge_play": null
+    },
+    {
+      "event_id": "401873011",
+      "name": "Pittsburgh Steelers at New Orleans Saints",
+      "short_name": "PIT VS NO",
+      "date": "2026-10-25T13:30Z",
+      "status": {
+        "state": "pre",
+        "detail": "10/25 - 9:30 AM EDT",
+        "period": 0,
+        "clock": "0:00",
+        "completed": false
+      },
+      "home_team": {
+        "id": "18",
+        "abbreviation": "NO",
+        "name": "New Orleans Saints",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/no.png"
+      },
+      "away_team": {
+        "id": "23",
+        "abbreviation": "PIT",
+        "name": "Pittsburgh Steelers",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/pit.png"
+      },
+      "win_probability": {
+        "home_wp": 0.5,
+        "away_wp": 0.5
+      },
+      "critical_moments": [],
+      "hinge_play": null
+    },
+    {
+      "event_id": "401873017",
+      "name": "San Francisco 49ers at Atlanta Falcons",
+      "short_name": "SF @ ATL",
+      "date": "2026-10-25T17:00Z",
+      "status": {
+        "state": "pre",
+        "detail": "10/25 - 1:00 PM EDT",
+        "period": 0,
+        "clock": "0:00",
+        "completed": false
+      },
+      "home_team": {
+        "id": "1",
+        "abbreviation": "ATL",
+        "name": "Atlanta Falcons",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/atl.png"
+      },
+      "away_team": {
+        "id": "25",
+        "abbreviation": "SF",
+        "name": "San Francisco 49ers",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/sf.png"
+      },
+      "win_probability": {
+        "home_wp": 0.5,
+        "away_wp": 0.5
+      },
+      "critical_moments": [],
+      "hinge_play": null
+    },
+    {
+      "event_id": "401873013",
+      "name": "Cleveland Browns at Tennessee Titans",
+      "short_name": "CLE @ TEN",
+      "date": "2026-10-25T17:00Z",
+      "status": {
+        "state": "pre",
+        "detail": "10/25 - 1:00 PM EDT",
+        "period": 0,
+        "clock": "0:00",
+        "completed": false
+      },
+      "home_team": {
+        "id": "10",
+        "abbreviation": "TEN",
+        "name": "Tennessee Titans",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/ten.png"
+      },
+      "away_team": {
+        "id": "5",
+        "abbreviation": "CLE",
+        "name": "Cleveland Browns",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/cle.png"
+      },
+      "win_probability": {
+        "home_wp": 0.5,
+        "away_wp": 0.5
+      },
+      "critical_moments": [],
+      "hinge_play": null
+    },
+    {
+      "event_id": "401873014",
+      "name": "Indianapolis Colts at Minnesota Vikings",
+      "short_name": "IND @ MIN",
+      "date": "2026-10-25T17:00Z",
+      "status": {
+        "state": "pre",
+        "detail": "10/25 - 1:00 PM EDT",
+        "period": 0,
+        "clock": "0:00",
+        "completed": false
+      },
+      "home_team": {
+        "id": "16",
+        "abbreviation": "MIN",
+        "name": "Minnesota Vikings",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/min.png"
+      },
+      "away_team": {
+        "id": "11",
+        "abbreviation": "IND",
+        "name": "Indianapolis Colts",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/ind.png"
+      },
+      "win_probability": {
+        "home_wp": 0.5,
+        "away_wp": 0.5
+      },
+      "critical_moments": [],
+      "hinge_play": null
+    },
+    {
+      "event_id": "401873015",
+      "name": "Miami Dolphins at New York Jets",
+      "short_name": "MIA @ NYJ",
+      "date": "2026-10-25T17:00Z",
+      "status": {
+        "state": "pre",
+        "detail": "10/25 - 1:00 PM EDT",
+        "period": 0,
+        "clock": "0:00",
+        "completed": false
+      },
+      "home_team": {
+        "id": "20",
+        "abbreviation": "NYJ",
+        "name": "New York Jets",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/nyj.png"
+      },
+      "away_team": {
+        "id": "15",
+        "abbreviation": "MIA",
+        "name": "Miami Dolphins",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/mia.png"
+      },
+      "win_probability": {
+        "home_wp": 0.5,
+        "away_wp": 0.5
+      },
+      "critical_moments": [],
+      "hinge_play": null
+    },
+    {
+      "event_id": "401873018",
+      "name": "Tampa Bay Buccaneers at Carolina Panthers",
+      "short_name": "TB @ CAR",
+      "date": "2026-10-25T17:00Z",
+      "status": {
+        "state": "pre",
+        "detail": "10/25 - 1:00 PM EDT",
+        "period": 0,
+        "clock": "0:00",
+        "completed": false
+      },
+      "home_team": {
+        "id": "29",
+        "abbreviation": "CAR",
+        "name": "Carolina Panthers",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/car.png"
+      },
+      "away_team": {
+        "id": "27",
+        "abbreviation": "TB",
+        "name": "Tampa Bay Buccaneers",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/tb.png"
+      },
+      "win_probability": {
+        "home_wp": 0.5,
+        "away_wp": 0.5
+      },
+      "critical_moments": [],
+      "hinge_play": null
+    },
+    {
+      "event_id": "401873012",
+      "name": "Cincinnati Bengals at Baltimore Ravens",
+      "short_name": "CIN @ BAL",
+      "date": "2026-10-25T17:00Z",
+      "status": {
+        "state": "pre",
+        "detail": "10/25 - 1:00 PM EDT",
+        "period": 0,
+        "clock": "0:00",
+        "completed": false
+      },
+      "home_team": {
+        "id": "33",
+        "abbreviation": "BAL",
+        "name": "Baltimore Ravens",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/bal.png"
+      },
+      "away_team": {
+        "id": "4",
+        "abbreviation": "CIN",
+        "name": "Cincinnati Bengals",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/cin.png"
+      },
+      "win_probability": {
+        "home_wp": 0.5,
+        "away_wp": 0.5
+      },
+      "critical_moments": [],
+      "hinge_play": null
+    },
+    {
+      "event_id": "401873016",
+      "name": "New York Giants at Houston Texans",
+      "short_name": "NYG @ HOU",
+      "date": "2026-10-25T17:00Z",
+      "status": {
+        "state": "pre",
+        "detail": "10/25 - 1:00 PM EDT",
+        "period": 0,
+        "clock": "0:00",
+        "completed": false
+      },
+      "home_team": {
+        "id": "34",
+        "abbreviation": "HOU",
+        "name": "Houston Texans",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/hou.png"
+      },
+      "away_team": {
+        "id": "19",
+        "abbreviation": "NYG",
+        "name": "New York Giants",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/nyg.png"
+      },
+      "win_probability": {
+        "home_wp": 0.5,
+        "away_wp": 0.5
+      },
+      "critical_moments": [],
+      "hinge_play": null
+    },
+    {
+      "event_id": "401873019",
+      "name": "Denver Broncos at Arizona Cardinals",
+      "short_name": "DEN @ ARI",
+      "date": "2026-10-25T20:05Z",
+      "status": {
+        "state": "pre",
+        "detail": "10/25 - 4:05 PM EDT",
+        "period": 0,
+        "clock": "0:00",
+        "completed": false
+      },
+      "home_team": {
+        "id": "22",
+        "abbreviation": "ARI",
+        "name": "Arizona Cardinals",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/ari.png"
+      },
+      "away_team": {
+        "id": "7",
+        "abbreviation": "DEN",
+        "name": "Denver Broncos",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/den.png"
+      },
+      "win_probability": {
+        "home_wp": 0.5,
+        "away_wp": 0.5
+      },
+      "critical_moments": [],
+      "hinge_play": null
+    },
+    {
+      "event_id": "401873020",
+      "name": "Green Bay Packers at Detroit Lions",
+      "short_name": "GB @ DET",
+      "date": "2026-10-25T20:25Z",
+      "status": {
+        "state": "pre",
+        "detail": "10/25 - 4:25 PM EDT",
+        "period": 0,
+        "clock": "0:00",
+        "completed": false
+      },
+      "home_team": {
+        "id": "8",
+        "abbreviation": "DET",
+        "name": "Detroit Lions",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/det.png"
+      },
+      "away_team": {
+        "id": "9",
+        "abbreviation": "GB",
+        "name": "Green Bay Packers",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/gb.png"
+      },
+      "win_probability": {
+        "home_wp": 0.5,
+        "away_wp": 0.5
+      },
+      "critical_moments": [],
+      "hinge_play": null
+    },
+    {
+      "event_id": "401873021",
+      "name": "Los Angeles Rams at Las Vegas Raiders",
+      "short_name": "LAR @ LV",
+      "date": "2026-10-25T20:25Z",
+      "status": {
+        "state": "pre",
+        "detail": "10/25 - 4:25 PM EDT",
+        "period": 0,
+        "clock": "0:00",
+        "completed": false
+      },
+      "home_team": {
+        "id": "13",
+        "abbreviation": "LV",
+        "name": "Las Vegas Raiders",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/lv.png"
+      },
+      "away_team": {
+        "id": "14",
+        "abbreviation": "LAR",
+        "name": "Los Angeles Rams",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/lar.png"
+      },
+      "win_probability": {
+        "home_wp": 0.5,
+        "away_wp": 0.5
+      },
+      "critical_moments": [],
+      "hinge_play": null
+    },
+    {
+      "event_id": "401873022",
+      "name": "Kansas City Chiefs at Seattle Seahawks",
+      "short_name": "KC @ SEA",
+      "date": "2026-10-26T00:20Z",
+      "status": {
+        "state": "pre",
+        "detail": "10/25 - 8:20 PM EDT",
+        "period": 0,
+        "clock": "0:00",
+        "completed": false
+      },
+      "home_team": {
+        "id": "26",
+        "abbreviation": "SEA",
+        "name": "Seattle Seahawks",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/sea.png"
+      },
+      "away_team": {
+        "id": "12",
+        "abbreviation": "KC",
+        "name": "Kansas City Chiefs",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/kc.png"
+      },
+      "win_probability": {
+        "home_wp": 0.5,
+        "away_wp": 0.5
+      },
+      "critical_moments": [],
+      "hinge_play": null
+    },
+    {
+      "event_id": "401873009",
+      "name": "Dallas Cowboys at Philadelphia Eagles",
+      "short_name": "DAL @ PHI",
+      "date": "2026-10-27T00:15Z",
+      "status": {
+        "state": "pre",
+        "detail": "10/26 - 8:15 PM EDT",
+        "period": 0,
+        "clock": "0:00",
+        "completed": false
+      },
+      "home_team": {
+        "id": "21",
+        "abbreviation": "PHI",
+        "name": "Philadelphia Eagles",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/phi.png"
+      },
+      "away_team": {
+        "id": "6",
+        "abbreviation": "DAL",
+        "name": "Dallas Cowboys",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/dal.png"
+      },
+      "win_probability": {
+        "home_wp": 0.5,
+        "away_wp": 0.5
+      },
+      "critical_moments": [],
+      "hinge_play": null
+    }
+  ]
+}
