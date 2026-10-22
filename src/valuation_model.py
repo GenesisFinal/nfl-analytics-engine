@@ -655,6 +655,7 @@ def evaluate_players(
     # Rellenar con 0 cuando un jugador solo tuvo jugadas en minutos basura
     zero_fill_cols = [
         "competitive_opportunities",
+        "comp_weeks_played",
         "competitive_yards",
         "epa_total",
         "epa_per_play",
@@ -664,9 +665,11 @@ def evaluate_players(
         "success_rate",
     ]
     for col in zero_fill_cols:
-        merged[col] = merged[col].fillna(0.0)
+        if col in merged.columns:
+            merged[col] = merged[col].fillna(0.0)
 
     merged["competitive_opportunities"] = merged["competitive_opportunities"].astype(int)
+    merged["comp_weeks_played"] = merged["comp_weeks_played"].astype(int)
     merged["raw_opportunities"] = merged["raw_opportunities"].astype(int)
     merged["player_name"] = merged["player_id"].map(name_map)
     merged["name"] = merged["player_name"]
@@ -968,11 +971,29 @@ def run_valuation_pipeline(
         "rankings_by_scope": rankings_by_scope,
     }
 
+    def _sanitize_json_value(val: Any) -> Any:
+        if isinstance(val, dict):
+            return {k: _sanitize_json_value(v) for k, v in val.items()}
+        if isinstance(val, list):
+            return [_sanitize_json_value(v) for v in val]
+        if isinstance(val, (float, np.floating)):
+            fval = float(val)
+            return 0.0 if (np.isnan(fval) or np.isinf(fval)) else fval
+        if isinstance(val, np.integer):
+            return int(val)
+        return val
+
+    payload = _sanitize_json_value(payload)
+
     target_path = Path(output_path) if output_path is not None else DEFAULT_OUTPUT_PATH
     target_path.parent.mkdir(parents=True, exist_ok=True)
-    target_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
+    target_path.write_text(
+        json.dumps(payload, indent=2, ensure_ascii=False, allow_nan=False),
+        encoding="utf-8",
+    )
     return payload
 
 
 if __name__ == "__main__":
     run_valuation_pipeline()
+

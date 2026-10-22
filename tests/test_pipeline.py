@@ -692,27 +692,37 @@ def test_critic_generator_no_em_dash_and_exact_citations(
 
 
 def test_public_data_json_files_if_present() -> None:
-    """Valida el esquema de los archivos JSON en `public/data/` cuando están presentes en disco."""
+    """Valida el esquema y cumplimiento estricto RFC 8259 (sin NaN/Infinity) de los JSON en `public/data/`."""
     scoreboard_file = PUBLIC_DATA_DIR / "live_scoreboard.json"
     rankings_file = PUBLIC_DATA_DIR / "player_rankings.json"
     critiques_file = PUBLIC_DATA_DIR / "game_critiques.json"
 
+    def _strict_loads(text: str) -> dict:
+        return json.loads(
+            text,
+            parse_constant=lambda c: (_ for _ in ()).throw(
+                ValueError(f"Invalid JSON constant for browser JSON.parse: {c}")
+            ),
+        )
+
     if scoreboard_file.exists():
-        sb = json.loads(scoreboard_file.read_text(encoding="utf-8"))
+        sb = _strict_loads(scoreboard_file.read_text(encoding="utf-8"))
         assert "updated_at" in sb
         assert "games" in sb and isinstance(sb["games"], list)
 
     if rankings_file.exists():
-        rk = json.loads(rankings_file.read_text(encoding="utf-8"))
+        rk = _strict_loads(rankings_file.read_text(encoding="utf-8"))
         assert "updated_at" in rk
         assert "mvp_real" in rk
         assert "inflated_stat_leader" in rk
         assert "players" in rk and isinstance(rk["players"], list)
+        assert len(rk["players"]) > 0
 
     if critiques_file.exists():
         cr_text = critiques_file.read_text(encoding="utf-8")
         assert "\u2014" not in cr_text
         assert "\u2013" not in cr_text
-        cr = json.loads(cr_text)
+        cr = _strict_loads(cr_text)
         assert "executive_summary" in cr
         assert "critiques" in cr and isinstance(cr["critiques"], list)
+

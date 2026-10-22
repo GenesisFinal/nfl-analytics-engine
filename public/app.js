@@ -138,7 +138,13 @@ async function fetchLocalJson(relativePath) {
     if (!response.ok) {
       throw new Error(`HTTP ${response.status} al leer ${relativePath}`);
     }
-    return await response.json();
+    const rawText = await response.text();
+    try {
+      return JSON.parse(rawText);
+    } catch {
+      const cleaned = rawText.replace(/:\s*(NaN|-?Infinity)\b/g, ': 0');
+      return JSON.parse(cleaned);
+    }
   } catch (error) {
     console.warn(`[NFL Analytics Engine] No se pudo cargar ${relativePath}:`, error);
     return null;
