@@ -297,20 +297,49 @@
           </p>
         </div>
 
-        <!-- Filtros de Partidos -->
-        <div class="flex flex-wrap items-center gap-1.5" role="group" aria-label="Filtrar partidos">
-          <button type="button" data-game-filter="all" class="game-filter-btn rounded-lg border border-cyan-500/40 bg-cyan-500/15 px-3 py-1.5 text-xs font-semibold text-cyan-300 transition">
-            Todos
-          </button>
-          <button type="button" data-game-filter="live" class="game-filter-btn rounded-lg border border-slate-800 bg-[#111827] px-3 py-1.5 text-xs font-medium text-slate-400 transition hover:border-slate-700 hover:text-white">
-            En Vivo
-          </button>
-          <button type="button" data-game-filter="hinge" class="game-filter-btn rounded-lg border border-slate-800 bg-[#111827] px-3 py-1.5 text-xs font-medium text-slate-400 transition hover:border-slate-700 hover:text-white">
-            Con Jugada Bisagra (&ge;12% WP)
-          </button>
-          <button type="button" data-game-filter="final" class="game-filter-btn rounded-lg border border-slate-800 bg-[#111827] px-3 py-1.5 text-xs font-medium text-slate-400 transition hover:border-slate-700 hover:text-white">
-            Finalizados
-          </button>
+        <!-- Filtros de Partidos (Estado + Semana de Temporada Regular + Equipo) -->
+        <div class="flex flex-wrap items-center gap-2" role="group" aria-label="Filtrar partidos de temporada regular">
+          <div class="flex items-center gap-1.5">
+            <label for="scoreboard-week-select" class="font-mono-num text-[11px] font-semibold uppercase tracking-wider text-slate-400">Semana:</label>
+            <select id="scoreboard-week-select" class="rounded-lg border border-slate-700 bg-[#111827] px-2.5 py-1.5 font-mono-num text-xs font-semibold text-cyan-300 focus:border-cyan-500 focus:outline-none">
+              <option value="ALL">Todas (Temp. Regular)</option>
+            </select>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <label for="scoreboard-team-select" class="font-mono-num text-[11px] font-semibold uppercase tracking-wider text-slate-400">Equipo:</label>
+            <select id="scoreboard-team-select" class="rounded-lg border border-slate-700 bg-[#111827] px-2.5 py-1.5 font-mono-num text-xs font-semibold text-slate-200 focus:border-cyan-500 focus:outline-none">
+              <option value="ALL">Todos (32)</option>
+            </select>
+          </div>
+          <div class="flex flex-wrap items-center gap-1">
+            <button type="button" data-game-filter="all" class="game-filter-btn rounded-lg border border-cyan-500/40 bg-cyan-500/15 px-2.5 py-1.5 text-xs font-semibold text-cyan-300 transition">
+              Todos
+            </button>
+            <button type="button" data-game-filter="live" class="game-filter-btn rounded-lg border border-slate-800 bg-[#111827] px-2.5 py-1.5 text-xs font-medium text-slate-400 transition hover:border-slate-700 hover:text-white">
+              En Vivo
+            </button>
+            <button type="button" data-game-filter="hinge" class="game-filter-btn rounded-lg border border-slate-800 bg-[#111827] px-2.5 py-1.5 text-xs font-medium text-slate-400 transition hover:border-slate-700 hover:text-white">
+              Con Jugada Bisagra (&ge;12% WP)
+            </button>
+            <button type="button" data-game-filter="final" class="game-filter-btn rounded-lg border border-slate-800 bg-[#111827] px-2.5 py-1.5 text-xs font-medium text-slate-400 transition hover:border-slate-700 hover:text-white">
+              Finalizados
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Barra de Cobertura de Temporada Regular (100% Sin Pretemporada) -->
+      <div id="season-coverage-bar" class="rounded-xl border border-emerald-500/25 bg-[#111827]/90 px-4 py-3 text-xs text-slate-300 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="rounded border border-emerald-500/40 bg-emerald-500/15 px-2 py-0.5 font-mono-num text-[10px] font-bold uppercase tracking-wider text-emerald-300">
+              100% Temporada Regular (Sin Pretemporada)
+            </span>
+            <span id="season-coverage-summary" class="font-mono-num text-xs text-slate-300">
+              Cargando cobertura completa de partidos oficiales...
+            </span>
+          </div>
+          <span id="season-coverage-filter-status" class="font-mono-num text-[11px] text-cyan-300"></span>
         </div>
       </div>
 
