@@ -329,6 +329,7 @@ def test_espn_extract_critical_moments_threshold_and_sorting() -> None:
                         {"id": "p3", "period": {"number": 3}, "clock": {"displayValue": "08:30"}, "text": "Touchdown de 65 yardas"},
                         {"id": "p4", "period": {"number": 4}, "clock": {"displayValue": "02:15"}, "text": "Fumble recuperado"},
                         {"id": "p5", "period": {"number": 4}, "clock": {"displayValue": "00:40"}, "text": "Gol de campo ganador"},
+                        {"id": "p6", "period": {"number": 4}, "clock": {"displayValue": "00:00"}, "text": "END GAME"},
                     ]
                 }
             ]
@@ -339,10 +340,19 @@ def test_espn_extract_critical_moments_threshold_and_sorting() -> None:
             {"playId": "p3", "homeWinPercentage": 0.71},  # delta = +0.35 (|delta| = 0.35)
             {"playId": "p4", "homeWinPercentage": 0.56},  # delta = -0.15 (|delta| = 0.15)
             {"playId": "p5", "homeWinPercentage": 0.96},  # delta = +0.40 (|delta| = 0.40)
+            {"playId": "p6", "homeWinPercentage": 1.00},  # END GAME administrativa
         ],
     }
 
-    moments = ingest_espn.extract_critical_moments(summary_payload, min_delta=0.12, top_n=3)
+    moments = ingest_espn.extract_critical_moments(
+        summary_payload,
+        min_delta=0.12,
+        top_n=3,
+        event_id="401671789",
+        away_abbr="KC",
+        home_abbr="BAL",
+        season=2025,
+    )
     assert len(moments) == 3
     assert [m["play_id"] for m in moments] == ["p5", "p3", "p2"]
     assert all(m["abs_delta_wp"] >= 0.12 for m in moments)
@@ -350,6 +360,9 @@ def test_espn_extract_critical_moments_threshold_and_sorting() -> None:
     assert moments[0]["delta_wp"] == pytest.approx(0.40, abs=1e-4)
     assert moments[1]["delta_wp"] == pytest.approx(0.35, abs=1e-4)
     assert moments[2]["delta_wp"] == pytest.approx(-0.18, abs=1e-4)
+    for m in moments:
+        assert m.get("video_url", "").startswith("http")
+        assert m.get("espn_play_url", "").startswith("https://www.espn.com/nfl/")
 
 
 def test_espn_scoreboard_fallback_and_schema(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
@@ -420,6 +433,8 @@ def test_espn_scoreboard_fallback_and_schema(monkeypatch: pytest.MonkeyPatch, tm
     assert game["away_team"]["abbreviation"] == "KC"
     assert len(game["critical_moments"]) == 1
     assert game["critical_moments"][0]["abs_delta_wp"] == pytest.approx(0.25, abs=1e-4)
+    assert game["hinge_play"]["video_url"].startswith("http")
+    assert game["hinge_play"]["espn_play_url"].startswith("https://www.espn.com/nfl/")
 
 
 # ---------------------------------------------------------------------------
