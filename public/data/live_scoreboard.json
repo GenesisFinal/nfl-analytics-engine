@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-22T02:38:41.266931+00:00",
+  "updated_at": "2026-10-22T11:58:14.622204+00:00",
   "source": "ESPN JSON API",
   "season": 2026,
   "week": 7,
@@ -34,6 +34,11 @@
         "home_wp": 1.0,
         "away_wp": 0.0
       },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401872995/seahawks-broncos",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401872995",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401872995"
+      },
       "critical_moments": [
         {
           "play_id": "4018729954092",
@@ -43,17 +48,13 @@
           "home_wp_before": 0.5323,
           "home_wp_after": 0.9111,
           "delta_wp": 0.3788,
-          "abs_delta_wp": 0.3788
-        },
-        {
-          "play_id": "4018729954819",
-          "qtr": 5,
-          "clock": "4:53",
-          "description": "END GAME",
-          "home_wp_before": 0.7447,
-          "home_wp_after": 1.0,
-          "delta_wp": 0.2553,
-          "abs_delta_wp": 0.2553
+          "abs_delta_wp": 0.3788,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401872995",
+          "video_url": "https://www.youtube.com/results?search_query=NFL+Seattle+Seahawks+vs+Denver+Broncos+Darnold+Horton+interception+Q4+highlight",
+          "video_source": "YouTube NFL Highlights",
+          "video_title": "Video: SEA @ DEN (Q4)",
+          "has_direct_video": false,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+Seattle+Seahawks+vs+Denver+Broncos+Darnold+Horton+interception+Q4+highlight"
         },
         {
           "play_id": "4018729954013",
@@ -63,7 +64,29 @@
           "home_wp_before": 0.7849,
           "home_wp_after": 0.6018,
           "delta_wp": -0.1831,
-          "abs_delta_wp": 0.1831
+          "abs_delta_wp": 0.1831,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401872995",
+          "video_url": "https://www.youtube.com/results?search_query=NFL+Seattle+Seahawks+vs+Denver+Broncos+Darnold+Smith-Njigba+deep+pass+Q4+highlight",
+          "video_source": "YouTube NFL Highlights",
+          "video_title": "Video: SEA @ DEN (Q4)",
+          "has_direct_video": false,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+Seattle+Seahawks+vs+Denver+Broncos+Darnold+Smith-Njigba+deep+pass+Q4+highlight"
+        },
+        {
+          "play_id": "4018729954334",
+          "qtr": 4,
+          "clock": "0:25",
+          "description": "(Shotgun) S.Darnold pass short middle to C.Kupp to DEN 23 for 17 yards (J.McMillian).",
+          "home_wp_before": 0.7851,
+          "home_wp_after": 0.6035,
+          "delta_wp": -0.1816,
+          "abs_delta_wp": 0.1816,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401872995",
+          "video_url": "https://www.youtube.com/results?search_query=NFL+Seattle+Seahawks+vs+Denver+Broncos+Darnold+Kupp+Q4+highlight",
+          "video_source": "YouTube NFL Highlights",
+          "video_title": "Video: SEA @ DEN (Q4)",
+          "has_direct_video": false,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+Seattle+Seahawks+vs+Denver+Broncos+Darnold+Kupp+Q4+highlight"
         }
       ],
       "hinge_play": {
@@ -75,6 +98,12 @@
         "home_wp_after": 0.9111,
         "delta_wp": 0.3788,
         "abs_delta_wp": 0.3788,
+        "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401872995",
+        "video_url": "https://www.youtube.com/results?search_query=NFL+Seattle+Seahawks+vs+Denver+Broncos+Darnold+Horton+interception+Q4+highlight",
+        "video_source": "YouTube NFL Highlights",
+        "video_title": "Video: SEA @ DEN (Q4)",
+        "has_direct_video": false,
+        "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+Seattle+Seahawks+vs+Denver+Broncos+Darnold+Horton+interception+Q4+highlight",
         "exceeds_threshold": true
       }
     },
@@ -108,6 +137,11 @@
         "home_wp": 0.0,
         "away_wp": 1.0
       },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401872996/texans-jaguars",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401872996",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401872996"
+      },
       "critical_moments": [
         {
           "play_id": "4018729964024",
@@ -117,7 +151,13 @@
           "home_wp_before": 0.1153,
           "home_wp_after": 0.3059,
           "delta_wp": 0.1906,
-          "abs_delta_wp": 0.1906
+          "abs_delta_wp": 0.1906,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401872996",
+          "video_url": "https://www.youtube.com/results?search_query=NFL+Houston+Texans+vs+Jacksonville+Jaguars+Fisher+Stroud+interception+Q4+highlight",
+          "video_source": "YouTube NFL Highlights",
+          "video_title": "Video: HOU @ JAX (Q4)",
+          "has_direct_video": false,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+Houston+Texans+vs+Jacksonville+Jaguars+Fisher+Stroud+interception+Q4+highlight"
         },
         {
           "play_id": "4018729964431",
@@ -127,7 +167,13 @@
           "home_wp_before": 0.1458,
           "home_wp_after": 0.3259,
           "delta_wp": 0.1801,
-          "abs_delta_wp": 0.1801
+          "abs_delta_wp": 0.1801,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401872996",
+          "video_url": "https://www.youtube.com/results?search_query=NFL+Houston+Texans+vs+Jacksonville+Jaguars+Fisher+Stover+Q4+highlight",
+          "video_source": "YouTube NFL Highlights",
+          "video_title": "Video: HOU @ JAX (Q4)",
+          "has_direct_video": false,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+Houston+Texans+vs+Jacksonville+Jaguars+Fisher+Stover+Q4+highlight"
         },
         {
           "play_id": "4018729964465",
@@ -137,7 +183,13 @@
           "home_wp_before": 0.1744,
           "home_wp_after": 0.0,
           "delta_wp": -0.1744,
-          "abs_delta_wp": 0.1744
+          "abs_delta_wp": 0.1744,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401872996",
+          "video_url": "https://www.youtube.com/results?search_query=NFL+Houston+Texans+vs+Jacksonville+Jaguars+Fairbairn+Brinkman+field+goal+Q4+highlight",
+          "video_source": "YouTube NFL Highlights",
+          "video_title": "Video: HOU @ JAX (Q4)",
+          "has_direct_video": false,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+Houston+Texans+vs+Jacksonville+Jaguars+Fairbairn+Brinkman+field+goal+Q4+highlight"
         }
       ],
       "hinge_play": {
@@ -149,6 +201,12 @@
         "home_wp_after": 0.3059,
         "delta_wp": 0.1906,
         "abs_delta_wp": 0.1906,
+        "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401872996",
+        "video_url": "https://www.youtube.com/results?search_query=NFL+Houston+Texans+vs+Jacksonville+Jaguars+Fisher+Stroud+interception+Q4+highlight",
+        "video_source": "YouTube NFL Highlights",
+        "video_title": "Video: HOU @ JAX (Q4)",
+        "has_direct_video": false,
+        "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+Houston+Texans+vs+Jacksonville+Jaguars+Fisher+Stroud+interception+Q4+highlight",
         "exceeds_threshold": true
       }
     },
@@ -182,6 +240,11 @@
         "home_wp": 0.0,
         "away_wp": 1.0
       },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401872999/bears-falcons",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401872999",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401872999"
+      },
       "critical_moments": [
         {
           "play_id": "4018729991",
@@ -191,7 +254,13 @@
           "home_wp_before": 0.5,
           "home_wp_after": 0.3381,
           "delta_wp": -0.1619,
-          "abs_delta_wp": 0.1619
+          "abs_delta_wp": 0.1619,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401872999",
+          "video_url": "https://www.youtube.com/results?search_query=NFL+Chicago+Bears+vs+Atlanta+Falcons+Jugada+sin+descripci+highlight",
+          "video_source": "YouTube NFL Highlights",
+          "video_title": "Video: CHI @ ATL (Jugada Clave)",
+          "has_direct_video": false,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+Chicago+Bears+vs+Atlanta+Falcons+Jugada+sin+descripci+highlight"
         }
       ],
       "hinge_play": {
@@ -203,6 +272,12 @@
         "home_wp_after": 0.3381,
         "delta_wp": -0.1619,
         "abs_delta_wp": 0.1619,
+        "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401872999",
+        "video_url": "https://www.youtube.com/results?search_query=NFL+Chicago+Bears+vs+Atlanta+Falcons+Jugada+sin+descripci+highlight",
+        "video_source": "YouTube NFL Highlights",
+        "video_title": "Video: CHI @ ATL (Jugada Clave)",
+        "has_direct_video": false,
+        "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+Chicago+Bears+vs+Atlanta+Falcons+Jugada+sin+descripci+highlight",
         "exceeds_threshold": true
       }
     },
@@ -236,6 +311,11 @@
         "home_wp": 1.0,
         "away_wp": 0.0
       },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401872997/ravens-browns",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401872997",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401872997"
+      },
       "critical_moments": [
         {
           "play_id": "4018729973905",
@@ -245,7 +325,13 @@
           "home_wp_before": 0.5619,
           "home_wp_after": 0.8546,
           "delta_wp": 0.2927,
-          "abs_delta_wp": 0.2927
+          "abs_delta_wp": 0.2927,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401872997",
+          "video_url": "https://www.youtube.com/results?search_query=NFL+Baltimore+Ravens+vs+Cleveland+Browns+Watson+Jeudy+deep+pass+Q4+highlight",
+          "video_source": "YouTube NFL Highlights",
+          "video_title": "Video: BAL @ CLE (Q4)",
+          "has_direct_video": false,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+Baltimore+Ravens+vs+Cleveland+Browns+Watson+Jeudy+deep+pass+Q4+highlight"
         },
         {
           "play_id": "4018729973559",
@@ -255,7 +341,13 @@
           "home_wp_before": 0.5934,
           "home_wp_after": 0.4078,
           "delta_wp": -0.1856,
-          "abs_delta_wp": 0.1856
+          "abs_delta_wp": 0.1856,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401872997",
+          "video_url": "https://www.youtube.com/results?search_query=NFL+Baltimore+Ravens+vs+Cleveland+Browns+Szmyt+Sunahara+field+goal+Q4+highlight",
+          "video_source": "YouTube NFL Highlights",
+          "video_title": "Video: BAL @ CLE (Q4)",
+          "has_direct_video": false,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+Baltimore+Ravens+vs+Cleveland+Browns+Szmyt+Sunahara+field+goal+Q4+highlight"
         },
         {
           "play_id": "4018729972960",
@@ -265,7 +357,13 @@
           "home_wp_before": 0.1508,
           "home_wp_after": 0.2779,
           "delta_wp": 0.1271,
-          "abs_delta_wp": 0.1271
+          "abs_delta_wp": 0.1271,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401872997",
+          "video_url": "https://www.youtube.com/results?search_query=NFL+Baltimore+Ravens+vs+Cleveland+Browns+Henry+Campbell+fumble+Q4+highlight",
+          "video_source": "YouTube NFL Highlights",
+          "video_title": "Video: BAL @ CLE (Q4)",
+          "has_direct_video": false,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+Baltimore+Ravens+vs+Cleveland+Browns+Henry+Campbell+fumble+Q4+highlight"
         }
       ],
       "hinge_play": {
@@ -277,6 +375,12 @@
         "home_wp_after": 0.8546,
         "delta_wp": 0.2927,
         "abs_delta_wp": 0.2927,
+        "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401872997",
+        "video_url": "https://www.youtube.com/results?search_query=NFL+Baltimore+Ravens+vs+Cleveland+Browns+Watson+Jeudy+deep+pass+Q4+highlight",
+        "video_source": "YouTube NFL Highlights",
+        "video_title": "Video: BAL @ CLE (Q4)",
+        "has_direct_video": false,
+        "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+Baltimore+Ravens+vs+Cleveland+Browns+Watson+Jeudy+deep+pass+Q4+highlight",
         "exceeds_threshold": true
       }
     },
@@ -310,6 +414,11 @@
         "home_wp": 0.0,
         "away_wp": 1.0
       },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873003/titans-colts",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873003",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873003"
+      },
       "critical_moments": [
         {
           "play_id": "4018730032893",
@@ -319,7 +428,13 @@
           "home_wp_before": 0.8499,
           "home_wp_after": 0.3049,
           "delta_wp": -0.545,
-          "abs_delta_wp": 0.545
+          "abs_delta_wp": 0.545,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873003",
+          "video_url": "https://www.youtube.com/results?search_query=NFL+Tennessee+Titans+vs+Indianapolis+Colts+Jones+Downs+Q3+highlight",
+          "video_source": "YouTube NFL Highlights",
+          "video_title": "Video: TEN @ IND (Q3)",
+          "has_direct_video": false,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+Tennessee+Titans+vs+Indianapolis+Colts+Jones+Downs+Q3+highlight"
         },
         {
           "play_id": "4018730032918",
@@ -329,7 +444,13 @@
           "home_wp_before": 0.3049,
           "home_wp_after": 0.8324,
           "delta_wp": 0.5275,
-          "abs_delta_wp": 0.5275
+          "abs_delta_wp": 0.5275,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873003",
+          "video_url": "https://www.youtube.com/results?search_query=NFL+Tennessee+Titans+vs+Indianapolis+Colts+Jones+sack+Q3+highlight",
+          "video_source": "YouTube NFL Highlights",
+          "video_title": "Video: TEN @ IND (Q3)",
+          "has_direct_video": false,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+Tennessee+Titans+vs+Indianapolis+Colts+Jones+sack+Q3+highlight"
         },
         {
           "play_id": "4018730033284",
@@ -339,7 +460,13 @@
           "home_wp_before": 0.5589,
           "home_wp_after": 0.2611,
           "delta_wp": -0.2978,
-          "abs_delta_wp": 0.2978
+          "abs_delta_wp": 0.2978,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873003",
+          "video_url": "https://www.youtube.com/results?search_query=NFL+Tennessee+Titans+vs+Indianapolis+Colts+Sanchez+Chestnut+touchdown+Q4+highlight",
+          "video_source": "YouTube NFL Highlights",
+          "video_title": "Video: TEN @ IND (Q4)",
+          "has_direct_video": false,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+Tennessee+Titans+vs+Indianapolis+Colts+Sanchez+Chestnut+touchdown+Q4+highlight"
         }
       ],
       "hinge_play": {
@@ -351,6 +478,12 @@
         "home_wp_after": 0.3049,
         "delta_wp": -0.545,
         "abs_delta_wp": 0.545,
+        "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873003",
+        "video_url": "https://www.youtube.com/results?search_query=NFL+Tennessee+Titans+vs+Indianapolis+Colts+Jones+Downs+Q3+highlight",
+        "video_source": "YouTube NFL Highlights",
+        "video_title": "Video: TEN @ IND (Q3)",
+        "has_direct_video": false,
+        "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+Tennessee+Titans+vs+Indianapolis+Colts+Jones+Downs+Q3+highlight",
         "exceeds_threshold": true
       }
     },
@@ -384,6 +517,11 @@
         "home_wp": 1.0,
         "away_wp": 0.0
       },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873001/jets-patriots",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873001",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873001"
+      },
       "critical_moments": [
         {
           "play_id": "4018730011",
@@ -393,7 +531,13 @@
           "home_wp_before": 0.5,
           "home_wp_after": 0.7953,
           "delta_wp": 0.2953,
-          "abs_delta_wp": 0.2953
+          "abs_delta_wp": 0.2953,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873001",
+          "video_url": "https://www.youtube.com/results?search_query=NFL+New+York+Jets+vs+New+England+Patriots+Jugada+sin+descripci+highlight",
+          "video_source": "YouTube NFL Highlights",
+          "video_title": "Video: NYJ @ NE (Jugada Clave)",
+          "has_direct_video": false,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+New+York+Jets+vs+New+England+Patriots+Jugada+sin+descripci+highlight"
         }
       ],
       "hinge_play": {
@@ -405,6 +549,12 @@
         "home_wp_after": 0.7953,
         "delta_wp": 0.2953,
         "abs_delta_wp": 0.2953,
+        "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873001",
+        "video_url": "https://www.youtube.com/results?search_query=NFL+New+York+Jets+vs+New+England+Patriots+Jugada+sin+descripci+highlight",
+        "video_source": "YouTube NFL Highlights",
+        "video_title": "Video: NYJ @ NE (Jugada Clave)",
+        "has_direct_video": false,
+        "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+New+York+Jets+vs+New+England+Patriots+Jugada+sin+descripci+highlight",
         "exceeds_threshold": true
       }
     },
@@ -438,6 +588,11 @@
         "home_wp": 0.0,
         "away_wp": 1.0
       },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873000/saints-giants",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873000",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873000"
+      },
       "critical_moments": [
         {
           "play_id": "4018730005010",
@@ -447,7 +602,13 @@
           "home_wp_before": 0.1261,
           "home_wp_after": 0.3393,
           "delta_wp": 0.2132,
-          "abs_delta_wp": 0.2132
+          "abs_delta_wp": 0.2132,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873000",
+          "video_url": "https://www.youtube.com/results?search_query=NFL+New+Orleans+Saints+vs+New+York+Giants+McCarthy+Nabers+Q4+highlight",
+          "video_source": "YouTube NFL Highlights",
+          "video_title": "Video: NO @ NYG (Q4)",
+          "has_direct_video": false,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+New+Orleans+Saints+vs+New+York+Giants+McCarthy+Nabers+Q4+highlight"
         },
         {
           "play_id": "4018730005035",
@@ -457,7 +618,13 @@
           "home_wp_before": 0.3393,
           "home_wp_after": 0.132,
           "delta_wp": -0.2073,
-          "abs_delta_wp": 0.2073
+          "abs_delta_wp": 0.2073,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873000",
+          "video_url": "https://www.youtube.com/results?search_query=NFL+New+Orleans+Saints+vs+New+York+Giants+McCarthy+Q4+highlight",
+          "video_source": "YouTube NFL Highlights",
+          "video_title": "Video: NO @ NYG (Q4)",
+          "has_direct_video": false,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+New+Orleans+Saints+vs+New+York+Giants+McCarthy+Q4+highlight"
         },
         {
           "play_id": "4018730002138",
@@ -467,7 +634,13 @@
           "home_wp_before": 0.5947,
           "home_wp_after": 0.469,
           "delta_wp": -0.1257,
-          "abs_delta_wp": 0.1257
+          "abs_delta_wp": 0.1257,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873000",
+          "video_url": "https://www.youtube.com/results?search_query=NFL+New+Orleans+Saints+vs+New+York+Giants+Shough+Lance+touchdown+Q2+highlight",
+          "video_source": "YouTube NFL Highlights",
+          "video_title": "Video: NO @ NYG (Q2)",
+          "has_direct_video": false,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+New+Orleans+Saints+vs+New+York+Giants+Shough+Lance+touchdown+Q2+highlight"
         }
       ],
       "hinge_play": {
@@ -479,6 +652,12 @@
         "home_wp_after": 0.3393,
         "delta_wp": 0.2132,
         "abs_delta_wp": 0.2132,
+        "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873000",
+        "video_url": "https://www.youtube.com/results?search_query=NFL+New+Orleans+Saints+vs+New+York+Giants+McCarthy+Nabers+Q4+highlight",
+        "video_source": "YouTube NFL Highlights",
+        "video_title": "Video: NO @ NYG (Q4)",
+        "has_direct_video": false,
+        "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+New+Orleans+Saints+vs+New+York+Giants+McCarthy+Nabers+Q4+highlight",
         "exceeds_threshold": true
       }
     },
@@ -512,6 +691,11 @@
         "home_wp": 0.0,
         "away_wp": 1.0
       },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401872998/panthers-eagles",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401872998",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401872998"
+      },
       "critical_moments": [],
       "hinge_play": {
         "play_id": "4018729981794",
@@ -522,6 +706,12 @@
         "home_wp_after": 0.2357,
         "delta_wp": -0.104,
         "abs_delta_wp": 0.104,
+        "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401872998",
+        "video_url": "https://www.youtube.com/results?search_query=NFL+Carolina+Panthers+vs+Philadelphia+Eagles+Young+McMillan+Q2+highlight",
+        "video_source": "YouTube NFL Highlights",
+        "video_title": "Video: CAR @ PHI (Q2)",
+        "has_direct_video": false,
+        "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+Carolina+Panthers+vs+Philadelphia+Eagles+Young+McMillan+Q2+highlight",
         "exceeds_threshold": false
       }
     },
@@ -555,6 +745,11 @@
         "home_wp": 0.0,
         "away_wp": 1.0
       },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873002/steelers-buccaneers",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873002",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873002"
+      },
       "critical_moments": [
         {
           "play_id": "4018730024008",
@@ -564,7 +759,13 @@
           "home_wp_before": 0.5286,
           "home_wp_after": 0.1215,
           "delta_wp": -0.4071,
-          "abs_delta_wp": 0.4071
+          "abs_delta_wp": 0.4071,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873002",
+          "video_url": "https://www.youtube.com/results?search_query=NFL+Pittsburgh+Steelers+vs+Tampa+Bay+Buccaneers+Daniels+Egbuka+interception+Q4+highlight",
+          "video_source": "YouTube NFL Highlights",
+          "video_title": "Video: PIT @ TB (Q4)",
+          "has_direct_video": false,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+Pittsburgh+Steelers+vs+Tampa+Bay+Buccaneers+Daniels+Egbuka+interception+Q4+highlight"
         },
         {
           "play_id": "4018730024264",
@@ -574,7 +775,13 @@
           "home_wp_before": 0.2514,
           "home_wp_after": 0.5453,
           "delta_wp": 0.2939,
-          "abs_delta_wp": 0.2939
+          "abs_delta_wp": 0.2939,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873002",
+          "video_url": "https://www.youtube.com/results?search_query=NFL+Pittsburgh+Steelers+vs+Tampa+Bay+Buccaneers+McLaughlin+Deckers+field+goal+Q4+highlight",
+          "video_source": "YouTube NFL Highlights",
+          "video_title": "Video: PIT @ TB (Q4)",
+          "has_direct_video": false,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+Pittsburgh+Steelers+vs+Tampa+Bay+Buccaneers+McLaughlin+Deckers+field+goal+Q4+highlight"
         },
         {
           "play_id": "4018730023905",
@@ -584,7 +791,13 @@
           "home_wp_before": 0.5218,
           "home_wp_after": 0.7502,
           "delta_wp": 0.2284,
-          "abs_delta_wp": 0.2284
+          "abs_delta_wp": 0.2284,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873002",
+          "video_url": "https://www.youtube.com/results?search_query=NFL+Pittsburgh+Steelers+vs+Tampa+Bay+Buccaneers+Rodgers+sack+Q4+highlight",
+          "video_source": "YouTube NFL Highlights",
+          "video_title": "Video: PIT @ TB (Q4)",
+          "has_direct_video": false,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+Pittsburgh+Steelers+vs+Tampa+Bay+Buccaneers+Rodgers+sack+Q4+highlight"
         }
       ],
       "hinge_play": {
@@ -596,6 +809,12 @@
         "home_wp_after": 0.1215,
         "delta_wp": -0.4071,
         "abs_delta_wp": 0.4071,
+        "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873002",
+        "video_url": "https://www.youtube.com/results?search_query=NFL+Pittsburgh+Steelers+vs+Tampa+Bay+Buccaneers+Daniels+Egbuka+interception+Q4+highlight",
+        "video_source": "YouTube NFL Highlights",
+        "video_title": "Video: PIT @ TB (Q4)",
+        "has_direct_video": false,
+        "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+Pittsburgh+Steelers+vs+Tampa+Bay+Buccaneers+Daniels+Egbuka+interception+Q4+highlight",
         "exceeds_threshold": true
       }
     },
@@ -629,6 +848,11 @@
         "home_wp": 0.0,
         "away_wp": 1.0
       },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873004/cardinals-rams",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873004",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873004"
+      },
       "critical_moments": [
         {
           "play_id": "4018730044115",
@@ -638,7 +862,13 @@
           "home_wp_before": 0.5013,
           "home_wp_after": 0.0,
           "delta_wp": -0.5013,
-          "abs_delta_wp": 0.5013
+          "abs_delta_wp": 0.5013,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873004",
+          "video_url": "https://www.youtube.com/results?search_query=NFL+Arizona+Cardinals+vs+Los+Angeles+Rams+Ryland+Kreiter+field+goal+Q4+highlight",
+          "video_source": "YouTube NFL Highlights",
+          "video_title": "Video: ARI @ LAR (Q4)",
+          "has_direct_video": false,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+Arizona+Cardinals+vs+Los+Angeles+Rams+Ryland+Kreiter+field+goal+Q4+highlight"
         },
         {
           "play_id": "4018730043996",
@@ -648,17 +878,29 @@
           "home_wp_before": 0.7651,
           "home_wp_after": 0.3891,
           "delta_wp": -0.376,
-          "abs_delta_wp": 0.376
+          "abs_delta_wp": 0.376,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873004",
+          "video_url": "https://www.youtube.com/results?search_query=NFL+Arizona+Cardinals+vs+Los+Angeles+Rams+Brissett+Brooks+deep+pass+Q4+highlight",
+          "video_source": "YouTube NFL Highlights",
+          "video_title": "Video: ARI @ LAR (Q4)",
+          "has_direct_video": false,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+Arizona+Cardinals+vs+Los+Angeles+Rams+Brissett+Brooks+deep+pass+Q4+highlight"
         },
         {
-          "play_id": "4018730041",
-          "qtr": 0,
-          "clock": "0:00",
-          "description": "Jugada sin descripción",
-          "home_wp_before": 0.5,
-          "home_wp_after": 0.8734,
-          "delta_wp": 0.3734,
-          "abs_delta_wp": 0.3734
+          "play_id": "4018730043759",
+          "qtr": 4,
+          "clock": "2:01",
+          "description": "(Shotgun) M.Stafford pass short middle to P.Nacua to ARZ 34 for 43 yards (G.Williams) [D.Robinson].",
+          "home_wp_before": 0.1432,
+          "home_wp_after": 0.3942,
+          "delta_wp": 0.251,
+          "abs_delta_wp": 0.251,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873004",
+          "video_url": "https://www.youtube.com/results?search_query=NFL+Arizona+Cardinals+vs+Los+Angeles+Rams+Stafford+Nacua+Q4+highlight",
+          "video_source": "YouTube NFL Highlights",
+          "video_title": "Video: ARI @ LAR (Q4)",
+          "has_direct_video": false,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+Arizona+Cardinals+vs+Los+Angeles+Rams+Stafford+Nacua+Q4+highlight"
         }
       ],
       "hinge_play": {
@@ -670,6 +912,12 @@
         "home_wp_after": 0.0,
         "delta_wp": -0.5013,
         "abs_delta_wp": 0.5013,
+        "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873004",
+        "video_url": "https://www.youtube.com/results?search_query=NFL+Arizona+Cardinals+vs+Los+Angeles+Rams+Ryland+Kreiter+field+goal+Q4+highlight",
+        "video_source": "YouTube NFL Highlights",
+        "video_title": "Video: ARI @ LAR (Q4)",
+        "has_direct_video": false,
+        "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+Arizona+Cardinals+vs+Los+Angeles+Rams+Ryland+Kreiter+field+goal+Q4+highlight",
         "exceeds_threshold": true
       }
     },
@@ -703,6 +951,11 @@
         "home_wp": 1.0,
         "away_wp": 0.0
       },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873006/chargers-chiefs",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873006",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873006"
+      },
       "critical_moments": [
         {
           "play_id": "4018730061",
@@ -712,7 +965,13 @@
           "home_wp_before": 0.5,
           "home_wp_after": 0.7452,
           "delta_wp": 0.2452,
-          "abs_delta_wp": 0.2452
+          "abs_delta_wp": 0.2452,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873006",
+          "video_url": "https://www.youtube.com/results?search_query=NFL+Los+Angeles+Chargers+vs+Kansas+City+Chiefs+Jugada+sin+descripci+highlight",
+          "video_source": "YouTube NFL Highlights",
+          "video_title": "Video: LAC @ KC (Jugada Clave)",
+          "has_direct_video": false,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+Los+Angeles+Chargers+vs+Kansas+City+Chiefs+Jugada+sin+descripci+highlight"
         }
       ],
       "hinge_play": {
@@ -724,6 +983,12 @@
         "home_wp_after": 0.7452,
         "delta_wp": 0.2452,
         "abs_delta_wp": 0.2452,
+        "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873006",
+        "video_url": "https://www.youtube.com/results?search_query=NFL+Los+Angeles+Chargers+vs+Kansas+City+Chiefs+Jugada+sin+descripci+highlight",
+        "video_source": "YouTube NFL Highlights",
+        "video_title": "Video: LAC @ KC (Jugada Clave)",
+        "has_direct_video": false,
+        "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+Los+Angeles+Chargers+vs+Kansas+City+Chiefs+Jugada+sin+descripci+highlight",
         "exceeds_threshold": true
       }
     },
@@ -757,17 +1022,12 @@
         "home_wp": 0.0,
         "away_wp": 1.0
       },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873005/bills-raiders",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873005",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873005"
+      },
       "critical_moments": [
-        {
-          "play_id": "4018730051",
-          "qtr": 0,
-          "clock": "0:00",
-          "description": "Jugada sin descripción",
-          "home_wp_before": 0.5,
-          "home_wp_after": 0.2789,
-          "delta_wp": -0.2211,
-          "abs_delta_wp": 0.2211
-        },
         {
           "play_id": "4018730053629",
           "qtr": 4,
@@ -776,18 +1036,30 @@
           "home_wp_before": 0.2231,
           "home_wp_after": 0.3857,
           "delta_wp": 0.1626,
-          "abs_delta_wp": 0.1626
+          "abs_delta_wp": 0.1626,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873005",
+          "video_url": "https://www.youtube.com/results?search_query=NFL+Buffalo+Bills+vs+Las+Vegas+Raiders+Cousins+Tucker+touchdown+Q4+highlight",
+          "video_source": "YouTube NFL Highlights",
+          "video_title": "Video: BUF @ LV (Q4)",
+          "has_direct_video": false,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+Buffalo+Bills+vs+Las+Vegas+Raiders+Cousins+Tucker+touchdown+Q4+highlight"
         }
       ],
       "hinge_play": {
-        "play_id": "4018730051",
-        "qtr": 0,
-        "clock": "0:00",
-        "description": "Jugada sin descripción",
-        "home_wp_before": 0.5,
-        "home_wp_after": 0.2789,
-        "delta_wp": -0.2211,
-        "abs_delta_wp": 0.2211,
+        "play_id": "4018730053629",
+        "qtr": 4,
+        "clock": "8:07",
+        "description": "(Shotgun) K.Cousins pass short right to T.Tucker for 11 yards, TOUCHDOWN. M.Gay extra point is GOOD, Center-A.Ward, Holder-A.Cole.",
+        "home_wp_before": 0.2231,
+        "home_wp_after": 0.3857,
+        "delta_wp": 0.1626,
+        "abs_delta_wp": 0.1626,
+        "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873005",
+        "video_url": "https://www.youtube.com/results?search_query=NFL+Buffalo+Bills+vs+Las+Vegas+Raiders+Cousins+Tucker+touchdown+Q4+highlight",
+        "video_source": "YouTube NFL Highlights",
+        "video_title": "Video: BUF @ LV (Q4)",
+        "has_direct_video": false,
+        "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+Buffalo+Bills+vs+Las+Vegas+Raiders+Cousins+Tucker+touchdown+Q4+highlight",
         "exceeds_threshold": true
       }
     },
@@ -821,6 +1093,11 @@
         "home_wp": 1.0,
         "away_wp": 0.0
       },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873007/cowboys-packers",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873007",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873007"
+      },
       "critical_moments": [],
       "hinge_play": {
         "play_id": "4018730071127",
@@ -831,6 +1108,12 @@
         "home_wp_after": 0.6853,
         "delta_wp": 0.0904,
         "abs_delta_wp": 0.0904,
+        "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873007",
+        "video_url": "https://www.youtube.com/results?search_query=NFL+Dallas+Cowboys+vs+Green+Bay+Packers+Prescott+Lamb+interception+Q2+highlight",
+        "video_source": "YouTube NFL Highlights",
+        "video_title": "Video: DAL @ GB (Q2)",
+        "has_direct_video": false,
+        "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+Dallas+Cowboys+vs+Green+Bay+Packers+Prescott+Lamb+interception+Q2+highlight",
         "exceeds_threshold": false
       }
     },
@@ -864,17 +1147,12 @@
         "home_wp": 1.0,
         "away_wp": 0.0
       },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873008/commanders-49ers",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873008",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873008"
+      },
       "critical_moments": [
-        {
-          "play_id": "4018730081",
-          "qtr": 0,
-          "clock": "0:00",
-          "description": "Jugada sin descripción",
-          "home_wp_before": 0.5,
-          "home_wp_after": 0.8701,
-          "delta_wp": 0.3701,
-          "abs_delta_wp": 0.3701
-        },
         {
           "play_id": "4018730083854",
           "qtr": 4,
@@ -883,7 +1161,13 @@
           "home_wp_before": 0.7918,
           "home_wp_after": 0.9423,
           "delta_wp": 0.1505,
-          "abs_delta_wp": 0.1505
+          "abs_delta_wp": 0.1505,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873008",
+          "video_url": "https://www.youtube.com/results?search_query=NFL+Washington+Commanders+vs+San+Francisco+49ers+Daniels+Burks+Q4+highlight",
+          "video_source": "YouTube NFL Highlights",
+          "video_title": "Video: WSH @ SF (Q4)",
+          "has_direct_video": false,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+Washington+Commanders+vs+San+Francisco+49ers+Daniels+Burks+Q4+highlight"
         },
         {
           "play_id": "4018730083739",
@@ -893,18 +1177,46 @@
           "home_wp_before": 0.8987,
           "home_wp_after": 0.7516,
           "delta_wp": -0.1471,
-          "abs_delta_wp": 0.1471
+          "abs_delta_wp": 0.1471,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873008",
+          "video_url": "https://www.youtube.com/results?search_query=NFL+Washington+Commanders+vs+San+Francisco+49ers+Daniels+sack+Q4+highlight",
+          "video_source": "YouTube NFL Highlights",
+          "video_title": "Video: WSH @ SF (Q4)",
+          "has_direct_video": false,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+Washington+Commanders+vs+San+Francisco+49ers+Daniels+sack+Q4+highlight"
+        },
+        {
+          "play_id": "4018730084158",
+          "qtr": 4,
+          "clock": "0:21",
+          "description": "(Shotgun) J.Daniels pass incomplete short right [R.Height].PENALTY on WAS-J.Daniels, Intentional Grounding, 12 yards, enforced at SF 28.  10-second runoff.",
+          "home_wp_before": 0.8366,
+          "home_wp_after": 0.9728,
+          "delta_wp": 0.1362,
+          "abs_delta_wp": 0.1362,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873008",
+          "video_url": "https://www.youtube.com/results?search_query=NFL+Washington+Commanders+vs+San+Francisco+49ers+Daniels+Height+Q4+highlight",
+          "video_source": "YouTube NFL Highlights",
+          "video_title": "Video: WSH @ SF (Q4)",
+          "has_direct_video": false,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+Washington+Commanders+vs+San+Francisco+49ers+Daniels+Height+Q4+highlight"
         }
       ],
       "hinge_play": {
-        "play_id": "4018730081",
-        "qtr": 0,
-        "clock": "0:00",
-        "description": "Jugada sin descripción",
-        "home_wp_before": 0.5,
-        "home_wp_after": 0.8701,
-        "delta_wp": 0.3701,
-        "abs_delta_wp": 0.3701,
+        "play_id": "4018730083854",
+        "qtr": 4,
+        "clock": "2:00",
+        "description": "(Shotgun) J.Daniels pass incomplete deep right to T.Burks (M.Mustapha).",
+        "home_wp_before": 0.7918,
+        "home_wp_after": 0.9423,
+        "delta_wp": 0.1505,
+        "abs_delta_wp": 0.1505,
+        "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873008",
+        "video_url": "https://www.youtube.com/results?search_query=NFL+Washington+Commanders+vs+San+Francisco+49ers+Daniels+Burks+Q4+highlight",
+        "video_source": "YouTube NFL Highlights",
+        "video_title": "Video: WSH @ SF (Q4)",
+        "has_direct_video": false,
+        "youtube_search_url": "https://www.youtube.com/results?search_query=NFL+Washington+Commanders+vs+San+Francisco+49ers+Daniels+Burks+Q4+highlight",
         "exceeds_threshold": true
       }
     },
@@ -937,6 +1249,11 @@
       "win_probability": {
         "home_wp": 0.5,
         "away_wp": 0.5
+      },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873010/patriots-bears",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873010",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873010"
       },
       "critical_moments": [],
       "hinge_play": null
@@ -971,6 +1288,11 @@
         "home_wp": 0.5,
         "away_wp": 0.5
       },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873011/steelers-saints",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873011",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873011"
+      },
       "critical_moments": [],
       "hinge_play": null
     },
@@ -1003,6 +1325,11 @@
       "win_probability": {
         "home_wp": 0.5,
         "away_wp": 0.5
+      },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873017/49ers-falcons",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873017",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873017"
       },
       "critical_moments": [],
       "hinge_play": null
@@ -1037,6 +1364,11 @@
         "home_wp": 0.5,
         "away_wp": 0.5
       },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873013/browns-titans",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873013",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873013"
+      },
       "critical_moments": [],
       "hinge_play": null
     },
@@ -1069,6 +1401,11 @@
       "win_probability": {
         "home_wp": 0.5,
         "away_wp": 0.5
+      },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873014/colts-vikings",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873014",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873014"
       },
       "critical_moments": [],
       "hinge_play": null
@@ -1103,6 +1440,11 @@
         "home_wp": 0.5,
         "away_wp": 0.5
       },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873015/dolphins-jets",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873015",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873015"
+      },
       "critical_moments": [],
       "hinge_play": null
     },
@@ -1135,6 +1477,11 @@
       "win_probability": {
         "home_wp": 0.5,
         "away_wp": 0.5
+      },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873018/buccaneers-panthers",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873018",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873018"
       },
       "critical_moments": [],
       "hinge_play": null
@@ -1169,6 +1516,11 @@
         "home_wp": 0.5,
         "away_wp": 0.5
       },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873012/bengals-ravens",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873012",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873012"
+      },
       "critical_moments": [],
       "hinge_play": null
     },
@@ -1201,6 +1553,11 @@
       "win_probability": {
         "home_wp": 0.5,
         "away_wp": 0.5
+      },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873016/giants-texans",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873016",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873016"
       },
       "critical_moments": [],
       "hinge_play": null
@@ -1235,6 +1592,11 @@
         "home_wp": 0.5,
         "away_wp": 0.5
       },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873019/broncos-cardinals",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873019",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873019"
+      },
       "critical_moments": [],
       "hinge_play": null
     },
@@ -1267,6 +1629,11 @@
       "win_probability": {
         "home_wp": 0.5,
         "away_wp": 0.5
+      },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873020/packers-lions",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873020",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873020"
       },
       "critical_moments": [],
       "hinge_play": null
@@ -1301,6 +1668,11 @@
         "home_wp": 0.5,
         "away_wp": 0.5
       },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873021/rams-raiders",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873021",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873021"
+      },
       "critical_moments": [],
       "hinge_play": null
     },
@@ -1334,6 +1706,11 @@
         "home_wp": 0.5,
         "away_wp": 0.5
       },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873022/chiefs-seahawks",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873022",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873022"
+      },
       "critical_moments": [],
       "hinge_play": null
     },
@@ -1366,6 +1743,11 @@
       "win_probability": {
         "home_wp": 0.5,
         "away_wp": 0.5
+      },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873009/cowboys-eagles",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873009",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873009"
       },
       "critical_moments": [],
       "hinge_play": null
