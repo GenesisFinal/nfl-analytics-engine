@@ -83,6 +83,25 @@
       0%, 100% { opacity: 1; transform: scale(1); }
       50% { opacity: 0.45; transform: scale(0.92); }
     }
+    .method-card {
+      scroll-margin-top: 6.5rem;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+    }
+    .method-card:target,
+    .method-card.method-highlight {
+      border-color: #10B981 !important;
+      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.35), 0 12px 30px -6px rgba(16, 185, 129, 0.22);
+    }
+    .metric-ref-link {
+      text-decoration: underline;
+      text-decoration-style: dotted;
+      text-underline-offset: 3px;
+      transition: color 0.15s ease, text-decoration-color 0.15s ease;
+    }
+    .metric-ref-link:hover {
+      color: #34D399;
+      text-decoration-style: solid;
+    }
   </style>
 </head>
 <body class="min-h-screen antialiased selection:bg-emerald-500/30 selection:text-emerald-200">
@@ -108,7 +127,7 @@
               </span>
             </div>
             <p class="text-xs text-slate-400">
-              Valoración Actuarial Sin Minutos Basura (nflverse) - Win Probability en Vivo (ESPN) - Auditoría Crítica IA
+              Valoración Actuarial <a href="#metodo-epa-comp" class="metric-ref-link text-slate-300">Sin Minutos Basura</a> (nflverse) - <a href="#metodo-wp" class="metric-ref-link text-slate-300">Win Probability</a> en Vivo (ESPN) - Auditoría Crítica IA
             </p>
           </div>
         </div>
@@ -163,7 +182,7 @@
         <span class="text-slate-700">/</span>
         <a href="#valuation-section" class="rounded-md px-2.5 py-1 transition hover:bg-slate-800/70 hover:text-white">Ranking Score de Impacto (0-100)</a>
         <span class="text-slate-700">/</span>
-        <a href="#glossary-methodology-section" class="rounded-md bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-1 text-emerald-300 transition hover:bg-emerald-500/20 hover:text-white">Guía de Métricas y Ecuaciones</a>
+        <a href="#glossary-methodology-section" class="rounded-md bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-1 text-emerald-300 transition hover:bg-emerald-500/20 hover:text-white">Sección de Metodología</a>
         <span class="text-slate-700">/</span>
         <a href="#critiques-section" class="rounded-md px-2.5 py-1 transition hover:bg-slate-800/70 hover:text-white">Crónicas Analíticas</a>
       </nav>
@@ -192,36 +211,36 @@
         <!-- KPI 1: MVP Real -->
         <article class="relative overflow-hidden rounded-xl border border-emerald-500/30 bg-[#111827] p-4 shadow-lg">
           <div class="flex items-center justify-between">
-            <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-400">MVP Real (Tiempo Competitivo)</span>
-            <span class="rounded bg-emerald-500/15 px-2 py-0.5 font-mono-num text-[11px] font-bold text-emerald-300" id="kpi-mvp-score">-- / 100</span>
+            <a href="#metodo-epa-comp" class="metric-ref-link text-[11px] font-bold uppercase tracking-wider text-emerald-400" title="Ver metodología de Tiempo Competitivo y MVP Real">MVP Real (Tiempo Competitivo)</a>
+            <a href="#metodo-score-impacto" class="rounded bg-emerald-500/15 px-2 py-0.5 font-mono-num text-[11px] font-bold text-emerald-300 transition hover:bg-emerald-500/30" id="kpi-mvp-score" title="Ver metodología de Score de Impacto (0-100)">-- / 100</a>
           </div>
           <div class="mt-2.5 flex items-baseline justify-between gap-2">
             <h2 id="kpi-mvp-name" class="truncate text-lg font-extrabold text-white">Cargando...</h2>
             <span id="kpi-mvp-meta" class="shrink-0 font-mono-num text-xs font-semibold text-slate-400">--</span>
           </div>
           <p id="kpi-mvp-metrics" class="mt-2 font-mono-num text-xs text-slate-300">
-            EPA/jugada: -- | WPA: --
+            <a href="#metodo-epa" class="metric-ref-link">EPA/jugada</a>: -- | <a href="#metodo-wpa" class="metric-ref-link">WPA</a>: --
           </p>
           <div class="mt-2.5 text-[11px] text-slate-400">
-            Excluye Q4 con WP &lt; 5% o WP &gt; 95%
+            Excluye Q4 con <a href="#metodo-epa-comp" class="metric-ref-link text-slate-300">WP &lt; 5% o WP &gt; 95%</a>
           </div>
         </article>
 
         <!-- KPI 2: Estadístico Inflado -->
         <article class="relative overflow-hidden rounded-xl border border-amber-500/30 bg-[#111827] p-4 shadow-lg">
           <div class="flex items-center justify-between">
-            <span class="text-[11px] font-bold uppercase tracking-wider text-amber-400">Estadístico Inflado (Garbage Time)</span>
-            <span class="rounded bg-amber-500/15 px-2 py-0.5 font-mono-num text-[11px] font-bold text-amber-300" id="kpi-inflated-badge">Índice --</span>
+            <a href="#metodo-inflacion" class="metric-ref-link text-[11px] font-bold uppercase tracking-wider text-amber-400" title="Ver metodología de Índice de Inflación Estadística">Estadístico Inflado (Garbage Time)</a>
+            <a href="#metodo-inflacion" class="rounded bg-amber-500/15 px-2 py-0.5 font-mono-num text-[11px] font-bold text-amber-300 transition hover:bg-amber-500/30" id="kpi-inflated-badge" title="Ver metodología de Índice de Inflación">Índice --</a>
           </div>
           <div class="mt-2.5 flex items-baseline justify-between gap-2">
             <h2 id="kpi-inflated-name" class="truncate text-lg font-extrabold text-white">Cargando...</h2>
             <span id="kpi-inflated-meta" class="shrink-0 font-mono-num text-xs font-semibold text-slate-400">--</span>
           </div>
           <p id="kpi-inflated-metrics" class="mt-2 font-mono-num text-xs text-amber-200/90">
-            Yardas Basura: -- | ΔEPA: --
+            <a href="#metodo-epa-comp" class="metric-ref-link">Yardas Basura</a>: -- | <a href="#metodo-inflacion" class="metric-ref-link">&Delta;EPA</a>: --
           </p>
           <div class="mt-2.5 text-[11px] text-slate-400">
-            Mayor brecha entre volumen bruto y EPA competitivo
+            Mayor brecha entre volumen bruto y <a href="#metodo-epa-comp" class="metric-ref-link text-slate-300">EPA competitivo</a>
           </div>
         </article>
 
@@ -236,7 +255,7 @@
             <span id="kpi-games-status-breakdown" class="font-mono-num text-xs text-slate-400">--</span>
           </div>
           <p id="kpi-games-critical-total" class="mt-2 font-mono-num text-xs text-slate-300">
-            Momentos críticos (|ΔWP| &ge; 12%): --
+            <a href="#metodo-jugada-bisagra" class="metric-ref-link">Momentos críticos (|&Delta;WP| &ge; 12%)</a>: --
           </p>
           <div class="mt-2.5 text-[11px] text-slate-400">
             Ingesta estática libre de CORS desde public/data/
@@ -246,8 +265,8 @@
         <!-- KPI 4: Jugada Bisagra Principal -->
         <article class="relative overflow-hidden rounded-xl border border-rose-500/30 bg-[#111827] p-4 shadow-lg">
           <div class="flex items-center justify-between">
-            <span class="text-[11px] font-bold uppercase tracking-wider text-rose-400">Jugada Bisagra Principal</span>
-            <span id="kpi-hinge-delta" class="rounded bg-rose-500/15 px-2 py-0.5 font-mono-num text-[11px] font-bold text-rose-300">ΔWP --</span>
+            <a href="#metodo-jugada-bisagra" class="metric-ref-link text-[11px] font-bold uppercase tracking-wider text-rose-400" title="Ver metodología de Jugada Bisagra">Jugada Bisagra Principal</a>
+            <a href="#metodo-jugada-bisagra" id="kpi-hinge-delta" class="rounded bg-rose-500/15 px-2 py-0.5 font-mono-num text-[11px] font-bold text-rose-300 transition hover:bg-rose-500/30" title="Ver metodología de variación de Win Probability">&Delta;WP --</a>
           </div>
           <div class="mt-2.5 flex items-baseline justify-between gap-2">
             <h2 id="kpi-hinge-matchup" class="truncate text-base font-extrabold text-white">Sin alertas</h2>
@@ -269,11 +288,11 @@
           <div class="flex items-center gap-2">
             <span class="h-2.5 w-2.5 rounded-full bg-emerald-400 pulse-dot"></span>
             <h2 id="live-games-heading" class="text-lg sm:text-xl font-bold tracking-tight text-white">
-              Marcadores en Vivo, Win Probability y Jugadas Bisagra
+              Marcadores en Vivo, <a href="#metodo-wp" class="metric-ref-link text-cyan-300">Win Probability</a> y <a href="#metodo-jugada-bisagra" class="metric-ref-link text-rose-300">Jugadas Bisagra</a>
             </h2>
           </div>
           <p class="mt-1 text-xs text-slate-400">
-            Extracción de <code class="font-mono-num text-slate-300">winprobability</code> vía ESPN Summary API. Se destacan las 3 jugadas con mayor variación absoluta (<code class="font-mono-num text-amber-300">|delta_wp| &ge; 0.12</code>).
+            Extracción de <a href="#metodo-wp" class="metric-ref-link font-mono-num text-slate-300">winprobability</a> vía ESPN Summary API. Se destacan las 3 jugadas con mayor variación absoluta (<a href="#metodo-jugada-bisagra" class="metric-ref-link font-mono-num text-amber-300">|delta_wp| &ge; 0.12</a>).
           </p>
         </div>
 
@@ -311,14 +330,14 @@
         <div>
           <div class="flex flex-wrap items-center gap-2">
             <h2 id="valuation-heading" class="text-lg sm:text-xl font-bold tracking-tight text-white">
-              Modelo Matemático de Valoración Objetiva (Escala 0 a 100)
+              Modelo Matemático de Valoración Objetiva (<a href="#metodo-score-impacto" class="metric-ref-link text-emerald-400">Escala 0 a 100</a>)
             </h2>
-            <span class="rounded border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 font-mono-num text-[11px] font-semibold text-emerald-400">
+            <a href="#metodo-epa-comp" class="rounded border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 font-mono-num text-[11px] font-semibold text-emerald-400 transition hover:bg-emerald-500/25">
               FILTRO GARBAGE TIME ACTIVO
-            </span>
+            </a>
           </div>
           <p class="mt-1 text-xs text-slate-400">
-            Z-Score posicional normalizado sin minutos basura (<code class="font-mono-num text-slate-300">Q4</code> con <code class="font-mono-num text-slate-300">WP &lt; 5%</code> o <code class="font-mono-num text-slate-300">WP &gt; 95%</code>). Haz clic en cualquier encabezado para ordenar.
+            <a href="#metodo-score-impacto" class="metric-ref-link text-slate-300">Z-Score posicional</a> normalizado sin <a href="#metodo-epa-comp" class="metric-ref-link text-slate-300">minutos basura</a> (<code class="font-mono-num text-slate-300">Q4</code> con <a href="#metodo-wp" class="metric-ref-link font-mono-num text-slate-300">WP &lt; 5%</a> o <a href="#metodo-wp" class="metric-ref-link font-mono-num text-slate-300">WP &gt; 95%</a>). Haz clic en cualquier encabezado para ordenar o en <span class="font-mono-num text-emerald-400">[?]</span> para ir a la metodología.
           </p>
         </div>
 
@@ -366,14 +385,14 @@
           <span id="rankings-active-pos-label" class="ml-1 font-mono-num text-cyan-400">(Posición: Todos)</span>
         </div>
         <div class="flex flex-wrap items-center gap-3">
-          <span class="inline-flex items-center gap-1.5">
+          <a href="#metodo-score-impacto" class="inline-flex items-center gap-1.5 transition hover:text-emerald-300">
             <span class="h-2.5 w-2.5 rounded-sm bg-emerald-400"></span>
-            <span>MVP Real / Eficiencia Élite</span>
-          </span>
-          <span class="inline-flex items-center gap-1.5">
+            <span class="metric-ref-link">MVP Real / Eficiencia Élite</span>
+          </a>
+          <a href="#metodo-inflacion" class="inline-flex items-center gap-1.5 transition hover:text-amber-300">
             <span class="h-2.5 w-2.5 rounded-sm bg-amber-400"></span>
-            <span>Inflación en Minutos Basura</span>
-          </span>
+            <span class="metric-ref-link">Inflación en Minutos Basura</span>
+          </a>
         </div>
       </div>
 
@@ -390,46 +409,55 @@
                     <span class="sort-indicator text-slate-600" data-col="player_name">↕</span>
                   </div>
                 </th>
-                <th class="py-3.5 px-2 text-center">Pos</th>
+                <th class="py-3.5 px-2 text-center">
+                  <a href="#metodo-ecuacion-qb" class="metric-ref-link" title="Ver ecuaciones por posición">Pos</a>
+                </th>
                 <th class="sortable-th py-3.5 px-3" data-sort="impact_score">
                   <div class="flex items-center gap-1 text-emerald-400">
                     <span>Score Impacto (0-100)</span>
+                    <a href="#metodo-score-impacto" onclick="event.stopPropagation()" class="rounded bg-emerald-500/20 px-1 text-[10px] text-emerald-300 hover:bg-emerald-500/40" title="Ver explicación de Score de Impacto">?</a>
                     <span class="sort-indicator" data-col="impact_score">↓</span>
                   </div>
                 </th>
                 <th class="sortable-th py-3.5 px-3 text-right" data-sort="epa_per_play">
                   <div class="flex items-center justify-end gap-1">
                     <span>EPA / Jugada</span>
+                    <a href="#metodo-epa" onclick="event.stopPropagation()" class="rounded bg-slate-800 px-1 text-[10px] text-cyan-300 hover:bg-slate-700" title="Ver explicación de EPA y EPA Competitivo">?</a>
                     <span class="sort-indicator text-slate-600" data-col="epa_per_play">↕</span>
                   </div>
                 </th>
                 <th class="sortable-th py-3.5 px-3 text-right" data-sort="wpa_total">
                   <div class="flex items-center justify-end gap-1">
                     <span>WPA Total</span>
+                    <a href="#metodo-wpa" onclick="event.stopPropagation()" class="rounded bg-slate-800 px-1 text-[10px] text-cyan-300 hover:bg-slate-700" title="Ver explicación de WPA (Win Probability Added)">?</a>
                     <span class="sort-indicator text-slate-600" data-col="wpa_total">↕</span>
                   </div>
                 </th>
                 <th class="sortable-th py-3.5 px-3 text-right" data-sort="cpoe">
                   <div class="flex items-center justify-end gap-1" title="CPOE para QB / YAC EPA para WR y TE">
                     <span>CPOE / YAC EPA</span>
+                    <a href="#metodo-cpoe" onclick="event.stopPropagation()" class="rounded bg-slate-800 px-1 text-[10px] text-indigo-300 hover:bg-slate-700" title="Ver explicación de CPOE y YAC EPA">?</a>
                     <span class="sort-indicator text-slate-600" data-col="cpoe">↕</span>
                   </div>
                 </th>
                 <th class="sortable-th py-3.5 px-3 text-right" data-sort="success_rate">
                   <div class="flex items-center justify-end gap-1">
                     <span>Success Rate</span>
+                    <a href="#metodo-success-rate" onclick="event.stopPropagation()" class="rounded bg-slate-800 px-1 text-[10px] text-cyan-300 hover:bg-slate-700" title="Ver explicación de Success Rate">?</a>
                     <span class="sort-indicator text-slate-600" data-col="success_rate">↕</span>
                   </div>
                 </th>
                 <th class="sortable-th py-3.5 px-3 text-right" data-sort="garbage_time_yards">
                   <div class="flex items-center justify-end gap-1">
                     <span>Yds Comp vs Brutas (Basura)</span>
+                    <a href="#metodo-epa-comp" onclick="event.stopPropagation()" class="rounded bg-slate-800 px-1 text-[10px] text-emerald-300 hover:bg-slate-700" title="Ver filtro de Minutos Basura y Tiempo Competitivo">?</a>
                     <span class="sort-indicator text-slate-600" data-col="garbage_time_yards">↕</span>
                   </div>
                 </th>
                 <th class="sortable-th py-3.5 pl-3 pr-4 text-right" data-sort="inflation_index">
                   <div class="flex items-center justify-end gap-1 text-amber-400">
                     <span>Índice Inflación</span>
+                    <a href="#metodo-inflacion" onclick="event.stopPropagation()" class="rounded bg-amber-500/20 px-1 text-[10px] text-amber-300 hover:bg-amber-500/40" title="Ver explicación de Índice de Inflación Estadística">?</a>
                     <span class="sort-indicator text-slate-600" data-col="inflation_index">↕</span>
                   </div>
                 </th>
@@ -451,22 +479,22 @@
         <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div class="space-y-2 lg:max-w-xl">
             <div class="flex items-center gap-2">
-              <span class="rounded bg-cyan-500/15 px-2 py-0.5 font-mono-num text-[11px] font-bold uppercase text-cyan-300">
+              <a href="#glossary-methodology-section" class="rounded bg-cyan-500/15 px-2 py-0.5 font-mono-num text-[11px] font-bold uppercase text-cyan-300 transition hover:bg-cyan-500/25">
                 Nota Técnica Actuarial
-              </span>
+              </a>
               <h3 class="text-sm font-bold text-white">
-                Especificación de Fórmulas Z-Score y Regla de Exclusión de Minutos Basura
+                Especificación de <a href="#metodo-score-impacto" class="metric-ref-link text-emerald-300">Fórmulas Z-Score</a> y <a href="#metodo-epa-comp" class="metric-ref-link text-amber-300">Exclusión de Minutos Basura</a>
               </h3>
             </div>
             <p class="text-xs leading-relaxed text-slate-300">
               Para evitar que jugadores acumulen estadísticas vacías en partidos ya decididos, el motor filtra cualquier jugada del
-              <strong class="font-mono-num text-amber-300">4to cuarto (qtr == 4)</strong> donde la probabilidad de victoria previa
-              (<code class="font-mono-num text-amber-300">wp</code>) sea <strong class="font-mono-num text-amber-300">&lt; 0.05 (5%)</strong> o
+              <a href="#metodo-epa-comp" class="metric-ref-link font-mono-num font-bold text-amber-300">4to cuarto (qtr == 4)</a> donde la probabilidad de victoria previa
+              (<a href="#metodo-wp" class="metric-ref-link font-mono-num text-amber-300">wp</a>) sea <strong class="font-mono-num text-amber-300">&lt; 0.05 (5%)</strong> o
               <strong class="font-mono-num text-amber-300">&gt; 0.95 (95%)</strong>. Las métricas brutas se conservan en paralelo para cuantificar el
-              <strong class="text-white">Índice de Inflación Estadística</strong> (<code class="font-mono-num text-slate-300">inflation_index</code> / <code class="font-mono-num text-slate-300">epa_inflation_delta</code>).
+              <a href="#metodo-inflacion" class="metric-ref-link font-bold text-white">Índice de Inflación Estadística</a> (<code class="font-mono-num text-slate-300">inflation_index</code> / <code class="font-mono-num text-slate-300">epa_inflation_delta</code>).
             </p>
             <p class="font-mono-num text-[11px] text-slate-400">
-              Mínimos de participación semanal: QB &ge; 15 dropbacks/sem | RB &ge; 10 acarreos+targets/sem | WR/TE &ge; 5 targets/sem.
+              Mínimos de participación semanal: <a href="#metodo-ecuacion-qb" class="metric-ref-link text-emerald-300">QB &ge; 15 dropbacks/sem</a> | <a href="#metodo-ecuacion-rb" class="metric-ref-link text-cyan-300">RB &ge; 10 acarreos+targets/sem</a> | <a href="#metodo-ecuacion-wr-te" class="metric-ref-link text-amber-300">WR/TE &ge; 5 targets/sem</a>.
             </p>
           </div>
 
@@ -474,33 +502,33 @@
             <!-- Fórmula QB -->
             <div class="rounded-lg border border-slate-800 bg-[#090D16] p-3">
               <div class="flex items-center justify-between">
-                <span class="font-mono-num text-xs font-bold text-emerald-400">Quarterbacks (QB)</span>
+                <a href="#metodo-ecuacion-qb" class="metric-ref-link font-mono-num text-xs font-bold text-emerald-400">Quarterbacks (QB)</a>
                 <span class="font-mono-num text-[10px] text-slate-500">Min 15 DB/sem</span>
               </div>
               <code class="mt-1.5 block font-mono-num text-[11px] leading-relaxed text-slate-200">
-                0.45 * z(EPA_per_dropback) + 0.25 * z(WPA_total) + 0.20 * z(CPOE) + 0.10 * z(Success_Rate)
+                0.45 * z(<a href="#metodo-epa" class="metric-ref-link text-emerald-300">EPA_per_dropback</a>) + 0.25 * z(<a href="#metodo-wpa" class="metric-ref-link text-cyan-300">WPA_total</a>) + 0.20 * z(<a href="#metodo-cpoe" class="metric-ref-link text-indigo-300">CPOE</a>) + 0.10 * z(<a href="#metodo-success-rate" class="metric-ref-link text-slate-200">Success_Rate</a>)
               </code>
             </div>
 
             <!-- Fórmula RB -->
             <div class="rounded-lg border border-slate-800 bg-[#090D16] p-3">
               <div class="flex items-center justify-between">
-                <span class="font-mono-num text-xs font-bold text-cyan-400">Running Backs (RB)</span>
+                <a href="#metodo-ecuacion-rb" class="metric-ref-link font-mono-num text-xs font-bold text-cyan-400">Running Backs (RB)</a>
                 <span class="font-mono-num text-[10px] text-slate-500">Min 10 Touches/sem</span>
               </div>
               <code class="mt-1.5 block font-mono-num text-[11px] leading-relaxed text-slate-200">
-                0.50 * z(EPA_per_rush_and_rec) + 0.25 * z(Success_Rate) + 0.25 * z(WPA_total)
+                0.50 * z(<a href="#metodo-epa" class="metric-ref-link text-emerald-300">EPA_per_rush_and_rec</a>) + 0.25 * z(<a href="#metodo-success-rate" class="metric-ref-link text-slate-200">Success_Rate</a>) + 0.25 * z(<a href="#metodo-wpa" class="metric-ref-link text-cyan-300">WPA_total</a>)
               </code>
             </div>
 
             <!-- Fórmula WR / TE -->
             <div class="rounded-lg border border-slate-800 bg-[#090D16] p-3">
               <div class="flex items-center justify-between">
-                <span class="font-mono-num text-xs font-bold text-amber-400">Receptores (WR / TE)</span>
+                <a href="#metodo-ecuacion-wr-te" class="metric-ref-link font-mono-num text-xs font-bold text-amber-400">Receptores (WR / TE)</a>
                 <span class="font-mono-num text-[10px] text-slate-500">Min 5 Targets/sem</span>
               </div>
               <code class="mt-1.5 block font-mono-num text-[11px] leading-relaxed text-slate-200">
-                0.45 * z(EPA_per_target) + 0.30 * z(WPA_total) + 0.25 * z(YAC_EPA)
+                0.45 * z(<a href="#metodo-epa" class="metric-ref-link text-emerald-300">EPA_per_target</a>) + 0.30 * z(<a href="#metodo-wpa" class="metric-ref-link text-cyan-300">WPA_total</a>) + 0.25 * z(<a href="#metodo-yac-epa" class="metric-ref-link text-amber-300">YAC_EPA</a>)
               </code>
             </div>
           </div>
@@ -509,76 +537,127 @@
     </section>
 
     <!-- ===================================================================== -->
-    <!-- 3B. GUÍA METODOLÓGICA: GLOSARIO, ECUACIONES Y JUGADA BISAGRA          -->
+    <!-- 3B. SECCIÓN DE METODOLOGÍA: GLOSARIO, ECUACIONES Y JUGADA BISAGRA     -->
     <!-- ===================================================================== -->
-    <section id="glossary-methodology-section" class="space-y-6" aria-labelledby="glossary-heading">
+    <section id="glossary-methodology-section" class="space-y-6 scroll-mt-20" aria-labelledby="glossary-heading">
       <div class="flex flex-col gap-2 border-b border-slate-800 pb-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <div class="flex flex-wrap items-center gap-2">
             <span class="rounded border border-cyan-500/30 bg-cyan-500/10 px-2 py-0.5 font-mono-num text-[11px] font-bold uppercase tracking-wider text-cyan-300">
-              DOCUMENTACIÓN ACTUARIAL
+              SECCIÓN DE METODOLOGÍA ACTUARIAL
             </span>
             <h2 id="glossary-heading" class="text-lg sm:text-xl font-bold tracking-tight text-white">
-              Guía de Mediciones, Lógica de las Ecuaciones y Jugada Bisagra
+              Metodología del Motor: Mediciones, Lógica de Ecuaciones y Jugada Bisagra
             </h2>
           </div>
           <p class="mt-1 text-xs text-slate-400">
-            Fundamentos matemáticos de cada métrica del tablero y justificación estructural de los ponderadores posicionales.
+            Referencia técnica interactiva. Cada mención a una estadística en el tablero enlaza directamente al bloque metodológico donde se define su formulación matemática.
           </p>
+        </div>
+
+        <!-- Índice Rápido de Anclas de Metodología -->
+        <div class="flex flex-wrap items-center gap-1.5 font-mono-num text-[11px]">
+          <a href="#metodo-score-impacto" class="rounded border border-emerald-500/30 bg-emerald-500/10 px-2 py-1 text-emerald-300 hover:bg-emerald-500/20">Score Impacto</a>
+          <a href="#metodo-epa" class="rounded border border-slate-800 bg-[#111827] px-2 py-1 text-slate-300 hover:border-slate-700 hover:text-white">EPA</a>
+          <a href="#metodo-wp" class="rounded border border-slate-800 bg-[#111827] px-2 py-1 text-slate-300 hover:border-slate-700 hover:text-white">WP</a>
+          <a href="#metodo-wpa" class="rounded border border-slate-800 bg-[#111827] px-2 py-1 text-slate-300 hover:border-slate-700 hover:text-white">WPA</a>
+          <a href="#metodo-cpoe" class="rounded border border-slate-800 bg-[#111827] px-2 py-1 text-slate-300 hover:border-slate-700 hover:text-white">CPOE</a>
+          <a href="#metodo-yac-epa" class="rounded border border-slate-800 bg-[#111827] px-2 py-1 text-slate-300 hover:border-slate-700 hover:text-white">YAC EPA</a>
+          <a href="#metodo-success-rate" class="rounded border border-slate-800 bg-[#111827] px-2 py-1 text-slate-300 hover:border-slate-700 hover:text-white">Success Rate</a>
+          <a href="#metodo-epa-comp" class="rounded border border-slate-800 bg-[#111827] px-2 py-1 text-slate-300 hover:border-slate-700 hover:text-white">EPA Comp.</a>
+          <a href="#metodo-inflacion" class="rounded border border-amber-500/30 bg-amber-500/10 px-2 py-1 text-amber-300 hover:bg-amber-500/20">Inflación</a>
+          <a href="#metodo-jugada-bisagra" class="rounded border border-rose-500/30 bg-rose-500/10 px-2 py-1 text-rose-300 hover:bg-rose-500/20">Jugada Bisagra</a>
         </div>
       </div>
 
       <!-- SUBSECCIÓN A: Score de Impacto + Diccionario de Mediciones -->
       <div class="space-y-4">
         <h3 class="font-mono-num text-xs font-bold uppercase tracking-wider text-slate-300">
-          1. ¿Qué es el Score de Impacto (0 a 100) y qué mide cada indicador?
+          1. ¿Qué es el Score de Impacto (0 a 100) y qué mide cada indicador estadístico?
         </h3>
 
         <!-- Banner Destacado: Score de Impacto (0-100) -->
-        <article class="rounded-xl border border-emerald-500/40 bg-gradient-to-r from-emerald-950/30 via-[#111827] to-[#111827] p-5 shadow-lg">
-          <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <div class="space-y-2 lg:max-w-3xl">
+        <article id="metodo-score-impacto" class="method-card rounded-xl border border-emerald-500/40 bg-gradient-to-r from-emerald-950/30 via-[#111827] to-[#111827] p-5 shadow-lg">
+          <div class="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+            <div class="space-y-3 lg:max-w-3xl">
               <div class="flex flex-wrap items-center gap-2">
                 <span class="rounded bg-emerald-500/20 px-2.5 py-0.5 font-mono-num text-xs font-extrabold uppercase tracking-wider text-emerald-300">
-                  ★ Score Impacto (0 a 100)
+                  ★ Score de Impacto (0 a 100)
                 </span>
                 <span class="font-mono-num text-xs font-semibold text-emerald-400">
-                  Índice Sintético de Valoración Objetiva Posicional
+                  Calificación Maestra de Valoración Objetiva Posicional
                 </span>
               </div>
               <p class="text-xs leading-relaxed text-slate-200">
-                El <strong class="text-white">Score de Impacto (0-100)</strong> es la calificación maestra del motor que sintetiza en un único número de <code class="font-mono-num text-emerald-300">0.0 a 100.0</code> cuánto valor real aporta un jugador para ganar partidos, <strong class="text-emerald-300">comparado estrictamente contra los demás titulares de su misma posición</strong> y habiendo eliminado previamente los minutos basura.
+                El <strong class="text-white">Score de Impacto (0-100)</strong> es la calificación maestra del motor que resume en un único número de <code class="font-mono-num text-emerald-300">0.0 a 100.0</code> cuánto valor real aporta un jugador para ganar partidos, <strong class="text-emerald-300">comparado estrictamente contra los demás titulares de su misma posición</strong> y habiendo eliminado previamente los <a href="#metodo-epa-comp" class="metric-ref-link text-emerald-300">minutos basura</a>. Resuelve dos defectos del análisis tradicional: las yardas brutas engañan (acumuladas en partidos ya decididos) y las posiciones no son comparables en bruto (un QB interviene en ~35 jugadas por partido y un WR en ~7 targets).
               </p>
-              <p class="text-xs leading-relaxed text-slate-300">
-                <strong class="text-white">¿Cómo se calcula?</strong> Primero se calcula el puntaje compuesto <code class="font-mono-num text-cyan-300">Z-Score</code> de la posición (combinando eficiencia por jugada, impacto en probabilidad de victoria y ejecución técnica). Luego se proyecta a una escala percentil de 0 a 100 mediante la función de distribución acumulada normal estándar (<code class="font-mono-num text-emerald-300">Score = CDF_Normal(z_compuesto) * 100</code>), permitiendo comparar en una misma tabla a un Quarterback, un Running Back, un Wide Receiver y un Tight End.
-              </p>
+
+              <!-- Construcción en 4 pasos matemáticos -->
+              <div class="grid grid-cols-1 gap-2.5 pt-1 sm:grid-cols-2">
+                <div class="rounded-lg border border-slate-800 bg-[#090D16]/90 p-3 text-[11px] text-slate-300">
+                  <div class="font-mono-num font-bold text-emerald-400">Paso 1 - Limpieza y Filtro de Volumen</div>
+                  <p class="mt-1 text-slate-400">
+                    Se descartan jugadas del <code class="font-mono-num text-amber-300">Q4</code> con <code class="font-mono-num text-amber-300">WP &lt; 5%</code> o <code class="font-mono-num text-amber-300">&gt; 95%</code> y se exige participación titular mínima (<code class="font-mono-num text-slate-300">&ge;15 DB/sem</code> en QB, <code class="font-mono-num text-slate-300">&ge;10 toques/sem</code> en RB, <code class="font-mono-num text-slate-300">&ge;5 targets/sem</code> en WR/TE).
+                  </p>
+                </div>
+                <div class="rounded-lg border border-slate-800 bg-[#090D16]/90 p-3 text-[11px] text-slate-300">
+                  <div class="font-mono-num font-bold text-cyan-400">Paso 2 - Estandarización Z-Score Posicional</div>
+                  <p class="mt-1 text-slate-400">
+                    Cada métrica se convierte en desviaciones estándar respecto al promedio de su propia posición: <code class="font-mono-num text-cyan-300">z(X) = (X - media_pos) / desv_pos</code> (<code class="font-mono-num">0.0</code> es promedio NFL; <code class="font-mono-num">+2.0</code> es élite).
+                  </p>
+                </div>
+                <div class="rounded-lg border border-slate-800 bg-[#090D16]/90 p-3 text-[11px] text-slate-300">
+                  <div class="font-mono-num font-bold text-indigo-400">Paso 3 - Ponderación según Rol Estructural</div>
+                  <p class="mt-1 text-slate-400">
+                    Se aplica la ecuación específica de <a href="#metodo-ecuacion-qb" class="metric-ref-link text-emerald-300">QB</a>, <a href="#metodo-ecuacion-rb" class="metric-ref-link text-cyan-300">RB</a> o <a href="#metodo-ecuacion-wr-te" class="metric-ref-link text-amber-300">WR/TE</a> y se re-estandariza el índice compuesto (<code class="font-mono-num text-indigo-300">z_final</code>) dentro de cada grupo posicional.
+                  </p>
+                </div>
+                <div class="rounded-lg border border-slate-800 bg-[#090D16]/90 p-3 text-[11px] text-slate-300">
+                  <div class="font-mono-num font-bold text-amber-400">Paso 4 - Proyección CDF Normal (0 a 100)</div>
+                  <p class="mt-1 text-slate-400">
+                    Se transforma mediante la distribución normal acumulada <code class="font-mono-num text-emerald-300">Score = CDF_Normal(z_final) * 100</code>, permitiendo comparar en una misma tabla a QBs, RBs, WRs y TEs.
+                  </p>
+                </div>
+              </div>
             </div>
 
             <!-- Escala de Lectura Rápida -->
-            <div class="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-2 lg:w-72 shrink-0 font-mono-num text-[11px]">
+            <div class="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-1 lg:w-64 shrink-0 font-mono-num text-[11px]">
               <div class="rounded-lg border border-emerald-500/30 bg-[#090D16] p-2.5">
-                <div class="font-bold text-emerald-400">90.0 - 100</div>
-                <div class="text-[10px] text-slate-400">Élite / Nivel MVP</div>
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-emerald-400">90.0 - 100</span>
+                  <span class="text-[10px] text-emerald-300">z &ge; +1.28</span>
+                </div>
+                <div class="mt-0.5 text-[10px] text-slate-400">Élite / Nivel MVP Real</div>
               </div>
               <div class="rounded-lg border border-cyan-500/30 bg-[#090D16] p-2.5">
-                <div class="font-bold text-cyan-400">70.0 - 89.9</div>
-                <div class="text-[10px] text-slate-400">Titular Diferencial</div>
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-cyan-400">70.0 - 89.9</span>
+                  <span class="text-[10px] text-cyan-300">z +0.52 a +1.27</span>
+                </div>
+                <div class="mt-0.5 text-[10px] text-slate-400">Titular Diferencial / Pro Bowl</div>
               </div>
               <div class="rounded-lg border border-slate-700 bg-[#090D16] p-2.5">
-                <div class="font-bold text-slate-200">50.0</div>
-                <div class="text-[10px] text-slate-400">Promedio Exacto NFL</div>
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-slate-200">45.0 - 69.9</span>
+                  <span class="text-[10px] text-slate-400">z ~ 0.00 (50.0)</span>
+                </div>
+                <div class="mt-0.5 text-[10px] text-slate-400">Promedio Exacto Titular NFL</div>
               </div>
               <div class="rounded-lg border border-rose-500/30 bg-[#090D16] p-2.5">
-                <div class="font-bold text-rose-400">&lt; 35.0</div>
-                <div class="text-[10px] text-slate-400">Reemplazo / Ineficiente</div>
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-rose-400">&lt; 35.0</span>
+                  <span class="text-[10px] text-rose-300">z &le; -0.39</span>
+                </div>
+                <div class="mt-0.5 text-[10px] text-slate-400">Reemplazo / Valor Negativo</div>
               </div>
             </div>
           </div>
         </article>
 
-        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
           <!-- EPA -->
-          <article class="rounded-xl border border-slate-800 bg-[#111827] p-4 shadow-md">
+          <article id="metodo-epa" class="method-card rounded-xl border border-slate-800 bg-[#111827] p-4 shadow-md">
             <div class="flex items-center justify-between border-b border-slate-800/80 pb-2.5">
               <span class="font-mono-num text-sm font-extrabold text-emerald-400">EPA</span>
               <span class="rounded bg-emerald-500/10 px-2 py-0.5 font-mono-num text-[10px] font-semibold text-emerald-300">Expected Points Added</span>
@@ -592,7 +671,7 @@
           </article>
 
           <!-- WP -->
-          <article class="rounded-xl border border-slate-800 bg-[#111827] p-4 shadow-md">
+          <article id="metodo-wp" class="method-card rounded-xl border border-slate-800 bg-[#111827] p-4 shadow-md">
             <div class="flex items-center justify-between border-b border-slate-800/80 pb-2.5">
               <span class="font-mono-num text-sm font-extrabold text-cyan-400">WP</span>
               <span class="rounded bg-cyan-500/10 px-2 py-0.5 font-mono-num text-[10px] font-semibold text-cyan-300">Win Probability</span>
@@ -606,7 +685,7 @@
           </article>
 
           <!-- WPA -->
-          <article class="rounded-xl border border-slate-800 bg-[#111827] p-4 shadow-md">
+          <article id="metodo-wpa" class="method-card rounded-xl border border-slate-800 bg-[#111827] p-4 shadow-md">
             <div class="flex items-center justify-between border-b border-slate-800/80 pb-2.5">
               <span class="font-mono-num text-sm font-extrabold text-cyan-300">WPA</span>
               <span class="rounded bg-cyan-500/10 px-2 py-0.5 font-mono-num text-[10px] font-semibold text-cyan-300">Win Probability Added</span>
@@ -620,7 +699,7 @@
           </article>
 
           <!-- CPOE -->
-          <article class="rounded-xl border border-slate-800 bg-[#111827] p-4 shadow-md">
+          <article id="metodo-cpoe" class="method-card rounded-xl border border-slate-800 bg-[#111827] p-4 shadow-md">
             <div class="flex items-center justify-between border-b border-slate-800/80 pb-2.5">
               <span class="font-mono-num text-sm font-extrabold text-indigo-400">CPOE</span>
               <span class="rounded bg-indigo-500/10 px-2 py-0.5 font-mono-num text-[10px] font-semibold text-indigo-300">Completion % Over Expected</span>
@@ -633,31 +712,59 @@
             </div>
           </article>
 
+          <!-- YAC EPA -->
+          <article id="metodo-yac-epa" class="method-card rounded-xl border border-slate-800 bg-[#111827] p-4 shadow-md">
+            <div class="flex items-center justify-between border-b border-slate-800/80 pb-2.5">
+              <span class="font-mono-num text-sm font-extrabold text-amber-300">YAC EPA</span>
+              <span class="rounded bg-amber-500/10 px-2 py-0.5 font-mono-num text-[10px] font-semibold text-amber-300">Yards After Catch EPA</span>
+            </div>
+            <p class="mt-2.5 text-xs leading-relaxed text-slate-300">
+              Cuantifica los <strong class="text-white">puntos esperados generados exclusivamente después de la recepción</strong> gracias a la elusividad, visión de campo y rotura de tacleos del receptor (WR/TE).
+            </p>
+            <div class="mt-3 rounded-lg border border-slate-800/90 bg-[#090D16] p-2.5 text-[11px] text-slate-400">
+              <strong class="text-slate-200">Rol en el modelo:</strong> Representa el <span class="font-mono-num text-amber-300">25%</span> de la ecuación de receptores porque separa lo que produjo el vuelo del balón del valor extra creado por el receptor con el balón en las manos.
+            </div>
+          </article>
+
+          <!-- Success Rate -->
+          <article id="metodo-success-rate" class="method-card rounded-xl border border-slate-800 bg-[#111827] p-4 shadow-md">
+            <div class="flex items-center justify-between border-b border-slate-800/80 pb-2.5">
+              <span class="font-mono-num text-sm font-extrabold text-cyan-300">Success Rate</span>
+              <span class="rounded bg-cyan-500/10 px-2 py-0.5 font-mono-num text-[10px] font-semibold text-cyan-300">Tasa de Éxito por Snap</span>
+            </div>
+            <p class="mt-2.5 text-xs leading-relaxed text-slate-300">
+              Porcentaje de jugadas competitivas donde el jugador genera un <strong class="text-white">avance positivo de expectativa de puntos (<code class="font-mono-num text-emerald-300">EPA &gt; 0</code>)</strong> manteniendo a la ofensiva en ritmo de serie.
+            </p>
+            <div class="mt-3 rounded-lg border border-slate-800/90 bg-[#090D16] p-2.5 text-[11px] text-slate-400">
+              <strong class="text-slate-200">Control de volatilidad:</strong> Evita sobrevalorar a jugadores de tipo "todo o nada" que dependen de una sola jugada larga mientras fracasan en el 70% restante de sus oportunidades.
+            </div>
+          </article>
+
           <!-- EPA Comp. -->
-          <article class="rounded-xl border border-emerald-500/30 bg-[#111827] p-4 shadow-md">
+          <article id="metodo-epa-comp" class="method-card rounded-xl border border-emerald-500/30 bg-[#111827] p-4 shadow-md">
             <div class="flex items-center justify-between border-b border-slate-800/80 pb-2.5">
               <span class="font-mono-num text-sm font-extrabold text-emerald-400">EPA Comp.</span>
               <span class="rounded bg-emerald-500/15 px-2 py-0.5 font-mono-num text-[10px] font-semibold text-emerald-300">Tiempo Competitivo Real</span>
             </div>
             <p class="mt-2.5 text-xs leading-relaxed text-slate-300">
-              Es el EPA calculado <strong class="text-white">excluyendo estrictamente los Minutos Basura (Garbage Time)</strong>: se descarta toda jugada del <code class="font-mono-num text-amber-300">4to cuarto (qtr == 4)</code> donde la probabilidad de victoria previa sea <code class="font-mono-num text-amber-300">&lt; 5%</code> o <code class="font-mono-num text-amber-300">&gt; 95%</code>.
+              Es el <a href="#metodo-epa" class="metric-ref-link text-emerald-300">EPA</a> calculado <strong class="text-white">excluyendo estrictamente los Minutos Basura (Garbage Time)</strong>: se descarta toda jugada del <code class="font-mono-num text-amber-300">4to cuarto (qtr == 4)</code> donde la probabilidad de victoria previa (<a href="#metodo-wp" class="metric-ref-link text-cyan-300">WP</a>) sea <code class="font-mono-num text-amber-300">&lt; 5%</code> o <code class="font-mono-num text-amber-300">&gt; 95%</code>.
             </p>
             <div class="mt-3 rounded-lg border border-slate-800/90 bg-[#090D16] p-2.5 text-[11px] text-slate-400">
-              <strong class="text-slate-200">Objetivo actuarial:</strong> Evaluar al jugador únicamente cuando las defensivas rivales juegan esquemas competitivos reales y el resultado sigue abierto.
+              <strong class="text-slate-200">Objetivo actuarial:</strong> Evaluar al jugador únicamente cuando las defensivas rivales juegan esquemas competitivos reales y el resultado sigue abierto. Define al <strong class="text-emerald-300">MVP Real</strong>.
             </div>
           </article>
 
           <!-- Inflación -->
-          <article class="rounded-xl border border-amber-500/30 bg-[#111827] p-4 shadow-md">
+          <article id="metodo-inflacion" class="method-card rounded-xl border border-amber-500/30 bg-[#111827] p-4 shadow-md">
             <div class="flex items-center justify-between border-b border-slate-800/80 pb-2.5">
               <span class="font-mono-num text-sm font-extrabold text-amber-400">Inflación</span>
               <span class="rounded bg-amber-500/15 px-2 py-0.5 font-mono-num text-[10px] font-semibold text-amber-300">Índice de Inflación Estadística</span>
             </div>
             <p class="mt-2.5 text-xs leading-relaxed text-slate-300">
-              Mide el grado de <strong class="text-white">"maquillaje estadístico" (stat padding)</strong> comparando la producción bruta contra la producción en tiempo competitivo.
+              Mide el grado de <strong class="text-white">"maquillaje estadístico" (stat padding)</strong> comparando la producción bruta total contra la producción en <a href="#metodo-epa-comp" class="metric-ref-link text-emerald-300">tiempo competitivo</a>.
             </p>
             <div class="mt-3 rounded-lg border border-slate-800/90 bg-[#090D16] p-2.5 text-[11px] text-slate-400">
-              <strong class="text-slate-200">Construcción:</strong> Pondera el % de yardas en minutos basura (<code class="font-mono-num text-amber-300">60%</code>), el % de jugadas basura (<code class="font-mono-num text-amber-300">25%</code>) y la brecha estandarizada <code class="font-mono-num text-amber-300">z(Yardas_Brutas) - z(EPA_Comp)</code>.
+              <strong class="text-slate-200">Construcción:</strong> Pondera el % de yardas en minutos basura (<code class="font-mono-num text-amber-300">60%</code>), el % de jugadas basura (<code class="font-mono-num text-amber-300">25%</code>) y la brecha estandarizada <code class="font-mono-num text-amber-300">z(Yardas_Brutas) - z(EPA_Comp)</code>. Identifica al <strong class="text-amber-300">Estadístico Inflado</strong>.
             </div>
           </article>
         </div>
@@ -667,7 +774,7 @@
       <div class="space-y-4">
         <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
           <h3 class="font-mono-num text-xs font-bold uppercase tracking-wider text-slate-300">
-            2. Lógica Actuarial detrás de las Ecuaciones del Score de Impacto (0 a 100)
+            2. Lógica Actuarial detrás de las Ecuaciones Posicionales del <a href="#metodo-score-impacto" class="metric-ref-link text-emerald-300">Score de Impacto (0 a 100)</a>
           </h3>
           <span class="font-mono-num text-[11px] text-slate-400">
             Nota: <code class="text-cyan-300">z(X) = (X - media_pos) / desv_pos</code> normaliza cada variable antes de proyectarla a escala 0-100 vía CDF Normal.
@@ -676,7 +783,7 @@
 
         <div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
           <!-- Lógica Ecuación QB -->
-          <article class="flex flex-col justify-between rounded-xl border border-emerald-500/30 bg-[#111827] p-5 shadow-lg">
+          <article id="metodo-ecuacion-qb" class="method-card flex flex-col justify-between rounded-xl border border-emerald-500/30 bg-[#111827] p-5 shadow-lg">
             <div>
               <div class="flex items-center justify-between">
                 <span class="rounded bg-emerald-500/15 px-2.5 py-0.5 font-mono-num text-xs font-bold text-emerald-300">
@@ -685,31 +792,31 @@
                 <span class="font-mono-num text-[11px] text-slate-400">Mín. 15 dropbacks/sem</span>
               </div>
               <div class="mt-3 rounded-lg border border-slate-800 bg-[#090D16] p-3 font-mono-num text-xs leading-relaxed text-emerald-300">
-                0.45 * z(EPA_per_dropback) + 0.25 * z(WPA_total) + 0.20 * z(CPOE) + 0.10 * z(Success_Rate)
+                0.45 * z(<a href="#metodo-epa" class="metric-ref-link text-emerald-300">EPA_per_dropback</a>) + 0.25 * z(<a href="#metodo-wpa" class="metric-ref-link text-cyan-300">WPA_total</a>) + 0.20 * z(<a href="#metodo-cpoe" class="metric-ref-link text-indigo-300">CPOE</a>) + 0.10 * z(<a href="#metodo-success-rate" class="metric-ref-link text-slate-200">Success_Rate</a>)
               </div>
               <ul class="mt-4 space-y-2.5 text-xs text-slate-300">
                 <li class="flex items-start gap-2">
                   <span class="mt-0.5 shrink-0 rounded bg-emerald-500/20 px-1.5 py-0.5 font-mono-num text-[10px] font-bold text-emerald-300">45%</span>
-                  <span><strong class="text-white">z(EPA_per_dropback):</strong> Es el motor central de valor por jugada de pase (incluye pases, capturas sufridas y scrambles del QB).</span>
+                  <span><a href="#metodo-epa" class="metric-ref-link font-bold text-white">z(EPA_per_dropback):</a> Es el motor central de valor por jugada de pase (incluye pases, capturas sufridas y scrambles del QB en <a href="#metodo-epa-comp" class="metric-ref-link text-emerald-300">tiempo competitivo</a>).</span>
                 </li>
                 <li class="flex items-start gap-2">
                   <span class="mt-0.5 shrink-0 rounded bg-emerald-500/20 px-1.5 py-0.5 font-mono-num text-[10px] font-bold text-emerald-300">25%</span>
-                  <span><strong class="text-white">z(WPA_total):</strong> Captura la capacidad del QB para responder en situaciones críticas (3er down y series de cierre de partido).</span>
+                  <span><a href="#metodo-wpa" class="metric-ref-link font-bold text-white">z(WPA_total):</a> Captura la capacidad del QB para responder en situaciones críticas (3er down y series de cierre de partido).</span>
                 </li>
                 <li class="flex items-start gap-2">
                   <span class="mt-0.5 shrink-0 rounded bg-emerald-500/20 px-1.5 py-0.5 font-mono-num text-[10px] font-bold text-emerald-300">20%</span>
-                  <span><strong class="text-white">z(CPOE):</strong> Aísla la precisión pura del brazo del pasador, descontando pases pantalla fáciles o esquemas donde el receptor hace todo el trabajo.</span>
+                  <span><a href="#metodo-cpoe" class="metric-ref-link font-bold text-white">z(CPOE):</a> Aísla la precisión pura del brazo del pasador, descontando pases pantalla fáciles o esquemas donde el receptor hace todo el trabajo.</span>
                 </li>
                 <li class="flex items-start gap-2">
                   <span class="mt-0.5 shrink-0 rounded bg-emerald-500/20 px-1.5 py-0.5 font-mono-num text-[10px] font-bold text-emerald-300">10%</span>
-                  <span><strong class="text-white">z(Success_Rate):</strong> Premia la consistencia serie a serie (% de snaps con <code class="font-mono-num">EPA &gt; 0</code>) frente a la volatilidad extrema.</span>
+                  <span><a href="#metodo-success-rate" class="metric-ref-link font-bold text-white">z(Success_Rate):</a> Premia la consistencia serie a serie (% de snaps con <code class="font-mono-num">EPA &gt; 0</code>) frente a la volatilidad extrema.</span>
                 </li>
               </ul>
             </div>
           </article>
 
           <!-- Lógica Ecuación RB -->
-          <article class="flex flex-col justify-between rounded-xl border border-cyan-500/30 bg-[#111827] p-5 shadow-lg">
+          <article id="metodo-ecuacion-rb" class="method-card flex flex-col justify-between rounded-xl border border-cyan-500/30 bg-[#111827] p-5 shadow-lg">
             <div>
               <div class="flex items-center justify-between">
                 <span class="rounded bg-cyan-500/15 px-2.5 py-0.5 font-mono-num text-xs font-bold text-cyan-300">
@@ -718,27 +825,27 @@
                 <span class="font-mono-num text-[11px] text-slate-400">Mín. 10 toques/sem</span>
               </div>
               <div class="mt-3 rounded-lg border border-slate-800 bg-[#090D16] p-3 font-mono-num text-xs leading-relaxed text-cyan-300">
-                0.50 * z(EPA_per_rush_and_rec) + 0.25 * z(Success_Rate) + 0.25 * z(WPA_total)
+                0.50 * z(<a href="#metodo-epa" class="metric-ref-link text-emerald-300">EPA_per_rush_and_rec</a>) + 0.25 * z(<a href="#metodo-success-rate" class="metric-ref-link text-slate-200">Success_Rate</a>) + 0.25 * z(<a href="#metodo-wpa" class="metric-ref-link text-cyan-300">WPA_total</a>)
               </div>
               <ul class="mt-4 space-y-2.5 text-xs text-slate-300">
                 <li class="flex items-start gap-2">
                   <span class="mt-0.5 shrink-0 rounded bg-cyan-500/20 px-1.5 py-0.5 font-mono-num text-[10px] font-bold text-cyan-300">50%</span>
-                  <span><strong class="text-white">z(EPA_per_rush_and_rec):</strong> Evalúa al corredor moderno de forma integral combinando la eficiencia por acarreo y por target aéreo.</span>
+                  <span><a href="#metodo-epa" class="metric-ref-link font-bold text-white">z(EPA_per_rush_and_rec):</a> Evalúa al corredor moderno de forma integral combinando la eficiencia por acarreo y por target aéreo.</span>
                 </li>
                 <li class="flex items-start gap-2">
                   <span class="mt-0.5 shrink-0 rounded bg-cyan-500/20 px-1.5 py-0.5 font-mono-num text-[10px] font-bold text-cyan-300">25%</span>
-                  <span><strong class="text-white">z(Success_Rate):</strong> Recibe 2.5x más peso que en QBs porque el rol estructural del RB es evitar jugadas negativas y ganar yardaje útil en 1ra/2da oportunidad y corto yardaje.</span>
+                  <span><a href="#metodo-success-rate" class="metric-ref-link font-bold text-white">z(Success_Rate):</a> Recibe 2.5x más peso que en QBs porque el rol estructural del RB es evitar jugadas negativas y ganar yardaje útil en 1ra/2da oportunidad y corto yardaje.</span>
                 </li>
                 <li class="flex items-start gap-2">
                   <span class="mt-0.5 shrink-0 rounded bg-cyan-500/20 px-1.5 py-0.5 font-mono-num text-[10px] font-bold text-cyan-300">25%</span>
-                  <span><strong class="text-white">z(WPA_total):</strong> Valora las conversiones de zona roja, 3ra/4ta y 1 y escapadas que aseguran la victoria en cuartos finales competitivos.</span>
+                  <span><a href="#metodo-wpa" class="metric-ref-link font-bold text-white">z(WPA_total):</a> Valora las conversiones de zona roja, 3ra/4ta y 1 y escapadas que aseguran la victoria en cuartos finales competitivos.</span>
                 </li>
               </ul>
             </div>
           </article>
 
           <!-- Lógica Ecuación WR / TE -->
-          <article class="flex flex-col justify-between rounded-xl border border-amber-500/30 bg-[#111827] p-5 shadow-lg">
+          <article id="metodo-ecuacion-wr-te" class="method-card flex flex-col justify-between rounded-xl border border-amber-500/30 bg-[#111827] p-5 shadow-lg">
             <div>
               <div class="flex items-center justify-between">
                 <span class="rounded bg-amber-500/15 px-2.5 py-0.5 font-mono-num text-xs font-bold text-amber-300">
@@ -747,20 +854,20 @@
                 <span class="font-mono-num text-[11px] text-slate-400">Mín. 5 targets/sem</span>
               </div>
               <div class="mt-3 rounded-lg border border-slate-800 bg-[#090D16] p-3 font-mono-num text-xs leading-relaxed text-amber-300">
-                0.45 * z(EPA_per_target) + 0.30 * z(WPA_total) + 0.25 * z(YAC_EPA)
+                0.45 * z(<a href="#metodo-epa" class="metric-ref-link text-emerald-300">EPA_per_target</a>) + 0.30 * z(<a href="#metodo-wpa" class="metric-ref-link text-cyan-300">WPA_total</a>) + 0.25 * z(<a href="#metodo-yac-epa" class="metric-ref-link text-amber-300">YAC_EPA</a>)
               </div>
               <ul class="mt-4 space-y-2.5 text-xs text-slate-300">
                 <li class="flex items-start gap-2">
                   <span class="mt-0.5 shrink-0 rounded bg-amber-500/20 px-1.5 py-0.5 font-mono-num text-[10px] font-bold text-amber-300">45%</span>
-                  <span><strong class="text-white">z(EPA_per_target):</strong> Mide el retorno esperado en puntos cada vez que la ofensiva decide dirigir un pase hacia ese receptor.</span>
+                  <span><a href="#metodo-epa" class="metric-ref-link font-bold text-white">z(EPA_per_target):</a> Mide el retorno esperado en puntos cada vez que la ofensiva decide dirigir un pase hacia ese receptor.</span>
                 </li>
                 <li class="flex items-start gap-2">
                   <span class="mt-0.5 shrink-0 rounded bg-amber-500/20 px-1.5 py-0.5 font-mono-num text-[10px] font-bold text-amber-300">30%</span>
-                  <span><strong class="text-white">z(WPA_total):</strong> Es el peso más alto de WPA del modelo (30%) porque las recepciones en 3er/4to down y pases profundos son las jugadas que más inclinan la probabilidad de victoria.</span>
+                  <span><a href="#metodo-wpa" class="metric-ref-link font-bold text-white">z(WPA_total):</a> Es el peso más alto de WPA del modelo (30%) porque las recepciones en 3er/4to down y pases profundos son las jugadas que más inclinan la <a href="#metodo-wp" class="metric-ref-link text-cyan-300">probabilidad de victoria</a>.</span>
                 </li>
                 <li class="flex items-start gap-2">
                   <span class="mt-0.5 shrink-0 rounded bg-amber-500/20 px-1.5 py-0.5 font-mono-num text-[10px] font-bold text-amber-300">25%</span>
-                  <span><strong class="text-white">z(YAC_EPA):</strong> Aísla los puntos esperados creados por el receptor <em>después</em> de la recepción (rotura de tacleos y velocidad en campo abierto).</span>
+                  <span><a href="#metodo-yac-epa" class="metric-ref-link font-bold text-white">z(YAC_EPA):</a> Aísla los puntos esperados creados por el receptor <em>después</em> de la recepción (rotura de tacleos y velocidad en campo abierto).</span>
                 </li>
               </ul>
             </div>
@@ -769,7 +876,7 @@
       </div>
 
       <!-- SUBSECCIÓN C: ¿Qué es una Jugada Bisagra? -->
-      <article class="rounded-xl border border-rose-500/30 bg-gradient-to-r from-[#111827] via-[#111827] to-rose-950/20 p-5 shadow-lg">
+      <article id="metodo-jugada-bisagra" class="method-card rounded-xl border border-rose-500/30 bg-gradient-to-r from-[#111827] via-[#111827] to-rose-950/20 p-5 shadow-lg">
         <div class="grid grid-cols-1 gap-5 lg:grid-cols-12 lg:items-center">
           <div class="space-y-2 lg:col-span-8">
             <div class="flex flex-wrap items-center gap-2">
@@ -781,7 +888,7 @@
               </span>
             </div>
             <p class="text-xs leading-relaxed text-slate-300">
-              Una <strong class="text-white">Jugada Bisagra</strong> es el punto de inflexión estructural de un partido: cualquier jugada individual que altera la probabilidad de victoria de los equipos en al menos <strong class="font-mono-num text-rose-300">12 puntos porcentuales (|WP_después - WP_antes| &ge; 0.12)</strong> en un único snap.
+              Una <strong class="text-white">Jugada Bisagra</strong> es el punto de inflexión estructural de un partido: cualquier jugada individual que altera la <a href="#metodo-wp" class="metric-ref-link text-cyan-300">probabilidad de victoria (WP)</a> de los equipos en al menos <strong class="font-mono-num text-rose-300">12 puntos porcentuales (|WP_después - WP_antes| &ge; 0.12)</strong> en un único snap.
             </p>
             <p class="text-xs leading-relaxed text-slate-300">
               <strong class="text-white">¿Por qué 12% es el umbral crítico?</strong> En la distribución empírica de la NFL, más del 92% de las jugadas ordinarias mueven la probabilidad de victoria entre <span class="font-mono-num text-slate-200">0.5% y 5.0%</span>. Un salto igual o superior al <span class="font-mono-num text-rose-300">12%</span> separa el ruido normal de una serie ofensiva de los eventos que cambian el destino del encuentro: intercepciones o fumbles en terreno rival, detenciones en 4to down, goles de campo definitorios o touchdowns explosivos en el último cuarto.
@@ -793,8 +900,8 @@
               Algoritmo en src/ingest_espn.py
             </div>
             <ol class="mt-2.5 space-y-1.5 text-[11px] text-slate-300 list-decimal list-inside">
-              <li>Recorre el vector <code class="text-cyan-300">winprobability</code> de ESPN <code class="text-cyan-300">/summary</code>.</li>
-              <li>Calcula <code class="text-emerald-300">delta_wp = WP[i] - WP[i-1]</code> jugada por jugada.</li>
+              <li>Recorre el vector <a href="#metodo-wp" class="metric-ref-link text-cyan-300">winprobability</a> de ESPN <code class="text-cyan-300">/summary</code>.</li>
+              <li>Calcula <a href="#metodo-wpa" class="metric-ref-link text-emerald-300">delta_wp = WP[i] - WP[i-1]</a> jugada por jugada.</li>
               <li>Filtra snaps con <code class="text-amber-300">abs(delta_wp) &ge; 0.12</code> y cruza el <code class="text-slate-200">playId</code> con las jugadas de cada serie.</li>
               <li>Extrae el <strong class="text-white">Top 3</strong> ordenado por <code class="text-rose-300">|&Delta;WP|</code> y destaca la #1 como <strong class="text-rose-300">Jugada Bisagra</strong>.</li>
             </ol>
@@ -818,7 +925,7 @@
             </span>
           </div>
           <p class="mt-1 text-xs text-slate-400">
-            Cero adjetivos vacíos. Cada afirmación cita datos exactos de <code class="font-mono-num text-slate-300">EPA</code>, <code class="font-mono-num text-slate-300">WPA</code>, <code class="font-mono-num text-slate-300">CPOE</code> o <code class="font-mono-num text-slate-300">&Delta;WP</code> usando exclusivamente guion simple (<code class="font-mono-num text-slate-300">-</code>).
+            Cero adjetivos vacíos. Cada afirmación cita datos exactos de <a href="#metodo-epa" class="metric-ref-link font-mono-num text-emerald-300">EPA</a>, <a href="#metodo-wpa" class="metric-ref-link font-mono-num text-cyan-300">WPA</a>, <a href="#metodo-cpoe" class="metric-ref-link font-mono-num text-indigo-300">CPOE</a> o <a href="#metodo-jugada-bisagra" class="metric-ref-link font-mono-num text-rose-300">&Delta;WP</a> usando exclusivamente guion simple (<code class="font-mono-num text-slate-300">-</code>).
           </p>
         </div>
       </div>
@@ -842,15 +949,15 @@
         <article class="rounded-xl border border-emerald-500/30 bg-[#111827] p-5">
           <div class="flex items-center justify-between border-b border-slate-800 pb-3">
             <div>
-              <span class="rounded bg-emerald-500/20 px-2 py-0.5 font-mono-num text-[11px] font-bold uppercase text-emerald-300">
+              <a href="#metodo-epa-comp" class="rounded bg-emerald-500/20 px-2 py-0.5 font-mono-num text-[11px] font-bold uppercase text-emerald-300 transition hover:bg-emerald-500/30" title="Ver metodología de MVP Real y Tiempo Competitivo">
                 ★ MVP Real (Eficiencia Limpia)
-              </span>
+              </a>
               <h3 id="critique-mvp-title" class="mt-1.5 text-base font-extrabold text-white">--</h3>
             </div>
-            <div class="text-right font-mono-num">
+            <a href="#metodo-score-impacto" class="text-right font-mono-num transition hover:opacity-85" title="Ver metodología de Score de Impacto (0-100)">
               <div id="critique-mvp-score" class="text-xl font-extrabold text-emerald-400">--</div>
-              <div class="text-[10px] uppercase text-slate-400">Impact Score</div>
-            </div>
+              <div class="metric-ref-link text-[10px] uppercase text-slate-400">Impact Score</div>
+            </a>
           </div>
           <p id="critique-mvp-body" class="mt-3 text-xs leading-relaxed text-slate-300">--</p>
           <div id="critique-mvp-pills" class="mt-4 flex flex-wrap gap-1.5"></div>
@@ -860,15 +967,15 @@
         <article class="rounded-xl border border-amber-500/30 bg-[#111827] p-5">
           <div class="flex items-center justify-between border-b border-slate-800 pb-3">
             <div>
-              <span class="rounded bg-amber-500/20 px-2 py-0.5 font-mono-num text-[11px] font-bold uppercase text-amber-300">
+              <a href="#metodo-inflacion" class="rounded bg-amber-500/20 px-2 py-0.5 font-mono-num text-[11px] font-bold uppercase text-amber-300 transition hover:bg-amber-500/30" title="Ver metodología de Estadístico Inflado y Garbage Time">
                 ⚠ Estadístico Inflado (Garbage Time)
-              </span>
+              </a>
               <h3 id="critique-inflated-title" class="mt-1.5 text-base font-extrabold text-white">--</h3>
             </div>
-            <div class="text-right font-mono-num">
+            <a href="#metodo-inflacion" class="text-right font-mono-num transition hover:opacity-85" title="Ver metodología de Índice de Inflación">
               <div id="critique-inflated-index" class="text-xl font-extrabold text-amber-400">--</div>
-              <div class="text-[10px] uppercase text-slate-400">Índice Inflación</div>
-            </div>
+              <div class="metric-ref-link text-[10px] uppercase text-slate-400">Índice Inflación</div>
+            </a>
           </div>
           <p id="critique-inflated-body" class="mt-3 text-xs leading-relaxed text-slate-300">--</p>
           <div id="critique-inflated-pills" class="mt-4 flex flex-wrap gap-1.5"></div>
