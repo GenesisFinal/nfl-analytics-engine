@@ -308,6 +308,7 @@ function renderHeaderAndKpis() {
         topHingeCandidate = {
           absDelta,
           play: candidate,
+          game,
           shortName:
             game.short_name ||
             `${game?.away_team?.abbreviation || 'AWAY'} @ ${game?.home_team?.abbreviation || 'HOME'}`,
@@ -329,6 +330,7 @@ function renderHeaderAndKpis() {
   const kpiHingeMatchup = document.getElementById('kpi-hinge-matchup');
   const kpiHingeClock = document.getElementById('kpi-hinge-clock');
   const kpiHingeDesc = document.getElementById('kpi-hinge-desc');
+  const kpiHingeVideo = document.getElementById('kpi-hinge-video');
 
   if (topHingeCandidate && topHingeCandidate.play) {
     const hp = topHingeCandidate.play;
@@ -348,12 +350,78 @@ function renderHeaderAndKpis() {
         escapeHtml(hp.description || 'Jugada clave registrada')
       );
     }
+    if (kpiHingeVideo) {
+      const vidInfo = resolvePlayVideoLinks(hp, topHingeCandidate.game);
+      if (vidInfo.videoUrl) {
+        const btnLabel = vidInfo.hasDirectVideo
+          ? '▶ Video Oficial ESPN ↗'
+          : '▶ Ver Video de la Jugada ↗';
+        const pbpHtml = vidInfo.espnPlayUrl
+          ? `<a href="${escapeHtml(vidInfo.espnPlayUrl)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 rounded border border-slate-700 bg-slate-900/90 px-2 py-0.5 font-mono-num text-[10px] font-medium text-slate-300 transition hover:border-cyan-500/40 hover:text-cyan-300" title="Abrir Play-by-Play oficial en ESPN">Play-by-Play ↗</a>`
+          : '';
+        kpiHingeVideo.innerHTML = `
+          <div class="flex flex-wrap items-center gap-1.5">
+            <a href="${escapeHtml(vidInfo.videoUrl)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 rounded border border-rose-500/40 bg-rose-500/15 px-2.5 py-0.5 font-mono-num text-[10px] font-bold text-rose-200 transition hover:bg-rose-500/30 hover:text-white" title="${escapeHtml(vidInfo.videoSource)}">
+              ${btnLabel}
+            </a>
+            ${pbpHtml}
+          </div>
+        `;
+      } else {
+        kpiHingeVideo.innerHTML = '';
+      }
+    }
   }
 }
 
 /* ========================================================================== */
-/* UTILIDADES DE ENLACE PROFUNDO A LA SECCIÓN DE METODOLOGÍA                  */
+/* UTILIDADES DE ENLACE PROFUNDO A LA SECCIÓN DE METODOLOGÍA Y VIDEO          */
 /* ========================================================================== */
+
+/**
+ * Resuelve los enlaces de video y Play-by-Play para una Jugada Bisagra o momento crítico.
+ * Usa `play.video_url` precalculado por `src/ingest_espn.py` o construye el enlace
+ * de búsqueda de highlights de la jugada si el JSON proviene de un corte anterior.
+ * @param {Record<string, any>} play
+ * @param {Record<string, any>} [game]
+ * @returns {{ videoUrl: string, espnPlayUrl: string, hasDirectVideo: boolean, videoSource: string }}
+ */
+function resolvePlayVideoLinks(play, game = {}) {
+  if (!play || typeof play !== 'object') {
+    return { videoUrl: '', espnPlayUrl: '', hasDirectVideo: false, videoSource: '' };
+  }
+
+  const eventId = String(game?.event_id || '');
+  const awayAbbr = String(game?.away_team?.name || game?.away_team?.abbreviation || 'NFL');
+  const homeAbbr = String(game?.home_team?.name || game?.home_team?.abbreviation || 'NFL');
+  const qtr = Number(play.qtr || 0);
+  const qtrLabel = qtr >= 5 ? 'OT' : qtr > 0 ? `Q${qtr}` : '';
+
+  const hasDirectVideo = Boolean(play.has_direct_video);
+  let videoUrl = String(play.video_url || '').trim();
+
+  if (!videoUrl) {
+    const desc = String(play.description || '').replace(/\([^)]*\)/g, ' ').trim();
+    const shortDesc = desc.split(/\s+/).slice(0, 8).join(' ');
+    const query = ['NFL', `${awayAbbr} vs ${homeAbbr}`, shortDesc, qtrLabel, 'highlight']
+      .filter(Boolean)
+      .join(' ');
+    videoUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
+  }
+
+  const espnPlayUrl = String(
+    play.espn_play_url ||
+      game?.game_links?.pbp ||
+      game?.game_links?.recap ||
+      (eventId ? `https://www.espn.com/nfl/playbyplay/_/gameId/${eventId}` : '')
+  ).trim();
+
+  const videoSource = String(
+    play.video_source || (hasDirectVideo ? 'ESPN Video Oficial' : 'YouTube NFL Highlights')
+  );
+
+  return { videoUrl, espnPlayUrl, hasDirectVideo, videoSource };
+}
 
 /**
  * Devuelve el ancla metodológica correspondiente a una posición.
@@ -564,6 +632,7 @@ function renderScoreboardSection() {
         const beforePct = toPercentage(hingePlay.home_wp_before ?? 0.5);
         const afterPct = toPercentage(hingePlay.home_wp_after ?? 0.5);
         const favTeamAbbr = rawDelta >= 0 ? homeAbbr : awayAbbr;
+        const vidInfo = resolvePlayVideoLinks(hingePlay, game);
 
         const borderClass = isCritical
           ? 'border-amber-500/40 bg-amber-500/10'
@@ -571,6 +640,13 @@ function renderScoreboardSection() {
         const badgeClass = isCritical
           ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30'
           : 'bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700';
+
+        const videoBtnClass = vidInfo.hasDirectVideo
+          ? 'border-emerald-500/40 bg-emerald-500/15 text-emerald-300 hover:bg-emerald-500/30'
+          : 'border-rose-500/40 bg-rose-500/15 text-rose-200 hover:bg-rose-500/30';
+        const videoBtnLabel = vidInfo.hasDirectVideo
+          ? '▶ Video Oficial ESPN ↗'
+          : '▶ Ver Video de la Jugada ↗';
 
         hingeHtml = `
           <div class="mt-3.5 rounded-lg border ${borderClass} p-3">
@@ -588,6 +664,16 @@ function renderScoreboardSection() {
             <div class="mt-2 flex items-center justify-between font-mono-num text-[11px] text-slate-400">
               <span>Q${escapeHtml(hingePlay.qtr || 4)} - ${escapeHtml(hingePlay.clock || '0:00')}</span>
               <a href="#metodo-wp" class="metric-ref-link text-slate-300" title="Ver metodologia de Win Probability (WP)">WP ${homeAbbr}: ${beforePct.toFixed(1)}% -&gt; ${afterPct.toFixed(1)}%</a>
+            </div>
+            <div class="mt-2.5 flex flex-wrap items-center justify-between gap-1.5 border-t border-slate-800/70 pt-2">
+              <a href="${escapeHtml(vidInfo.videoUrl)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 rounded border px-2 py-0.5 font-mono-num text-[10px] font-bold transition ${videoBtnClass}" title="${escapeHtml(vidInfo.videoSource)}">
+                ${videoBtnLabel}
+              </a>
+              ${
+                vidInfo.espnPlayUrl
+                  ? `<a href="${escapeHtml(vidInfo.espnPlayUrl)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 rounded border border-slate-700/80 bg-[#090D16] px-2 py-0.5 font-mono-num text-[10px] font-medium text-slate-300 transition hover:border-cyan-500/40 hover:text-cyan-300" title="Ver registro Play-by-Play oficial en ESPN">Play-by-Play ESPN ↗</a>`
+                  : ''
+              }
             </div>
           </div>
         `;
@@ -609,11 +695,15 @@ function renderScoreboardSection() {
             const dPct = Math.abs(dRaw) <= 1.0001 ? dRaw * 100.0 : dRaw;
             const wpBefore = toPercentage(m.home_wp_before ?? 0.5);
             const wpAfter = toPercentage(m.home_wp_after ?? 0.5);
+            const mVid = resolvePlayVideoLinks(m, game);
             return `
               <li class="rounded border border-slate-800/90 bg-[#090D16]/70 p-2 text-[11px]">
-                <div class="flex items-center justify-between font-mono-num">
+                <div class="flex flex-wrap items-center justify-between gap-1 font-mono-num">
                   <a href="#metodo-jugada-bisagra" class="metric-ref-link font-bold text-amber-300">#${idx + 1} | Q${escapeHtml(m.qtr || 4)} ${escapeHtml(m.clock || '0:00')}</a>
-                  <a href="#metodo-wpa" class="metric-ref-link font-semibold text-white" title="Ver metodologia de WPA y Delta WP">${formatSigned(dPct, 1, '% WP')} (${wpBefore.toFixed(0)}% -&gt; ${wpAfter.toFixed(0)}%)</a>
+                  <div class="flex items-center gap-2">
+                    <a href="#metodo-wpa" class="metric-ref-link font-semibold text-white" title="Ver metodologia de WPA y Delta WP">${formatSigned(dPct, 1, '% WP')} (${wpBefore.toFixed(0)}% -&gt; ${wpAfter.toFixed(0)}%)</a>
+                    <a href="${escapeHtml(mVid.videoUrl)}" target="_blank" rel="noopener noreferrer" class="rounded border border-rose-500/40 bg-rose-500/15 px-1.5 py-0.5 text-[10px] font-bold text-rose-300 transition hover:bg-rose-500/30 hover:text-white" title="Ver video de esta jugada (${escapeHtml(mVid.videoSource)})">▶ Video ↗</a>
+                  </div>
                 </div>
                 <p class="mt-1 line-clamp-2 text-slate-300">${escapeHtml(m.description || '')}</p>
               </li>
@@ -1238,6 +1328,8 @@ function renderCritiquesSection() {
     return;
   }
 
+  const scoreboardGames = Array.isArray(state.scoreboard?.games) ? state.scoreboard.games : [];
+
   critiquesGrid.innerHTML = list
     .map((item) => {
       const category = escapeHtml(item.category || item.type || 'Analisis');
@@ -1263,6 +1355,29 @@ function renderCritiquesSection() {
         )
         .join('');
 
+      // Si la crónica corresponde a un partido con Jugada Bisagra, añadir enlace de video
+      const matchedGame = scoreboardGames.find(
+        (g) =>
+          (item.event_id && String(g.event_id) === String(item.event_id)) ||
+          (teams.length === 2 &&
+            g.away_team?.abbreviation === teams[0] &&
+            g.home_team?.abbreviation === teams[1])
+      );
+      let critiqueVideoHtml = '';
+      if (matchedGame && matchedGame.hinge_play) {
+        const vInfo = resolvePlayVideoLinks(matchedGame.hinge_play, matchedGame);
+        if (vInfo.videoUrl) {
+          critiqueVideoHtml = `
+            <a href="${escapeHtml(vInfo.videoUrl)}" target="_blank" rel="noopener noreferrer"
+              class="inline-flex items-center gap-1 rounded border border-rose-500/40 bg-rose-500/15 px-2 py-0.5 font-mono-num text-[10px] font-bold text-rose-200 transition hover:border-rose-400 hover:bg-rose-500/25 hover:text-white"
+              title="${escapeHtml(vInfo.videoTitle)} (${escapeHtml(vInfo.videoSource)})">
+              <span>▶ Video Jugada Bisagra</span>
+              <span class="text-[9px] opacity-75">↗</span>
+            </a>
+          `;
+        }
+      }
+
       return `
         <article class="flex flex-col justify-between rounded-xl border border-slate-800 bg-[#111827] p-5 shadow-md transition hover:border-slate-700">
           <div>
@@ -1280,8 +1395,11 @@ function renderCritiquesSection() {
             }
             <p class="mt-3 text-xs leading-relaxed text-slate-300">${body}</p>
           </div>
-          <div class="mt-4 flex flex-wrap gap-1.5 border-t border-slate-800/80 pt-3">
-            ${renderMetricsPills(item.metrics_cited || {})}
+          <div class="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-slate-800/80 pt-3">
+            <div class="flex flex-wrap gap-1.5">
+              ${renderMetricsPills(item.metrics_cited || {})}
+            </div>
+            ${critiqueVideoHtml}
           </div>
         </article>
       `;
