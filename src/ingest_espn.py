@@ -9,6 +9,7 @@ Complies strictly with AGENTS.md:
 
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor
 import json
 import logging
 from datetime import datetime, timezone
@@ -48,7 +49,42 @@ DEFAULT_HEADERS = {
 }
 
 
+import shutil
+import subprocess
+
 _SSL_FALLBACK_ACTIVE = False
+_USE_CURL_ON_SSL_ERROR = False
+
+
+def _fetch_json_via_curl(url: str, timeout: int = 15) -> dict[str, Any]:
+    """Fallback using OS native TLS (Schannel on Windows) when Python OpenSSL hits SSLEOFError."""
+    curl_bin = shutil.which("curl.exe") or shutil.which("curl")
+    if not curl_bin:
+        raise RuntimeError("curl binary not found for TLS fallback")
+    proc = subprocess.run(
+        [
+            curl_bin,
+            "-sL",
+            "--max-time",
+            str(timeout),
+            "-H",
+            f"User-Agent: {DEFAULT_HEADERS['User-Agent']}",
+            "-H",
+            "Accept: application/json",
+            url,
+        ],
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        check=False,
+    )
+    if proc.returncode != 0 or not proc.stdout.strip():
+        raise RuntimeError(f"curl failed ({proc.returncode}) for {url}: {proc.stderr}")
+    data = json.loads(proc.stdout)
+    if isinstance(data, dict):
+        return data
+    raise ValueError(f"Expected JSON object from {url}")
 
 
 def _get_json_with_fallback(
@@ -57,10 +93,16 @@ def _get_json_with_fallback(
     timeout: int = 15,
 ) -> dict[str, Any]:
     """Perform a GET request to primary_url with automatic fallback to fallback_url."""
-    global _SSL_FALLBACK_ACTIVE
+    global _SSL_FALLBACK_ACTIVE, _USE_CURL_ON_SSL_ERROR
     last_error: Exception | None = None
     urls = (fallback_url, primary_url) if _SSL_FALLBACK_ACTIVE else (primary_url, fallback_url)
     for url in urls:
+        if _USE_CURL_ON_SSL_ERROR and getattr(requests.get, "__module__", "").startswith("requests"):
+            try:
+                return _fetch_json_via_curl(url, timeout=timeout)
+            except Exception as exc:  # noqa: BLE001
+                last_error = exc
+                continue
         try:
             response = requests.get(url, headers=DEFAULT_HEADERS, timeout=timeout)
             status_code = getattr(response, "status_code", 200)
@@ -75,8 +117,13 @@ def _get_json_with_fallback(
         except requests.exceptions.SSLError as exc:
             if url == primary_url:
                 _SSL_FALLBACK_ACTIVE = True
-            logger.warning("SSL error on endpoint (%s), switching to fallback: %s", url, exc)
-            last_error = exc
+            logger.warning("SSL error on endpoint (%s), trying OS TLS fallback: %s", url, exc)
+            try:
+                data = _fetch_json_via_curl(url, timeout=timeout)
+                _USE_CURL_ON_SSL_ERROR = True
+                return data
+            except Exception as curl_exc:  # noqa: BLE001
+                last_error = curl_exc
         except Exception as exc:  # noqa: BLE001
             logger.warning("Endpoint failed (%s): %s", url, exc)
             last_error = exc
@@ -580,54 +627,146 @@ def _parse_team_competitor(competitor: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _load_completed_game_cache(target_path: Path) -> dict[str, dict[str, Any]]:
+    """Load already-completed games from existing live_scoreboard.json to avoid redundant summary fetches."""
+    cache: dict[str, dict[str, Any]] = {}
+    if not target_path.exists():
+        return cache
+    try:
+        existing = json.loads(target_path.read_text(encoding="utf-8"))
+        for g in existing.get("games", []):
+            if not isinstance(g, dict):
+                continue
+            eid = str(g.get("event_id") or "")
+            st = g.get("status") if isinstance(g.get("status"), dict) else {}
+            hp = g.get("hinge_play") if isinstance(g.get("hinge_play"), dict) else None
+            if (
+                eid
+                and st.get("completed") is True
+                and hp is not None
+                and str(hp.get("video_url") or "").startswith("http")
+                and str(hp.get("description") or "").strip().upper() != "END GAME"
+            ):
+                cache[eid] = g
+    except Exception:  # noqa: BLE001
+        pass
+    return cache
+
+
 def ingest_espn_scoreboard(
     output_path: Path | str | None = None,
+    include_all_regular_weeks: bool = True,
 ) -> dict[str, Any]:
-    """Fetch ESPN scoreboard + game summaries and persist public/data/live_scoreboard.json."""
+    """Fetch ESPN scoreboard + game summaries for the Regular Season (excluding Preseason) and persist JSON."""
     target_path = Path(output_path) if output_path is not None else DEFAULT_OUTPUT_PATH
-    scoreboard_raw = fetch_scoreboard()
+    cached_completed = _load_completed_game_cache(target_path)
 
+    scoreboard_raw = fetch_scoreboard()
     season_obj = scoreboard_raw.get("season") if isinstance(scoreboard_raw.get("season"), dict) else {}
     week_obj = scoreboard_raw.get("week") if isinstance(scoreboard_raw.get("week"), dict) else {}
 
     season = int(season_obj.get("year") or 2026)
+    season_type_num = int(season_obj.get("type") or 2)
     week = int(week_obj.get("number") or 1)
 
-    events = scoreboard_raw.get("events")
-    if not isinstance(events, list):
-        events = []
-
-    # Si todos los partidos de la semana en curso están en estado 'pre' (ej. martes/miércoles)
-    # y week > 1, cargar también la semana inmediata anterior para contar con partidos
-    # finalizados reales y sus Jugadas Bisagra (|delta_wp| >= 0.12).
-    def _is_pre_event(ev: dict[str, Any]) -> bool:
-        st = ev.get("status", {})
-        if not isinstance(st, dict):
-            return True
-        tp = st.get("type", {})
-        return isinstance(tp, dict) and str(tp.get("state", "pre")) == "pre"
-
-    if events and week > 1 and all(_is_pre_event(ev) for ev in events if isinstance(ev, dict)):
+    # Si ESPN responde en pretemporada (seasontype == 1), forzar Temporada Regular (seasontype == 2)
+    if season_type_num == 1:
+        season_type_num = 2
         try:
-            prev_sb = fetch_scoreboard(week=week - 1, seasontype=int(season_obj.get("type") or 2))
-            prev_events = prev_sb.get("events")
-            if isinstance(prev_events, list) and prev_events:
-                logger.info(
-                    "All Week %d games are pre-kickoff; prepending %d completed games from Week %d",
-                    week,
-                    len(prev_events),
-                    week - 1,
-                )
-                events = prev_events + events
+            scoreboard_raw = fetch_scoreboard(week=1, seasontype=2)
+            season_obj = scoreboard_raw.get("season") if isinstance(scoreboard_raw.get("season"), dict) else {}
+            week_obj = scoreboard_raw.get("week") if isinstance(scoreboard_raw.get("week"), dict) else {}
+            season = int(season_obj.get("year") or season)
+            week = int(week_obj.get("number") or 1)
         except Exception as exc:  # noqa: BLE001
-            logger.warning("Could not fetch previous week %d scoreboard: %s", week - 1, exc)
+            logger.warning("Could not switch from Preseason to Regular Season scoreboard: %s", exc)
+
+    raw_events_by_week: list[tuple[int, str, dict[str, Any]]] = []
+    seen_event_ids: set[str] = set()
+
+    def _add_events(ev_list: Any, default_week: int, default_stype: str = "REG") -> None:
+        if not isinstance(ev_list, list):
+            return
+        for ev in ev_list:
+            if not isinstance(ev, dict):
+                continue
+            ev_season = ev.get("season") if isinstance(ev.get("season"), dict) else {}
+            ev_stype_num = int(ev_season.get("type") or 2)
+            # Excluir estrictamente partidos de Pretemporada (type == 1)
+            if ev_stype_num == 1:
+                continue
+            ev_stype_label = "POST" if ev_stype_num == 3 else default_stype
+            ev_week_obj = ev.get("week") if isinstance(ev.get("week"), dict) else {}
+            ev_week = int(ev_week_obj.get("number") or default_week)
+            eid = str(ev.get("id") or "")
+            if eid and eid in seen_event_ids:
+                continue
+            if eid:
+                seen_event_ids.add(eid)
+            raw_events_by_week.append((ev_week, ev_stype_label, ev))
+
+    # Si include_all_regular_weeks está activo, recolectar todas las semanas de Temporada Regular (1..week)
+    if include_all_regular_weeks and week > 1:
+        prior_weeks = list(range(1, week))
+
+        def _fetch_week_sb(w: int) -> tuple[int, list[dict[str, Any]]]:
+            try:
+                sb_w = fetch_scoreboard(week=w, seasontype=2)
+                evs = sb_w.get("events")
+                return w, evs if isinstance(evs, list) else []
+            except Exception as exc:  # noqa: BLE001
+                logger.warning("Could not fetch Regular Season Week %d scoreboard: %s", w, exc)
+                return w, []
+
+        with ThreadPoolExecutor(max_workers=min(len(prior_weeks), 6)) as pool:
+            week_results = list(pool.map(_fetch_week_sb, prior_weeks))
+
+        # Agregar de la semana más reciente a la Semana 1, poniendo primero las semanas jugadas
+        for w, evs in sorted(week_results, key=lambda x: x[0], reverse=True):
+            _add_events(evs, default_week=w, default_stype="REG")
+
+    # Agregar también la semana actual
+    current_events = scoreboard_raw.get("events")
+    _add_events(
+        current_events,
+        default_week=week,
+        default_stype="POST" if season_type_num == 3 else "REG",
+    )
+
+    # Identificar qué event_ids requieren consulta a /summary (los no cacheados o aún en juego)
+    events_needing_summary: list[str] = []
+    for _ev_w, _ev_st, event in raw_events_by_week:
+        eid = str(event.get("id") or "")
+        if not eid:
+            continue
+        status_raw = event.get("status") if isinstance(event.get("status"), dict) else {}
+        status_type = status_raw.get("type") if isinstance(status_raw.get("type"), dict) else {}
+        is_completed = bool(status_type.get("completed", False))
+        if not (is_completed and eid in cached_completed):
+            events_needing_summary.append(eid)
+
+    summaries_by_id: dict[str, dict[str, Any]] = {}
+    if events_needing_summary:
+        def _safe_fetch_summary(eid: str) -> tuple[str, dict[str, Any]]:
+            try:
+                return eid, fetch_game_summary(eid)
+            except Exception as exc:  # noqa: BLE001
+                logger.warning("Could not fetch summary for event %s: %s", eid, exc)
+                return eid, {}
+
+        max_workers = min(len(events_needing_summary), 10)
+        if max_workers <= 1:
+            for eid in events_needing_summary:
+                _, s_data = _safe_fetch_summary(eid)
+                summaries_by_id[eid] = s_data
+        else:
+            with ThreadPoolExecutor(max_workers=max_workers) as pool:
+                for eid, s_data in pool.map(_safe_fetch_summary, events_needing_summary):
+                    summaries_by_id[eid] = s_data
 
     games: list[dict[str, Any]] = []
 
-    for event in events:
-        if not isinstance(event, dict):
-            continue
-
+    for ev_week, ev_stype_label, event in raw_events_by_week:
         event_id = str(event.get("id") or "")
         if not season_obj and isinstance(event.get("season"), dict):
             season = int(event["season"].get("year") or season)
@@ -655,6 +794,14 @@ def ingest_espn_scoreboard(
         clock = str(status_raw.get("displayClock") or "0:00")
         completed = bool(status_type.get("completed", False))
 
+        # Reutilizar partido finalizado desde caché si ya cuenta con Jugada Bisagra y enlaces de video
+        if completed and event_id in cached_completed:
+            cached_game = dict(cached_completed[event_id])
+            cached_game["week"] = int(ev_week)
+            cached_game["season_type"] = ev_stype_label
+            games.append(cached_game)
+            continue
+
         competitors = comp.get("competitors") if isinstance(comp.get("competitors"), list) else []
         home_comp: dict[str, Any] = {}
         away_comp: dict[str, Any] = {}
@@ -669,17 +816,19 @@ def ingest_espn_scoreboard(
         home_team = _parse_team_competitor(home_comp)
         away_team = _parse_team_competitor(away_comp)
 
-        summary_data: dict[str, Any] = {}
-        if event_id:
-            try:
-                summary_data = fetch_game_summary(event_id)
-            except Exception as exc:  # noqa: BLE001
-                logger.warning("Could not fetch summary for event %s: %s", event_id, exc)
+        summary_data = summaries_by_id.get(event_id, {})
 
         video_by_play, video_list = _extract_video_catalog(summary_data, comp)
         game_links = _extract_game_links(summary_data, event, event_id)
 
-        raw_critical = extract_critical_moments(summary_data, min_delta=0.12, top_n=3)
+        raw_critical = extract_critical_moments(
+            summary_data,
+            min_delta=0.12,
+            top_n=3,
+            event_id=event_id,
+            away_team=away_team,
+            home_team=home_team,
+        )
         critical_moments = [
             _enrich_moment_with_video_links(
                 m, event_id, away_team, home_team, video_by_play, video_list, game_links
@@ -729,6 +878,8 @@ def ingest_espn_scoreboard(
         games.append(
             {
                 "event_id": event_id,
+                "week": int(ev_week),
+                "season_type": ev_stype_label,
                 "name": str(event.get("name") or short_name),
                 "short_name": short_name,
                 "date": str(event.get("date") or ""),
@@ -751,11 +902,30 @@ def ingest_espn_scoreboard(
             }
         )
 
+    # Ordenar partidos: primero en vivo ('in'), luego finalizados ('post') de la semana más reciente a la 1, luego programados ('pre')
+    state_priority = {"in": 0, "post": 1, "pre": 2}
+    games.sort(
+        key=lambda g: (
+            state_priority.get(str(g.get("status", {}).get("state", "pre")), 3),
+            -int(g.get("week") or 0),
+        )
+    )
+
+    weeks_available = sorted({int(g.get("week") or week) for g in games})
+    completed_count = sum(1 for g in games if g.get("status", {}).get("completed") is True)
+    hinge_count = sum(1 for g in games if (g.get("hinge_play") or {}).get("exceeds_threshold") is True)
+
     payload: dict[str, Any] = {
         "updated_at": datetime.now(timezone.utc).isoformat(),
         "source": "ESPN JSON API",
         "season": season,
+        "season_type": "REG",
+        "preseason_excluded": True,
         "week": week,
+        "weeks_available": weeks_available,
+        "total_games": len(games),
+        "completed_games": completed_count,
+        "hinge_games_count": hinge_count,
         "games": games,
     }
 
@@ -764,7 +934,13 @@ def ingest_espn_scoreboard(
         json.dumps(payload, indent=2, ensure_ascii=False),
         encoding="utf-8",
     )
-    logger.info("Saved ESPN scoreboard with %d games to %s", len(games), target_path)
+    logger.info(
+        "Saved ESPN scoreboard with %d Regular Season games (weeks=%s, completed=%d) to %s",
+        len(games),
+        weeks_available,
+        completed_count,
+        target_path,
+    )
     return payload
 
 
