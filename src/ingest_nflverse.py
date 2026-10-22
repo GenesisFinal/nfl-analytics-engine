@@ -149,6 +149,10 @@ def detect_and_load_pbp(
                 response.raise_for_status()
 
             df = _read_parquet_bytes(response.content, relevant_columns=PBP_RELEVANT_COLUMNS)
+            if df is not None and not df.empty and "season_type" in df.columns:
+                non_pre_mask = df["season_type"].fillna("REG").astype(str).str.upper() != "PRE"
+                df = df.loc[non_pre_mask].copy()
+
             is_valid, validation_msg = _validate_pbp_dataframe(df)
             if not is_valid:
                 reason = f"Season {season} invalid PBP data: {validation_msg}"
@@ -163,18 +167,40 @@ def detect_and_load_pbp(
                 else "Primary requested season loaded successfully"
             )
 
+            weeks_included = (
+                sorted(pd.to_numeric(df["week"], errors="coerce").dropna().astype(int).unique().tolist())
+                if "week" in df.columns
+                else []
+            )
+            games_monitored = (
+                int(df["game_id"].dropna().nunique())
+                if "game_id" in df.columns
+                else 0
+            )
+            season_types = (
+                sorted(df["season_type"].dropna().astype(str).unique().tolist())
+                if "season_type" in df.columns
+                else ["REG"]
+            )
+
             metadata: dict[str, Any] = {
                 "requested_season": int(preferred_season),
                 "active_season": int(season),
                 "fallback_used": bool(fallback_used),
                 "fallback_reason": str(fallback_reason),
                 "total_plays": int(len(df)),
+                "games_monitored": games_monitored,
+                "weeks_included": weeks_included,
+                "season_types_included": season_types,
+                "preseason_excluded": True,
                 "pbp_url": url,
             }
             logger.info(
-                "Loaded nflverse PBP season %d (%d plays, fallback_used=%s)",
+                "Loaded nflverse PBP season %d (%d plays across %d games, weeks=%s, fallback_used=%s)",
                 season,
                 len(df),
+                games_monitored,
+                weeks_included,
                 fallback_used,
             )
             return df, metadata
