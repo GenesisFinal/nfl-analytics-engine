@@ -226,13 +226,14 @@ function renderHeaderAndKpis() {
     const mvpName = sanitizeHyphens(mvp.player_name || mvp.name);
     const mvpPos = sanitizeHyphens(mvp.position || 'QB');
     const mvpTeam = sanitizeHyphens(mvp.team || 'NFL');
+    const posHref = getPositionMethodologyAnchor(mvpPos);
     if (kpiMvpScore) kpiMvpScore.textContent = `${formatNumber(mvp.impact_score, 1)} / 100`;
     if (kpiMvpName) kpiMvpName.textContent = mvpName;
-    if (kpiMvpMeta) kpiMvpMeta.textContent = `${mvpPos} - ${mvpTeam}`;
+    if (kpiMvpMeta) {
+      kpiMvpMeta.innerHTML = `<a href="${posHref}" class="metric-ref-link text-emerald-300" title="Ver ecuacion de ${escapeHtml(mvpPos)}">${escapeHtml(mvpPos)}</a> - ${escapeHtml(mvpTeam)}`;
+    }
     if (kpiMvpMetrics) {
-      kpiMvpMetrics.textContent = sanitizeHyphens(
-        `EPA/jug: ${formatSigned(mvp.epa_per_play, 3)} | WPA: ${formatSigned(mvp.wpa_total, 3)}`
-      );
+      kpiMvpMetrics.innerHTML = `<a href="#metodo-epa" class="metric-ref-link text-emerald-300" title="Ver metodologia de EPA">EPA/jug</a>: ${escapeHtml(formatSigned(mvp.epa_per_play, 3))} | <a href="#metodo-wpa" class="metric-ref-link text-cyan-300" title="Ver metodologia de WPA">WPA</a>: ${escapeHtml(formatSigned(mvp.wpa_total, 3))}`;
     }
   } else if (kpiMvpName) {
     kpiMvpName.textContent = 'Sin datos';
@@ -257,14 +258,15 @@ function renderHeaderAndKpis() {
     const infIdx = formatNumber(inflated.inflation_index, 1);
     const gtYards = formatNumber(inflated.garbage_time_yards, 0);
     const epaDelta = formatSigned(inflated.epa_inflation_delta, 2);
+    const posHref = getPositionMethodologyAnchor(infPos);
 
     if (kpiInfBadge) kpiInfBadge.textContent = `Indice ${infIdx}`;
     if (kpiInfName) kpiInfName.textContent = infName;
-    if (kpiInfMeta) kpiInfMeta.textContent = `${infPos} - ${infTeam}`;
+    if (kpiInfMeta) {
+      kpiInfMeta.innerHTML = `<a href="${posHref}" class="metric-ref-link text-amber-300" title="Ver ecuacion de ${escapeHtml(infPos)}">${escapeHtml(infPos)}</a> - ${escapeHtml(infTeam)}`;
+    }
     if (kpiInfMetrics) {
-      kpiInfMetrics.textContent = sanitizeHyphens(
-        `Yds Basura: ${gtYards} yds | Delta EPA: ${epaDelta}`
-      );
+      kpiInfMetrics.innerHTML = `<a href="#metodo-epa-comp" class="metric-ref-link text-amber-300" title="Ver filtro de Minutos Basura">Yds Basura</a>: ${escapeHtml(gtYards)} yds | <a href="#metodo-inflacion" class="metric-ref-link text-amber-300" title="Ver Indice de Inflacion">Delta EPA</a>: ${escapeHtml(epaDelta)}`;
     }
   } else if (kpiInfName) {
     kpiInfName.textContent = 'Sin datos';
@@ -320,9 +322,7 @@ function renderHeaderAndKpis() {
     );
   }
   if (kpiGamesCritical) {
-    kpiGamesCritical.textContent = sanitizeHyphens(
-      `Momentos criticos (|ΔWP| >= 12%): ${totalCriticalPlays}`
-    );
+    kpiGamesCritical.innerHTML = `<a href="#metodo-jugada-bisagra" class="metric-ref-link text-cyan-300" title="Ver metodologia de Jugada Bisagra">Momentos criticos (|&Delta;WP| &ge; 12%)</a>: <strong class="text-white">${totalCriticalPlays}</strong>`;
   }
 
   const kpiHingeDelta = document.getElementById('kpi-hinge-delta');
@@ -344,9 +344,98 @@ function renderHeaderAndKpis() {
       kpiHingeClock.textContent = sanitizeHyphens(`Q${hp.qtr || 4} - ${hp.clock || '0:00'}`);
     }
     if (kpiHingeDesc) {
-      kpiHingeDesc.textContent = sanitizeHyphens(hp.description || 'Jugada clave registrada');
+      kpiHingeDesc.innerHTML = linkifyMetrics(
+        escapeHtml(hp.description || 'Jugada clave registrada')
+      );
     }
   }
+}
+
+/* ========================================================================== */
+/* UTILIDADES DE ENLACE PROFUNDO A LA SECCIÓN DE METODOLOGÍA                  */
+/* ========================================================================== */
+
+/**
+ * Devuelve el ancla metodológica correspondiente a una posición.
+ * @param {string} pos
+ * @returns {string}
+ */
+function getPositionMethodologyAnchor(pos) {
+  const clean = String(pos || 'QB').toUpperCase().trim();
+  if (clean === 'RB') return '#metodo-ecuacion-rb';
+  if (clean === 'WR' || clean === 'TE') return '#metodo-ecuacion-wr-te';
+  return '#metodo-ecuacion-qb';
+}
+
+/**
+ * Convierte menciones de métricas estadísticas en texto ya escapado (HTML-safe)
+ * en enlaces directos (`<a href="#metodo-...">`) hacia la sección de Metodología.
+ * Usa una única pasada regex para no anidar etiquetas.
+ * @param {string} escapedText
+ * @returns {string}
+ */
+function linkifyMetrics(escapedText) {
+  if (!escapedText) return '';
+  const pattern =
+    /\b(Score de Impacto|Impact Score|Indice de Inflacion Estadistica|Índice de Inflación Estadística|Indice de Inflacion|Índice de Inflación|inflation_index|Estadistico Inflado|Estadístico Inflado|MVP Real|EPA competitivo|EPA Comp\.?|EPA\/dropback|EPA\/jugada|EPA\/target|EPA_per_dropback|EPA_per_rush_and_rec|EPA_per_target|YAC_EPA|YAC EPA|yac_epa|Success_Rate|Success Rate|success_rate|Win Probability|winprobability|Jugadas Bisagra|Jugada Bisagra|jugadas bisagra|jugada bisagra|Momentos Criticos|Momentos Críticos|momentos criticos|momentos críticos|Minutos Basura|minutos basura|Garbage Time|delta_wp|WPA_total|WPA|CPOE|EPA|WP)\b|(\|&Delta;WP\||&Delta;WP|ΔWP)/g;
+
+  return escapedText.replace(pattern, (match) => {
+    const lower = match.toLowerCase();
+    let href = '#glossary-methodology-section';
+    let colorClass = 'text-emerald-300';
+
+    if (lower.includes('score')) {
+      href = '#metodo-score-impacto';
+      colorClass = 'text-emerald-300';
+    } else if (
+      lower.includes('inflacion') ||
+      lower.includes('inflación') ||
+      lower.includes('inflation') ||
+      lower.includes('inflado')
+    ) {
+      href = '#metodo-inflacion';
+      colorClass = 'text-amber-300';
+    } else if (
+      lower.includes('basura') ||
+      lower.includes('garbage') ||
+      lower.includes('mvp real') ||
+      lower.includes('epa comp')
+    ) {
+      href = '#metodo-epa-comp';
+      colorClass = 'text-emerald-300';
+    } else if (lower.includes('yac')) {
+      href = '#metodo-yac-epa';
+      colorClass = 'text-amber-300';
+    } else if (lower.includes('cpoe')) {
+      href = '#metodo-cpoe';
+      colorClass = 'text-indigo-300';
+    } else if (lower.includes('success')) {
+      href = '#metodo-success-rate';
+      colorClass = 'text-cyan-300';
+    } else if (
+      lower.includes('bisagra') ||
+      lower.includes('critico') ||
+      lower.includes('crítico') ||
+      lower.includes('delta_wp') ||
+      lower.includes('δwp') ||
+      lower.includes('deltawp') ||
+      match.includes('ΔWP')
+    ) {
+      href = '#metodo-jugada-bisagra';
+      colorClass = 'text-rose-300';
+    } else if (lower === 'wpa' || lower === 'wpa_total') {
+      href = '#metodo-wpa';
+      colorClass = 'text-cyan-300';
+    } else if (lower.includes('epa')) {
+      href = '#metodo-epa';
+      colorClass = 'text-emerald-300';
+    } else if (lower === 'wp' || lower.includes('win probability') || lower === 'winprobability') {
+      href = '#metodo-wp';
+      colorClass = 'text-cyan-300';
+    }
+
+    return `<a href="${href}" class="metric-ref-link font-mono-num ${colorClass}" title="Ver definicion en Metodologia">${match}</a>`;
+  });
 }
 
 /* ========================================================================== */
@@ -480,32 +569,32 @@ function renderScoreboardSection() {
           ? 'border-amber-500/40 bg-amber-500/10'
           : 'border-slate-800 bg-slate-900/70';
         const badgeClass = isCritical
-          ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
-          : 'bg-slate-800 text-slate-300 border border-slate-700';
+          ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30'
+          : 'bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700';
 
         hingeHtml = `
           <div class="mt-3.5 rounded-lg border ${borderClass} p-3">
             <div class="flex flex-wrap items-center justify-between gap-1.5">
-              <span class="inline-flex items-center gap-1 rounded px-1.5 py-0.5 font-mono-num text-[10px] font-bold uppercase ${badgeClass}">
+              <a href="#metodo-jugada-bisagra" class="inline-flex items-center gap-1 rounded px-1.5 py-0.5 font-mono-num text-[10px] font-bold uppercase transition ${badgeClass}" title="Ver metodologia de Jugada Bisagra">
                 ${isCritical ? '⚡ Jugada Bisagra (|ΔWP| >= 12%)' : 'Mayor Variacion WP'}
-              </span>
-              <span class="font-mono-num text-xs font-extrabold ${rawDelta >= 0 ? 'text-emerald-400' : 'text-cyan-400'}">
+              </a>
+              <a href="#metodo-jugada-bisagra" class="metric-ref-link font-mono-num text-xs font-extrabold ${rawDelta >= 0 ? 'text-emerald-400' : 'text-cyan-400'}" title="Ver calculo de variacion de Win Probability">
                 ${formatSigned(deltaPct, 1, '% WP')} (${favTeamAbbr})
-              </span>
+              </a>
             </div>
             <p class="mt-1.5 text-xs leading-snug text-slate-200">
               ${escapeHtml(hingePlay.description || 'Jugada clave')}
             </p>
             <div class="mt-2 flex items-center justify-between font-mono-num text-[11px] text-slate-400">
               <span>Q${escapeHtml(hingePlay.qtr || 4)} - ${escapeHtml(hingePlay.clock || '0:00')}</span>
-              <span>WP ${homeAbbr}: ${beforePct.toFixed(1)}% -> ${afterPct.toFixed(1)}%</span>
+              <a href="#metodo-wp" class="metric-ref-link text-slate-300" title="Ver metodologia de Win Probability (WP)">WP ${homeAbbr}: ${beforePct.toFixed(1)}% -&gt; ${afterPct.toFixed(1)}%</a>
             </div>
           </div>
         `;
       } else {
         hingeHtml = `
           <div class="mt-3.5 rounded-lg border border-slate-800/80 bg-slate-900/40 p-2.5 text-center font-mono-num text-[11px] text-slate-500">
-            Sin variaciones |ΔWP| >= 12% registradas en este encuentro
+            Sin variaciones <a href="#metodo-jugada-bisagra" class="metric-ref-link text-slate-400">|&Delta;WP| &ge; 12%</a> registradas en este encuentro
           </div>
         `;
       }
@@ -523,8 +612,8 @@ function renderScoreboardSection() {
             return `
               <li class="rounded border border-slate-800/90 bg-[#090D16]/70 p-2 text-[11px]">
                 <div class="flex items-center justify-between font-mono-num">
-                  <span class="font-bold text-amber-300">#${idx + 1} | Q${escapeHtml(m.qtr || 4)} ${escapeHtml(m.clock || '0:00')}</span>
-                  <span class="font-semibold text-white">${formatSigned(dPct, 1, '% WP')} (${wpBefore.toFixed(0)}% -> ${wpAfter.toFixed(0)}%)</span>
+                  <a href="#metodo-jugada-bisagra" class="metric-ref-link font-bold text-amber-300">#${idx + 1} | Q${escapeHtml(m.qtr || 4)} ${escapeHtml(m.clock || '0:00')}</a>
+                  <a href="#metodo-wpa" class="metric-ref-link font-semibold text-white" title="Ver metodologia de WPA y Delta WP">${formatSigned(dPct, 1, '% WP')} (${wpBefore.toFixed(0)}% -&gt; ${wpAfter.toFixed(0)}%)</a>
                 </div>
                 <p class="mt-1 line-clamp-2 text-slate-300">${escapeHtml(m.description || '')}</p>
               </li>
@@ -599,8 +688,8 @@ function renderScoreboardSection() {
             <!-- Barra Visual de Win Probability -->
             <div class="mt-4">
               <div class="flex items-center justify-between font-mono-num text-[11px]">
-                <span class="text-cyan-300">${awayAbbr} WP: <strong>${awayWpPct.toFixed(1)}%</strong></span>
-                <span class="text-emerald-300"><strong>${homeWpPct.toFixed(1)}%</strong> :WP ${homeAbbr}</span>
+                <a href="#metodo-wp" class="metric-ref-link text-cyan-300" title="Ver metodologia de Win Probability (WP)">${awayAbbr} WP: <strong>${awayWpPct.toFixed(1)}%</strong></a>
+                <a href="#metodo-wp" class="metric-ref-link text-emerald-300" title="Ver metodologia de Win Probability (WP)"><strong>${homeWpPct.toFixed(1)}%</strong> :WP ${homeAbbr}</a>
               </div>
               <div class="mt-1.5 flex h-2.5 w-full overflow-hidden rounded-full bg-slate-900 p-0.5 border border-slate-800">
                 <div
@@ -780,6 +869,7 @@ function renderPlayerRankingsTable() {
       const name = escapeHtml(player.player_name || player.name || 'Jugador');
       const team = escapeHtml(player.team || 'NFL');
       const pos = escapeHtml(player.position || 'QB');
+      const posAnchor = getPositionMethodologyAnchor(pos);
 
       const isMvp = pid && pid === String(mvpId);
       const isInflatedLeader = pid && pid === String(inflatedId);
@@ -806,59 +896,59 @@ function renderPlayerRankingsTable() {
       const inflIndex = Number(player.inflation_index ?? 0);
       const epaDelta = Number(player.epa_inflation_delta ?? 0);
 
-      // Badges especiales de auditoría
+      // Badges especiales de auditoría con enlace directo a Metodología
       let specialBadgesHtml = '';
       if (isMvp) {
         specialBadgesHtml += `
-          <span class="inline-flex items-center gap-1 rounded border border-emerald-500/40 bg-emerald-500/20 px-1.5 py-0.5 font-mono-num text-[10px] font-bold text-emerald-300">
+          <a href="#metodo-epa-comp" class="inline-flex items-center gap-1 rounded border border-emerald-500/40 bg-emerald-500/20 px-1.5 py-0.5 font-mono-num text-[10px] font-bold text-emerald-300 transition hover:bg-emerald-500/35" title="Ver metodologia de MVP Real en Tiempo Competitivo">
             ★ MVP REAL
-          </span>
+          </a>
         `;
       }
       if (isInflatedLeader) {
         specialBadgesHtml += `
-          <span class="inline-flex items-center gap-1 rounded border border-amber-500/50 bg-amber-500/20 px-1.5 py-0.5 font-mono-num text-[10px] font-bold text-amber-300">
+          <a href="#metodo-inflacion" class="inline-flex items-center gap-1 rounded border border-amber-500/50 bg-amber-500/20 px-1.5 py-0.5 font-mono-num text-[10px] font-bold text-amber-300 transition hover:bg-amber-500/35" title="Ver metodologia de Estadistico Inflado e Indice de Inflacion">
             ⚠ ESTADISTICO INFLADO
-          </span>
+          </a>
         `;
       } else if (inflIndex >= 15 || gtYards >= 120) {
         specialBadgesHtml += `
-          <span class="inline-flex items-center rounded border border-amber-500/30 bg-amber-500/10 px-1.5 py-0.5 font-mono-num text-[10px] font-medium text-amber-300">
+          <a href="#metodo-inflacion" class="inline-flex items-center rounded border border-amber-500/30 bg-amber-500/10 px-1.5 py-0.5 font-mono-num text-[10px] font-medium text-amber-300 transition hover:bg-amber-500/25" title="Ver metodologia de Indice de Inflacion">
             Inflacion Alta
-          </span>
+          </a>
         `;
       }
 
-      // Columna CPOE / YAC EPA contextual por posición
+      // Columna CPOE / YAC EPA contextual por posición (con enlaces a #metodo-cpoe / #metodo-yac-epa)
       let secondaryMetricHtml = '';
       if (pos === 'QB') {
         secondaryMetricHtml = `
-          <div class="font-mono-num font-semibold ${cpoeVal >= 0 ? 'text-emerald-300' : 'text-rose-300'}">
+          <a href="#metodo-cpoe" class="block font-mono-num font-semibold ${cpoeVal >= 0 ? 'text-emerald-300' : 'text-rose-300'} hover:underline" title="Ver metodologia de CPOE">
             ${formatSigned(cpoeVal, 1, '%')}
-          </div>
-          <div class="font-mono-num text-[10px] text-slate-500">CPOE</div>
+          </a>
+          <a href="#metodo-cpoe" class="metric-ref-link font-mono-num text-[10px] text-slate-500">CPOE</a>
         `;
       } else if (pos === 'WR' || pos === 'TE') {
         secondaryMetricHtml = `
-          <div class="font-mono-num font-semibold ${yacEpaVal >= 0 ? 'text-cyan-300' : 'text-rose-300'}">
+          <a href="#metodo-yac-epa" class="block font-mono-num font-semibold ${yacEpaVal >= 0 ? 'text-cyan-300' : 'text-rose-300'} hover:underline" title="Ver metodologia de YAC EPA">
             ${formatSigned(yacEpaVal, 2)}
-          </div>
-          <div class="font-mono-num text-[10px] text-slate-500">YAC EPA</div>
+          </a>
+          <a href="#metodo-yac-epa" class="metric-ref-link font-mono-num text-[10px] text-slate-500">YAC EPA</a>
         `;
       } else {
         secondaryMetricHtml = `
-          <div class="font-mono-num font-semibold text-slate-300">
+          <a href="#metodo-ecuacion-rb" class="block font-mono-num font-semibold text-slate-300 hover:underline" title="Ver ecuacion y minimo de participacion de RB">
             ${formatNumber(player.opportunities_per_week, 1)}
-          </div>
-          <div class="font-mono-num text-[10px] text-slate-500">Touches/sem</div>
+          </a>
+          <a href="#metodo-ecuacion-rb" class="metric-ref-link font-mono-num text-[10px] text-slate-500">Touches/sem</a>
         `;
       }
 
       const posBadgeColors = {
-        QB: 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300',
-        RB: 'border-cyan-500/30 bg-cyan-500/10 text-cyan-300',
-        WR: 'border-sky-500/30 bg-sky-500/10 text-sky-300',
-        TE: 'border-purple-500/30 bg-purple-500/10 text-purple-300',
+        QB: 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/25',
+        RB: 'border-cyan-500/30 bg-cyan-500/10 text-cyan-300 hover:bg-cyan-500/25',
+        WR: 'border-sky-500/30 bg-sky-500/10 text-sky-300 hover:bg-sky-500/25',
+        TE: 'border-purple-500/30 bg-purple-500/10 text-purple-300 hover:bg-purple-500/25',
       };
       const posBadgeClass =
         posBadgeColors[pos] || 'border-slate-700 bg-slate-800 text-slate-300';
@@ -884,46 +974,46 @@ function renderPlayerRankingsTable() {
               ${specialBadgesHtml}
             </div>
             <div class="mt-0.5 font-mono-num text-[10px] text-slate-500">
-              Oportunidades: ${Number(player.competitive_opportunities ?? player.opportunities ?? 0)} comp / ${Number(player.raw_opportunities ?? player.opportunities ?? 0)} tot (${Number(player.weeks_played ?? 1)} sem)
+              <a href="${posAnchor}" class="metric-ref-link text-slate-400" title="Ver minimo de participacion posicional">Oportunidades</a>: ${Number(player.competitive_opportunities ?? player.opportunities ?? 0)} comp / ${Number(player.raw_opportunities ?? player.opportunities ?? 0)} tot (${Number(player.weeks_played ?? 1)} sem)
             </div>
           </td>
 
-          <!-- Posición -->
+          <!-- Posición (enlaza a la ecuación posicional) -->
           <td class="py-3 px-2 text-center">
-            <span class="inline-block rounded border px-2 py-0.5 font-mono-num text-[11px] font-bold ${posBadgeClass}">
+            <a href="${posAnchor}" class="inline-block rounded border px-2 py-0.5 font-mono-num text-[11px] font-bold transition ${posBadgeClass}" title="Ver ecuacion Z-Score para ${pos}">
               ${pos}
-            </span>
+            </a>
           </td>
 
           <!-- Score de Impacto (0-100) -->
           <td class="py-3 px-3">
-            <div class="flex items-center gap-2.5">
-              <span class="inline-block w-12 rounded border px-1.5 py-0.5 text-center font-mono-num text-xs font-extrabold ${badgeClass}">
+            <a href="#metodo-score-impacto" class="flex items-center gap-2.5 group" title="Ver metodologia de Score de Impacto (0-100)">
+              <span class="inline-block w-12 rounded border px-1.5 py-0.5 text-center font-mono-num text-xs font-extrabold transition group-hover:scale-105 ${badgeClass}">
                 ${impactScore.toFixed(1)}
               </span>
               <div class="hidden sm:block h-2 flex-1 min-w-[72px] max-w-[110px] overflow-hidden rounded-full bg-slate-900 border border-slate-800">
                 <div class="h-full rounded-full ${barClass}" style="width: ${Math.max(2, Math.min(100, impactScore))}%"></div>
               </div>
-            </div>
+            </a>
           </td>
 
           <!-- EPA / Jugada (Sin Minutos Basura) -->
           <td class="py-3 px-3 text-right">
-            <div class="font-mono-num font-bold ${epaPerPlay >= 0 ? 'text-emerald-400' : 'text-rose-400'}">
+            <a href="#metodo-epa" class="block font-mono-num font-bold ${epaPerPlay >= 0 ? 'text-emerald-400' : 'text-rose-400'} hover:underline" title="Ver metodologia de EPA">
               ${formatSigned(epaPerPlay, 3)}
-            </div>
+            </a>
             <div class="font-mono-num text-[10px] text-slate-500">
-              Tot: ${formatSigned(epaTotal, 1)} | Bruto: ${formatSigned(rawEpaPerPlay, 3)}
+              <a href="#metodo-epa-comp" class="metric-ref-link" title="EPA Competitivo vs EPA Bruto">Tot: ${formatSigned(epaTotal, 1)} | Bruto: ${formatSigned(rawEpaPerPlay, 3)}</a>
             </div>
           </td>
 
           <!-- WPA Total -->
           <td class="py-3 px-3 text-right">
-            <div class="font-mono-num font-semibold ${wpaTotal >= 0 ? 'text-cyan-300' : 'text-rose-300'}">
+            <a href="#metodo-wpa" class="block font-mono-num font-semibold ${wpaTotal >= 0 ? 'text-cyan-300' : 'text-rose-300'} hover:underline" title="Ver metodologia de WPA (Win Probability Added)">
               ${formatSigned(wpaTotal, 3)}
-            </div>
+            </a>
             <div class="font-mono-num text-[10px] text-slate-500">
-              Bruto: ${formatSigned(rawWpaTotal, 3)}
+              <a href="#metodo-wpa" class="metric-ref-link">Bruto: ${formatSigned(rawWpaTotal, 3)}</a>
             </div>
           </td>
 
@@ -934,33 +1024,33 @@ function renderPlayerRankingsTable() {
 
           <!-- Success Rate -->
           <td class="py-3 px-3 text-right font-mono-num">
-            <div class="font-semibold text-slate-200">${srPct.toFixed(1)}%</div>
-            <div class="text-[10px] text-slate-500">EPA &gt; 0</div>
+            <a href="#metodo-success-rate" class="block font-semibold text-slate-200 hover:underline" title="Ver metodologia de Success Rate">${srPct.toFixed(1)}%</a>
+            <a href="#metodo-epa" class="metric-ref-link text-[10px] text-slate-500">EPA &gt; 0</a>
           </td>
 
           <!-- Yardas Competitivas vs Brutas (Basura) -->
           <td class="py-3 px-3 text-right font-mono-num">
-            <div class="text-slate-200">
+            <a href="#metodo-epa-comp" class="block text-slate-200 hover:underline" title="Ver filtro de Tiempo Competitivo vs Minutos Basura">
               <span class="font-semibold text-white">${compYards.toFixed(0)}</span>
               <span class="text-slate-500">/</span>
               <span class="text-slate-400">${rawYards.toFixed(0)} yds</span>
-            </div>
-            <div class="text-[10px] ${gtYards > 0 ? 'text-amber-300' : 'text-slate-500'}">
+            </a>
+            <a href="#metodo-epa-comp" class="metric-ref-link text-[10px] ${gtYards > 0 ? 'text-amber-300' : 'text-slate-500'}">
               Basura: +${gtYards.toFixed(0)} yds (${gtPlays} jug)
-            </div>
+            </a>
           </td>
 
           <!-- Índice de Inflación Estadística -->
           <td class="py-3 pl-3 pr-4 text-right font-mono-num">
-            <span class="inline-block rounded border px-2 py-0.5 text-xs font-bold ${
+            <a href="#metodo-inflacion" class="inline-block rounded border px-2 py-0.5 text-xs font-bold transition hover:scale-105 ${
               isInflatedLeader || inflIndex >= 15
                 ? 'border-amber-500/40 bg-amber-500/15 text-amber-300'
                 : 'border-slate-800 bg-slate-900 text-slate-300'
-            }">
+            }" title="Ver metodologia de Indice de Inflacion Estadistica">
               ${inflIndex.toFixed(2)}
-            </span>
+            </a>
             <div class="mt-0.5 text-[10px] ${epaDelta > 0.5 ? 'text-amber-400' : 'text-slate-500'}">
-              ΔEPA: ${formatSigned(epaDelta, 2)}
+              <a href="#metodo-inflacion" class="metric-ref-link">&Delta;EPA: ${formatSigned(epaDelta, 2)}</a>
             </div>
           </td>
         </tr>
@@ -974,52 +1064,59 @@ function renderPlayerRankingsTable() {
 /* ========================================================================== */
 
 /**
- * Renderiza píldoras de métricas numéricas citadas.
+ * Renderiza píldoras de métricas numéricas citadas, enlazando cada una a su bloque
+ * en la sección de Metodología.
  * @param {Record<string, any>} metricsObj
  * @returns {string}
  */
 function renderMetricsPills(metricsObj) {
   if (!metricsObj || typeof metricsObj !== 'object') return '';
-  const labelMap = {
-    impact_score: 'Impact Score',
-    epa_total: 'EPA Comp',
-    raw_epa_total: 'EPA Bruto',
-    epa_per_play: 'EPA/Jugada',
-    wpa_total: 'WPA Total',
-    cpoe: 'CPOE %',
-    yac_epa: 'YAC EPA',
-    success_rate_pct: 'Success %',
-    inflation_index: 'Indice Inflacion',
-    raw_yards: 'Yds Brutas',
-    competitive_yards: 'Yds Comp',
-    garbage_time_yards: 'Yds Basura',
-    home_wp: 'WP Local',
-    delta_wp: 'ΔWP',
-    critical_plays_count: 'Jugadas Criticas',
+  const metaMap = {
+    impact_score: { label: 'Impact Score', href: '#metodo-score-impacto' },
+    epa_total: { label: 'EPA Comp', href: '#metodo-epa-comp' },
+    raw_epa_total: { label: 'EPA Bruto', href: '#metodo-epa' },
+    epa_per_play: { label: 'EPA/Jugada', href: '#metodo-epa' },
+    wpa_total: { label: 'WPA Total', href: '#metodo-wpa' },
+    cpoe: { label: 'CPOE %', href: '#metodo-cpoe' },
+    yac_epa: { label: 'YAC EPA', href: '#metodo-yac-epa' },
+    success_rate_pct: { label: 'Success %', href: '#metodo-success-rate' },
+    success_rate: { label: 'Success Rate', href: '#metodo-success-rate' },
+    inflation_index: { label: 'Indice Inflacion', href: '#metodo-inflacion' },
+    epa_inflation_delta: { label: 'ΔEPA Basura', href: '#metodo-inflacion' },
+    raw_yards: { label: 'Yds Brutas', href: '#metodo-epa-comp' },
+    competitive_yards: { label: 'Yds Comp', href: '#metodo-epa-comp' },
+    garbage_time_yards: { label: 'Yds Basura', href: '#metodo-epa-comp' },
+    home_wp: { label: 'WP Local', href: '#metodo-wp' },
+    delta_wp: { label: 'ΔWP', href: '#metodo-jugada-bisagra' },
+    abs_delta_wp: { label: '|ΔWP| Max', href: '#metodo-jugada-bisagra' },
+    critical_plays_count: { label: 'Jugadas Bisagra', href: '#metodo-jugada-bisagra' },
+    qtr: { label: 'Cuarto (Q)', href: '#metodo-epa-comp' },
   };
 
   return Object.entries(metricsObj)
     .map(([key, val]) => {
       if (val === null || val === undefined) return '';
-      const label = labelMap[key] || key;
+      const info = metaMap[key] || { label: key, href: '#glossary-methodology-section' };
       let formatted = String(val);
       const num = Number(val);
       if (Number.isFinite(num)) {
         if (key === 'home_wp') {
           formatted = `${toPercentage(num).toFixed(1)}%`;
-        } else if (key.includes('epa') || key.includes('wpa') || key === 'delta_wp') {
+        } else if (key.includes('epa') || key.includes('wpa') || key.includes('delta_wp')) {
           formatted = formatSigned(num, 3);
         } else if (key.includes('yards')) {
           formatted = `${num.toFixed(0)} yds`;
+        } else if (key === 'qtr') {
+          formatted = `Q${num.toFixed(0)}`;
         } else {
           formatted = formatNumber(num, 2);
         }
       }
       return `
-        <span class="inline-flex items-center gap-1 rounded border border-slate-700/80 bg-[#090D16] px-2 py-0.5 font-mono-num text-[11px] text-slate-300">
-          <span class="text-slate-500">${escapeHtml(label)}:</span>
+        <a href="${info.href}" class="inline-flex items-center gap-1 rounded border border-slate-700/80 bg-[#090D16] px-2 py-0.5 font-mono-num text-[11px] text-slate-300 transition hover:border-emerald-500/50 hover:text-emerald-300" title="Ver metodologia de ${escapeHtml(info.label)}">
+          <span class="text-slate-400 underline decoration-dotted underline-offset-2">${escapeHtml(info.label)}:</span>
           <strong class="text-white">${escapeHtml(formatted)}</strong>
-        </span>
+        </a>
       `;
     })
     .join('');
@@ -1045,9 +1142,11 @@ function renderCritiquesSection() {
     updatedEl.textContent = `Actualizado: ${formatTimestamp(critiquesData.updated_at)}`;
   }
   if (summaryEl) {
-    summaryEl.textContent = sanitizeHyphens(
-      critiquesData.executive_summary ||
-        'Resumen ejecutivo pendiente de generacion.'
+    summaryEl.innerHTML = linkifyMetrics(
+      escapeHtml(
+        critiquesData.executive_summary ||
+          'Resumen ejecutivo pendiente de generacion.'
+      )
     );
   }
 
@@ -1068,15 +1167,21 @@ function renderCritiquesSection() {
     const mName = sanitizeHyphens(mvp.player_name || mvp.name);
     const mPos = sanitizeHyphens(mvp.position || 'QB');
     const mTeam = sanitizeHyphens(mvp.team || 'NFL');
-    if (mvpTitleEl) mvpTitleEl.textContent = `${mName} (${mPos} - ${mTeam})`;
+    const mPosAnchor = getPositionMethodologyAnchor(mPos);
+    if (mvpTitleEl) {
+      mvpTitleEl.innerHTML = `${escapeHtml(mName)} (<a href="${mPosAnchor}" class="metric-ref-link text-emerald-300" title="Ver ecuacion de ${escapeHtml(mPos)}">${escapeHtml(mPos)}</a> - ${escapeHtml(mTeam)})`;
+    }
     if (mvpScoreEl) mvpScoreEl.textContent = `${formatNumber(mvp.impact_score, 1)}`;
     if (mvpBodyEl) {
-      mvpBodyEl.textContent = sanitizeHyphens(
-        `Lider absoluto en valoracion limpia sin minutos basura. Registra ${formatSigned(mvp.epa_total, 2)} EPA competitivo total (${formatSigned(mvp.epa_per_play, 3)} EPA/jugada), WPA acumulado de ${formatSigned(mvp.wpa_total, 3)}, CPOE de ${formatSigned(mvp.cpoe, 2)}% y ${formatNumber(mvp.competitive_yards, 0)} yardas competitivas.`
+      mvpBodyEl.innerHTML = linkifyMetrics(
+        escapeHtml(
+          `Lider absoluto en valoracion limpia sin minutos basura. Registra ${formatSigned(mvp.epa_total, 2)} EPA competitivo total (${formatSigned(mvp.epa_per_play, 3)} EPA/jugada), WPA acumulado de ${formatSigned(mvp.wpa_total, 3)}, CPOE de ${formatSigned(mvp.cpoe, 2)}% y ${formatNumber(mvp.competitive_yards, 0)} yardas competitivas.`
+        )
       );
     }
     if (mvpPillsEl) {
       mvpPillsEl.innerHTML = renderMetricsPills({
+        impact_score: mvp.impact_score,
         epa_per_play: mvp.epa_per_play,
         epa_total: mvp.epa_total,
         wpa_total: mvp.wpa_total,
@@ -1095,15 +1200,21 @@ function renderCritiquesSection() {
     const iName = sanitizeHyphens(inflated.player_name || inflated.name);
     const iPos = sanitizeHyphens(inflated.position || 'QB');
     const iTeam = sanitizeHyphens(inflated.team || 'NFL');
-    if (infTitleEl) infTitleEl.textContent = `${iName} (${iPos} - ${iTeam})`;
+    const iPosAnchor = getPositionMethodologyAnchor(iPos);
+    if (infTitleEl) {
+      infTitleEl.innerHTML = `${escapeHtml(iName)} (<a href="${iPosAnchor}" class="metric-ref-link text-amber-300" title="Ver ecuacion de ${escapeHtml(iPos)}">${escapeHtml(iPos)}</a> - ${escapeHtml(iTeam)})`;
+    }
     if (infIndexEl) infIndexEl.textContent = `${formatNumber(inflated.inflation_index, 2)}`;
     if (infBodyEl) {
-      infBodyEl.textContent = sanitizeHyphens(
-        `Mayor divergencia entre volumen bruto (${formatNumber(inflated.raw_yards, 0)} yds) y eficiencia en tiempo competitivo (${formatNumber(inflated.competitive_yards, 0)} yds). Acumula ${formatNumber(inflated.garbage_time_yards, 0)} yardas en minutos basura (Q4 con WP < 5% o > 95%) y una inflacion de EPA de ${formatSigned(inflated.epa_inflation_delta, 2)}.`
+      infBodyEl.innerHTML = linkifyMetrics(
+        escapeHtml(
+          `Mayor divergencia entre volumen bruto (${formatNumber(inflated.raw_yards, 0)} yds) y eficiencia en tiempo competitivo (${formatNumber(inflated.competitive_yards, 0)} yds). Acumula ${formatNumber(inflated.garbage_time_yards, 0)} yardas en minutos basura (Q4 con WP < 5% o > 95%) y una inflacion de EPA de ${formatSigned(inflated.epa_inflation_delta, 2)}.`
+        )
       );
     }
     if (infPillsEl) {
       infPillsEl.innerHTML = renderMetricsPills({
+        inflation_index: inflated.inflation_index,
         garbage_time_yards: inflated.garbage_time_yards,
         raw_yards: inflated.raw_yards,
         competitive_yards: inflated.competitive_yards,
@@ -1129,17 +1240,20 @@ function renderCritiquesSection() {
 
   critiquesGrid.innerHTML = list
     .map((item) => {
-      const category = escapeHtml(item.category || 'Analisis');
-      const title = escapeHtml(item.title || 'Cronica Cuantitativa');
-      const subtitle = escapeHtml(item.subtitle || '');
-      const body = escapeHtml(item.body || '');
+      const category = escapeHtml(item.category || item.type || 'Analisis');
+      const title = linkifyMetrics(escapeHtml(item.title || item.headline || 'Cronica Cuantitativa'));
+      const subtitle = linkifyMetrics(escapeHtml(item.subtitle || ''));
+      const body = linkifyMetrics(escapeHtml(item.body || ''));
       const teams = Array.isArray(item.teams) ? item.teams : [];
 
       let catBadgeClass = 'border-cyan-500/30 bg-cyan-500/10 text-cyan-300';
+      let catHref = '#metodo-jugada-bisagra';
       if (category.toLowerCase().includes('mvp')) {
         catBadgeClass = 'border-emerald-500/40 bg-emerald-500/15 text-emerald-300';
-      } else if (category.toLowerCase().includes('inflado')) {
+        catHref = '#metodo-epa-comp';
+      } else if (category.toLowerCase().includes('inflado') || category.toLowerCase().includes('inflacion')) {
         catBadgeClass = 'border-amber-500/40 bg-amber-500/15 text-amber-300';
+        catHref = '#metodo-inflacion';
       }
 
       const teamsHtml = teams
@@ -1153,9 +1267,9 @@ function renderCritiquesSection() {
         <article class="flex flex-col justify-between rounded-xl border border-slate-800 bg-[#111827] p-5 shadow-md transition hover:border-slate-700">
           <div>
             <div class="flex flex-wrap items-center justify-between gap-2">
-              <span class="rounded border px-2 py-0.5 font-mono-num text-[10px] font-bold uppercase ${catBadgeClass}">
+              <a href="${catHref}" class="rounded border px-2 py-0.5 font-mono-num text-[10px] font-bold uppercase transition hover:opacity-85 ${catBadgeClass}">
                 ${category}
-              </span>
+              </a>
               <div class="flex items-center gap-1">${teamsHtml}</div>
             </div>
             <h3 class="mt-2.5 text-base font-bold text-white">${title}</h3>
@@ -1250,6 +1364,24 @@ function bindUiEvents() {
       refreshBtn.disabled = false;
     });
   }
+
+  // 6. Resaltado interactivo al hacer clic en cualquier link hacia #metodo-*
+  document.addEventListener('click', (event) => {
+    const anchor = event.target.closest('a[href^="#metodo-"]');
+    if (!anchor) return;
+    const targetId = anchor.getAttribute('href')?.slice(1);
+    if (!targetId) return;
+    const targetEl = document.getElementById(targetId);
+    if (!targetEl) return;
+
+    document.querySelectorAll('.method-card.method-highlight').forEach((el) => {
+      el.classList.remove('method-highlight');
+    });
+    targetEl.classList.add('method-highlight');
+    setTimeout(() => {
+      targetEl.classList.remove('method-highlight');
+    }, 2600);
+  });
 }
 
 async function loadAllDashboardData() {
