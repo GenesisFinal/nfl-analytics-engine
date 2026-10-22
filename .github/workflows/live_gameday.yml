@@ -1,0 +1,53 @@
+name: Live Gameday ESPN Scoreboard & Win Probability
+
+on:
+  schedule:
+    # Domingos de NFL (17:00 a 23:59 UTC cada 15 minutos)
+    - cron: '*/15 17-23 * * 0'
+    # Ventanas nocturnas TNF / SNF / MNF (00:00 a 04:59 UTC en lunes, martes y viernes UTC)
+    - cron: '*/15 0-4 * * 1,2,5'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nfl-data-pipeline
+  cancel-in-progress: false
+
+jobs:
+  update-live-scoreboard:
+    name: Update ESPN Scoreboard & Critical Win Probability Swings
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Fetch ESPN Scoreboard & Extract Critical Moments (|delta_wp| >= 0.12)
+        run: python -m src.ingest_espn
+
+      - name: Commit and Push Updated Live Scoreboard JSON
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/data/live_scoreboard.json
+          if git diff --cached --quiet; then
+            echo "No changes in public/data/live_scoreboard.json."
+          else
+            git commit -m "chore(live): update ESPN scoreboard & win probability swings"
+            git pull --rebase origin "${GITHUB_REF_NAME}" || true
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
