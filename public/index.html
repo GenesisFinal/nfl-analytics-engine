@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="es" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NFL Analytics Engine | Valoración Cuantitativa, EPA/WPA y Win Probability</title>
+  <meta name="description" content="Plataforma cuantitativa de análisis profundo de la NFL: marcadores y Win Probability en vivo (ESPN), valoración matemática objetiva (0-100) sin minutos basura (nflverse) y crónicas analíticas auditadas por IA." />
+
+  <!-- Tipografía Técnica Ejecutiva: Inter + JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS vía CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            quant: {
+              bg: '#090D16',
+              panel: '#111827',
+              card: '#0F172A',
+              border: '#1E293B',
+              accent: '#10B981',
+              cyan: '#06B6D4',
+              amber: '#F59E0B',
+              danger: '#EF4444'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    body {
+      background-color: #090D16;
+      color: #F8FAFC;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-image:
+        radial-gradient(circle at 12% 0%, rgba(16, 185, 129, 0.07), transparent 32%),
+        radial-gradient(circle at 88% 4%, rgba(6, 182, 212, 0.07), transparent 32%);
+    }
+    .font-mono-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-variant-numeric: tabular-nums;
+    }
+    /* Custom subtle scrollbars */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #090D16;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1E293B;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #334155;
+    }
+    .sortable-th {
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+    .sortable-th:hover {
+      background-color: rgba(30, 41, 59, 0.75);
+      color: #38BDF8;
+    }
+    .pulse-dot {
+      animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes pulse-ring {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.45; transform: scale(0.92); }
+    }
+  </style>
+</head>
+<body class="min-h-screen antialiased selection:bg-emerald-500/30 selection:text-emerald-200">
+
+  <!-- ===================================================================== -->
+  <!-- 1. HEADER EJECUTIVO Y ESTADO DEL MOTOR                                -->
+  <!-- ===================================================================== -->
+  <header class="sticky top-0 z-40 border-b border-slate-800/90 bg-[#090D16]/95 backdrop-blur-md">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <!-- Top Bar: Identidad + Telemetría del Motor -->
+      <div class="flex flex-col gap-3 py-4 lg:flex-row lg:items-center lg:justify-between">
+        <div class="flex items-start sm:items-center gap-3.5">
+          <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-500/30 bg-gradient-to-br from-emerald-500/20 via-cyan-500/10 to-slate-900 shadow-inner">
+            <span class="font-mono-num text-sm font-extrabold tracking-tighter text-emerald-400">NFL</span>
+          </div>
+          <div>
+            <div class="flex flex-wrap items-center gap-2">
+              <h1 class="text-lg sm:text-xl font-extrabold tracking-tight text-white">
+                NFL ANALYTICS ENGINE
+              </h1>
+              <span class="rounded border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 font-mono-num text-[11px] font-semibold uppercase tracking-wider text-emerald-400">
+                QUANT TERMINAL v2.6
+              </span>
+            </div>
+            <p class="text-xs text-slate-400">
+              Valoración Actuarial Sin Minutos Basura (nflverse) - Win Probability en Vivo (ESPN) - Auditoría Crítica IA
+            </p>
+          </div>
+        </div>
+
+        <!-- Badges de Estado del Motor -->
+        <div class="flex flex-wrap items-center gap-2 text-xs">
+          <!-- Temporada Activa -->
+          <div class="flex items-center gap-1.5 rounded-lg border border-slate-800 bg-[#111827] px-3 py-1.5">
+            <span class="h-2 w-2 rounded-full bg-emerald-400 pulse-dot"></span>
+            <span class="text-slate-400">Temporada:</span>
+            <span id="header-season-badge" class="font-mono-num font-bold text-white">--</span>
+          </div>
+
+          <!-- Estado de Fallback nflverse -->
+          <div id="header-fallback-container" class="flex items-center gap-1.5 rounded-lg border border-slate-800 bg-[#111827] px-3 py-1.5" title="Estado de resolución del dataset Play-by-Play de nflverse">
+            <span id="header-fallback-dot" class="h-2 w-2 rounded-full bg-cyan-400"></span>
+            <span id="header-fallback-text" class="font-mono-num text-[11px] text-slate-300">Verificando PBP...</span>
+          </div>
+
+          <!-- Motor de Críticas -->
+          <div class="flex items-center gap-1.5 rounded-lg border border-slate-800 bg-[#111827] px-3 py-1.5">
+            <span class="text-slate-400">Motor Crítico:</span>
+            <span id="header-ai-mode" class="font-mono-num font-semibold text-cyan-400">--</span>
+          </div>
+
+          <!-- Timestamp de Actualización -->
+          <div class="flex items-center gap-1.5 rounded-lg border border-slate-800 bg-[#111827] px-3 py-1.5">
+            <span class="text-slate-400">Sync:</span>
+            <time id="header-updated-at" class="font-mono-num text-slate-200">--</time>
+          </div>
+
+          <!-- Botón de Recarga Local -->
+          <button
+            id="btn-refresh-data"
+            type="button"
+            class="inline-flex items-center gap-1.5 rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-3 py-1.5 font-medium text-cyan-300 transition hover:bg-cyan-500/20 active:scale-95"
+            title="Recargar archivos JSON estáticos locales"
+          >
+            <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            <span>Actualizar</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Barra de Navegación Rápida -->
+      <nav class="flex items-center gap-1 overflow-x-auto border-t border-slate-800/60 py-2 text-xs font-medium text-slate-400" aria-label="Secciones del tablero">
+        <a href="#kpi-summary-section" class="rounded-md px-2.5 py-1 transition hover:bg-slate-800/70 hover:text-white">Resumen Ejecutivo</a>
+        <span class="text-slate-700">/</span>
+        <a href="#live-games-section" class="rounded-md px-2.5 py-1 transition hover:bg-slate-800/70 hover:text-white">Marcadores y Win Probability</a>
+        <span class="text-slate-700">/</span>
+        <a href="#valuation-section" class="rounded-md px-2.5 py-1 transition hover:bg-slate-800/70 hover:text-white">Ranking Score de Impacto (0-100)</a>
+        <span class="text-slate-700">/</span>
+        <a href="#methodology-note" class="rounded-md px-2.5 py-1 transition hover:bg-slate-800/70 hover:text-white">Fórmulas Z-Score y Filtro Basura</a>
+        <span class="text-slate-700">/</span>
+        <a href="#critiques-section" class="rounded-md px-2.5 py-1 transition hover:bg-slate-800/70 hover:text-white">Crónicas Analíticas</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Banner de Alerta / Fallback de Temporada o Estado de Carga -->
+  <div id="system-status-banner" class="hidden border-b border-amber-500/30 bg-amber-500/10">
+    <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-2 text-xs text-amber-200 sm:px-6 lg:px-8">
+      <div class="flex items-center gap-2">
+        <span class="inline-block h-2 w-2 shrink-0 rounded-full bg-amber-400"></span>
+        <span id="system-status-banner-text" class="font-mono-num"></span>
+      </div>
+      <span class="hidden sm:inline font-mono-num text-[11px] uppercase tracking-wider text-amber-400/90">Fuente: public/data/*.json</span>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- CONTENIDO PRINCIPAL                                                   -->
+  <!-- ===================================================================== -->
+  <main class="mx-auto max-w-7xl space-y-10 px-4 py-8 sm:px-6 lg:px-8">
+
+    <!-- 1B. TARJETAS KPI EJECUTIVAS -->
+    <section id="kpi-summary-section" aria-label="Indicadores clave del motor">
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <!-- KPI 1: MVP Real -->
+        <article class="relative overflow-hidden rounded-xl border border-emerald-500/30 bg-[#111827] p-4 shadow-lg">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-400">MVP Real (Tiempo Competitivo)</span>
+            <span class="rounded bg-emerald-500/15 px-2 py-0.5 font-mono-num text-[11px] font-bold text-emerald-300" id="kpi-mvp-score">-- / 100</span>
+          </div>
+          <div class="mt-2.5 flex items-baseline justify-between gap-2">
+            <h2 id="kpi-mvp-name" class="truncate text-lg font-extrabold text-white">Cargando...</h2>
+            <span id="kpi-mvp-meta" class="shrink-0 font-mono-num text-xs font-semibold text-slate-400">--</span>
+          </div>
+          <p id="kpi-mvp-metrics" class="mt-2 font-mono-num text-xs text-slate-300">
+            EPA/jugada: -- | WPA: --
+          </p>
+          <div class="mt-2.5 text-[11px] text-slate-400">
+            Excluye Q4 con WP &lt; 5% o WP &gt; 95%
+          </div>
+        </article>
+
+        <!-- KPI 2: Estadístico Inflado -->
+        <article class="relative overflow-hidden rounded-xl border border-amber-500/30 bg-[#111827] p-4 shadow-lg">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-amber-400">Estadístico Inflado (Garbage Time)</span>
+            <span class="rounded bg-amber-500/15 px-2 py-0.5 font-mono-num text-[11px] font-bold text-amber-300" id="kpi-inflated-badge">Índice --</span>
+          </div>
+          <div class="mt-2.5 flex items-baseline justify-between gap-2">
+            <h2 id="kpi-inflated-name" class="truncate text-lg font-extrabold text-white">Cargando...</h2>
+            <span id="kpi-inflated-meta" class="shrink-0 font-mono-num text-xs font-semibold text-slate-400">--</span>
+          </div>
+          <p id="kpi-inflated-metrics" class="mt-2 font-mono-num text-xs text-amber-200/90">
+            Yardas Basura: -- | ΔEPA: --
+          </p>
+          <div class="mt-2.5 text-[11px] text-slate-400">
+            Mayor brecha entre volumen bruto y EPA competitivo
+          </div>
+        </article>
+
+        <!-- KPI 3: Partidos Monitoreados -->
+        <article class="relative overflow-hidden rounded-xl border border-slate-800 bg-[#111827] p-4 shadow-lg">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-cyan-400">Partidos Monitoreados (ESPN)</span>
+            <span id="kpi-games-week" class="rounded bg-cyan-500/15 px-2 py-0.5 font-mono-num text-[11px] font-bold text-cyan-300">Semana --</span>
+          </div>
+          <div class="mt-2.5 flex items-baseline justify-between gap-2">
+            <h2 id="kpi-games-count" class="font-mono-num text-2xl font-extrabold text-white">0</h2>
+            <span id="kpi-games-status-breakdown" class="font-mono-num text-xs text-slate-400">--</span>
+          </div>
+          <p id="kpi-games-critical-total" class="mt-2 font-mono-num text-xs text-slate-300">
+            Momentos críticos (|ΔWP| &ge; 12%): --
+          </p>
+          <div class="mt-2.5 text-[11px] text-slate-400">
+            Ingesta estática libre de CORS desde public/data/
+          </div>
+        </article>
+
+        <!-- KPI 4: Jugada Bisagra Principal -->
+        <article class="relative overflow-hidden rounded-xl border border-rose-500/30 bg-[#111827] p-4 shadow-lg">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-rose-400">Jugada Bisagra Principal</span>
+            <span id="kpi-hinge-delta" class="rounded bg-rose-500/15 px-2 py-0.5 font-mono-num text-[11px] font-bold text-rose-300">ΔWP --</span>
+          </div>
+          <div class="mt-2.5 flex items-baseline justify-between gap-2">
+            <h2 id="kpi-hinge-matchup" class="truncate text-base font-extrabold text-white">Sin alertas</h2>
+            <span id="kpi-hinge-clock" class="shrink-0 font-mono-num text-xs text-slate-400">--</span>
+          </div>
+          <p id="kpi-hinge-desc" class="mt-2 line-clamp-2 text-xs text-slate-300">
+            Esperando telemetría de winprobability...
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- 2. SECCIÓN SUPERIOR DE PARTIDOS EN VIVO Y RECIENTES (live_scoreboard) -->
+    <!-- ===================================================================== -->
+    <section id="live-games-section" class="space-y-4" aria-labelledby="live-games-heading">
+      <div class="flex flex-col gap-3 border-b border-slate-800 pb-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="h-2.5 w-2.5 rounded-full bg-emerald-400 pulse-dot"></span>
+            <h2 id="live-games-heading" class="text-lg sm:text-xl font-bold tracking-tight text-white">
+              Marcadores en Vivo, Win Probability y Jugadas Bisagra
+            </h2>
+          </div>
+          <p class="mt-1 text-xs text-slate-400">
+            Extracción de <code class="font-mono-num text-slate-300">winprobability</code> vía ESPN Summary API. Se destacan las 3 jugadas con mayor variación absoluta (<code class="font-mono-num text-amber-300">|delta_wp| &ge; 0.12</code>).
+          </p>
+        </div>
+
+        <!-- Filtros de Partidos -->
+        <div class="flex flex-wrap items-center gap-1.5" role="group" aria-label="Filtrar partidos">
+          <button type="button" data-game-filter="all" class="game-filter-btn rounded-lg border border-cyan-500/40 bg-cyan-500/15 px-3 py-1.5 text-xs font-semibold text-cyan-300 transition">
+            Todos
+          </button>
+          <button type="button" data-game-filter="live" class="game-filter-btn rounded-lg border border-slate-800 bg-[#111827] px-3 py-1.5 text-xs font-medium text-slate-400 transition hover:border-slate-700 hover:text-white">
+            En Vivo
+          </button>
+          <button type="button" data-game-filter="hinge" class="game-filter-btn rounded-lg border border-slate-800 bg-[#111827] px-3 py-1.5 text-xs font-medium text-slate-400 transition hover:border-slate-700 hover:text-white">
+            Con Jugada Bisagra (&ge;12% WP)
+          </button>
+          <button type="button" data-game-filter="final" class="game-filter-btn rounded-lg border border-slate-800 bg-[#111827] px-3 py-1.5 text-xs font-medium text-slate-400 transition hover:border-slate-700 hover:text-white">
+            Finalizados
+          </button>
+        </div>
+      </div>
+
+      <!-- Contenedor de Tarjetas de Partidos -->
+      <div id="scoreboard-grid" class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <!-- Renderizado dinámicamente por public/app.js -->
+        <div class="col-span-full rounded-xl border border-slate-800 bg-[#111827] p-8 text-center text-sm text-slate-400">
+          Cargando telemetría de partidos desde <code class="font-mono-num text-slate-300">./data/live_scoreboard.json</code>...
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- 3. TABLA INTERACTIVA DE VALORACIÓN OBJETIVA (0-100) (player_rankings) -->
+    <!-- ===================================================================== -->
+    <section id="valuation-section" class="space-y-5" aria-labelledby="valuation-heading">
+      <div class="flex flex-col gap-4 border-b border-slate-800 pb-4 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+          <div class="flex flex-wrap items-center gap-2">
+            <h2 id="valuation-heading" class="text-lg sm:text-xl font-bold tracking-tight text-white">
+              Modelo Matemático de Valoración Objetiva (Escala 0 a 100)
+            </h2>
+            <span class="rounded border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 font-mono-num text-[11px] font-semibold text-emerald-400">
+              FILTRO GARBAGE TIME ACTIVO
+            </span>
+          </div>
+          <p class="mt-1 text-xs text-slate-400">
+            Z-Score posicional normalizado sin minutos basura (<code class="font-mono-num text-slate-300">Q4</code> con <code class="font-mono-num text-slate-300">WP &lt; 5%</code> o <code class="font-mono-num text-slate-300">WP &gt; 95%</code>). Haz clic en cualquier encabezado para ordenar.
+          </p>
+        </div>
+
+        <!-- Controles de Filtrado por Posición y Buscador -->
+        <div class="flex flex-col gap-2.5 sm:flex-row sm:items-center">
+          <!-- Botones de Posición -->
+          <div class="inline-flex rounded-xl border border-slate-800 bg-[#111827] p-1" role="tablist" aria-label="Filtrar por posición">
+            <button type="button" data-pos-filter="ALL" class="pos-filter-btn rounded-lg bg-emerald-500/20 px-3 py-1.5 font-mono-num text-xs font-bold text-emerald-300 transition">
+              Todos
+            </button>
+            <button type="button" data-pos-filter="QB" class="pos-filter-btn rounded-lg px-3 py-1.5 font-mono-num text-xs font-semibold text-slate-400 transition hover:text-white">
+              QB
+            </button>
+            <button type="button" data-pos-filter="RB" class="pos-filter-btn rounded-lg px-3 py-1.5 font-mono-num text-xs font-semibold text-slate-400 transition hover:text-white">
+              RB
+            </button>
+            <button type="button" data-pos-filter="WR" class="pos-filter-btn rounded-lg px-3 py-1.5 font-mono-num text-xs font-semibold text-slate-400 transition hover:text-white">
+              WR
+            </button>
+            <button type="button" data-pos-filter="TE" class="pos-filter-btn rounded-lg px-3 py-1.5 font-mono-num text-xs font-semibold text-slate-400 transition hover:text-white">
+              TE
+            </button>
+          </div>
+
+          <!-- Buscador por Nombre o Equipo -->
+          <div class="relative">
+            <input
+              id="player-search-input"
+              type="search"
+              placeholder="Buscar jugador o equipo (ej. KC, Allen)..."
+              class="w-full sm:w-64 rounded-xl border border-slate-800 bg-[#111827] py-1.5 pl-8 pr-3 text-xs text-white placeholder-slate-500 focus:border-cyan-500 focus:outline-none"
+              aria-label="Buscar jugador o equipo"
+            />
+            <svg class="pointer-events-none absolute left-2.5 top-2 h-4 w-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 103.5 10.5a7.5 7.5 0 0013.15 6.15z" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Barra de Metadatos de Tabla -->
+      <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400">
+        <div>
+          Mostrando <span id="rankings-visible-count" class="font-mono-num font-bold text-white">0</span> de <span id="rankings-total-count" class="font-mono-num font-semibold text-slate-300">0</span> jugadores calificados
+          <span id="rankings-active-pos-label" class="ml-1 font-mono-num text-cyan-400">(Posición: Todos)</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-3">
+          <span class="inline-flex items-center gap-1.5">
+            <span class="h-2.5 w-2.5 rounded-sm bg-emerald-400"></span>
+            <span>MVP Real / Eficiencia Élite</span>
+          </span>
+          <span class="inline-flex items-center gap-1.5">
+            <span class="h-2.5 w-2.5 rounded-sm bg-amber-400"></span>
+            <span>Inflación en Minutos Basura</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Tabla Ordenable de Valoración -->
+      <div class="overflow-hidden rounded-xl border border-slate-800 bg-[#111827] shadow-xl">
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse text-left text-xs" id="player-rankings-table">
+            <thead>
+              <tr class="border-b border-slate-800 bg-slate-900/90 font-mono-num text-[11px] uppercase tracking-wider text-slate-400">
+                <th class="py-3.5 pl-4 pr-2 text-center w-12">#</th>
+                <th class="sortable-th py-3.5 px-3" data-sort="player_name">
+                  <div class="flex items-center gap-1">
+                    <span>Jugador / Equipo</span>
+                    <span class="sort-indicator text-slate-600" data-col="player_name">↕</span>
+                  </div>
+                </th>
+                <th class="py-3.5 px-2 text-center">Pos</th>
+                <th class="sortable-th py-3.5 px-3" data-sort="impact_score">
+                  <div class="flex items-center gap-1 text-emerald-400">
+                    <span>Score Impacto (0-100)</span>
+                    <span class="sort-indicator" data-col="impact_score">↓</span>
+                  </div>
+                </th>
+                <th class="sortable-th py-3.5 px-3 text-right" data-sort="epa_per_play">
+                  <div class="flex items-center justify-end gap-1">
+                    <span>EPA / Jugada</span>
+                    <span class="sort-indicator text-slate-600" data-col="epa_per_play">↕</span>
+                  </div>
+                </th>
+                <th class="sortable-th py-3.5 px-3 text-right" data-sort="wpa_total">
+                  <div class="flex items-center justify-end gap-1">
+                    <span>WPA Total</span>
+                    <span class="sort-indicator text-slate-600" data-col="wpa_total">↕</span>
+                  </div>
+                </th>
+                <th class="sortable-th py-3.5 px-3 text-right" data-sort="cpoe">
+                  <div class="flex items-center justify-end gap-1" title="CPOE para QB / YAC EPA para WR y TE">
+                    <span>CPOE / YAC EPA</span>
+                    <span class="sort-indicator text-slate-600" data-col="cpoe">↕</span>
+                  </div>
+                </th>
+                <th class="sortable-th py-3.5 px-3 text-right" data-sort="success_rate">
+                  <div class="flex items-center justify-end gap-1">
+                    <span>Success Rate</span>
+                    <span class="sort-indicator text-slate-600" data-col="success_rate">↕</span>
+                  </div>
+                </th>
+                <th class="sortable-th py-3.5 px-3 text-right" data-sort="garbage_time_yards">
+                  <div class="flex items-center justify-end gap-1">
+                    <span>Yds Comp vs Brutas (Basura)</span>
+                    <span class="sort-indicator text-slate-600" data-col="garbage_time_yards">↕</span>
+                  </div>
+                </th>
+                <th class="sortable-th py-3.5 pl-3 pr-4 text-right" data-sort="inflation_index">
+                  <div class="flex items-center justify-end gap-1 text-amber-400">
+                    <span>Índice Inflación</span>
+                    <span class="sort-indicator text-slate-600" data-col="inflation_index">↕</span>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody id="player-rankings-tbody" class="divide-y divide-slate-800/70">
+              <tr>
+                <td colspan="10" class="py-10 text-center text-sm text-slate-400">
+                  Cargando ranking cuantitativo desde <code class="font-mono-num text-slate-300">./data/player_rankings.json</code>...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Nota Técnica Visible con las Fórmulas Exactas y Filtro Garbage Time -->
+      <aside id="methodology-note" class="rounded-xl border border-slate-800 bg-[#111827]/90 p-5 shadow-md" aria-label="Especificación matemática del modelo de valoración">
+        <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+          <div class="space-y-2 lg:max-w-xl">
+            <div class="flex items-center gap-2">
+              <span class="rounded bg-cyan-500/15 px-2 py-0.5 font-mono-num text-[11px] font-bold uppercase text-cyan-300">
+                Nota Técnica Actuarial
+              </span>
+              <h3 class="text-sm font-bold text-white">
+                Especificación de Fórmulas Z-Score y Regla de Exclusión de Minutos Basura
+              </h3>
+            </div>
+            <p class="text-xs leading-relaxed text-slate-300">
+              Para evitar que jugadores acumulen estadísticas vacías en partidos ya decididos, el motor filtra cualquier jugada del
+              <strong class="font-mono-num text-amber-300">4to cuarto (qtr == 4)</strong> donde la probabilidad de victoria previa
+              (<code class="font-mono-num text-amber-300">wp</code>) sea <strong class="font-mono-num text-amber-300">&lt; 0.05 (5%)</strong> o
+              <strong class="font-mono-num text-amber-300">&gt; 0.95 (95%)</strong>. Las métricas brutas se conservan en paralelo para cuantificar el
+              <strong class="text-white">Índice de Inflación Estadística</strong> (<code class="font-mono-num text-slate-300">inflation_index</code> / <code class="font-mono-num text-slate-300">epa_inflation_delta</code>).
+            </p>
+            <p class="font-mono-num text-[11px] text-slate-400">
+              Mínimos de participación semanal: QB &ge; 15 dropbacks/sem | RB &ge; 10 acarreos+targets/sem | WR/TE &ge; 5 targets/sem.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 gap-2.5 sm:grid-cols-3 lg:flex-1">
+            <!-- Fórmula QB -->
+            <div class="rounded-lg border border-slate-800 bg-[#090D16] p-3">
+              <div class="flex items-center justify-between">
+                <span class="font-mono-num text-xs font-bold text-emerald-400">Quarterbacks (QB)</span>
+                <span class="font-mono-num text-[10px] text-slate-500">Min 15 DB/sem</span>
+              </div>
+              <code class="mt-1.5 block font-mono-num text-[11px] leading-relaxed text-slate-200">
+                0.45 * z(EPA_per_dropback) + 0.25 * z(WPA_total) + 0.20 * z(CPOE) + 0.10 * z(Success_Rate)
+              </code>
+            </div>
+
+            <!-- Fórmula RB -->
+            <div class="rounded-lg border border-slate-800 bg-[#090D16] p-3">
+              <div class="flex items-center justify-between">
+                <span class="font-mono-num text-xs font-bold text-cyan-400">Running Backs (RB)</span>
+                <span class="font-mono-num text-[10px] text-slate-500">Min 10 Touches/sem</span>
+              </div>
+              <code class="mt-1.5 block font-mono-num text-[11px] leading-relaxed text-slate-200">
+                0.50 * z(EPA_per_rush_and_rec) + 0.25 * z(Success_Rate) + 0.25 * z(WPA_total)
+              </code>
+            </div>
+
+            <!-- Fórmula WR / TE -->
+            <div class="rounded-lg border border-slate-800 bg-[#090D16] p-3">
+              <div class="flex items-center justify-between">
+                <span class="font-mono-num text-xs font-bold text-amber-400">Receptores (WR / TE)</span>
+                <span class="font-mono-num text-[10px] text-slate-500">Min 5 Targets/sem</span>
+              </div>
+              <code class="mt-1.5 block font-mono-num text-[11px] leading-relaxed text-slate-200">
+                0.45 * z(EPA_per_target) + 0.30 * z(WPA_total) + 0.25 * z(YAC_EPA)
+              </code>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- 4. SECCIÓN DE CRÓNICAS ANALÍTICAS BASADAS EN DATOS (game_critiques)   -->
+    <!-- ===================================================================== -->
+    <section id="critiques-section" class="space-y-6" aria-labelledby="critiques-heading">
+      <div class="flex flex-col gap-3 border-b border-slate-800 pb-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <div class="flex flex-wrap items-center gap-2">
+            <h2 id="critiques-heading" class="text-lg sm:text-xl font-bold tracking-tight text-white">
+              Crónicas Analíticas y Auditoría Estadística
+            </h2>
+            <span id="critiques-mode-badge" class="rounded border border-cyan-500/30 bg-cyan-500/10 px-2.5 py-0.5 font-mono-num text-[11px] font-semibold text-cyan-300">
+              Modo: --
+            </span>
+          </div>
+          <p class="mt-1 text-xs text-slate-400">
+            Cero adjetivos vacíos. Cada afirmación cita datos exactos de <code class="font-mono-num text-slate-300">EPA</code>, <code class="font-mono-num text-slate-300">WPA</code>, <code class="font-mono-num text-slate-300">CPOE</code> o <code class="font-mono-num text-slate-300">&Delta;WP</code> usando exclusivamente guion simple (<code class="font-mono-num text-slate-300">-</code>).
+          </p>
+        </div>
+      </div>
+
+      <!-- Tarjeta Destacada del Resumen Ejecutivo -->
+      <article class="rounded-xl border border-emerald-500/30 bg-gradient-to-br from-[#111827] via-[#111827] to-emerald-950/20 p-5 shadow-lg">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span class="inline-flex items-center gap-1.5 rounded bg-emerald-500/15 px-2.5 py-0.5 font-mono-num text-xs font-bold uppercase tracking-wider text-emerald-300">
+            Dictamen Ejecutivo de la Jornada
+          </span>
+          <span id="critiques-updated-at" class="font-mono-num text-xs text-slate-400">--</span>
+        </div>
+        <p id="executive-summary-text" class="mt-3 text-sm leading-relaxed text-slate-200">
+          Cargando resumen ejecutivo desde <code class="font-mono-num text-slate-300">./data/game_critiques.json</code>...
+        </p>
+      </article>
+
+      <!-- Comparativa Cara a Cara: MVP Real vs Estadístico Inflado -->
+      <div class="grid grid-cols-1 gap-4 lg:grid-cols-2" id="head-to-head-comparison">
+        <!-- Tarjeta MVP Real -->
+        <article class="rounded-xl border border-emerald-500/30 bg-[#111827] p-5">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div>
+              <span class="rounded bg-emerald-500/20 px-2 py-0.5 font-mono-num text-[11px] font-bold uppercase text-emerald-300">
+                ★ MVP Real (Eficiencia Limpia)
+              </span>
+              <h3 id="critique-mvp-title" class="mt-1.5 text-base font-extrabold text-white">--</h3>
+            </div>
+            <div class="text-right font-mono-num">
+              <div id="critique-mvp-score" class="text-xl font-extrabold text-emerald-400">--</div>
+              <div class="text-[10px] uppercase text-slate-400">Impact Score</div>
+            </div>
+          </div>
+          <p id="critique-mvp-body" class="mt-3 text-xs leading-relaxed text-slate-300">--</p>
+          <div id="critique-mvp-pills" class="mt-4 flex flex-wrap gap-1.5"></div>
+        </article>
+
+        <!-- Tarjeta Estadístico Inflado -->
+        <article class="rounded-xl border border-amber-500/30 bg-[#111827] p-5">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div>
+              <span class="rounded bg-amber-500/20 px-2 py-0.5 font-mono-num text-[11px] font-bold uppercase text-amber-300">
+                ⚠ Estadístico Inflado (Garbage Time)
+              </span>
+              <h3 id="critique-inflated-title" class="mt-1.5 text-base font-extrabold text-white">--</h3>
+            </div>
+            <div class="text-right font-mono-num">
+              <div id="critique-inflated-index" class="text-xl font-extrabold text-amber-400">--</div>
+              <div class="text-[10px] uppercase text-slate-400">Índice Inflación</div>
+            </div>
+          </div>
+          <p id="critique-inflated-body" class="mt-3 text-xs leading-relaxed text-slate-300">--</p>
+          <div id="critique-inflated-pills" class="mt-4 flex flex-wrap gap-1.5"></div>
+        </article>
+      </div>
+
+      <!-- Grilla de Crónicas Críticas Post-Partido y de Jugadores -->
+      <div id="critiques-grid" class="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div class="col-span-full rounded-xl border border-slate-800 bg-[#111827] p-8 text-center text-sm text-slate-400">
+          Cargando crónicas analíticas...
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================================================================== -->
+  <!-- FOOTER TÉCNICO                                                        -->
+  <!-- ===================================================================== -->
+  <footer class="mt-16 border-t border-slate-800/80 bg-[#090D16] py-8 text-xs text-slate-500">
+    <div class="mx-auto flex max-w-7xl flex-col items-start justify-between gap-4 px-4 sm:flex-row sm:items-center sm:px-6 lg:px-8">
+      <div>
+        <p class="font-semibold text-slate-300">NFL Analytics Engine - Plataforma Pública de Análisis Cuantitativo</p>
+        <p class="mt-1">
+          Datos procesados vía GitHub Actions desde <code class="font-mono-num text-slate-400">nflverse-data</code> (Parquet) y <code class="font-mono-num text-slate-400">ESPN JSON API</code>. Servido estáticamente desde <code class="font-mono-num text-slate-400">public/data/*.json</code>.
+        </p>
+      </div>
+      <div class="font-mono-num text-[11px] text-slate-400">
+        Regla de Integridad: Prohibido scraping HTML y llamadas CORS directas desde el navegador.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Lógica Modular del Frontend (100% lectura local estática) -->
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
