@@ -1,0 +1,319 @@
+{
+  "updated_at": "2026-10-22T02:40:27.138904+00:00",
+  "season": 2026,
+  "generation_mode": "deterministic_template",
+  "executive_summary": "Auditoria cuantitativa temporada 2026 (excluyendo jugadas de 4to cuarto con WP < 5% o WP > 95%): El MVP Real es Mike Evans (WR - SF) con Impact Score de 98.5/100, EPA competitivo total de +40.92 (+1.023 EPA/jugada), WPA acumulado de +1.193, CPOE de +0.00% y Success Rate de 70.0%. En contraste, el Estadistico Inflado es Matthew Golden (WR - GB), quien registra 503 yardas brutas pero solo 348 yardas en tiempo competitivo (155 yardas en minutos basura), pasando de un EPA bruto de +15.11 a un EPA competitivo de +6.18 (WPA de +0.098, CPOE de +0.00%) con un Indice de Inflacion Estadistica de 52.77.",
+  "mvp_real": {
+    "player_id": "00-0031408",
+    "raw_opportunities": 40,
+    "raw_weeks_played": 6,
+    "raw_yards": 422.0,
+    "raw_epa_total": 40.92,
+    "raw_epa_per_play": 1.023,
+    "raw_wpa_total": 1.193,
+    "raw_cpoe": 0.0,
+    "raw_yac_epa": -18.32,
+    "raw_success_rate": 0.7,
+    "competitive_opportunities": 40,
+    "comp_weeks_played": 6.0,
+    "competitive_yards": 422.0,
+    "epa_total": 40.92,
+    "epa_per_play": 1.023,
+    "wpa_total": 1.193,
+    "cpoe": 0.0,
+    "yac_epa": -18.32,
+    "success_rate": 0.7,
+    "player_name": "Mike Evans",
+    "name": "Mike Evans",
+    "gsis_id": "00-0031408",
+    "team": "SF",
+    "position": "WR",
+    "weeks_played": 6,
+    "opportunities": 40,
+    "opportunities_per_week": 6.67,
+    "epa_per_dropback": 0.0,
+    "epa_per_rush_and_rec": 0.0,
+    "epa_per_target": 1.023,
+    "z_score": 1.7563,
+    "impact_score": 98.5,
+    "garbage_time_plays": 0,
+    "garbage_time_yards": 0.0,
+    "epa_inflation_delta": 0.0,
+    "yards_inflation_pct": 0.0,
+    "inflation_index": 0.0,
+    "success_rate_pct": 70.0,
+    "rank": 1
+  },
+  "inflated_player": {
+    "player_id": "00-0040667",
+    "raw_opportunities": 58,
+    "raw_weeks_played": 6,
+    "raw_yards": 503.0,
+    "raw_epa_total": 15.11,
+    "raw_epa_per_play": 0.261,
+    "raw_wpa_total": 0.117,
+    "raw_cpoe": 0.0,
+    "raw_yac_epa": -65.63,
+    "raw_success_rate": 0.4655,
+    "competitive_opportunities": 43,
+    "comp_weeks_played": 6.0,
+    "competitive_yards": 348.0,
+    "epa_total": 6.18,
+    "epa_per_play": 0.144,
+    "wpa_total": 0.098,
+    "cpoe": 0.0,
+    "yac_epa": -58.18,
+    "success_rate": 0.4419,
+    "player_name": "Matthew Golden",
+    "name": "Matthew Golden",
+    "gsis_id": "00-0040667",
+    "team": "GB",
+    "position": "WR",
+    "weeks_played": 6,
+    "opportunities": 58,
+    "opportunities_per_week": 9.67,
+    "epa_per_dropback": 0.0,
+    "epa_per_rush_and_rec": 0.0,
+    "epa_per_target": 0.144,
+    "z_score": -1.0962,
+    "impact_score": 8.7,
+    "garbage_time_plays": 15,
+    "garbage_time_yards": 155.0,
+    "epa_inflation_delta": 8.936,
+    "yards_inflation_pct": 30.82,
+    "inflation_index": 52.77,
+    "success_rate_pct": 44.2,
+    "rank": 143
+  },
+  "inflated_stat_leader": {
+    "player_id": "00-0040667",
+    "raw_opportunities": 58,
+    "raw_weeks_played": 6,
+    "raw_yards": 503.0,
+    "raw_epa_total": 15.11,
+    "raw_epa_per_play": 0.261,
+    "raw_wpa_total": 0.117,
+    "raw_cpoe": 0.0,
+    "raw_yac_epa": -65.63,
+    "raw_success_rate": 0.4655,
+    "competitive_opportunities": 43,
+    "comp_weeks_played": 6.0,
+    "competitive_yards": 348.0,
+    "epa_total": 6.18,
+    "epa_per_play": 0.144,
+    "wpa_total": 0.098,
+    "cpoe": 0.0,
+    "yac_epa": -58.18,
+    "success_rate": 0.4419,
+    "player_name": "Matthew Golden",
+    "name": "Matthew Golden",
+    "gsis_id": "00-0040667",
+    "team": "GB",
+    "position": "WR",
+    "weeks_played": 6,
+    "opportunities": 58,
+    "opportunities_per_week": 9.67,
+    "epa_per_dropback": 0.0,
+    "epa_per_rush_and_rec": 0.0,
+    "epa_per_target": 0.144,
+    "z_score": -1.0962,
+    "impact_score": 8.7,
+    "garbage_time_plays": 15,
+    "garbage_time_yards": 155.0,
+    "epa_inflation_delta": 8.936,
+    "yards_inflation_pct": 30.82,
+    "inflation_index": 52.77,
+    "success_rate_pct": 44.2,
+    "rank": 143
+  },
+  "critiques": [
+    {
+      "id": "mvp-real-00-0031408",
+      "title": "MVP Real: Mike Evans (SF)",
+      "subtitle": "Impact Score 98.5 - EPA +40.92 - WPA +1.193",
+      "category": "MVP Real",
+      "teams": [
+        "SF"
+      ],
+      "body": "Designacion de MVP Real: Mike Evans (WR - SF) lidera el modelo de valoracion con Impact Score de 98.5/100 tras filtrar minutos basura. En situaciones competitivas genera +40.92 EPA total (+1.023 EPA/jugada), WPA de +1.193, CPOE de +0.00%, Success Rate de 70.0% y 422 yardas netas competitivas.",
+      "metrics_cited": {
+        "impact_score": 98.5,
+        "epa_total": 40.92,
+        "epa_per_play": 1.023,
+        "wpa_total": 1.193,
+        "cpoe": 0.0,
+        "success_rate_pct": 70.0
+      }
+    },
+    {
+      "id": "inflated-00-0040667",
+      "title": "Estadistico Inflado: Matthew Golden (GB)",
+      "subtitle": "Inflacion 52.77 - 155 yds en minutos basura - EPA +6.18",
+      "category": "Estadístico Inflado",
+      "teams": [
+        "GB"
+      ],
+      "body": "Alerta de Estadistico Inflado: Matthew Golden (WR - GB) acumula 503 yardas brutas, pero 155 yardas provienen de 15 jugadas en minutos basura (4to cuarto con WP < 5% o WP > 95%). Su produccion real se reduce a 348 yardas competitivas con EPA competitivo de +6.18 (frente a +15.11 EPA bruto), WPA de +0.098, CPOE de +0.00% e Indice de Inflacion Estadistica de 52.77.",
+      "metrics_cited": {
+        "inflation_index": 52.77,
+        "raw_yards": 503.0,
+        "competitive_yards": 348.0,
+        "garbage_time_yards": 155.0,
+        "epa_total": 6.18,
+        "raw_epa_total": 15.11,
+        "wpa_total": 0.098,
+        "cpoe": 0.0
+      }
+    },
+    {
+      "id": "pos-leader-rb-00-0037248",
+      "title": "Referente RB: James Cook (BUF)",
+      "subtitle": "Impact Score 96.8 - EPA/jugada +0.086 - WPA +0.907",
+      "category": "Lider RB",
+      "teams": [
+        "BUF"
+      ],
+      "body": "Lider posicional RB: James Cook (BUF) registra Impact Score de 96.8/100 con EPA competitivo total de +10.27 (+0.086 EPA/oportunidad), WPA de +0.907, CPOE de +0.00%, YAC EPA de +13.17 y Success Rate de 49.6%.",
+      "metrics_cited": {
+        "impact_score": 96.8,
+        "epa_total": 10.27,
+        "epa_per_play": 0.086,
+        "wpa_total": 0.907,
+        "cpoe": 0.0,
+        "yac_epa": 13.17
+      }
+    },
+    {
+      "id": "pos-leader-wr-00-0031408",
+      "title": "Referente WR: Mike Evans (SF)",
+      "subtitle": "Impact Score 98.5 - EPA/jugada +1.023 - WPA +1.193",
+      "category": "Lider WR",
+      "teams": [
+        "SF"
+      ],
+      "body": "Lider posicional WR: Mike Evans (SF) registra Impact Score de 98.5/100 con EPA competitivo total de +40.92 (+1.023 EPA/oportunidad), WPA de +1.193, CPOE de +0.00%, YAC EPA de -18.32 y Success Rate de 70.0%.",
+      "metrics_cited": {
+        "impact_score": 98.5,
+        "epa_total": 40.92,
+        "epa_per_play": 1.023,
+        "wpa_total": 1.193,
+        "cpoe": 0.0,
+        "yac_epa": -18.32
+      }
+    },
+    {
+      "id": "pos-leader-te-00-0039065",
+      "title": "Referente TE: Sam LaPorta (DET)",
+      "subtitle": "Impact Score 94.0 - EPA/jugada +0.749 - WPA +0.508",
+      "category": "Lider TE",
+      "teams": [
+        "DET"
+      ],
+      "body": "Lider posicional TE: Sam LaPorta (DET) registra Impact Score de 94.0/100 con EPA competitivo total de +23.95 (+0.749 EPA/oportunidad), WPA de +0.508, CPOE de +0.00%, YAC EPA de +11.42 y Success Rate de 62.5%.",
+      "metrics_cited": {
+        "impact_score": 94.0,
+        "epa_total": 23.95,
+        "epa_per_play": 0.749,
+        "wpa_total": 0.508,
+        "cpoe": 0.0,
+        "yac_epa": 11.42
+      }
+    },
+    {
+      "id": "game-critique-401872995",
+      "title": "Auditoria de Partido: SEA 14 - DEN 17",
+      "subtitle": "WP Local 100.0% - Max |delta_wp| 0.379",
+      "category": "Partido",
+      "teams": [
+        "SEA",
+        "DEN"
+      ],
+      "body": "Marcador SEA 14 - DEN 17 (WP local: 100.0%). Momento critico principal en Q4 con variacion de probabilidad de victoria delta_wp de +0.379 (|delta_wp| = 0.379, WPA equivalente +0.379): (No Huddle) S.Darnold pass short left intended for T.Horton INTERCEPTED by K.Abrams-Draine at DEN 31. K.Abrams-Draine to DEN 31 for no gain (T.Horton).",
+      "metrics_cited": {
+        "home_wp": 1.0,
+        "delta_wp": 0.3788,
+        "critical_plays_count": 3
+      }
+    },
+    {
+      "id": "game-critique-401872996",
+      "title": "Auditoria de Partido: HOU 34 - JAX 31",
+      "subtitle": "WP Local 50.0% - Max |delta_wp| 0.191",
+      "category": "Partido",
+      "teams": [
+        "HOU",
+        "JAX"
+      ],
+      "body": "Marcador HOU 34 - JAX 31 (WP local: 50.0%). Momento critico principal en Q4 con variacion de probabilidad de victoria delta_wp de +0.191 (|delta_wp| = 0.191, WPA equivalente +0.191): (Shotgun) B.Fisher reported in as eligible.  C.Stroud pass short right intended for X.Hutchinson INTERCEPTED by T.Hunter at JAX -5. Touchback.Penalty on HST-A.Ersery, Ineligible Downfield Pass, declined.",
+      "metrics_cited": {
+        "home_wp": 0.5,
+        "delta_wp": 0.1906,
+        "critical_plays_count": 3
+      }
+    },
+    {
+      "id": "game-critique-401872999",
+      "title": "Auditoria de Partido: CHI 31 - ATL 23",
+      "subtitle": "WP Local 50.0% - Max |delta_wp| 0.162",
+      "category": "Partido",
+      "teams": [
+        "CHI",
+        "ATL"
+      ],
+      "body": "Marcador CHI 31 - ATL 23 (WP local: 50.0%). Momento critico principal en Q4 con variacion de probabilidad de victoria delta_wp de -0.162 (|delta_wp| = 0.162, WPA equivalente -0.162): Jugada sin descripción",
+      "metrics_cited": {
+        "home_wp": 0.5,
+        "delta_wp": -0.1619,
+        "critical_plays_count": 1
+      }
+    },
+    {
+      "id": "game-critique-401872997",
+      "title": "Auditoria de Partido: BAL 10 - CLE 13",
+      "subtitle": "WP Local 100.0% - Max |delta_wp| 0.293",
+      "category": "Partido",
+      "teams": [
+        "BAL",
+        "CLE"
+      ],
+      "body": "Marcador BAL 10 - CLE 13 (WP local: 100.0%). Momento critico principal en Q4 con variacion de probabilidad de victoria delta_wp de +0.293 (|delta_wp| = 0.293, WPA equivalente +0.293): (Shotgun) D.Watson pass deep middle to J.Jeudy to BLT 29 for 33 yards (M.Starks).",
+      "metrics_cited": {
+        "home_wp": 1.0,
+        "delta_wp": 0.2927,
+        "critical_plays_count": 3
+      }
+    },
+    {
+      "id": "game-critique-401873003",
+      "title": "Auditoria de Partido: TEN 26 - IND 20",
+      "subtitle": "WP Local 50.0% - Max |delta_wp| 0.545",
+      "category": "Partido",
+      "teams": [
+        "TEN",
+        "IND"
+      ],
+      "body": "Marcador TEN 26 - IND 20 (WP local: 50.0%). Momento critico principal en Q3 con variacion de probabilidad de victoria delta_wp de -0.545 (|delta_wp| = 0.545, WPA equivalente -0.545): (Shotgun) D.Jones pass short middle to J.Downs to IND 36 for 5 yards (T.Adams).",
+      "metrics_cited": {
+        "home_wp": 0.5,
+        "delta_wp": -0.545,
+        "critical_plays_count": 3
+      }
+    },
+    {
+      "id": "game-critique-401873001",
+      "title": "Auditoria de Partido: NYJ 19 - NE 26",
+      "subtitle": "WP Local 100.0% - Max |delta_wp| 0.295",
+      "category": "Partido",
+      "teams": [
+        "NYJ",
+        "NE"
+      ],
+      "body": "Marcador NYJ 19 - NE 26 (WP local: 100.0%). Momento critico principal en Q4 con variacion de probabilidad de victoria delta_wp de +0.295 (|delta_wp| = 0.295, WPA equivalente +0.295): Jugada sin descripción",
+      "metrics_cited": {
+        "home_wp": 1.0,
+        "delta_wp": 0.2953,
+        "critical_plays_count": 1
+      }
+    }
+  ]
+}
