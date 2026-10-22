@@ -13,7 +13,9 @@ import json
 import logging
 from datetime import datetime, timezone
 from pathlib import Path
+import re
 from typing import Any
+from urllib.parse import quote_plus
 
 import requests
 
@@ -160,6 +162,19 @@ def _build_play_lookup(summary_data: dict[str, Any]) -> dict[str, dict[str, Any]
                 or "Jugada sin descripción"
             ).strip()
 
+            # Extract play-level video URL if present in the play object
+            play_video_url = ""
+            raw_video = play.get("video") or play.get("media")
+            if isinstance(raw_video, dict):
+                play_video_url = _extract_url_from_video_obj(raw_video)
+            elif isinstance(play.get("links"), list):
+                for lnk in play["links"]:
+                    if isinstance(lnk, dict) and lnk.get("href"):
+                        rel = lnk.get("rel") or []
+                        if any("video" in str(r).lower() or "highlight" in str(r).lower() for r in rel):
+                            play_video_url = str(lnk["href"])
+                            break
+
             play_lookup[play_id] = {
                 "play_id": play_id,
                 "qtr": qtr,
@@ -167,9 +182,225 @@ def _build_play_lookup(summary_data: dict[str, Any]) -> dict[str, dict[str, Any]
                 "description": description,
                 "home_score": play.get("homeScore"),
                 "away_score": play.get("awayScore"),
+                "video_url": play_video_url,
             }
 
     return play_lookup
+
+
+def _extract_url_from_video_obj(video_obj: dict[str, Any]) -> str:
+    """Extract the best playable or web URL from an ESPN video/highlight dictionary."""
+    if not isinstance(video_obj, dict):
+        return ""
+    links = video_obj.get("links")
+    if isinstance(links, dict):
+        source = links.get("source")
+        if isinstance(source, dict):
+            for quality in ("HD", "full", "mezzanine", "flash", "hds"):
+                q_obj = source.get(quality)
+                if isinstance(q_obj, dict) and q_obj.get("href"):
+                    return str(q_obj["href"]).strip()
+            if source.get("href"):
+                return str(source["href"]).strip()
+        web = links.get("web")
+        if isinstance(web, dict) and web.get("href"):
+            return str(web["href"]).strip()
+        mobile = links.get("mobile")
+        if isinstance(mobile, dict) and mobile.get("href"):
+            return str(mobile["href"]).strip()
+    for direct_key in ("videoUrl", "url", "href"):
+        val = video_obj.get(direct_key)
+        if isinstance(val, str) and val.startswith("http"):
+            return val.strip()
+    return ""
+
+
+def _extract_video_catalog(
+    summary_data: dict[str, Any],
+    comp_data: dict[str, Any] | None = None,
+) -> tuple[dict[str, dict[str, str]], list[dict[str, str]]]:
+    """Collect official video clips from summary.videos, article.video, and competition.highlights."""
+    by_play_id: dict[str, dict[str, str]] = {}
+    all_videos: list[dict[str, str]] = []
+
+    raw_lists: list[Any] = []
+    if isinstance(summary_data, dict):
+        raw_lists.append(summary_data.get("videos"))
+        article = summary_data.get("article")
+        if isinstance(article, dict):
+            raw_lists.append(article.get("video"))
+    if isinstance(comp_data, dict):
+        raw_lists.append(comp_data.get("highlights"))
+
+    for raw_list in raw_lists:
+        if not isinstance(raw_list, list):
+            continue
+        for vid in raw_list:
+            if not isinstance(vid, dict):
+                continue
+            url = _extract_url_from_video_obj(vid)
+            if not url:
+                continue
+            title = str(vid.get("headline") or vid.get("title") or vid.get("name") or "").strip()
+            desc = str(vid.get("description") or vid.get("caption") or "").strip()
+            thumb = str(vid.get("thumbnail") or "").strip()
+            entry = {
+                "video_url": url,
+                "video_title": title or desc or "Clip Oficial ESPN",
+                "video_description": desc,
+                "video_thumbnail": thumb,
+            }
+            all_videos.append(entry)
+            for pid_key in ("playId", "play_id", "id"):
+                pid_val = vid.get(pid_key)
+                if pid_val is not None:
+                    by_play_id[str(pid_val)] = entry
+
+    return by_play_id, all_videos
+
+
+def _extract_game_links(
+    summary_data: dict[str, Any],
+    event_data: dict[str, Any] | None = None,
+    event_id: str = "",
+) -> dict[str, str]:
+    """Extract official ESPN Play-by-Play, Recap, and Gamecast URLs for the event."""
+    links_found: dict[str, str] = {}
+    link_lists: list[Any] = []
+    if isinstance(summary_data, dict):
+        header = summary_data.get("header")
+        if isinstance(header, dict):
+            link_lists.append(header.get("links"))
+    if isinstance(event_data, dict):
+        link_lists.append(event_data.get("links"))
+
+    for l_list in link_lists:
+        if not isinstance(l_list, list):
+            continue
+        for item in l_list:
+            if not isinstance(item, dict) or not item.get("href"):
+                continue
+            href = str(item["href"]).strip()
+            rels = [str(r).lower() for r in (item.get("rel") or [])]
+            if "pbp" in rels and "pbp" not in links_found:
+                links_found["pbp"] = href
+            elif "recap" in rels and "recap" not in links_found:
+                links_found["recap"] = href
+            elif "summary" in rels and "summary" not in links_found:
+                links_found["summary"] = href
+
+    if event_id:
+        links_found.setdefault("pbp", f"https://www.espn.com/nfl/playbyplay/_/gameId/{event_id}")
+        links_found.setdefault("recap", f"https://www.espn.com/nfl/recap?gameId={event_id}")
+        links_found.setdefault("summary", f"https://www.espn.com/nfl/game/_/gameId/{event_id}")
+
+    return links_found
+
+
+def _build_play_search_keywords(description: str) -> str:
+    """Extract key player surnames and football actions from a play description for video matching."""
+    cleaned = re.sub(r"\([^)]*\)", " ", description or "")
+    cleaned = re.sub(r"Penalty on[^.]*\.", " ", cleaned, flags=re.IGNORECASE)
+    cleaned = re.sub(r"\s+", " ", cleaned).strip()
+
+    # Extract abbreviated player names like S.Darnold, K.Abrams-Draine, J.Smith-Njigba, C.Stroud
+    players = re.findall(r"\b[A-Z]\.\s?[A-Za-z'-]{2,}\b", cleaned)
+    surnames: list[str] = []
+    for p in players:
+        surname = p.split(".", 1)[-1].strip()
+        if surname and surname not in surnames:
+            surnames.append(surname)
+
+    action_terms: list[str] = []
+    lower_desc = cleaned.lower()
+    for token, label in (
+        ("intercepted", "interception"),
+        ("touchdown", "touchdown"),
+        ("fumble", "fumble"),
+        ("field goal", "field goal"),
+        ("sacked", "sack"),
+        ("pass deep", "deep pass"),
+        ("4th", "4th down"),
+    ):
+        if token in lower_desc:
+            action_terms.append(label)
+
+    parts = surnames[:2] + action_terms[:2]
+    if parts:
+        return " ".join(parts)
+    words = [w for w in re.findall(r"[A-Za-z0-9'-]+", cleaned) if len(w) > 2]
+    return " ".join(words[:6])
+
+
+def _enrich_moment_with_video_links(
+    moment: dict[str, Any],
+    event_id: str,
+    away_team: dict[str, Any],
+    home_team: dict[str, Any],
+    video_by_play: dict[str, dict[str, str]],
+    video_list: list[dict[str, str]],
+    game_links: dict[str, str],
+) -> dict[str, Any]:
+    """Attach direct ESPN video clip URL (if available) plus YouTube highlight search and ESPN PBP link."""
+    play_id = str(moment.get("play_id") or "")
+    description = str(moment.get("description") or "")
+    qtr = int(moment.get("qtr") or 0)
+
+    direct_url = str(moment.get("video_url") or "").strip()
+    video_title = ""
+
+    # 1. Match by play_id in summary/competition video catalog
+    if not direct_url and play_id in video_by_play:
+        direct_url = video_by_play[play_id]["video_url"]
+        video_title = video_by_play[play_id].get("video_title", "")
+
+    # 2. Match by player surname + action keywords across game video catalog
+    if not direct_url and video_list and description:
+        players = [
+            p.split(".", 1)[-1].strip().lower()
+            for p in re.findall(r"\b[A-Z]\.\s?[A-Za-z'-]{2,}\b", description)
+        ]
+        for vid in video_list:
+            haystack = f"{vid.get('video_title', '')} {vid.get('video_description', '')}".lower()
+            if players and any(len(p) >= 3 and p in haystack for p in players):
+                direct_url = vid["video_url"]
+                video_title = vid.get("video_title", "")
+                break
+
+    away_label = str(away_team.get("name") or away_team.get("abbreviation") or "NFL").strip()
+    home_label = str(home_team.get("name") or home_team.get("abbreviation") or "NFL").strip()
+    play_keywords = _build_play_search_keywords(description)
+    qtr_label = "OT" if qtr >= 5 else (f"Q{qtr}" if qtr > 0 else "")
+    yt_query = " ".join(
+        part for part in ("NFL", f"{away_label} vs {home_label}", play_keywords, qtr_label, "highlight") if part
+    )
+    youtube_search_url = f"https://www.youtube.com/results?search_query={quote_plus(yt_query)}"
+    espn_play_url = game_links.get("pbp") or game_links.get("recap") or ""
+
+    has_direct_video = bool(direct_url)
+    primary_video_url = direct_url if has_direct_video else youtube_search_url
+    video_source = "ESPN Video Oficial" if has_direct_video else "YouTube NFL Highlights"
+
+    return {
+        **moment,
+        "video_url": primary_video_url,
+        "video_source": video_source,
+        "video_title": video_title or f"Video: {away_team.get('abbreviation', '')} @ {home_team.get('abbreviation', '')} ({qtr_label or 'Jugada Clave'})",
+        "has_direct_video": has_direct_video,
+        "youtube_search_url": youtube_search_url,
+        "espn_play_url": espn_play_url,
+    }
+
+
+def _is_non_play_marker(moment: dict[str, Any]) -> bool:
+    """Return True if a winprobability entry is an administrative boundary rather than an on-field snap."""
+    desc = str(moment.get("description") or "").strip().upper()
+    qtr = int(moment.get("qtr") or 0)
+    if desc in {"END GAME", "END OF GAME", "END PERIOD", "END QUARTER", "TWO-MINUTE WARNING"}:
+        return True
+    if qtr == 0 and ("SIN DESCRIPCI" in desc or not desc):
+        return True
+    return False
 
 
 def _extract_all_wp_deltas(summary_data: dict[str, Any]) -> list[dict[str, Any]]:
@@ -182,6 +413,8 @@ def _extract_all_wp_deltas(summary_data: dict[str, Any]) -> list[dict[str, Any]]
         return []
 
     play_lookup = _build_play_lookup(summary_data)
+    video_by_play, video_list = _extract_video_catalog(summary_data)
+    game_links = _extract_game_links(summary_data)
     moments: list[dict[str, Any]] = []
     prev_home_wp = 0.5
 
@@ -251,18 +484,32 @@ def _extract_all_wp_deltas(summary_data: dict[str, Any]) -> list[dict[str, Any]]
                 or "Jugada sin descripción"
             ).strip()
 
-        moments.append(
-            {
-                "play_id": play_id,
-                "qtr": int(qtr),
-                "clock": str(clock),
-                "description": str(description),
-                "home_wp_before": round(home_wp_before, 4),
-                "home_wp_after": round(curr_home_wp, 4),
-                "delta_wp": round(delta_wp, 4),
-                "abs_delta_wp": round(abs_delta_wp, 4),
-            }
-        )
+        play_video_url = str(
+            lookup_info.get("video_url")
+            or _extract_url_from_video_obj(nested_play.get("video") if isinstance(nested_play.get("video"), dict) else {})
+            or _extract_url_from_video_obj(item.get("video") if isinstance(item.get("video"), dict) else {})
+            or ""
+        ).strip()
+
+        base_moment: dict[str, Any] = {
+            "play_id": play_id,
+            "qtr": int(qtr),
+            "clock": str(clock),
+            "description": str(description),
+            "home_wp_before": round(home_wp_before, 4),
+            "home_wp_after": round(curr_home_wp, 4),
+            "delta_wp": round(delta_wp, 4),
+            "abs_delta_wp": round(abs_delta_wp, 4),
+        }
+        if play_video_url:
+            base_moment["video_url"] = play_video_url
+        elif play_id in video_by_play:
+            base_moment["video_url"] = video_by_play[play_id]["video_url"]
+
+        if game_links.get("pbp"):
+            base_moment["espn_play_url"] = game_links["pbp"]
+
+        moments.append(base_moment)
 
     return moments
 
@@ -271,12 +518,37 @@ def extract_critical_moments(
     summary_data: dict[str, Any],
     min_delta: float = 0.12,
     top_n: int = 3,
+    event_id: str = "",
+    away_team: dict[str, Any] | None = None,
+    home_team: dict[str, Any] | None = None,
+    **kwargs: Any,
 ) -> list[dict[str, Any]]:
     """Extract top_n plays with |delta_wp| >= min_delta sorted descending by |delta_wp|."""
     all_moments = _extract_all_wp_deltas(summary_data)
     filtered = [m for m in all_moments if m["abs_delta_wp"] >= min_delta]
-    filtered.sort(key=lambda m: m["abs_delta_wp"], reverse=True)
-    return filtered[:top_n]
+    real_plays = [m for m in filtered if not _is_non_play_marker(m)]
+    candidates = real_plays if real_plays else filtered
+    candidates.sort(key=lambda m: m["abs_delta_wp"], reverse=True)
+    top_moments = candidates[:top_n]
+
+    video_by_play, video_list = _extract_video_catalog(summary_data)
+    resolved_event_id = str(event_id or summary_data.get("header", {}).get("id") or "nfl")
+    game_links = _extract_game_links(summary_data, event_id=resolved_event_id)
+    away_dict = away_team or {"abbreviation": str(kwargs.get("away_abbr", "AWAY")), "name": str(kwargs.get("away_abbr", "NFL"))}
+    home_dict = home_team or {"abbreviation": str(kwargs.get("home_abbr", "HOME")), "name": str(kwargs.get("home_abbr", "NFL"))}
+
+    return [
+        _enrich_moment_with_video_links(
+            m,
+            event_id=resolved_event_id,
+            away_team=away_dict,
+            home_team=home_dict,
+            video_by_play=video_by_play,
+            video_list=video_list,
+            game_links=game_links,
+        )
+        for m in top_moments
+    ]
 
 
 def _parse_team_competitor(competitor: dict[str, Any]) -> dict[str, Any]:
@@ -404,18 +676,32 @@ def ingest_espn_scoreboard(
             except Exception as exc:  # noqa: BLE001
                 logger.warning("Could not fetch summary for event %s: %s", event_id, exc)
 
-        critical_moments = extract_critical_moments(summary_data, min_delta=0.12, top_n=3)
+        video_by_play, video_list = _extract_video_catalog(summary_data, comp)
+        game_links = _extract_game_links(summary_data, event, event_id)
+
+        raw_critical = extract_critical_moments(summary_data, min_delta=0.12, top_n=3)
+        critical_moments = [
+            _enrich_moment_with_video_links(
+                m, event_id, away_team, home_team, video_by_play, video_list, game_links
+            )
+            for m in raw_critical
+        ]
         all_moments = _extract_all_wp_deltas(summary_data)
+        real_all_moments = [m for m in all_moments if not _is_non_play_marker(m)]
+        fallback_pool = real_all_moments if real_all_moments else all_moments
 
         if critical_moments:
             hinge_play: dict[str, Any] | None = {
                 **critical_moments[0],
                 "exceeds_threshold": True,
             }
-        elif all_moments:
-            best_moment = max(all_moments, key=lambda m: m["abs_delta_wp"])
+        elif fallback_pool:
+            best_moment = max(fallback_pool, key=lambda m: m["abs_delta_wp"])
+            enriched_best = _enrich_moment_with_video_links(
+                best_moment, event_id, away_team, home_team, video_by_play, video_list, game_links
+            )
             hinge_play = {
-                **best_moment,
+                **enriched_best,
                 "exceeds_threshold": False,
             }
         else:
@@ -459,6 +745,7 @@ def ingest_espn_scoreboard(
                     "home_wp": home_wp,
                     "away_wp": away_wp,
                 },
+                "game_links": game_links,
                 "critical_moments": critical_moments,
                 "hinge_play": hinge_play,
             }
