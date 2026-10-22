@@ -1,0 +1,62 @@
+name: Nightly nflverse Valuation & AI Critiques
+
+on:
+  schedule:
+    # Ejecución diaria a las 08:00 UTC
+    - cron: '0 8 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nfl-data-pipeline
+  cancel-in-progress: false
+
+jobs:
+  nightly-valuation-and-critiques:
+    name: Run nflverse Valuation, AI Critiques & Validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Ingest ESPN Live Scoreboard & Win Probability
+        run: python -m src.ingest_espn
+
+      - name: Run nflverse Play-by-Play Valuation Model (0-100)
+        run: python -m src.valuation_model
+
+      - name: Generate Quantitative Critiques (Gemini API / Deterministic Fallback)
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python -m src.critic_generator
+
+      - name: Validate Pipeline & Generated JSON Integrity with Pytest
+        run: pytest tests/ -v
+
+      - name: Commit and Push Updated Static JSON Data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/data/*.json
+          if git diff --cached --quiet; then
+            echo "No data changes detected in public/data/*.json."
+          else
+            git commit -m "chore(data): nightly nflverse valuation & critiques update"
+            git pull --rebase origin "${GITHUB_REF_NAME}" || true
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
