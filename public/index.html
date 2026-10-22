@@ -953,7 +953,7 @@
               <li>Calcula <a href="#metodo-wpa" class="metric-ref-link text-emerald-300">delta_wp = WP[i] - WP[i-1]</a> jugada por jugada.</li>
               <li>Filtra snaps con <code class="text-amber-300">abs(delta_wp) &ge; 0.12</code> y cruza el <code class="text-slate-200">playId</code> con las jugadas de cada serie.</li>
               <li>Extrae el <strong class="text-white">Top 3</strong> ordenado por <code class="text-rose-300">|&Delta;WP|</code> y destaca la #1 como <strong class="text-rose-300">Jugada Bisagra</strong>.</li>
-              <li>Vincula el <strong class="text-emerald-300">video de la jugada</strong> (clip directo de ESPN o búsqueda exacta en YouTube NFL Highlights) y el registro Play-by-Play oficial.</li>
+              <li>Vincula el <strong class="text-emerald-300">clip puntual de la jugada</strong> (resolviendo nombres completos del boxscore, rol táctico exacto -interceptor/pateador/receptor-, filtro nativo <code class="text-rose-300">sp=EgIYAQ%3D%3D (&lt;4 min)</code> para excluir resúmenes largos y clip directo en <code class="text-sky-300">X / @NFL</code>).</li>
             </ol>
           </div>
         </div>
@@ -1060,6 +1060,6 @@
   </footer>
 
   <!-- Lógica Modular del Frontend (100% lectura local estática) -->
-  <script type="module" src="./app.js?v=2.8"></script>
+  <script type="module" src="./app.js?v=2.9"></script>
 </body>
 </html>

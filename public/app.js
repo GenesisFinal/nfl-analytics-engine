@@ -391,16 +391,20 @@ function renderHeaderAndKpis() {
       const vidInfo = resolvePlayVideoLinks(hp, topHingeCandidate.game);
       if (vidInfo.videoUrl) {
         const btnLabel = vidInfo.hasDirectVideo
-          ? '▶ Video Oficial ESPN ↗'
-          : '▶ Ver Video de la Jugada ↗';
+          ? `▶ Clip Oficial (${escapeHtml(vidInfo.playLabel || 'Directo')}) ↗`
+          : `▶ Clip Puntual (<4m): ${escapeHtml(vidInfo.playLabel || 'Ver Jugada')} ↗`;
+        const xBtnHtml = vidInfo.xVideoUrl
+          ? `<a href="${escapeHtml(vidInfo.xVideoUrl)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 rounded border border-cyan-500/40 bg-cyan-500/10 px-2 py-0.5 font-mono-num text-[10px] font-semibold text-cyan-200 transition hover:bg-cyan-500/25 hover:text-white" title="Buscar clip corto de la jugada en X / @NFL Video">▶ Clip X/@NFL ↗</a>`
+          : '';
         const pbpHtml = vidInfo.espnPlayUrl
           ? `<a href="${escapeHtml(vidInfo.espnPlayUrl)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 rounded border border-slate-700 bg-slate-900/90 px-2 py-0.5 font-mono-num text-[10px] font-medium text-slate-300 transition hover:border-cyan-500/40 hover:text-cyan-300" title="Abrir Play-by-Play oficial en ESPN">Play-by-Play ↗</a>`
           : '';
         kpiHingeVideo.innerHTML = `
           <div class="flex flex-wrap items-center gap-1.5">
-            <a href="${escapeHtml(vidInfo.videoUrl)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 rounded border border-rose-500/40 bg-rose-500/15 px-2.5 py-0.5 font-mono-num text-[10px] font-bold text-rose-200 transition hover:bg-rose-500/30 hover:text-white" title="${escapeHtml(vidInfo.videoSource)}">
+            <a href="${escapeHtml(vidInfo.videoUrl)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 rounded border border-rose-500/40 bg-rose-500/15 px-2.5 py-0.5 font-mono-num text-[10px] font-bold text-rose-200 transition hover:bg-rose-500/30 hover:text-white" title="${escapeHtml(vidInfo.videoTitle || vidInfo.videoSource)}">
               ${btnLabel}
             </a>
+            ${xBtnHtml}
             ${pbpHtml}
           </div>
         `;
@@ -416,34 +420,51 @@ function renderHeaderAndKpis() {
 /* ========================================================================== */
 
 /**
- * Resuelve los enlaces de video y Play-by-Play para una Jugada Bisagra o momento crítico.
- * Usa `play.video_url` precalculado por `src/ingest_espn.py` o construye el enlace
- * de búsqueda de highlights de la jugada si el JSON proviene de un corte anterior.
+ * Resuelve los enlaces de video puntual (<4 min, sin resúmenes de partido completo)
+ * y Play-by-Play para una Jugada Bisagra o momento crítico.
  * @param {Record<string, any>} play
  * @param {Record<string, any>} [game]
- * @returns {{ videoUrl: string, espnPlayUrl: string, hasDirectVideo: boolean, videoSource: string }}
+ * @returns {{ videoUrl: string, youtubeShortUrl: string, xVideoUrl: string, espnPlayUrl: string, hasDirectVideo: boolean, videoSource: string, videoTitle: string, playLabel: string }}
  */
 function resolvePlayVideoLinks(play, game = {}) {
   if (!play || typeof play !== 'object') {
-    return { videoUrl: '', espnPlayUrl: '', hasDirectVideo: false, videoSource: '' };
+    return {
+      videoUrl: '',
+      youtubeShortUrl: '',
+      xVideoUrl: '',
+      espnPlayUrl: '',
+      hasDirectVideo: false,
+      videoSource: '',
+      videoTitle: '',
+      playLabel: '',
+    };
   }
 
   const eventId = String(game?.event_id || '');
-  const awayAbbr = String(game?.away_team?.name || game?.away_team?.abbreviation || 'NFL');
-  const homeAbbr = String(game?.home_team?.name || game?.home_team?.abbreviation || 'NFL');
-  const qtr = Number(play.qtr || 0);
-  const qtrLabel = qtr >= 5 ? 'OT' : qtr > 0 ? `Q${qtr}` : '';
+  const awayFull = String(game?.away_team?.name || game?.away_team?.abbreviation || 'NFL').trim();
+  const homeFull = String(game?.home_team?.name || game?.home_team?.abbreviation || 'NFL').trim();
+  const awayNick = awayFull.includes(' ') ? awayFull.split(/\s+/).slice(-1)[0] : awayFull;
+  const homeNick = homeFull.includes(' ') ? homeFull.split(/\s+/).slice(-1)[0] : homeFull;
 
   const hasDirectVideo = Boolean(play.has_direct_video);
+  const playLabel = String(play.play_label || '').trim();
+  const videoTitle = String(play.video_title || '').trim();
   let videoUrl = String(play.video_url || '').trim();
+  let youtubeShortUrl = String(play.youtube_search_url || '').trim();
+  let xVideoUrl = String(play.x_video_url || '').trim();
 
-  if (!videoUrl) {
-    const desc = String(play.description || '').replace(/\([^)]*\)/g, ' ').trim();
-    const shortDesc = desc.split(/\s+/).slice(0, 8).join(' ');
-    const query = ['NFL', `${awayAbbr} vs ${homeAbbr}`, shortDesc, qtrLabel, 'highlight']
-      .filter(Boolean)
-      .join(' ');
-    videoUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
+  if (!videoUrl || !youtubeShortUrl) {
+    const rawDesc = String(play.description || '')
+      .replace(/\b(?:Center|Holder|Punter)-[A-Z]{1,2}\.\s?[A-Za-z'-]+/gi, ' ')
+      .replace(/Penalty on[^.]*\./gi, ' ')
+      .replace(/\([^)]*\)/g, ' ')
+      .trim();
+    const queryTerms = `${rawDesc.split(/\s+/).slice(0, 7).join(' ')} ${awayNick} ${homeNick}`.trim();
+    youtubeShortUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(queryTerms)}&sp=EgIYAQ%3D%3D`;
+    if (!videoUrl) videoUrl = youtubeShortUrl;
+    if (!xVideoUrl) {
+      xVideoUrl = `https://x.com/search?q=${encodeURIComponent(queryTerms)}&f=video`;
+    }
   }
 
   const espnPlayUrl = String(
@@ -454,10 +475,19 @@ function resolvePlayVideoLinks(play, game = {}) {
   ).trim();
 
   const videoSource = String(
-    play.video_source || (hasDirectVideo ? 'ESPN Video Oficial' : 'YouTube NFL Highlights')
+    play.video_source || (hasDirectVideo ? 'Clip Oficial @NFL / ESPN' : 'Clip Puntual (<4m)')
   );
 
-  return { videoUrl, espnPlayUrl, hasDirectVideo, videoSource };
+  return {
+    videoUrl,
+    youtubeShortUrl,
+    xVideoUrl,
+    espnPlayUrl,
+    hasDirectVideo,
+    videoSource,
+    videoTitle,
+    playLabel,
+  };
 }
 
 /**
@@ -871,8 +901,8 @@ function renderScoreboardSection() {
           ? 'border-emerald-500/40 bg-emerald-500/15 text-emerald-300 hover:bg-emerald-500/30'
           : 'border-rose-500/40 bg-rose-500/15 text-rose-200 hover:bg-rose-500/30';
         const videoBtnLabel = vidInfo.hasDirectVideo
-          ? '▶ Video Oficial ESPN ↗'
-          : '▶ Ver Video de la Jugada ↗';
+          ? `▶ Clip Oficial${vidInfo.playLabel ? `: ${escapeHtml(vidInfo.playLabel)}` : ''} ↗`
+          : `▶ Clip Puntual (<4m)${vidInfo.playLabel ? `: ${escapeHtml(vidInfo.playLabel)}` : ''} ↗`;
 
         hingeHtml = `
           <div class="mt-3.5 rounded-lg border ${borderClass} p-3">
@@ -892,9 +922,16 @@ function renderScoreboardSection() {
               <a href="#metodo-wp" class="metric-ref-link text-slate-300" title="Ver metodologia de Win Probability (WP)">WP ${homeAbbr}: ${beforePct.toFixed(1)}% -&gt; ${afterPct.toFixed(1)}%</a>
             </div>
             <div class="mt-2.5 flex flex-wrap items-center justify-between gap-1.5 border-t border-slate-800/70 pt-2">
-              <a href="${escapeHtml(vidInfo.videoUrl)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 rounded border px-2 py-0.5 font-mono-num text-[10px] font-bold transition ${videoBtnClass}" title="${escapeHtml(vidInfo.videoSource)}">
-                ${videoBtnLabel}
-              </a>
+              <div class="flex flex-wrap items-center gap-1.5">
+                <a href="${escapeHtml(vidInfo.videoUrl)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 rounded border px-2 py-0.5 font-mono-num text-[10px] font-bold transition ${videoBtnClass}" title="${escapeHtml(vidInfo.videoSource)} (${escapeHtml(vidInfo.videoQuery || '')})">
+                  ${videoBtnLabel}
+                </a>
+                ${
+                  vidInfo.xVideoUrl && vidInfo.xVideoUrl !== vidInfo.videoUrl
+                    ? `<a href="${escapeHtml(vidInfo.xVideoUrl)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 rounded border border-sky-500/40 bg-sky-500/10 px-2 py-0.5 font-mono-num text-[10px] font-semibold text-sky-300 transition hover:bg-sky-500/25" title="Buscar clip oficial de esta jugada en X / @NFL">▶ Clip X/@NFL ↗</a>`
+                    : ''
+                }
+              </div>
               ${
                 vidInfo.espnPlayUrl
                   ? `<a href="${escapeHtml(vidInfo.espnPlayUrl)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 rounded border border-slate-700/80 bg-[#090D16] px-2 py-0.5 font-mono-num text-[10px] font-medium text-slate-300 transition hover:border-cyan-500/40 hover:text-cyan-300" title="Ver registro Play-by-Play oficial en ESPN">Play-by-Play ESPN ↗</a>`
@@ -925,10 +962,15 @@ function renderScoreboardSection() {
             return `
               <li class="rounded border border-slate-800/90 bg-[#090D16]/70 p-2 text-[11px]">
                 <div class="flex flex-wrap items-center justify-between gap-1 font-mono-num">
-                  <a href="#metodo-jugada-bisagra" class="metric-ref-link font-bold text-amber-300">#${idx + 1} | Q${escapeHtml(m.qtr || 4)} ${escapeHtml(m.clock || '0:00')}</a>
-                  <div class="flex items-center gap-2">
+                  <a href="#metodo-jugada-bisagra" class="metric-ref-link font-bold text-amber-300">#${idx + 1} | Q${escapeHtml(m.qtr || 4)} ${escapeHtml(m.clock || '0:00')}${mVid.playLabel ? ` · <span class="text-slate-300">${escapeHtml(mVid.playLabel)}</span>` : ''}</a>
+                  <div class="flex items-center gap-1.5">
                     <a href="#metodo-wpa" class="metric-ref-link font-semibold text-white" title="Ver metodologia de WPA y Delta WP">${formatSigned(dPct, 1, '% WP')} (${wpBefore.toFixed(0)}% -&gt; ${wpAfter.toFixed(0)}%)</a>
-                    <a href="${escapeHtml(mVid.videoUrl)}" target="_blank" rel="noopener noreferrer" class="rounded border border-rose-500/40 bg-rose-500/15 px-1.5 py-0.5 text-[10px] font-bold text-rose-300 transition hover:bg-rose-500/30 hover:text-white" title="Ver video de esta jugada (${escapeHtml(mVid.videoSource)})">▶ Video ↗</a>
+                    <a href="${escapeHtml(mVid.videoUrl)}" target="_blank" rel="noopener noreferrer" class="rounded border border-rose-500/40 bg-rose-500/15 px-1.5 py-0.5 text-[10px] font-bold text-rose-300 transition hover:bg-rose-500/30 hover:text-white" title="Ver clip puntual (${escapeHtml(mVid.videoSource)}: ${escapeHtml(mVid.videoQuery || '')})">▶ Clip (<4m) ↗</a>
+                    ${
+                      mVid.xVideoUrl && mVid.xVideoUrl !== mVid.videoUrl
+                        ? `<a href="${escapeHtml(mVid.xVideoUrl)}" target="_blank" rel="noopener noreferrer" class="rounded border border-sky-500/40 bg-sky-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-sky-300 transition hover:bg-sky-500/25 hover:text-white" title="Buscar clip de la jugada en X / @NFL">▶ X ↗</a>`
+                        : ''
+                    }
                   </div>
                 </div>
                 <p class="mt-1 line-clamp-2 text-slate-300">${escapeHtml(m.description || '')}</p>

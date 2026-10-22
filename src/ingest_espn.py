@@ -156,8 +156,120 @@ def fetch_game_summary(event_id: str, timeout: int = 15) -> dict[str, Any]:
     )
 
 
+_GLOBAL_PLAYER_LOOKUP: dict[str, str] | None = None
+
+
+def _get_global_player_lookup() -> dict[str, str]:
+    """Load a fallback abbreviated-name -> full-name map from player_rankings.json if available."""
+    global _GLOBAL_PLAYER_LOOKUP
+    if _GLOBAL_PLAYER_LOOKUP is not None:
+        return _GLOBAL_PLAYER_LOOKUP
+    lookup: dict[str, str] = {}
+    rankings_path = PROJECT_ROOT / "public" / "data" / "player_rankings.json"
+    if rankings_path.exists():
+        try:
+            data = json.loads(rankings_path.read_text(encoding="utf-8"))
+            for p in data.get("players", []):
+                full = str(p.get("player_name") or p.get("name") or "").strip()
+                if not full or " " not in full:
+                    continue
+                parts = full.split()
+                first_init = parts[0][0].lower()
+                last_name = parts[-1].lower()
+                lookup.setdefault(f"{first_init}.{last_name}", full)
+                lookup.setdefault(last_name, full)
+        except Exception:  # noqa: BLE001
+            pass
+    _GLOBAL_PLAYER_LOOKUP = lookup
+    return lookup
+
+
+def _build_player_name_lookup(summary_data: dict[str, Any]) -> dict[str, str]:
+    """Build a game-specific lookup mapping 'S.Darnold' / 'K.Abrams-Draine' -> 'Sam Darnold' / 'Kris Abrams-Draine'."""
+    lookup = dict(_get_global_player_lookup())
+    if not isinstance(summary_data, dict):
+        return lookup
+
+    def _register_full_name(full_name: str) -> None:
+        clean = str(full_name or "").strip()
+        if not clean or " " not in clean:
+            return
+        parts = clean.split()
+        first_init = parts[0][0].lower()
+        last_raw = parts[-1]
+        # Ignore generational suffixes when building last-name key if possible
+        if last_raw.upper().rstrip(".") in {"JR", "SR", "II", "III", "IV", "V"} and len(parts) >= 3:
+            last_key = parts[-2].lower()
+        else:
+            last_key = last_raw.lower()
+        lookup[f"{first_init}.{last_key}"] = clean
+        lookup[f"{first_init}.{last_raw.lower()}"] = clean
+        lookup.setdefault(last_key, clean)
+
+    # 1. From boxscore.players
+    boxscore = summary_data.get("boxscore")
+    if isinstance(boxscore, dict):
+        for team_bx in boxscore.get("players") or []:
+            if not isinstance(team_bx, dict):
+                continue
+            for stat_grp in team_bx.get("statistics") or []:
+                if not isinstance(stat_grp, dict):
+                    continue
+                for ath_entry in stat_grp.get("athletes") or []:
+                    if not isinstance(ath_entry, dict):
+                        continue
+                    ath = ath_entry.get("athlete")
+                    if isinstance(ath, dict):
+                        disp = str(ath.get("displayName") or ath.get("fullName") or "").strip()
+                        first = str(ath.get("firstName") or "").strip()
+                        last = str(ath.get("lastName") or "").strip()
+                        if disp:
+                            _register_full_name(disp)
+                        if first and last:
+                            full_fl = disp or f"{first} {last}"
+                            lookup[f"{first[0].lower()}.{last.lower()}"] = full_fl
+                            lookup.setdefault(last.lower(), full_fl)
+
+    # 2. From scoringPlays and leaders
+    for sp in summary_data.get("scoringPlays") or []:
+        if isinstance(sp, dict):
+            for a_item in sp.get("athletesInvolved") or []:
+                if isinstance(a_item, dict):
+                    _register_full_name(str(a_item.get("displayName") or a_item.get("shortName") or ""))
+
+    # 3. From article.story <a href=".../nfl/player/_/id/...">Full Name</a>
+    article = summary_data.get("article")
+    if isinstance(article, dict):
+        story = str(article.get("story") or "")
+        for m in re.finditer(r"nfl/player/_/id/\d+/[^\"']+[\"']>([^<]+)</a>", story, flags=re.IGNORECASE):
+            _register_full_name(m.group(1))
+
+    return lookup
+
+
+def _is_non_play_text(description: str, qtr: int = 1) -> bool:
+    """Return True if a play text is an administrative marker (END GAME, Timeout, Two-Minute Warning, empty)."""
+    desc = str(description or "").strip().upper()
+    if not desc or "SIN DESCRIPCI" in desc:
+        return True
+    if desc in {"END GAME", "END OF GAME", "END PERIOD", "END QUARTER", "TWO-MINUTE WARNING", "OFFICIAL TIMEOUT"}:
+        return True
+    if desc.startswith("END QUARTER") or desc.startswith("END PERIOD") or desc.startswith("END OF "):
+        return True
+    if desc.startswith("TIMEOUT ") or desc.startswith("TIMEOUT #") or "TWO-MINUTE WARNING" in desc:
+        return True
+    if desc.startswith("INJURY TIMEOUT") or desc.startswith("TV TIMEOUT"):
+        return True
+    return False
+
+
 def _build_play_lookup(summary_data: dict[str, Any]) -> dict[str, dict[str, Any]]:
-    """Build a mapping from play_id to play metadata from drives.previous and drives.current."""
+    """Build a mapping from play_id to play metadata from drives.previous and drives.current.
+
+    Also links administrative markers (such as END GAME or END QUARTER) to the immediately
+    preceding on-field play in the same drive so walk-off plays (e.g. a game-winning OT FG
+    whose 100% WP is recorded on the END GAME row) are preserved with their real play text.
+    """
     play_lookup: dict[str, dict[str, Any]] = {}
     drives_obj = summary_data.get("drives")
     if not isinstance(drives_obj, dict):
@@ -178,6 +290,7 @@ def _build_play_lookup(summary_data: dict[str, Any]) -> dict[str, dict[str, Any]
         plays = drive.get("plays")
         if not isinstance(plays, list):
             continue
+        last_real_play_info: dict[str, Any] | None = None
         for play in plays:
             if not isinstance(play, dict):
                 continue
@@ -222,7 +335,7 @@ def _build_play_lookup(summary_data: dict[str, Any]) -> dict[str, dict[str, Any]
                             play_video_url = str(lnk["href"])
                             break
 
-            play_lookup[play_id] = {
+            entry: dict[str, Any] = {
                 "play_id": play_id,
                 "qtr": qtr,
                 "clock": clock,
@@ -231,6 +344,12 @@ def _build_play_lookup(summary_data: dict[str, Any]) -> dict[str, dict[str, Any]
                 "away_score": play.get("awayScore"),
                 "video_url": play_video_url,
             }
+            if _is_non_play_text(description, qtr) and last_real_play_info is not None:
+                entry["preceding_real_play"] = dict(last_real_play_info)
+            else:
+                last_real_play_info = entry
+
+            play_lookup[play_id] = entry
 
     return play_lookup
 
@@ -262,11 +381,58 @@ def _extract_url_from_video_obj(video_obj: dict[str, Any]) -> str:
     return ""
 
 
+def _extract_story_video_clips(summary_data: dict[str, Any]) -> list[dict[str, str]]:
+    """Extract direct single-play video clips (e.g. x.com/NFL/status/..., espn.com/video/clip/...) embedded in article.story."""
+    clips: list[dict[str, str]] = []
+    if not isinstance(summary_data, dict):
+        return clips
+    article = summary_data.get("article")
+    if not isinstance(article, dict):
+        return clips
+    story = str(article.get("story") or "")
+    if not story:
+        return clips
+
+    paragraphs = re.split(r"\n\s*\n|<p>|<\s*hl2\s*>", story)
+    for para in paragraphs:
+        # Split compound sentences on ' and ' when another clause follows so links bind only to their own play clause
+        for m in re.finditer(r"<a\s+href=[\"'](https?://[^\"']+)[\"'][^>]*>([^<]+)</a>", para, flags=re.IGNORECASE):
+            href = m.group(1).strip()
+            anchor_text = m.group(2).strip()
+            lower_href = href.lower()
+            is_clip = (
+                "/status/" in lower_href
+                or "espn.com/video/clip" in lower_href
+                or "youtube.com/watch" in lower_href
+                or "youtu.be/" in lower_href
+                or "nfl.com/videos" in lower_href
+            )
+            if is_clip:
+                start_idx = max(0, m.start() - 120)
+                end_idx = min(len(para), m.end() + 90)
+                local_raw = para[start_idx:end_idx]
+                # Truncate at ' and ' after the anchor to avoid bleeding into the next play in the sentence
+                before_part = re.sub(r"<[^>]+>", " ", para[start_idx : m.start()])
+                after_part = re.sub(r"<[^>]+>", " ", para[m.end() : end_idx])
+                after_part = re.split(r"\band\b|\bwhile\b|;", after_part, maxsplit=1)[0]
+                before_part = re.split(r"\band\b|;", before_part)[-1]
+                local_clause = re.sub(r"\s+", " ", f"{before_part} {anchor_text} {after_part}").strip()
+                clips.append(
+                    {
+                        "video_url": href,
+                        "video_title": f"Clip Oficial: {anchor_text}",
+                        "video_description": local_clause,
+                        "video_source": "Clip Oficial @NFL / ESPN",
+                    }
+                )
+    return clips
+
+
 def _extract_video_catalog(
     summary_data: dict[str, Any],
     comp_data: dict[str, Any] | None = None,
 ) -> tuple[dict[str, dict[str, str]], list[dict[str, str]]]:
-    """Collect official video clips from summary.videos, article.video, and competition.highlights."""
+    """Collect official video clips from summary.videos, article.video, competition.highlights, and article.story."""
     by_play_id: dict[str, dict[str, str]] = {}
     all_videos: list[dict[str, str]] = []
 
@@ -296,12 +462,17 @@ def _extract_video_catalog(
                 "video_title": title or desc or "Clip Oficial ESPN",
                 "video_description": desc,
                 "video_thumbnail": thumb,
+                "video_source": "ESPN Video Oficial",
             }
             all_videos.append(entry)
             for pid_key in ("playId", "play_id", "id"):
                 pid_val = vid.get(pid_key)
                 if pid_val is not None:
                     by_play_id[str(pid_val)] = entry
+
+    # Append direct single-play clips embedded in the official game recap story
+    story_clips = _extract_story_video_clips(summary_data)
+    all_videos.extend(story_clips)
 
     return by_play_id, all_videos
 
@@ -344,39 +515,208 @@ def _extract_game_links(
     return links_found
 
 
-def _build_play_search_keywords(description: str) -> str:
-    """Extract key player surnames and football actions from a play description for video matching."""
-    cleaned = re.sub(r"\([^)]*\)", " ", description or "")
+def _resolve_player_token(raw_token: str, player_lookup: dict[str, str] | None = None) -> str:
+    """Resolve an abbreviated player token like 'S.Darnold' or 'K.Abrams-Draine' to full name."""
+    token = str(raw_token or "").strip()
+    if not token:
+        return ""
+    # Strip team prefix like 'NO-C.Young' -> 'C.Young'
+    if "-" in token and re.match(r"^[A-Z]{2,3}-[A-Z]\.", token):
+        token = token.split("-", 1)[1].strip()
+    normalized = re.sub(r"\s+", "", token).lower()
+    surname = token.split(".", 1)[-1].strip() if "." in token else token
+    lookup = player_lookup if player_lookup is not None else _get_global_player_lookup()
+    if normalized in lookup:
+        return lookup[normalized]
+    if surname.lower() in lookup:
+        return lookup[surname.lower()]
+    return surname
+
+
+def _parse_play_search_descriptor(
+    description: str,
+    player_lookup: dict[str, str] | None = None,
+) -> dict[str, Any]:
+    """Parse play-by-play text by football role to extract exact playmakers, yardage, and action.
+
+    Crucially avoids misleading tokens:
+    - On interceptions, extracts the INTERCEPTOR and the PASSER (ignoring the 'intended for' target).
+    - On field goals, extracts ONLY the KICKER and yardage (ignoring 'Center-...' and 'Holder-...').
+    - On fumbles, extracts the RECOVERER / FORCER and FUMBLER (ignoring unrelated tacklers).
+    """
+    raw = str(description or "").strip()
+    # Strip long snapper, holder, punter metadata and penalty clauses
+    cleaned = re.sub(r"\b(?:Center|Holder|Punter)-[A-Z]{1,2}\.\s?[A-Za-z'-]+", " ", raw, flags=re.IGNORECASE)
     cleaned = re.sub(r"Penalty on[^.]*\.", " ", cleaned, flags=re.IGNORECASE)
+    cleaned = re.sub(r"\((?:Shotgun|No Huddle|No Huddle,\s*Shotgun|Under Center|Wildcat)\)", " ", cleaned, flags=re.IGNORECASE)
     cleaned = re.sub(r"\s+", " ", cleaned).strip()
+    lower = cleaned.lower()
 
-    # Extract abbreviated player names like S.Darnold, K.Abrams-Draine, J.Smith-Njigba, C.Stroud
-    players = re.findall(r"\b[A-Z]\.\s?[A-Za-z'-]{2,}\b", cleaned)
-    surnames: list[str] = []
-    for p in players:
-        surname = p.split(".", 1)[-1].strip()
-        if surname and surname not in surnames:
-            surnames.append(surname)
+    name_pat = r"\b(?:[A-Z]{2,3}-)?[A-Z]{1,2}\.\s?[A-Za-z'-]{2,}\b"
 
-    action_terms: list[str] = []
-    lower_desc = cleaned.lower()
-    for token, label in (
-        ("intercepted", "interception"),
-        ("touchdown", "touchdown"),
-        ("fumble", "fumble"),
-        ("field goal", "field goal"),
-        ("sacked", "sack"),
-        ("pass deep", "deep pass"),
-        ("4th", "4th down"),
-    ):
-        if token in lower_desc:
-            action_terms.append(label)
+    # 1. INTERCEPTION: prioritize interceptor + passer (never 'intended for' target)
+    if "intercepted" in lower:
+        int_match = re.search(rf"intercepted\s+by\s+({name_pat})", cleaned, flags=re.IGNORECASE)
+        passer_match = re.search(rf"({name_pat})\s+pass\b", cleaned, flags=re.IGNORECASE)
+        interceptor = _resolve_player_token(int_match.group(1), player_lookup) if int_match else ""
+        passer = _resolve_player_token(passer_match.group(1), player_lookup) if passer_match else ""
+        actors = [p for p in (interceptor, passer) if p]
+        is_td = "touchdown" in lower
+        action = "pick six interception touchdown" if is_td else "interception"
+        label = (
+            f"{interceptor or 'Defensa'} INT a {passer}"
+            if passer
+            else f"{interceptor or 'Jugada'} Intercepcion"
+        )
+        return {
+            "primary_actors": actors,
+            "action_phrase": action,
+            "play_label": label.strip(),
+            "yardage": None,
+        }
 
-    parts = surnames[:2] + action_terms[:2]
-    if parts:
-        return " ".join(parts)
-    words = [w for w in re.findall(r"[A-Za-z0-9'-]+", cleaned) if len(w) > 2]
-    return " ".join(words[:6])
+    # 2. FIELD GOAL: only kicker + yardage
+    fg_match = re.search(rf"({name_pat})\s+(\d+)\s+yard\s+field\s+goal", cleaned, flags=re.IGNORECASE)
+    if fg_match or "field goal" in lower:
+        kicker = _resolve_player_token(fg_match.group(1), player_lookup) if fg_match else ""
+        yds = int(fg_match.group(2)) if fg_match else None
+        if not kicker:
+            first_p = re.search(name_pat, cleaned)
+            kicker = _resolve_player_token(first_p.group(0), player_lookup) if first_p else ""
+        yds_str = f"{yds} yard " if yds else ""
+        if "blocked" in lower:
+            action = f"{yds_str}blocked field goal".strip()
+            label = f"{kicker} FG Bloqueado ({yds or ''} yds)".strip()
+        elif "no good" in lower or "missed" in lower:
+            action = f"{yds_str}missed field goal".strip()
+            label = f"{kicker} FG Fallado ({yds or ''} yds)".strip()
+        else:
+            action = f"{yds_str}field goal".strip()
+            label = f"{kicker} FG {yds or ''} yds".strip()
+        return {
+            "primary_actors": [kicker] if kicker else [],
+            "action_phrase": action,
+            "play_label": label,
+            "yardage": yds,
+        }
+
+    # 3. FUMBLE: fumbler + recoverer/forcer
+    if "fumble" in lower:
+        pre_fumble = re.split(r"\bfumbles\b", cleaned, maxsplit=1, flags=re.IGNORECASE)[0]
+        pre_no_parens = re.sub(r"\([^)]*\)", " ", pre_fumble)
+        first_p = re.search(name_pat, pre_no_parens)
+        fumbler = _resolve_player_token(first_p.group(0), player_lookup) if first_p else ""
+        rec_match = re.search(rf"recovered\s+by\s+({name_pat})", cleaned, flags=re.IGNORECASE)
+        forced_match = re.search(rf"fumbles\s*\(({name_pat})\)", cleaned, flags=re.IGNORECASE)
+        recoverer = _resolve_player_token(rec_match.group(1), player_lookup) if rec_match else ""
+        forcer = _resolve_player_token(forced_match.group(1), player_lookup) if forced_match else ""
+        second_actor = recoverer or forcer
+        actors = [p for p in (fumbler, second_actor) if p and p != fumbler]
+        if fumbler and fumbler not in actors:
+            actors.insert(0, fumbler)
+        action = "fumble return touchdown" if "touchdown" in lower else "fumble"
+        label = f"Fumble: {' / '.join(actors[:2])}" if actors else "Fumble Recuperado"
+        return {
+            "primary_actors": actors[:2],
+            "action_phrase": action,
+            "play_label": label,
+            "yardage": None,
+        }
+
+    # 4. PASS PLAY (Touchdown or Big Completion / Incomplete)
+    if re.search(r"\bpass\b", lower):
+        passer_match = re.search(rf"({name_pat})\s+pass\b", cleaned, flags=re.IGNORECASE)
+        rec_match = re.search(rf"\bpass\b.*?\b(?:to|intended\s+for)\s+({name_pat})", cleaned, flags=re.IGNORECASE)
+        yds_match = re.search(r"\bfor\s+(\d+)\s+yards?\b", cleaned, flags=re.IGNORECASE)
+        passer = _resolve_player_token(passer_match.group(1), player_lookup) if passer_match else ""
+        receiver = _resolve_player_token(rec_match.group(1), player_lookup) if rec_match else ""
+        yds = int(yds_match.group(1)) if yds_match else None
+        actors = [p for p in (passer, receiver) if p]
+        if "touchdown" in lower:
+            action = f"{yds} yard touchdown".strip() if yds else "touchdown pass"
+            label = f"{passer} a {receiver} TD ({yds} yds)" if yds else f"{passer} a {receiver} TD"
+        elif "incomplete" in lower:
+            action = "4th down incomplete pass" if "4th" in lower else "incomplete pass"
+            label = f"Pase incompleto: {passer} a {receiver}".strip()
+        else:
+            action = f"{yds} yard catch" if yds else "completion"
+            label = f"{passer} a {receiver} ({yds} yds)" if yds else f"{passer} a {receiver}"
+        return {
+            "primary_actors": actors,
+            "action_phrase": action,
+            "play_label": label,
+            "yardage": yds,
+        }
+
+    # 5. SACK
+    if "sacked" in lower:
+        qb_match = re.search(rf"({name_pat})\s+sacked\b", cleaned, flags=re.IGNORECASE)
+        sacker_match = re.search(rf"sacked\b.*?\(({name_pat})", cleaned, flags=re.IGNORECASE)
+        qb = _resolve_player_token(qb_match.group(1), player_lookup) if qb_match else ""
+        sacker = _resolve_player_token(sacker_match.group(1), player_lookup) if sacker_match else ""
+        actors = [p for p in (sacker, qb) if p]
+        label = f"{sacker or 'Defensa'} captura a {qb}".strip()
+        return {
+            "primary_actors": actors,
+            "action_phrase": "sack",
+            "play_label": label,
+            "yardage": None,
+        }
+
+    # 6. RUSH / PUNT RETURN / KICKOFF RETURN / OTHER
+    no_parens = re.sub(r"\([^)]*\)", " ", cleaned)
+    found_names = re.findall(name_pat, no_parens)
+    primary = _resolve_player_token(found_names[0], player_lookup) if found_names else ""
+    yds_match = re.search(r"\bfor\s+(\d+)\s+yards?\b", cleaned, flags=re.IGNORECASE)
+    yds = int(yds_match.group(1)) if yds_match else None
+    if "touchdown" in lower:
+        if "punt" in lower or "kick" in lower:
+            action = f"{yds} yard return touchdown" if yds else "return touchdown"
+        else:
+            action = f"{yds} yard touchdown run" if yds else "touchdown run"
+        label = f"{primary} TD ({yds or 1} yds)"
+    elif "punt" in lower:
+        action = "punt return"
+        label = f"Despeje / Regreso: {primary}"
+    else:
+        action = f"{yds} yard run" if yds and yds >= 10 else "run"
+        label = f"Acarreo: {primary} ({yds} yds)" if yds else f"Jugada: {primary}"
+
+    return {
+        "primary_actors": [primary] if primary else [],
+        "action_phrase": action,
+        "play_label": label.strip(),
+        "yardage": yds,
+    }
+
+
+def _build_play_search_keywords(
+    description: str,
+    player_lookup: dict[str, str] | None = None,
+) -> str:
+    """Return precise player full names + football action for a play description."""
+    desc_info = _parse_play_search_descriptor(description, player_lookup)
+    parts = list(desc_info["primary_actors"]) + [desc_info["action_phrase"]]
+    return " ".join(p for p in parts if p).strip()
+
+
+def _team_nickname(team: dict[str, Any]) -> str:
+    """Extract the short franchise nickname (e.g. 'Seattle Seahawks' -> 'Seahawks') to avoid matching full-game recap titles."""
+    full = str(team.get("name") or "").strip()
+    abbr = str(team.get("abbreviation") or "").strip()
+    if full and " " in full:
+        return full.split()[-1]
+    return full or abbr
+
+
+def _is_direct_clip_url(url: str) -> bool:
+    """Return True only if url is a direct clip/video URL and NOT a search results page."""
+    clean = str(url or "").strip().lower()
+    if not clean.startswith("http"):
+        return False
+    if "youtube.com/results" in clean or "x.com/search" in clean or "google.com/search" in clean:
+        return False
+    return True
 
 
 def _enrich_moment_with_video_links(
@@ -387,67 +727,114 @@ def _enrich_moment_with_video_links(
     video_by_play: dict[str, dict[str, str]],
     video_list: list[dict[str, str]],
     game_links: dict[str, str],
+    player_lookup: dict[str, str] | None = None,
 ) -> dict[str, Any]:
-    """Attach direct ESPN video clip URL (if available) plus YouTube highlight search and ESPN PBP link."""
+    """Attach direct clip URL (if available) plus surgical short-clip (<4 min) YouTube & X video links."""
     play_id = str(moment.get("play_id") or "")
     description = str(moment.get("description") or "")
     qtr = int(moment.get("qtr") or 0)
 
-    direct_url = str(moment.get("video_url") or "").strip()
-    video_title = ""
+    desc_info = _parse_play_search_descriptor(description, player_lookup)
+    actors: list[str] = desc_info["primary_actors"]
+    action_phrase: str = desc_info["action_phrase"]
+    play_label: str = desc_info["play_label"]
+    yardage: int | None = desc_info["yardage"]
+
+    existing_url = str(moment.get("video_url") or "").strip()
+    direct_url = existing_url if _is_direct_clip_url(existing_url) else ""
+    video_title = str(moment.get("video_title") or "") if direct_url else ""
+    direct_source = "ESPN Video Oficial"
 
     # 1. Match by play_id in summary/competition video catalog
     if not direct_url and play_id in video_by_play:
-        direct_url = video_by_play[play_id]["video_url"]
-        video_title = video_by_play[play_id].get("video_title", "")
+        cand_url = video_by_play[play_id].get("video_url", "")
+        if _is_direct_clip_url(cand_url):
+            direct_url = cand_url
+            video_title = video_by_play[play_id].get("video_title", "")
+            direct_source = video_by_play[play_id].get("video_source", "ESPN Video Oficial")
 
-    # 2. Match by player surname + action keywords across game video catalog
-    if not direct_url and video_list and description:
-        players = [
-            p.split(".", 1)[-1].strip().lower()
-            for p in re.findall(r"\b[A-Z]\.\s?[A-Za-z'-]{2,}\b", description)
-        ]
+    # 2. Match against game video catalog (including embedded @NFL / Team clips in article.story)
+    # Require matching the primary playmaker surname AND the action/context so a clip from another play isn't mismatched
+    if not direct_url and video_list and actors:
+        primary_surname = actors[0].split()[-1].lower()
+        secondary_surname = actors[1].split()[-1].lower() if len(actors) > 1 else ""
+        is_ot = qtr >= 5
+
         for vid in video_list:
+            cand_url = vid.get("video_url", "")
+            if not _is_direct_clip_url(cand_url):
+                continue
             haystack = f"{vid.get('video_title', '')} {vid.get('video_description', '')}".lower()
-            if players and any(len(p) >= 3 and p in haystack for p in players):
-                direct_url = vid["video_url"]
+            if len(primary_surname) < 3 or primary_surname not in haystack:
+                continue
+            # Verify action or yardage or secondary actor consistency
+            action_ok = False
+            if "interception" in action_phrase and ("intercept" in haystack or "pick" in haystack):
+                # If a game has multiple INTs (e.g. Q4 vs OT), ensure overtime/regulation alignment
+                if is_ot and ("overtime" in haystack or " ot " in haystack):
+                    action_ok = True
+                elif not is_ot and "overtime" not in haystack:
+                    action_ok = True
+            elif "field goal" in action_phrase and ("field goal" in haystack or (yardage and f"{yardage}-yard" in haystack)):
+                action_ok = True
+            elif "touchdown" in action_phrase and ("touchdown" in haystack or "td" in haystack or "scored" in haystack):
+                if not yardage or f"{yardage}-yard" in haystack or f"{yardage} yard" in haystack or (secondary_surname and secondary_surname in haystack):
+                    action_ok = True
+            elif secondary_surname and secondary_surname in haystack:
+                action_ok = True
+
+            if action_ok:
+                direct_url = cand_url
                 video_title = vid.get("video_title", "")
+                direct_source = vid.get("video_source", "Clip Oficial @NFL / ESPN")
                 break
 
-    away_label = str(away_team.get("name") or away_team.get("abbreviation") or "NFL").strip()
-    home_label = str(home_team.get("name") or home_team.get("abbreviation") or "NFL").strip()
-    play_keywords = _build_play_search_keywords(description)
+    away_nick = _team_nickname(away_team)
+    home_nick = _team_nickname(home_team)
     qtr_label = "OT" if qtr >= 5 else (f"Q{qtr}" if qtr > 0 else "")
-    yt_query = " ".join(
-        part for part in ("NFL", f"{away_label} vs {home_label}", play_keywords, qtr_label, "highlight") if part
+
+    # Build surgical single-play YouTube query:
+    # - Uses full player names (primary playmaker first) + exact play action + team nicknames
+    # - Avoids 'Team A vs Team B' + 'highlight' pattern which triggers 15-minute full-game recaps
+    # - Uses YouTube's native sp=EgIYAQ%3D%3D parameter (Duration < 4 minutes: Short Clips Only)
+    core_play_terms = " ".join(actors[:2] + [action_phrase, away_nick, home_nick]).strip()
+    youtube_search_url = (
+        f"https://www.youtube.com/results?search_query={quote_plus(core_play_terms)}&sp=EgIYAQ%3D%3D"
     )
-    youtube_search_url = f"https://www.youtube.com/results?search_query={quote_plus(yt_query)}"
+
+    # Build X / @NFL single-play video search URL (f=video shows only short broadcast clips of the play)
+    x_video_url = (
+        direct_url
+        if ("x.com/" in direct_url or "twitter.com/" in direct_url)
+        else f"https://x.com/search?q={quote_plus(core_play_terms)}&f=video"
+    )
+
     espn_play_url = game_links.get("pbp") or game_links.get("recap") or ""
 
     has_direct_video = bool(direct_url)
     primary_video_url = direct_url if has_direct_video else youtube_search_url
-    video_source = "ESPN Video Oficial" if has_direct_video else "YouTube NFL Highlights"
+    video_source = direct_source if has_direct_video else "Clip Puntual (<4m)"
 
     return {
         **moment,
+        "play_label": play_label,
+        "video_query": core_play_terms,
+        "video_query_v2": core_play_terms,
         "video_url": primary_video_url,
         "video_source": video_source,
-        "video_title": video_title or f"Video: {away_team.get('abbreviation', '')} @ {home_team.get('abbreviation', '')} ({qtr_label or 'Jugada Clave'})",
+        "video_title": video_title or f"Jugada Puntual: {play_label} ({away_team.get('abbreviation', '')} @ {home_team.get('abbreviation', '')} {qtr_label})".strip(),
         "has_direct_video": has_direct_video,
         "youtube_search_url": youtube_search_url,
+        "x_video_url": x_video_url,
         "espn_play_url": espn_play_url,
     }
 
 
 def _is_non_play_marker(moment: dict[str, Any]) -> bool:
     """Return True if a winprobability entry is an administrative boundary rather than an on-field snap."""
-    desc = str(moment.get("description") or "").strip().upper()
+    desc = str(moment.get("description") or "").strip()
     qtr = int(moment.get("qtr") or 0)
-    if desc in {"END GAME", "END OF GAME", "END PERIOD", "END QUARTER", "TWO-MINUTE WARNING"}:
-        return True
-    if qtr == 0 and ("SIN DESCRIPCI" in desc or not desc):
-        return True
-    return False
+    return _is_non_play_text(desc, qtr)
 
 
 def _extract_all_wp_deltas(summary_data: dict[str, Any]) -> list[dict[str, Any]]:
@@ -460,8 +847,14 @@ def _extract_all_wp_deltas(summary_data: dict[str, Any]) -> list[dict[str, Any]]
         return []
 
     play_lookup = _build_play_lookup(summary_data)
-    video_by_play, video_list = _extract_video_catalog(summary_data)
+    video_by_play, _video_list = _extract_video_catalog(summary_data)
     game_links = _extract_game_links(summary_data)
+    wp_play_ids = {
+        str(item.get("playId") or item.get("play_id") or item.get("id") or "")
+        for item in wp_array
+        if isinstance(item, dict)
+    }
+
     moments: list[dict[str, Any]] = []
     prev_home_wp = 0.5
 
@@ -498,6 +891,14 @@ def _extract_all_wp_deltas(summary_data: dict[str, Any]) -> list[dict[str, Any]]
         )
         play_id = str(raw_play_id)
         lookup_info = play_lookup.get(play_id, {})
+
+        # If this WP row is attached to an administrative marker (like END GAME on a walk-off FG)
+        # and the immediately preceding play in the drive was not in winprobability, attribute the
+        # WP jump to that real preceding play!
+        preceding_real = lookup_info.get("preceding_real_play")
+        if isinstance(preceding_real, dict) and str(preceding_real.get("play_id") or "") not in wp_play_ids:
+            lookup_info = preceding_real
+            play_id = str(preceding_real.get("play_id") or play_id)
 
         # Resolve quarter
         qtr = lookup_info.get("qtr")
@@ -548,7 +949,7 @@ def _extract_all_wp_deltas(summary_data: dict[str, Any]) -> list[dict[str, Any]]
             "delta_wp": round(delta_wp, 4),
             "abs_delta_wp": round(abs_delta_wp, 4),
         }
-        if play_video_url:
+        if play_video_url and _is_direct_clip_url(play_video_url):
             base_moment["video_url"] = play_video_url
         elif play_id in video_by_play:
             base_moment["video_url"] = video_by_play[play_id]["video_url"]
@@ -579,6 +980,7 @@ def extract_critical_moments(
     top_moments = candidates[:top_n]
 
     video_by_play, video_list = _extract_video_catalog(summary_data)
+    player_lookup = _build_player_name_lookup(summary_data)
     resolved_event_id = str(event_id or summary_data.get("header", {}).get("id") or "nfl")
     game_links = _extract_game_links(summary_data, event_id=resolved_event_id)
     away_dict = away_team or {"abbreviation": str(kwargs.get("away_abbr", "AWAY")), "name": str(kwargs.get("away_abbr", "NFL"))}
@@ -593,6 +995,7 @@ def extract_critical_moments(
             video_by_play=video_by_play,
             video_list=video_list,
             game_links=game_links,
+            player_lookup=player_lookup,
         )
         for m in top_moments
     ]
@@ -628,7 +1031,7 @@ def _parse_team_competitor(competitor: dict[str, Any]) -> dict[str, Any]:
 
 
 def _load_completed_game_cache(target_path: Path) -> dict[str, dict[str, Any]]:
-    """Load already-completed games from existing live_scoreboard.json to avoid redundant summary fetches."""
+    """Load already-completed games from existing live_scoreboard.json if they have v2 play-specific video metadata."""
     cache: dict[str, dict[str, Any]] = {}
     if not target_path.exists():
         return cache
@@ -644,8 +1047,9 @@ def _load_completed_game_cache(target_path: Path) -> dict[str, dict[str, Any]]:
                 eid
                 and st.get("completed") is True
                 and hp is not None
+                and bool(hp.get("video_query_v2"))
                 and str(hp.get("video_url") or "").startswith("http")
-                and str(hp.get("description") or "").strip().upper() != "END GAME"
+                and not _is_non_play_text(str(hp.get("description") or ""))
             ):
                 cache[eid] = g
     except Exception:  # noqa: BLE001
@@ -819,6 +1223,7 @@ def ingest_espn_scoreboard(
         summary_data = summaries_by_id.get(event_id, {})
 
         video_by_play, video_list = _extract_video_catalog(summary_data, comp)
+        player_lookup = _build_player_name_lookup(summary_data)
         game_links = _extract_game_links(summary_data, event, event_id)
 
         raw_critical = extract_critical_moments(
@@ -831,7 +1236,14 @@ def ingest_espn_scoreboard(
         )
         critical_moments = [
             _enrich_moment_with_video_links(
-                m, event_id, away_team, home_team, video_by_play, video_list, game_links
+                m,
+                event_id,
+                away_team,
+                home_team,
+                video_by_play,
+                video_list,
+                game_links,
+                player_lookup=player_lookup,
             )
             for m in raw_critical
         ]
@@ -847,7 +1259,14 @@ def ingest_espn_scoreboard(
         elif fallback_pool:
             best_moment = max(fallback_pool, key=lambda m: m["abs_delta_wp"])
             enriched_best = _enrich_moment_with_video_links(
-                best_moment, event_id, away_team, home_team, video_by_play, video_list, game_links
+                best_moment,
+                event_id,
+                away_team,
+                home_team,
+                video_by_play,
+                video_list,
+                game_links,
+                player_lookup=player_lookup,
             )
             hinge_play = {
                 **enriched_best,

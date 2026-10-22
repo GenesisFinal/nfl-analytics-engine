@@ -365,6 +365,102 @@ def test_espn_extract_critical_moments_threshold_and_sorting() -> None:
         assert m.get("espn_play_url", "").startswith("https://www.espn.com/nfl/")
 
 
+def test_espn_role_aware_single_play_video_links() -> None:
+    """Verifica que las consultas de video extraigan al protagonista real (ej. interceptor y no receptor fallido) y filtren clips cortos (<4m)."""
+    summary_payload = {
+        "boxscore": {
+            "players": [
+                {
+                    "statistics": [
+                        {
+                            "athletes": [
+                                {"athlete": {"displayName": "Sam Darnold"}},
+                                {"athlete": {"displayName": "Tory Horton"}},
+                                {"athlete": {"displayName": "Kris Abrams-Draine"}},
+                                {"athlete": {"displayName": "Cam Little"}},
+                                {"athlete": {"displayName": "Wil Lutz"}},
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "drives": {
+            "previous": [
+                {
+                    "plays": [
+                        {
+                            "id": "p_int",
+                            "period": {"number": 4},
+                            "clock": {"displayValue": "06:15"},
+                            "text": "(6:15) (Shotgun) S.Darnold pass short left intended for T.Horton INTERCEPTED by K.Abrams-Draine at DEN 31.",
+                        },
+                        {
+                            "id": "p_fg",
+                            "period": {"number": 4},
+                            "clock": {"displayValue": "00:08"},
+                            "text": "(0:08) C.Little 57 yard field goal is GOOD, Center-D.Hamilton, Holder-L.Cooke.",
+                        },
+                        {
+                            "id": "p_walkoff",
+                            "period": {"number": 5},
+                            "clock": {"displayValue": "06:33"},
+                            "text": "(6:33) W.Lutz 53 yard field goal is GOOD, Center-M.Fraboni, Holder-J.Crawshaw.",
+                        },
+                        {
+                            "id": "p_end",
+                            "period": {"number": 5},
+                            "clock": {"displayValue": "06:29"},
+                            "text": "END GAME",
+                        },
+                    ]
+                }
+            ]
+        },
+        "winprobability": [
+            {"playId": "p_int", "homeWinPercentage": 0.90},      # delta = +0.40
+            {"playId": "p_fg", "homeWinPercentage": 0.65},       # delta = -0.25
+            {"playId": "p_end", "homeWinPercentage": 1.00},      # delta = +0.35 atribuido a p_walkoff
+        ],
+    }
+
+    moments = ingest_espn.extract_critical_moments(
+        summary_payload,
+        min_delta=0.12,
+        top_n=3,
+        event_id="401872995",
+        away_abbr="SEA",
+        home_abbr="DEN",
+        away_name="Seattle Seahawks",
+        home_name="Denver Broncos",
+        season=2026,
+    )
+    assert len(moments) == 3
+    by_id = {m["play_id"]: m for m in moments}
+
+    # 1. Intercepción: debe incluir a Kris Abrams-Draine y Sam Darnold, y EXCLUIR a Horton
+    int_moment = by_id["p_int"]
+    assert "Kris Abrams-Draine" in int_moment["video_query"]
+    assert "Sam Darnold" in int_moment["video_query"]
+    assert "Horton" not in int_moment["video_query"]
+    assert "sp=EgIYAQ%3D%3D" in int_moment["youtube_search_url"]
+    assert int_moment["x_video_url"].startswith("https://x.com/search?q=")
+    assert bool(int_moment["video_query_v2"])
+
+    # 2. Field Goal: debe incluir a Cam Little y 57 yard field goal, y EXCLUIR al long snapper/holder
+    fg_moment = by_id["p_fg"]
+    assert "Cam Little" in fg_moment["video_query"]
+    assert "57 yard field goal" in fg_moment["video_query"]
+    assert "Hamilton" not in fg_moment["video_query"]
+    assert "Cooke" not in fg_moment["video_query"]
+
+    # 3. Walk-off FG oculto tras END GAME: debe atribuirse a p_walkoff (Wil Lutz 53 yard field goal)
+    assert "p_walkoff" in by_id
+    walkoff_moment = by_id["p_walkoff"]
+    assert "Wil Lutz" in walkoff_moment["video_query"]
+    assert "53 yard field goal" in walkoff_moment["video_query"]
+
+
 def test_espn_scoreboard_fallback_and_schema(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     """Verifica el fallback automático de ESPN y la estructura del archivo `live_scoreboard.json`."""
     calls: list[str] = []
