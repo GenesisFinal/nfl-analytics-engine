@@ -528,11 +528,54 @@
         </div>
       </div>
 
-      <!-- SUBSECCIÓN A: Diccionario de Mediciones (6 Tarjetas) -->
-      <div>
-        <h3 class="mb-3 font-mono-num text-xs font-bold uppercase tracking-wider text-slate-300">
-          1. ¿Qué mide cada indicador del motor?
+      <!-- SUBSECCIÓN A: Score de Impacto + Diccionario de Mediciones -->
+      <div class="space-y-4">
+        <h3 class="font-mono-num text-xs font-bold uppercase tracking-wider text-slate-300">
+          1. ¿Qué es el Score de Impacto (0 a 100) y qué mide cada indicador?
         </h3>
+
+        <!-- Banner Destacado: Score de Impacto (0-100) -->
+        <article class="rounded-xl border border-emerald-500/40 bg-gradient-to-r from-emerald-950/30 via-[#111827] to-[#111827] p-5 shadow-lg">
+          <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div class="space-y-2 lg:max-w-3xl">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="rounded bg-emerald-500/20 px-2.5 py-0.5 font-mono-num text-xs font-extrabold uppercase tracking-wider text-emerald-300">
+                  ★ Score Impacto (0 a 100)
+                </span>
+                <span class="font-mono-num text-xs font-semibold text-emerald-400">
+                  Índice Sintético de Valoración Objetiva Posicional
+                </span>
+              </div>
+              <p class="text-xs leading-relaxed text-slate-200">
+                El <strong class="text-white">Score de Impacto (0-100)</strong> es la calificación maestra del motor que sintetiza en un único número de <code class="font-mono-num text-emerald-300">0.0 a 100.0</code> cuánto valor real aporta un jugador para ganar partidos, <strong class="text-emerald-300">comparado estrictamente contra los demás titulares de su misma posición</strong> y habiendo eliminado previamente los minutos basura.
+              </p>
+              <p class="text-xs leading-relaxed text-slate-300">
+                <strong class="text-white">¿Cómo se calcula?</strong> Primero se calcula el puntaje compuesto <code class="font-mono-num text-cyan-300">Z-Score</code> de la posición (combinando eficiencia por jugada, impacto en probabilidad de victoria y ejecución técnica). Luego se proyecta a una escala percentil de 0 a 100 mediante la función de distribución acumulada normal estándar (<code class="font-mono-num text-emerald-300">Score = CDF_Normal(z_compuesto) * 100</code>), permitiendo comparar en una misma tabla a un Quarterback, un Running Back, un Wide Receiver y un Tight End.
+              </p>
+            </div>
+
+            <!-- Escala de Lectura Rápida -->
+            <div class="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-2 lg:w-72 shrink-0 font-mono-num text-[11px]">
+              <div class="rounded-lg border border-emerald-500/30 bg-[#090D16] p-2.5">
+                <div class="font-bold text-emerald-400">90.0 - 100</div>
+                <div class="text-[10px] text-slate-400">Élite / Nivel MVP</div>
+              </div>
+              <div class="rounded-lg border border-cyan-500/30 bg-[#090D16] p-2.5">
+                <div class="font-bold text-cyan-400">70.0 - 89.9</div>
+                <div class="text-[10px] text-slate-400">Titular Diferencial</div>
+              </div>
+              <div class="rounded-lg border border-slate-700 bg-[#090D16] p-2.5">
+                <div class="font-bold text-slate-200">50.0</div>
+                <div class="text-[10px] text-slate-400">Promedio Exacto NFL</div>
+              </div>
+              <div class="rounded-lg border border-rose-500/30 bg-[#090D16] p-2.5">
+                <div class="font-bold text-rose-400">&lt; 35.0</div>
+                <div class="text-[10px] text-slate-400">Reemplazo / Ineficiente</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           <!-- EPA -->
           <article class="rounded-xl border border-slate-800 bg-[#111827] p-4 shadow-md">
