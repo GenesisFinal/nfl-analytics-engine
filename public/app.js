@@ -24,6 +24,8 @@ const appState = {
   gameFilter: 'all', // 'all' | 'live' | 'hinge' | 'final'
   gameWeekFilter: 'ALL', // 'ALL' | '1' | '2' | ...
   gameTeamFilter: 'ALL', // 'ALL' | 'KC' | 'BAL' | ...
+  rankingScopeFilter: 'ALL', // 'ALL' | 'CUM_5' | 'WEEK_6' | ...
+  rankingTeamFilter: 'ALL', // 'ALL' | 'KC' | 'SF' | ...
   positionFilter: 'ALL', // 'ALL' | 'QB' | 'RB' | 'WR' | 'TE'
   searchQuery: '',
   sortColumn: 'impact_score',
@@ -215,9 +217,10 @@ function renderHeaderAndKpis() {
     updatedAtEl.textContent = formatTimestamp(latestTimestamp);
   }
 
-  // KPI 1: MVP Real
-  const players = Array.isArray(rankings.players) ? rankings.players : [];
-  const mvp = rankings.mvp_real || critiques.mvp_real || players[0] || null;
+  // KPI 1: MVP Real (según el corte temporal activo en el Ranking)
+  const activeRankSlice = getActiveRankingsSlice();
+  const players = activeRankSlice.players;
+  const mvp = activeRankSlice.mvp_real || players[0] || null;
 
   const kpiMvpScore = document.getElementById('kpi-mvp-score');
   const kpiMvpName = document.getElementById('kpi-mvp-name');
@@ -241,8 +244,9 @@ function renderHeaderAndKpis() {
     kpiMvpName.textContent = 'Sin datos';
   }
 
-  // KPI 2: Estadístico Inflado
+  // KPI 2: Estadístico Inflado (según el corte temporal activo)
   const inflated =
+    activeRankSlice.inflated_stat_leader ||
     rankings.inflated_stat_leader ||
     critiques.inflated_player ||
     critiques.inflated_stat_leader ||
@@ -562,8 +566,40 @@ function renderTeamLogo(team) {
   `;
 }
 
+function getActiveRankingsSlice() {
+  const rankings = appState.rankings || {};
+  const scopes = rankings.rankings_by_scope || {};
+  const scopeKey = appState.rankingScopeFilter || 'ALL';
+
+  if (scopeKey !== 'ALL' && scopes[scopeKey]) {
+    const sc = scopes[scopeKey];
+    return {
+      players: Array.isArray(sc.players) ? sc.players : [],
+      mvp_real: sc.mvp_real || null,
+      inflated_stat_leader: sc.inflated_stat_leader || null,
+      label: sc.label || scopeKey,
+    };
+  }
+
+  const cov = rankings.season_coverage || {};
+  const weeks = Array.isArray(cov.weeks_included) && cov.weeks_included.length
+    ? cov.weeks_included
+    : [1, 2, 3, 4, 5, 6];
+  const minW = Math.min(...weeks);
+  const maxW = Math.max(...weeks);
+  const gamesMon = cov.games_monitored || 93;
+
+  return {
+    players: Array.isArray(rankings.players) ? rankings.players : [],
+    mvp_real: rankings.mvp_real || null,
+    inflated_stat_leader: rankings.inflated_stat_leader || null,
+    label: `Temporada Completa (Sem. ${minW}-${maxW} · ${gamesMon} part.)`,
+  };
+}
+
 function populateScoreboardSelectors() {
   const scoreboard = appState.scoreboard;
+  const rankings = appState.rankings || {};
   const allGames = Array.isArray(scoreboard?.games) ? scoreboard.games : [];
 
   const weekSelect = document.getElementById('scoreboard-week-select');
@@ -589,18 +625,24 @@ function populateScoreboardSelectors() {
     weekSelect.value = weeks.map(String).includes(String(currentVal)) ? String(currentVal) : 'ALL';
   }
 
+  const teamsMap = new Map();
+  allGames.forEach((g) => {
+    const awayAbbr = g?.away_team?.abbreviation;
+    const awayName = g?.away_team?.name;
+    const homeAbbr = g?.home_team?.abbreviation;
+    const homeName = g?.home_team?.name;
+    if (awayAbbr) teamsMap.set(awayAbbr, awayName || awayAbbr);
+    if (homeAbbr) teamsMap.set(homeAbbr, homeName || homeAbbr);
+  });
+  (Array.isArray(rankings.players) ? rankings.players : []).forEach((p) => {
+    if (p.team && !teamsMap.has(p.team)) {
+      teamsMap.set(p.team, p.team);
+    }
+  });
+  const sortedTeams = Array.from(teamsMap.entries()).sort((a, b) => a[0].localeCompare(b[0]));
+
   const teamSelect = document.getElementById('scoreboard-team-select');
   if (teamSelect) {
-    const teamsMap = new Map();
-    allGames.forEach((g) => {
-      const awayAbbr = g?.away_team?.abbreviation;
-      const awayName = g?.away_team?.name;
-      const homeAbbr = g?.home_team?.abbreviation;
-      const homeName = g?.home_team?.name;
-      if (awayAbbr) teamsMap.set(awayAbbr, awayName || awayAbbr);
-      if (homeAbbr) teamsMap.set(homeAbbr, homeName || homeAbbr);
-    });
-    const sortedTeams = Array.from(teamsMap.entries()).sort((a, b) => a[0].localeCompare(b[0]));
     const currentTeam = appState.gameTeamFilter || 'ALL';
     teamSelect.innerHTML = [
       `<option value="ALL">Todos (${sortedTeams.length})</option>`,
@@ -609,6 +651,58 @@ function populateScoreboardSelectors() {
       ),
     ].join('');
     teamSelect.value = teamsMap.has(currentTeam) ? currentTeam : 'ALL';
+  }
+
+  // Poblar Selector de Periodo/Semana en la sección de Ranking (#ranking-scope-select)
+  const rankingScopeSelect = document.getElementById('ranking-scope-select');
+  if (rankingScopeSelect) {
+    const cov = rankings.season_coverage || {};
+    const weeksInc = Array.isArray(cov.weeks_included) && cov.weeks_included.length
+      ? cov.weeks_included
+      : [1, 2, 3, 4, 5, 6];
+    const minW = Math.min(...weeksInc);
+    const maxW = Math.max(...weeksInc);
+    const gamesMon = cov.games_monitored || 93;
+    const scopes = rankings.rankings_by_scope || {};
+
+    const cumOptions = weeksInc
+      .filter((w) => w > 1 && w < maxW && scopes[`CUM_${w}`])
+      .sort((a, b) => b - a)
+      .map((w) => {
+        const sc = scopes[`CUM_${w}`];
+        return `<option value="CUM_${w}">${escapeHtml(sc.label)}</option>`;
+      });
+
+    const weekOptions = [...weeksInc]
+      .sort((a, b) => b - a)
+      .filter((w) => scopes[`WEEK_${w}`])
+      .map((w) => {
+        const sc = scopes[`WEEK_${w}`];
+        return `<option value="WEEK_${w}">${escapeHtml(sc.label)}</option>`;
+      });
+
+    const currentScope = appState.rankingScopeFilter || 'ALL';
+    rankingScopeSelect.innerHTML = [
+      `<option value="ALL">Temporada Completa (Sem. ${minW}-${maxW} · ${gamesMon} part.)</option>`,
+      ...(cumOptions.length ? [`<optgroup label="Acumulado Progresivo">${cumOptions.join('')}</optgroup>`] : []),
+      ...(weekOptions.length ? [`<optgroup label="Por Semana Individual">${weekOptions.join('')}</optgroup>`] : []),
+    ].join('');
+    if (currentScope === 'ALL' || scopes[currentScope]) {
+      rankingScopeSelect.value = currentScope;
+    }
+  }
+
+  // Poblar Selector de Equipo en la sección de Ranking (#ranking-team-select)
+  const rankingTeamSelect = document.getElementById('ranking-team-select');
+  if (rankingTeamSelect) {
+    const currentRTeam = appState.rankingTeamFilter || 'ALL';
+    rankingTeamSelect.innerHTML = [
+      `<option value="ALL">Todos (${sortedTeams.length})</option>`,
+      ...sortedTeams.map(
+        ([abbr, name]) => `<option value="${escapeHtml(abbr)}">${escapeHtml(abbr)} - ${escapeHtml(name)}</option>`
+      ),
+    ].join('');
+    rankingTeamSelect.value = teamsMap.has(currentRTeam) ? currentRTeam : 'ALL';
   }
 }
 
@@ -1025,32 +1119,40 @@ function renderPlayerRankingsTable() {
   const visibleCountEl = document.getElementById('rankings-visible-count');
   const totalCountEl = document.getElementById('rankings-total-count');
   const activePosLabel = document.getElementById('rankings-active-pos-label');
+  const activeScopeLabel = document.getElementById('rankings-active-scope-label');
 
   if (!tbody) return;
 
-  const rankings = appState.rankings || {};
-  const allPlayers = Array.isArray(rankings.players) ? rankings.players : [];
-  const mvpId = rankings.mvp_real?.player_id || allPlayers[0]?.player_id || null;
-  const inflatedId = rankings.inflated_stat_leader?.player_id || null;
+  const activeSlice = getActiveRankingsSlice();
+  const allPlayers = activeSlice.players;
+  const mvpId = activeSlice.mvp_real?.player_id || allPlayers[0]?.player_id || null;
+  const inflatedId = activeSlice.inflated_stat_leader?.player_id || null;
 
   if (totalCountEl) totalCountEl.textContent = String(allPlayers.length);
   if (activePosLabel) {
+    const teamText = appState.rankingTeamFilter !== 'ALL' ? ` | Equipo: ${appState.rankingTeamFilter}` : '';
     activePosLabel.textContent = sanitizeHyphens(
-      `(Posicion: ${appState.positionFilter === 'ALL' ? 'Todos' : appState.positionFilter})`
+      `(Posicion: ${appState.positionFilter === 'ALL' ? 'Todos' : appState.positionFilter}${teamText})`
     );
   }
+  if (activeScopeLabel) {
+    activeScopeLabel.textContent = sanitizeHyphens(`[${activeSlice.label}]`);
+  }
 
-  // 1. Filtrar por posición y búsqueda
+  // 1. Filtrar por equipo, posición y búsqueda
   const query = appState.searchQuery.trim().toLowerCase();
   const filtered = allPlayers.filter((p) => {
     const pos = String(p.position || '').toUpperCase();
+    const team = String(p.team || '').toUpperCase();
     if (appState.positionFilter !== 'ALL' && pos !== appState.positionFilter) {
+      return false;
+    }
+    if (appState.rankingTeamFilter !== 'ALL' && team !== appState.rankingTeamFilter) {
       return false;
     }
     if (query) {
       const name = String(p.player_name || p.name || '').toLowerCase();
-      const team = String(p.team || '').toLowerCase();
-      return name.includes(query) || team.includes(query) || pos.toLowerCase().includes(query);
+      return name.includes(query) || team.toLowerCase().includes(query) || pos.toLowerCase().includes(query);
     }
     return true;
   });
@@ -1561,22 +1663,62 @@ function bindUiEvents() {
     });
   });
 
-  // 1B. Selector de Semana de Temporada Regular y Selector de Equipo
+  // 1B. Selector de Semana de Temporada Regular y Selector de Equipo en Scoreboard
   const weekSelect = document.getElementById('scoreboard-week-select');
   if (weekSelect) {
     weekSelect.addEventListener('change', (event) => {
-      appState.gameWeekFilter = event.target.value || 'ALL';
+      const val = event.target.value || 'ALL';
+      appState.gameWeekFilter = val;
+      // Si existe ese corte semanal en rankings_by_scope, sincronizar también el Ranking
+      const scopes = appState.rankings?.rankings_by_scope || {};
+      const rScopeSelect = document.getElementById('ranking-scope-select');
+      if (val === 'ALL') {
+        appState.rankingScopeFilter = 'ALL';
+        if (rScopeSelect) rScopeSelect.value = 'ALL';
+      } else if (scopes[`WEEK_${val}`]) {
+        appState.rankingScopeFilter = `WEEK_${val}`;
+        if (rScopeSelect) rScopeSelect.value = `WEEK_${val}`;
+      }
       renderHeaderAndKpis();
       renderScoreboardSection();
+      renderPlayerRankingsTable();
     });
   }
 
   const teamSelect = document.getElementById('scoreboard-team-select');
   if (teamSelect) {
     teamSelect.addEventListener('change', (event) => {
-      appState.gameTeamFilter = event.target.value || 'ALL';
+      const val = event.target.value || 'ALL';
+      appState.gameTeamFilter = val;
+      appState.rankingTeamFilter = val;
+      const rTeamSelect = document.getElementById('ranking-team-select');
+      if (rTeamSelect) rTeamSelect.value = val;
       renderHeaderAndKpis();
       renderScoreboardSection();
+      renderPlayerRankingsTable();
+    });
+  }
+
+  // 1C. Selector de Periodo/Semana y Selector de Equipo directamente en la Tabla de Ranking
+  const rankingScopeSelect = document.getElementById('ranking-scope-select');
+  if (rankingScopeSelect) {
+    rankingScopeSelect.addEventListener('change', (event) => {
+      appState.rankingScopeFilter = event.target.value || 'ALL';
+      renderHeaderAndKpis();
+      renderPlayerRankingsTable();
+    });
+  }
+
+  const rankingTeamSelect = document.getElementById('ranking-team-select');
+  if (rankingTeamSelect) {
+    rankingTeamSelect.addEventListener('change', (event) => {
+      const val = event.target.value || 'ALL';
+      appState.rankingTeamFilter = val;
+      appState.gameTeamFilter = val;
+      if (teamSelect) teamSelect.value = val;
+      renderHeaderAndKpis();
+      renderScoreboardSection();
+      renderPlayerRankingsTable();
     });
   }
 

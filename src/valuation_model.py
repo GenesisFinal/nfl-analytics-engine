@@ -868,22 +868,23 @@ def run_valuation_pipeline(
 
     players_list: list[dict[str, Any]] = ranked_df.to_dict(orient="records") if not ranked_df.empty else []
 
-    mvp_real: dict[str, Any] | None = None
-    inflated_stat_leader: dict[str, Any] | None = None
-
-    if players_list:
-        mvp_real = players_list[0]
-        # Seleccionar el líder de inflación estadística (mayor brecha entre yardas brutas y EPA competitivo)
-        candidates = [p for p in players_list if p["player_id"] != mvp_real["player_id"]] or players_list
-        gt_candidates = [p for p in candidates if float(p.get("garbage_time_yards", 0.0)) > 0] or candidates
-        inflated_stat_leader = max(
-            gt_candidates,
+    def _pick_leaders(p_list: list[dict[str, Any]]) -> tuple[dict[str, Any] | None, dict[str, Any] | None]:
+        if not p_list:
+            return None, None
+        mvp = p_list[0]
+        cands = [p for p in p_list if p["player_id"] != mvp["player_id"]] or p_list
+        gt_cands = [p for p in cands if float(p.get("garbage_time_yards", 0.0)) > 0] or cands
+        infl = max(
+            gt_cands,
             key=lambda p: (
                 float(p.get("inflation_index", 0.0)) * np.log1p(max(float(p.get("garbage_time_yards", 0.0)), 1.0)),
                 float(p.get("garbage_time_yards", 0.0)),
                 float(p.get("epa_inflation_delta", 0.0)),
             ),
         )
+        return mvp, infl
+
+    mvp_real, inflated_stat_leader = _pick_leaders(players_list)
 
     comp_df_meta, raw_df_meta = filter_garbage_time(pbp_df)
     weeks_included = (
@@ -896,6 +897,45 @@ def run_valuation_pipeline(
         if not raw_df_meta.empty and "game_id" in raw_df_meta.columns
         else int(meta.get("games_monitored", 0))
     )
+
+    # Pre-calcular cortes por Semana individual (WEEK_X) y Acumulado hasta Semana X (CUM_X)
+    # cuando hay múltiples semanas en el dataset para permitir comparación dinámica en el Frontend
+    rankings_by_scope: dict[str, dict[str, Any]] = {}
+    if len(weeks_included) > 1 and pbp_df is not None and "week" in pbp_df.columns:
+        week_num_s = pd.to_numeric(pbp_df["week"], errors="coerce").fillna(0).astype(int)
+        for w in weeks_included:
+            # 1. Corte individual de la Semana w
+            df_w = pbp_df.loc[week_num_s == w]
+            ranked_w = evaluate_players(df_w, roster_df)
+            list_w = ranked_w.to_dict(orient="records") if not ranked_w.empty else []
+            mvp_w, inf_w = _pick_leaders(list_w)
+            games_w = int(df_w["game_id"].dropna().nunique()) if "game_id" in df_w.columns else 0
+            rankings_by_scope[f"WEEK_{w}"] = {
+                "label": f"Solo Semana {w} ({games_w} partidos)",
+                "weeks": [w],
+                "games_monitored": games_w,
+                "total_plays": int(len(df_w)),
+                "mvp_real": mvp_w,
+                "inflated_stat_leader": inf_w,
+                "players": list_w,
+            }
+
+            # 2. Corte acumulado Semanas 1..w (si w > 1 y w < max(weeks_included))
+            if 1 < w < max(weeks_included):
+                df_cum = pbp_df.loc[(week_num_s >= 1) & (week_num_s <= w)]
+                ranked_cum = evaluate_players(df_cum, roster_df)
+                list_cum = ranked_cum.to_dict(orient="records") if not ranked_cum.empty else []
+                mvp_cum, inf_cum = _pick_leaders(list_cum)
+                games_cum = int(df_cum["game_id"].dropna().nunique()) if "game_id" in df_cum.columns else 0
+                rankings_by_scope[f"CUM_{w}"] = {
+                    "label": f"Acumulado Semanas 1 a {w} ({games_cum} partidos)",
+                    "weeks": list(range(1, w + 1)),
+                    "games_monitored": games_cum,
+                    "total_plays": int(len(df_cum)),
+                    "mvp_real": mvp_cum,
+                    "inflated_stat_leader": inf_cum,
+                    "players": list_cum,
+                }
 
     payload: dict[str, Any] = {
         "updated_at": datetime.now(timezone.utc).isoformat(),
@@ -925,6 +965,7 @@ def run_valuation_pipeline(
         "mvp_real": mvp_real,
         "inflated_stat_leader": inflated_stat_leader,
         "players": players_list,
+        "rankings_by_scope": rankings_by_scope,
     }
 
     target_path = Path(output_path) if output_path is not None else DEFAULT_OUTPUT_PATH
