@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-23T02:32:36.957567+00:00",
+  "updated_at": "2026-10-23T07:56:09.572971+00:00",
   "source": "ESPN JSON API",
   "season": 2026,
   "season_type": "REG",
@@ -15,7 +15,7 @@
     7
   ],
   "total_games": 107,
-  "completed_games": 93,
+  "completed_games": 94,
   "hinge_games_count": 86,
   "games": [
     {
@@ -26,34 +26,34 @@
       "short_name": "NE @ CHI",
       "date": "2026-10-23T00:15Z",
       "status": {
-        "state": "in",
-        "detail": "0:58 - 3rd",
-        "period": 3,
-        "clock": "0:58",
-        "completed": false
+        "state": "post",
+        "detail": "Final",
+        "period": 4,
+        "clock": "0:00",
+        "completed": true
       },
       "home_team": {
         "id": "3",
         "abbreviation": "CHI",
         "name": "Chicago Bears",
-        "score": 27,
+        "score": 30,
         "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/chi.png"
       },
       "away_team": {
         "id": "17",
         "abbreviation": "NE",
         "name": "New England Patriots",
-        "score": 21,
+        "score": 24,
         "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/ne.png"
       },
       "win_probability": {
-        "home_wp": 0.7128,
-        "away_wp": 0.2872
+        "home_wp": 1.0,
+        "away_wp": 0.0
       },
       "game_links": {
-        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873010",
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873010/patriots-bears",
         "recap": "https://www.espn.com/nfl/recap?gameId=401873010",
-        "summary": "https://www.espn.com/nfl/game/_/gameId/401873010"
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873010"
       },
       "critical_moments": [
         {
