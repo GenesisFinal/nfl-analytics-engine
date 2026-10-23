@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-22T20:07:06.154151+00:00",
+  "updated_at": "2026-10-23T02:32:36.957567+00:00",
   "source": "ESPN JSON API",
   "season": 2026,
   "season_type": "REG",
@@ -16,8 +16,109 @@
   ],
   "total_games": 107,
   "completed_games": 93,
-  "hinge_games_count": 85,
+  "hinge_games_count": 86,
   "games": [
+    {
+      "event_id": "401873010",
+      "week": 7,
+      "season_type": "REG",
+      "name": "New England Patriots at Chicago Bears",
+      "short_name": "NE @ CHI",
+      "date": "2026-10-23T00:15Z",
+      "status": {
+        "state": "in",
+        "detail": "0:58 - 3rd",
+        "period": 3,
+        "clock": "0:58",
+        "completed": false
+      },
+      "home_team": {
+        "id": "3",
+        "abbreviation": "CHI",
+        "name": "Chicago Bears",
+        "score": 27,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/chi.png"
+      },
+      "away_team": {
+        "id": "17",
+        "abbreviation": "NE",
+        "name": "New England Patriots",
+        "score": 21,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/ne.png"
+      },
+      "win_probability": {
+        "home_wp": 0.7128,
+        "away_wp": 0.2872
+      },
+      "game_links": {
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873010",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873010",
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873010"
+      },
+      "critical_moments": [
+        {
+          "play_id": "4018730101658",
+          "qtr": 2,
+          "clock": "3:32",
+          "description": "(Shotgun) D.Maye pass deep right intended for E.Raridon INTERCEPTED by D.Jackson at CHI -7. Touchback.",
+          "home_wp_before": 0.6143,
+          "home_wp_after": 0.7521,
+          "delta_wp": 0.1378,
+          "abs_delta_wp": 0.1378,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873010",
+          "play_label": "D'Marco Jackson INT a Drake Maye",
+          "video_query": "D'Marco Jackson Drake Maye interception Patriots Bears",
+          "video_query_v2": "D'Marco Jackson Drake Maye interception Patriots Bears",
+          "video_url": "https://www.youtube.com/results?search_query=D%27Marco+Jackson+Drake+Maye+interception+Patriots+Bears&sp=EgIYAQ%3D%3D",
+          "video_source": "Clip Puntual (<4m)",
+          "video_title": "Jugada Puntual: D'Marco Jackson INT a Drake Maye (NE @ CHI Q2)",
+          "has_direct_video": false,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=D%27Marco+Jackson+Drake+Maye+interception+Patriots+Bears&sp=EgIYAQ%3D%3D",
+          "x_video_url": "https://x.com/search?q=D%27Marco+Jackson+Drake+Maye+interception+Patriots+Bears&f=video"
+        },
+        {
+          "play_id": "4018730102079",
+          "qtr": 2,
+          "clock": "0:00",
+          "description": "(Shotgun) D.Maye pass short right to R.Stevenson for 48 yards, TOUCHDOWN. A.Borregales extra point is GOOD, Center-J.Ashby, Holder-M.Wishnowsky.",
+          "home_wp_before": 0.8896,
+          "home_wp_after": 0.7669,
+          "delta_wp": -0.1227,
+          "abs_delta_wp": 0.1227,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873010",
+          "play_label": "Drake Maye a Rhamondre Stevenson TD (48 yds)",
+          "video_query": "Drake Maye Rhamondre Stevenson 48 yard touchdown Patriots Bears",
+          "video_query_v2": "Drake Maye Rhamondre Stevenson 48 yard touchdown Patriots Bears",
+          "video_url": "https://www.youtube.com/results?search_query=Drake+Maye+Rhamondre+Stevenson+48+yard+touchdown+Patriots+Bears&sp=EgIYAQ%3D%3D",
+          "video_source": "Clip Puntual (<4m)",
+          "video_title": "Jugada Puntual: Drake Maye a Rhamondre Stevenson TD (48 yds) (NE @ CHI Q2)",
+          "has_direct_video": false,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=Drake+Maye+Rhamondre+Stevenson+48+yard+touchdown+Patriots+Bears&sp=EgIYAQ%3D%3D",
+          "x_video_url": "https://x.com/search?q=Drake+Maye+Rhamondre+Stevenson+48+yard+touchdown+Patriots+Bears&f=video"
+        }
+      ],
+      "hinge_play": {
+        "play_id": "4018730101658",
+        "qtr": 2,
+        "clock": "3:32",
+        "description": "(Shotgun) D.Maye pass deep right intended for E.Raridon INTERCEPTED by D.Jackson at CHI -7. Touchback.",
+        "home_wp_before": 0.6143,
+        "home_wp_after": 0.7521,
+        "delta_wp": 0.1378,
+        "abs_delta_wp": 0.1378,
+        "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873010",
+        "play_label": "D'Marco Jackson INT a Drake Maye",
+        "video_query": "D'Marco Jackson Drake Maye interception Patriots Bears",
+        "video_query_v2": "D'Marco Jackson Drake Maye interception Patriots Bears",
+        "video_url": "https://www.youtube.com/results?search_query=D%27Marco+Jackson+Drake+Maye+interception+Patriots+Bears&sp=EgIYAQ%3D%3D",
+        "video_source": "Clip Puntual (<4m)",
+        "video_title": "Jugada Puntual: D'Marco Jackson INT a Drake Maye (NE @ CHI Q2)",
+        "has_direct_video": false,
+        "youtube_search_url": "https://www.youtube.com/results?search_query=D%27Marco+Jackson+Drake+Maye+interception+Patriots+Bears&sp=EgIYAQ%3D%3D",
+        "x_video_url": "https://x.com/search?q=D%27Marco+Jackson+Drake+Maye+interception+Patriots+Bears&f=video",
+        "exceeds_threshold": true
+      }
+    },
     {
       "event_id": "401872995",
       "week": 6,
@@ -9382,46 +9483,6 @@
         "x_video_url": "https://x.com/search?q=Ezeudu+60+yard+touchdown+run+Broncos+Chiefs&f=video",
         "exceeds_threshold": true
       }
-    },
-    {
-      "event_id": "401873010",
-      "week": 7,
-      "season_type": "REG",
-      "name": "New England Patriots at Chicago Bears",
-      "short_name": "NE @ CHI",
-      "date": "2026-10-23T00:15Z",
-      "status": {
-        "state": "pre",
-        "detail": "10/22 - 8:15 PM EDT",
-        "period": 0,
-        "clock": "0:00",
-        "completed": false
-      },
-      "home_team": {
-        "id": "3",
-        "abbreviation": "CHI",
-        "name": "Chicago Bears",
-        "score": 0,
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/chi.png"
-      },
-      "away_team": {
-        "id": "17",
-        "abbreviation": "NE",
-        "name": "New England Patriots",
-        "score": 0,
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/ne.png"
-      },
-      "win_probability": {
-        "home_wp": 0.5,
-        "away_wp": 0.5
-      },
-      "game_links": {
-        "summary": "https://www.espn.com/nfl/game/_/gameId/401873010/patriots-bears",
-        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873010",
-        "recap": "https://www.espn.com/nfl/recap?gameId=401873010"
-      },
-      "critical_moments": [],
-      "hinge_play": null
     },
     {
       "event_id": "401873011",
