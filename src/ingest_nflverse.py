@@ -75,6 +75,14 @@ PBP_RELEVANT_COLUMNS: list[str] = [
     "away_score",
     "desc",
     "play_type",
+    "down",
+    "ydstogo",
+    "yardline_100",
+    "third_down_converted",
+    "third_down_failed",
+    "fourth_down_converted",
+    "fourth_down_failed",
+    "touchdown",
 ]
 
 REQUIRED_PBP_COLUMNS: tuple[str, ...] = ("epa", "wp", "qtr")

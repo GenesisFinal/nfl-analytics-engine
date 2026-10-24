@@ -174,17 +174,82 @@
         </div>
       </div>
 
-      <!-- Barra de Navegación Rápida -->
-      <nav class="flex items-center gap-1 overflow-x-auto border-t border-slate-800/60 py-2 text-xs font-medium text-slate-400" aria-label="Secciones del tablero">
-        <a href="#kpi-summary-section" class="rounded-md px-2.5 py-1 transition hover:bg-slate-800/70 hover:text-white">Resumen Ejecutivo</a>
-        <span class="text-slate-700">/</span>
-        <a href="#live-games-section" class="rounded-md px-2.5 py-1 transition hover:bg-slate-800/70 hover:text-white">Marcadores y Win Probability</a>
-        <span class="text-slate-700">/</span>
-        <a href="#valuation-section" class="rounded-md px-2.5 py-1 transition hover:bg-slate-800/70 hover:text-white">Ranking Score de Impacto (0-100)</a>
-        <span class="text-slate-700">/</span>
-        <a href="#glossary-methodology-section" class="rounded-md bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-1 text-emerald-300 transition hover:bg-emerald-500/20 hover:text-white">Sección de Metodología</a>
-        <span class="text-slate-700">/</span>
-        <a href="#critiques-section" class="rounded-md px-2.5 py-1 transition hover:bg-slate-800/70 hover:text-white">Crónicas Analíticas</a>
+      <!-- Menú Principal de Vistas (Navegación Modular SPA sin sobrecarga visual) -->
+      <nav id="main-tab-nav" class="flex items-center justify-between gap-2 overflow-x-auto border-t border-slate-800/80 py-2.5 text-xs font-semibold" role="tablist" aria-label="Menú principal de secciones">
+        <div class="flex items-center gap-1.5">
+          <button
+            type="button"
+            data-tab-target="games"
+            role="tab"
+            aria-selected="true"
+            class="main-tab-btn inline-flex items-center gap-2 rounded-lg border border-emerald-500/40 bg-emerald-500/15 px-3.5 py-2 text-emerald-300 shadow-sm transition"
+          >
+            <span>🏈 Partidos &amp; WP</span>
+            <span id="nav-badge-games" class="rounded bg-emerald-500/20 px-1.5 py-0.5 font-mono-num text-[10px] font-bold text-emerald-200">--</span>
+          </button>
+
+          <button
+            type="button"
+            data-tab-target="rankings"
+            role="tab"
+            aria-selected="false"
+            class="main-tab-btn inline-flex items-center gap-2 rounded-lg border border-slate-800 bg-[#111827] px-3.5 py-2 text-slate-300 transition hover:border-slate-700 hover:text-white"
+          >
+            <span>🏆 Ranking Jugadores</span>
+            <span id="nav-badge-players" class="rounded bg-slate-800 px-1.5 py-0.5 font-mono-num text-[10px] font-bold text-slate-300">--</span>
+          </button>
+
+          <button
+            type="button"
+            data-tab-target="lab"
+            role="tab"
+            aria-selected="false"
+            class="main-tab-btn inline-flex items-center gap-2 rounded-lg border border-slate-800 bg-[#111827] px-3.5 py-2 text-slate-300 transition hover:border-slate-700 hover:text-white"
+          >
+            <span>🔬 Laboratorio Analítico</span>
+            <span class="rounded bg-cyan-500/20 px-1.5 py-0.5 font-mono-num text-[10px] font-bold text-cyan-300">H2H + Clutch</span>
+          </button>
+
+          <button
+            type="button"
+            data-tab-target="teams"
+            role="tab"
+            aria-selected="false"
+            class="main-tab-btn inline-flex items-center gap-2 rounded-lg border border-slate-800 bg-[#111827] px-3.5 py-2 text-slate-300 transition hover:border-slate-700 hover:text-white"
+          >
+            <span>🛡 Equipos NFL (32)</span>
+            <span class="rounded bg-indigo-500/20 px-1.5 py-0.5 font-mono-num text-[10px] font-bold text-indigo-300">Cuadrante EPA</span>
+          </button>
+
+          <button
+            type="button"
+            data-tab-target="critiques"
+            role="tab"
+            aria-selected="false"
+            class="main-tab-btn inline-flex items-center gap-2 rounded-lg border border-slate-800 bg-[#111827] px-3.5 py-2 text-slate-300 transition hover:border-slate-700 hover:text-white"
+          >
+            <span>📰 Crónicas IA</span>
+          </button>
+
+          <button
+            type="button"
+            data-tab-target="methodology"
+            role="tab"
+            aria-selected="false"
+            class="main-tab-btn inline-flex items-center gap-2 rounded-lg border border-slate-800 bg-[#111827] px-3.5 py-2 text-slate-300 transition hover:border-slate-700 hover:text-white"
+          >
+            <span>📐 Metodología &amp; Fórmulas</span>
+          </button>
+        </div>
+
+        <button
+          type="button"
+          id="btn-toggle-kpi-strip"
+          class="hidden lg:inline-flex items-center gap-1 rounded-lg border border-slate-800 bg-[#111827] px-2.5 py-1.5 font-mono-num text-[11px] text-slate-400 transition hover:border-slate-700 hover:text-white"
+          title="Mostrar u ocultar tarjetas de resumen ejecutivo superior"
+        >
+          <span id="kpi-strip-toggle-label">Ocultar Resumen KPI ▴</span>
+        </button>
       </nav>
     </div>
   </header>
@@ -203,87 +268,90 @@
   <!-- ===================================================================== -->
   <!-- CONTENIDO PRINCIPAL                                                   -->
   <!-- ===================================================================== -->
-  <main class="mx-auto max-w-7xl space-y-10 px-4 py-8 sm:px-6 lg:px-8">
+  <main class="mx-auto max-w-7xl space-y-6 px-4 py-6 sm:px-6 lg:px-8">
 
-    <!-- 1B. TARJETAS KPI EJECUTIVAS -->
+    <!-- 1B. TARJETAS KPI EJECUTIVAS (Compactas y Colapsables) -->
     <section id="kpi-summary-section" aria-label="Indicadores clave del motor">
-      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div id="kpi-cards-grid" class="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
         <!-- KPI 1: MVP Real -->
-        <article class="relative overflow-hidden rounded-xl border border-emerald-500/30 bg-[#111827] p-4 shadow-lg">
+        <article class="relative overflow-hidden rounded-xl border border-emerald-500/30 bg-[#111827] p-3.5 shadow-lg">
           <div class="flex items-center justify-between">
             <a href="#metodo-epa-comp" class="metric-ref-link text-[11px] font-bold uppercase tracking-wider text-emerald-400" title="Ver metodología de Tiempo Competitivo y MVP Real">MVP Real (Tiempo Competitivo)</a>
             <a href="#metodo-score-impacto" class="rounded bg-emerald-500/15 px-2 py-0.5 font-mono-num text-[11px] font-bold text-emerald-300 transition hover:bg-emerald-500/30" id="kpi-mvp-score" title="Ver metodología de Score de Impacto (0-100)">-- / 100</a>
           </div>
-          <div class="mt-2.5 flex items-baseline justify-between gap-2">
-            <h2 id="kpi-mvp-name" class="truncate text-lg font-extrabold text-white">Cargando...</h2>
+          <div class="mt-2 flex items-baseline justify-between gap-2">
+            <h2 id="kpi-mvp-name" class="truncate text-base font-extrabold text-white">Cargando...</h2>
             <span id="kpi-mvp-meta" class="shrink-0 font-mono-num text-xs font-semibold text-slate-400">--</span>
           </div>
-          <p id="kpi-mvp-metrics" class="mt-2 font-mono-num text-xs text-slate-300">
+          <p id="kpi-mvp-metrics" class="mt-1.5 font-mono-num text-xs text-slate-300">
             <a href="#metodo-epa" class="metric-ref-link">EPA/jugada</a>: -- | <a href="#metodo-wpa" class="metric-ref-link">WPA</a>: --
           </p>
-          <div class="mt-2.5 text-[11px] text-slate-400">
-            Excluye Q4 con <a href="#metodo-epa-comp" class="metric-ref-link text-slate-300">WP &lt; 5% o WP &gt; 95%</a>
+          <div class="mt-2 flex items-center justify-between text-[11px] text-slate-400">
+            <span>Sin Q4 (<a href="#metodo-epa-comp" class="metric-ref-link text-slate-300">WP &lt; 5% / &gt; 95%</a>)</span>
+            <button type="button" data-jump-tab="rankings" class="font-mono-num font-bold text-emerald-400 hover:underline">Ver Ranking -&gt;</button>
           </div>
         </article>
 
         <!-- KPI 2: Estadístico Inflado -->
-        <article class="relative overflow-hidden rounded-xl border border-amber-500/30 bg-[#111827] p-4 shadow-lg">
+        <article class="relative overflow-hidden rounded-xl border border-amber-500/30 bg-[#111827] p-3.5 shadow-lg">
           <div class="flex items-center justify-between">
             <a href="#metodo-inflacion" class="metric-ref-link text-[11px] font-bold uppercase tracking-wider text-amber-400" title="Ver metodología de Índice de Inflación Estadística">Estadístico Inflado (Garbage Time)</a>
             <a href="#metodo-inflacion" class="rounded bg-amber-500/15 px-2 py-0.5 font-mono-num text-[11px] font-bold text-amber-300 transition hover:bg-amber-500/30" id="kpi-inflated-badge" title="Ver metodología de Índice de Inflación">Índice --</a>
           </div>
-          <div class="mt-2.5 flex items-baseline justify-between gap-2">
-            <h2 id="kpi-inflated-name" class="truncate text-lg font-extrabold text-white">Cargando...</h2>
+          <div class="mt-2 flex items-baseline justify-between gap-2">
+            <h2 id="kpi-inflated-name" class="truncate text-base font-extrabold text-white">Cargando...</h2>
             <span id="kpi-inflated-meta" class="shrink-0 font-mono-num text-xs font-semibold text-slate-400">--</span>
           </div>
-          <p id="kpi-inflated-metrics" class="mt-2 font-mono-num text-xs text-amber-200/90">
+          <p id="kpi-inflated-metrics" class="mt-1.5 font-mono-num text-xs text-amber-200/90">
             <a href="#metodo-epa-comp" class="metric-ref-link">Yardas Basura</a>: -- | <a href="#metodo-inflacion" class="metric-ref-link">&Delta;EPA</a>: --
           </p>
-          <div class="mt-2.5 text-[11px] text-slate-400">
-            Mayor brecha entre volumen bruto y <a href="#metodo-epa-comp" class="metric-ref-link text-slate-300">EPA competitivo</a>
+          <div class="mt-2 flex items-center justify-between text-[11px] text-slate-400">
+            <span>Brecha volumen vs <a href="#metodo-epa-comp" class="metric-ref-link text-slate-300">EPA limpio</a></span>
+            <button type="button" data-jump-tab="lab" class="font-mono-num font-bold text-amber-400 hover:underline">Auditar en Lab -&gt;</button>
           </div>
         </article>
 
         <!-- KPI 3: Partidos Monitoreados -->
-        <article class="relative overflow-hidden rounded-xl border border-slate-800 bg-[#111827] p-4 shadow-lg">
+        <article class="relative overflow-hidden rounded-xl border border-slate-800 bg-[#111827] p-3.5 shadow-lg">
           <div class="flex items-center justify-between">
             <span class="text-[11px] font-bold uppercase tracking-wider text-cyan-400">Partidos Monitoreados (ESPN)</span>
             <span id="kpi-games-week" class="rounded bg-cyan-500/15 px-2 py-0.5 font-mono-num text-[11px] font-bold text-cyan-300">Semana --</span>
           </div>
-          <div class="mt-2.5 flex items-baseline justify-between gap-2">
-            <h2 id="kpi-games-count" class="font-mono-num text-2xl font-extrabold text-white">0</h2>
+          <div class="mt-2 flex items-baseline justify-between gap-2">
+            <h2 id="kpi-games-count" class="font-mono-num text-xl font-extrabold text-white">0</h2>
             <span id="kpi-games-status-breakdown" class="font-mono-num text-xs text-slate-400">--</span>
           </div>
-          <p id="kpi-games-critical-total" class="mt-2 font-mono-num text-xs text-slate-300">
+          <p id="kpi-games-critical-total" class="mt-1.5 font-mono-num text-xs text-slate-300">
             <a href="#metodo-jugada-bisagra" class="metric-ref-link">Momentos críticos (|&Delta;WP| &ge; 12%)</a>: --
           </p>
-          <div class="mt-2.5 text-[11px] text-slate-400">
-            Ingesta estática libre de CORS desde public/data/
+          <div class="mt-2 flex items-center justify-between text-[11px] text-slate-400">
+            <span>Temporada Regular oficial</span>
+            <button type="button" data-jump-tab="teams" class="font-mono-num font-bold text-cyan-400 hover:underline">Ver 32 Equipos -&gt;</button>
           </div>
         </article>
 
         <!-- KPI 4: Jugada Bisagra Principal -->
-        <article class="relative overflow-hidden rounded-xl border border-rose-500/30 bg-[#111827] p-4 shadow-lg">
+        <article class="relative overflow-hidden rounded-xl border border-rose-500/30 bg-[#111827] p-3.5 shadow-lg">
           <div class="flex items-center justify-between">
             <a href="#metodo-jugada-bisagra" class="metric-ref-link text-[11px] font-bold uppercase tracking-wider text-rose-400" title="Ver metodología de Jugada Bisagra">Jugada Bisagra Principal</a>
             <a href="#metodo-jugada-bisagra" id="kpi-hinge-delta" class="rounded bg-rose-500/15 px-2 py-0.5 font-mono-num text-[11px] font-bold text-rose-300 transition hover:bg-rose-500/30" title="Ver metodología de variación de Win Probability">&Delta;WP --</a>
           </div>
-          <div class="mt-2.5 flex items-baseline justify-between gap-2">
-            <h2 id="kpi-hinge-matchup" class="truncate text-base font-extrabold text-white">Sin alertas</h2>
+          <div class="mt-2 flex items-baseline justify-between gap-2">
+            <h2 id="kpi-hinge-matchup" class="truncate text-sm font-extrabold text-white">Sin alertas</h2>
             <span id="kpi-hinge-clock" class="shrink-0 font-mono-num text-xs text-slate-400">--</span>
           </div>
-          <p id="kpi-hinge-desc" class="mt-2 line-clamp-2 text-xs text-slate-300">
+          <p id="kpi-hinge-desc" class="mt-1.5 line-clamp-2 text-xs text-slate-300">
             Esperando telemetría de winprobability...
           </p>
-          <div id="kpi-hinge-video" class="mt-2.5"></div>
+          <div id="kpi-hinge-video" class="mt-2"></div>
         </article>
       </div>
     </section>
 
     <!-- ===================================================================== -->
-    <!-- 2. SECCIÓN SUPERIOR DE PARTIDOS EN VIVO Y RECIENTES (live_scoreboard) -->
+    <!-- VISTA 1 (TAB: games) - PARTIDOS, WIN PROBABILITY Y JUGADAS BISAGRA    -->
     <!-- ===================================================================== -->
-    <section id="live-games-section" class="space-y-4" aria-labelledby="live-games-heading">
+    <section id="live-games-section" data-tab-panel="games" class="space-y-4" aria-labelledby="live-games-heading">
       <div class="flex flex-col gap-3 border-b border-slate-800 pb-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div class="flex items-center gap-2">
@@ -353,9 +421,9 @@
     </section>
 
     <!-- ===================================================================== -->
-    <!-- 3. TABLA INTERACTIVA DE VALORACIÓN OBJETIVA (0-100) (player_rankings) -->
+    <!-- VISTA 2 (TAB: rankings) - RANKING INTERACTIVO DE VALORACIÓN (0-100)   -->
     <!-- ===================================================================== -->
-    <section id="valuation-section" class="space-y-5" aria-labelledby="valuation-heading">
+    <section id="valuation-section" data-tab-panel="rankings" class="hidden space-y-5" aria-labelledby="valuation-heading">
       <div class="flex flex-col gap-4 border-b border-slate-800 pb-4 lg:flex-row lg:items-end lg:justify-between">
         <div>
           <div class="flex flex-wrap items-center gap-2">
@@ -367,7 +435,7 @@
             </a>
           </div>
           <p class="mt-1 text-xs text-slate-400">
-            <a href="#metodo-score-impacto" class="metric-ref-link text-slate-300">Z-Score posicional</a> normalizado sin <a href="#metodo-epa-comp" class="metric-ref-link text-slate-300">minutos basura</a> (<code class="font-mono-num text-slate-300">Q4</code> con <a href="#metodo-wp" class="metric-ref-link font-mono-num text-slate-300">WP &lt; 5%</a> o <a href="#metodo-wp" class="metric-ref-link font-mono-num text-slate-300">WP &gt; 95%</a>). Haz clic en cualquier encabezado para ordenar o en <span class="font-mono-num text-emerald-400">[?]</span> para ir a la metodología.
+            <a href="#metodo-score-impacto" class="metric-ref-link text-slate-300">Z-Score posicional</a> normalizado sin <a href="#metodo-epa-comp" class="metric-ref-link text-slate-300">minutos basura</a> (<code class="font-mono-num text-slate-300">Q4</code> con <a href="#metodo-wp" class="metric-ref-link font-mono-num text-slate-300">WP &lt; 5%</a> o <a href="#metodo-wp" class="metric-ref-link font-mono-num text-slate-300">WP &gt; 95%</a>). Haz clic en cualquier encabezado para ordenar o en <span class="font-mono-num text-cyan-300">[⚖ H2H]</span> para comparar dos jugadores.
           </p>
         </div>
 
@@ -416,7 +484,7 @@
               id="player-search-input"
               type="search"
               placeholder="Buscar jugador o equipo (ej. Evans, KC)..."
-              class="w-full sm:w-60 rounded-xl border border-slate-800 bg-[#111827] py-1.5 pl-8 pr-3 text-xs text-white placeholder-slate-500 focus:border-cyan-500 focus:outline-none"
+              class="w-full sm:w-56 rounded-xl border border-slate-800 bg-[#111827] py-1.5 pl-8 pr-3 text-xs text-white placeholder-slate-500 focus:border-cyan-500 focus:outline-none"
               aria-label="Buscar jugador o equipo"
             />
             <svg class="pointer-events-none absolute left-2.5 top-2 h-4 w-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -426,7 +494,7 @@
         </div>
       </div>
 
-      <!-- Barra de Metadatos de Tabla -->
+      <!-- Barra de Metadatos de Tabla + Switch de Densidad de Columnas -->
       <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400">
         <div>
           Mostrando <span id="rankings-visible-count" class="font-mono-num font-bold text-white">0</span> de <span id="rankings-total-count" class="font-mono-num font-semibold text-slate-300">0</span> jugadores calificados
@@ -434,6 +502,14 @@
           <span id="rankings-active-scope-label" class="ml-1 font-mono-num text-emerald-400"></span>
         </div>
         <div class="flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            id="btn-toggle-table-density"
+            class="inline-flex items-center gap-1.5 rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-2.5 py-1 font-mono-num text-[11px] font-semibold text-cyan-300 transition hover:bg-cyan-500/20"
+            title="Alternar entre vista limpia (columnas esenciales) y auditoría completa (incluyendo desglose de yardas brutas/basura)"
+          >
+            <span id="table-density-label">🔍 Ver Columnas de Auditoría Completa (+Basura)</span>
+          </button>
           <a href="#metodo-score-impacto" class="inline-flex items-center gap-1.5 transition hover:text-emerald-300">
             <span class="h-2.5 w-2.5 rounded-sm bg-emerald-400"></span>
             <span class="metric-ref-link">MVP Real / Eficiencia Élite</span>
@@ -489,32 +565,33 @@
                     <span class="sort-indicator text-slate-600" data-col="cpoe">↕</span>
                   </div>
                 </th>
-                <th class="sortable-th py-3.5 px-3 text-right" data-sort="success_rate">
+                <th class="sortable-th col-audit-extra hidden py-3.5 px-3 text-right" data-sort="success_rate">
                   <div class="flex items-center justify-end gap-1">
                     <span>Success Rate</span>
                     <a href="#metodo-success-rate" onclick="event.stopPropagation()" class="rounded bg-slate-800 px-1 text-[10px] text-cyan-300 hover:bg-slate-700" title="Ver explicación de Success Rate">?</a>
                     <span class="sort-indicator text-slate-600" data-col="success_rate">↕</span>
                   </div>
                 </th>
-                <th class="sortable-th py-3.5 px-3 text-right" data-sort="garbage_time_yards">
+                <th class="sortable-th col-audit-extra hidden py-3.5 px-3 text-right" data-sort="garbage_time_yards">
                   <div class="flex items-center justify-end gap-1">
                     <span>Yds Comp vs Brutas (Basura)</span>
                     <a href="#metodo-epa-comp" onclick="event.stopPropagation()" class="rounded bg-slate-800 px-1 text-[10px] text-emerald-300 hover:bg-slate-700" title="Ver filtro de Minutos Basura y Tiempo Competitivo">?</a>
                     <span class="sort-indicator text-slate-600" data-col="garbage_time_yards">↕</span>
                   </div>
                 </th>
-                <th class="sortable-th py-3.5 pl-3 pr-4 text-right" data-sort="inflation_index">
+                <th class="sortable-th py-3.5 px-3 text-right" data-sort="inflation_index">
                   <div class="flex items-center justify-end gap-1 text-amber-400">
                     <span>Índice Inflación</span>
                     <a href="#metodo-inflacion" onclick="event.stopPropagation()" class="rounded bg-amber-500/20 px-1 text-[10px] text-amber-300 hover:bg-amber-500/40" title="Ver explicación de Índice de Inflación Estadística">?</a>
                     <span class="sort-indicator text-slate-600" data-col="inflation_index">↕</span>
                   </div>
                 </th>
+                <th class="py-3.5 pl-2 pr-4 text-center w-24">H2H / Evol</th>
               </tr>
             </thead>
             <tbody id="player-rankings-tbody" class="divide-y divide-slate-800/70">
               <tr>
-                <td colspan="10" class="py-10 text-center text-sm text-slate-400">
+                <td colspan="11" class="py-10 text-center text-sm text-slate-400">
                   Cargando ranking cuantitativo desde <code class="font-mono-num text-slate-300">./data/player_rankings.json</code>...
                 </td>
               </tr>
@@ -528,7 +605,7 @@
         <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div class="space-y-2 lg:max-w-xl">
             <div class="flex items-center gap-2">
-              <a href="#glossary-methodology-section" class="rounded bg-cyan-500/15 px-2 py-0.5 font-mono-num text-[11px] font-bold uppercase text-cyan-300 transition hover:bg-cyan-500/25">
+              <a href="#metodo-score-impacto" class="rounded bg-cyan-500/15 px-2 py-0.5 font-mono-num text-[11px] font-bold uppercase text-cyan-300 transition hover:bg-cyan-500/25">
                 Nota Técnica Actuarial
               </a>
               <h3 class="text-sm font-bold text-white">
@@ -586,9 +663,194 @@
     </section>
 
     <!-- ===================================================================== -->
-    <!-- 3B. SECCIÓN DE METODOLOGÍA: GLOSARIO, ECUACIONES Y JUGADA BISAGRA     -->
+    <!-- VISTA 3 (TAB: lab) - LABORATORIO ANALÍTICO (H2H + EVOLUCIÓN + CLUTCH) -->
     <!-- ===================================================================== -->
-    <section id="glossary-methodology-section" class="space-y-6 scroll-mt-20" aria-labelledby="glossary-heading">
+    <section id="lab-section" data-tab-panel="lab" class="hidden space-y-6" aria-labelledby="lab-heading">
+      <div class="flex flex-col gap-3 border-b border-slate-800 pb-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="rounded border border-cyan-500/30 bg-cyan-500/10 px-2.5 py-0.5 font-mono-num text-[11px] font-bold uppercase tracking-wider text-cyan-300">
+              LABORATORIO CUANTITATIVO DE JUGADORES
+            </span>
+            <h2 id="lab-heading" class="text-lg sm:text-xl font-bold tracking-tight text-white">
+              Comparador Cara a Cara (H2H), Evolución Semanal y Radar Clutch vs. Minutos Basura
+            </h2>
+          </div>
+          <p class="mt-1 text-xs text-slate-400">
+            Compara dos jugadores cualesquiera en todas las dimensiones del modelo (<a href="#metodo-score-impacto" class="metric-ref-link text-emerald-300">Impact Score</a>, <a href="#metodo-epa" class="metric-ref-link text-cyan-300">EPA/jugada</a>, <a href="#metodo-wpa" class="metric-ref-link text-cyan-300">WPA</a>, <a href="#metodo-inflacion" class="metric-ref-link text-amber-300">Inflación</a>) y analiza su curva de rendimiento semana a semana.
+          </p>
+        </div>
+      </div>
+
+      <!-- MÓDULO A: Comparador Cara a Cara (Head-to-Head) + Evolución Semanal -->
+      <div class="rounded-xl border border-slate-800 bg-[#111827] p-5 shadow-xl space-y-5">
+        <div class="flex flex-col gap-3 border-b border-slate-800/80 pb-4 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <h3 class="text-sm font-extrabold uppercase tracking-wider text-emerald-400">
+              1. Comparador Cara a Cara (Head-to-Head) &amp; Curva de Evolución Semanal
+            </h3>
+            <p class="mt-0.5 text-xs text-slate-400">
+              Selecciona dos jugadores para enfrentar sus métricas en tiempo competitivo y su consistencia de la Semana 1 a la actual.
+            </p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <div class="flex items-center gap-1.5">
+              <label for="h2h-pos-filter" class="font-mono-num text-[11px] text-slate-400">Posición:</label>
+              <select id="h2h-pos-filter" class="rounded-lg border border-slate-700 bg-[#090D16] px-2.5 py-1.5 font-mono-num text-xs font-bold text-slate-200 focus:border-emerald-500 focus:outline-none">
+                <option value="ALL">Todas (QB/RB/WR/TE)</option>
+                <option value="QB">Solo QBs</option>
+                <option value="RB">Solo RBs</option>
+                <option value="WR">Solo WRs</option>
+                <option value="TE">Solo TEs</option>
+              </select>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="h-2.5 w-2.5 rounded-full bg-emerald-400"></span>
+              <label for="h2h-player-a" class="font-mono-num text-[11px] font-bold text-emerald-300">Jugador A:</label>
+              <select id="h2h-player-a" class="max-w-[210px] rounded-lg border border-emerald-500/40 bg-[#090D16] px-2.5 py-1.5 font-mono-num text-xs font-semibold text-emerald-200 focus:border-emerald-400 focus:outline-none"></select>
+            </div>
+            <span class="font-mono-num text-xs font-extrabold text-slate-500">VS</span>
+            <div class="flex items-center gap-1.5">
+              <span class="h-2.5 w-2.5 rounded-full bg-cyan-400"></span>
+              <label for="h2h-player-b" class="font-mono-num text-[11px] font-bold text-cyan-300">Jugador B:</label>
+              <select id="h2h-player-b" class="max-w-[210px] rounded-lg border border-cyan-500/40 bg-[#090D16] px-2.5 py-1.5 font-mono-num text-xs font-semibold text-cyan-200 focus:border-cyan-400 focus:outline-none"></select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contenedor Dinámico del Comparador H2H y Gráfico Semanal -->
+        <div id="h2h-comparison-container" class="grid grid-cols-1 gap-6 lg:grid-cols-12">
+          <div class="col-span-full py-8 text-center text-xs text-slate-400">
+            Cargando comparador de jugadores...
+          </div>
+        </div>
+      </div>
+
+      <!-- MÓDULO B: Radar Especialistas Clutch (WPA) vs. Auditoría de Minutos Basura -->
+      <div class="grid grid-cols-1 gap-5 lg:grid-cols-2">
+        <!-- Panel Izquierdo: Top Especialistas Clutch (WPA en Tiempo Competitivo) -->
+        <article class="rounded-xl border border-cyan-500/30 bg-[#111827] p-5 shadow-lg">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div>
+              <span class="rounded bg-cyan-500/15 px-2 py-0.5 font-mono-num text-[10px] font-bold uppercase tracking-wider text-cyan-300">
+                ⚡ Especialistas Clutch (Tiempo Competitivo)
+              </span>
+              <h3 class="mt-1 text-base font-extrabold text-white">
+                Líderes en <a href="#metodo-wpa" class="metric-ref-link text-cyan-300">WPA Total</a> (Probabilidad de Victoria Añadida)
+              </h3>
+            </div>
+            <a href="#metodo-wpa" class="font-mono-num text-[11px] text-cyan-400 hover:underline">¿Qué es WPA?</a>
+          </div>
+          <p class="mt-2 text-xs text-slate-400">
+            Jugadores cuyas intervenciones en momentos de alta palanca inclinaron más veces la balanza de victoria a favor de su franquicia (excluyendo minutos basura).
+          </p>
+          <div id="lab-clutch-leaders-list" class="mt-4 space-y-2.5"></div>
+        </article>
+
+        <!-- Panel Derecho: Auditoría de Espejismos de Minutos Basura (Garbage Time Audit) -->
+        <article class="rounded-xl border border-amber-500/30 bg-[#111827] p-5 shadow-lg">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div>
+              <span class="rounded bg-amber-500/15 px-2 py-0.5 font-mono-num text-[10px] font-bold uppercase tracking-wider text-amber-300">
+                ⚠ Auditoría de Minutos Basura (Q4 WP &lt;5% o &gt;95%)
+              </span>
+              <h3 class="mt-1 text-base font-extrabold text-white">
+                Mayores Brechas de <a href="#metodo-inflacion" class="metric-ref-link text-amber-300">Inflación Estadística</a>
+              </h3>
+            </div>
+            <a href="#metodo-inflacion" class="font-mono-num text-[11px] text-amber-400 hover:underline">Ver Fórmula</a>
+          </div>
+          <p class="mt-2 text-xs text-slate-400">
+            Contraste entre yardas/EPA acumulados cuando el partido ya estaba liquidado frente a su eficiencia real en tiempo competitivo.
+          </p>
+          <div id="lab-garbage-audit-list" class="mt-4 space-y-2.5"></div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- VISTA 4 (TAB: teams) - MATRIZ DE 32 EQUIPOS Y FÚTBOL SITUACIONAL      -->
+    <!-- ===================================================================== -->
+    <section id="teams-section" data-tab-panel="teams" class="hidden space-y-6" aria-labelledby="teams-heading">
+      <div class="flex flex-col gap-3 border-b border-slate-800 pb-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="rounded border border-indigo-500/30 bg-indigo-500/10 px-2.5 py-0.5 font-mono-num text-[11px] font-bold uppercase tracking-wider text-indigo-300">
+              DIAGNÓSTICO DE LAS 32 FRANQUICIAS NFL
+            </span>
+            <h2 id="teams-heading" class="text-lg sm:text-xl font-bold tracking-tight text-white">
+              Matriz Ofensiva vs. Defensiva (<a href="#metodo-epa-comp" class="metric-ref-link text-emerald-300">EPA Competitivo</a>) y Eficiencia Situacional
+            </h2>
+          </div>
+          <p class="mt-1 text-xs text-slate-400">
+            Radiografía completa de los 32 equipos sin minutos basura: cuadrante de eficiencia neta, letalidad en Zona Roja, conversión de 3er Down y agresividad en 4to Down.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <label for="teams-tier-filter" class="font-mono-num text-[11px] font-semibold uppercase tracking-wider text-slate-400">Cuadrante:</label>
+          <select id="teams-tier-filter" class="rounded-xl border border-slate-700 bg-[#111827] px-3 py-1.5 font-mono-num text-xs font-semibold text-slate-200 focus:border-cyan-500 focus:outline-none">
+            <option value="ALL">Todos los Equipos (32)</option>
+            <option value="Contendiente Élite">★ Contendientes Élite (Ofensiva + Defensa Top)</option>
+            <option value="Potencia Ofensiva">⚡ Potencias Ofensivas</option>
+            <option value="Muralla Defensiva">🛡 Murallas Defensivas</option>
+            <option value="En Reconstrucción">⚠ En Reconstrucción</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- MÓDULO C: Gráfico de 4 Cuadrantes SVG (EPA Ofensivo vs EPA Defensivo Permitido) -->
+      <div class="grid grid-cols-1 gap-5 lg:grid-cols-12">
+        <div class="rounded-xl border border-slate-800 bg-[#111827] p-5 shadow-xl lg:col-span-8">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
+            <div>
+              <h3 class="text-sm font-extrabold uppercase tracking-wider text-white">
+                Mapa de 4 Cuadrantes: <a href="#metodo-epa" class="metric-ref-link text-emerald-300">EPA/Jugada Ofensivo</a> vs. <a href="#metodo-epa" class="metric-ref-link text-cyan-300">EPA/Jugada Defensivo Permitido</a>
+              </h3>
+              <p class="text-[11px] text-slate-400">
+                Eje X: Eficiencia Ofensiva (derecha = mejor ataque) | Eje Y Invertido: Eficiencia Defensiva (arriba = menos EPA permitido). Haz clic en cualquier equipo para filtrar sus jugadores.
+              </p>
+            </div>
+          </div>
+          <div id="teams-quadrant-chart" class="mt-4 w-full overflow-x-auto"></div>
+        </div>
+
+        <!-- Panel Lateral: Resumen de Líderes Situacionales (3er Down, Zona Roja, 4to Down, Dominio Neto) -->
+        <div id="teams-situational-highlights" class="space-y-3.5 lg:col-span-4"></div>
+      </div>
+
+      <!-- MÓDULO D: Tabla Ordenable de los 32 Equipos (Eficiencia + Situacional) -->
+      <div class="overflow-hidden rounded-xl border border-slate-800 bg-[#111827] shadow-xl">
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse text-left text-xs" id="teams-analytics-table">
+            <thead>
+              <tr class="border-b border-slate-800 bg-slate-900/90 font-mono-num text-[11px] uppercase tracking-wider text-slate-400">
+                <th class="py-3.5 pl-4 pr-2 text-center w-10">#</th>
+                <th class="team-sortable-th sortable-th py-3.5 px-3" data-team-sort="team">Equipo / Cuadrante</th>
+                <th class="team-sortable-th sortable-th py-3.5 px-3 text-right text-emerald-400" data-team-sort="net_epa_per_play">EPA Neto / Jug ↓</th>
+                <th class="team-sortable-th sortable-th py-3.5 px-3 text-right" data-team-sort="off_epa_per_play">EPA Ofensivo</th>
+                <th class="team-sortable-th sortable-th py-3.5 px-3 text-right" data-team-sort="off_pass_epa">EPA Pase / Rush</th>
+                <th class="team-sortable-th sortable-th py-3.5 px-3 text-right text-cyan-300" data-team-sort="def_epa_allowed">EPA Def. Permitido</th>
+                <th class="team-sortable-th sortable-th py-3.5 px-3 text-right" data-team-sort="third_down_conv_pct">3er Down Conv %</th>
+                <th class="team-sortable-th sortable-th py-3.5 px-3 text-right" data-team-sort="red_zone_td_pct">Zona Roja TD %</th>
+                <th class="team-sortable-th sortable-th py-3.5 px-3 text-right" data-team-sort="fourth_down_attempts">4to Down (Int / Conv%)</th>
+                <th class="team-sortable-th sortable-th py-3.5 pl-3 pr-4 text-right text-amber-300" data-team-sort="garbage_time_share_pct">% Snaps Basura</th>
+              </tr>
+            </thead>
+            <tbody id="teams-analytics-tbody" class="divide-y divide-slate-800/70">
+              <tr>
+                <td colspan="10" class="py-8 text-center text-slate-400">Cargando métricas de los 32 equipos...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- VISTA 6 (TAB: methodology) - GLOSARIO, ECUACIONES Y JUGADA BISAGRA    -->
+    <!-- ===================================================================== -->
+    <section id="glossary-methodology-section" data-tab-panel="methodology" class="hidden space-y-6 scroll-mt-20" aria-labelledby="glossary-heading">
       <div class="flex flex-col gap-2 border-b border-slate-800 pb-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <div class="flex flex-wrap items-center gap-2">
@@ -961,9 +1223,9 @@
     </section>
 
     <!-- ===================================================================== -->
-    <!-- 4. SECCIÓN DE CRÓNICAS ANALÍTICAS BASADAS EN DATOS (game_critiques)   -->
+    <!-- VISTA 5 (TAB: critiques) - CRÓNICAS ANALÍTICAS Y AUDITORÍA IA         -->
     <!-- ===================================================================== -->
-    <section id="critiques-section" class="space-y-6" aria-labelledby="critiques-heading">
+    <section id="critiques-section" data-tab-panel="critiques" class="hidden space-y-6" aria-labelledby="critiques-heading">
       <div class="flex flex-col gap-3 border-b border-slate-800 pb-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div class="flex flex-wrap items-center gap-2">
@@ -1060,6 +1322,6 @@
   </footer>
 
   <!-- Lógica Modular del Frontend (100% lectura local estática) -->
-  <script type="module" src="./app.js?v=2.9"></script>
+  <script type="module" src="./app.js?v=3.0"></script>
 </body>
 </html>

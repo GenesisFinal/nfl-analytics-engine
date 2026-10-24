@@ -799,6 +799,193 @@ def evaluate_players(
     return result
 
 
+def evaluate_teams(pbp_df: pd.DataFrame | None) -> list[dict[str, Any]]:
+    """Agrega métricas de eficiencia ofensiva, defensiva y situacional por franquicia NFL (sin minutos basura)."""
+    if pbp_df is None or pbp_df.empty or "posteam" not in pbp_df.columns:
+        return []
+
+    comp_df, raw_df = filter_garbage_time(pbp_df)
+    if comp_df.empty:
+        return []
+
+    def _filter_scrimmage(df: pd.DataFrame) -> pd.DataFrame:
+        work = df.loc[df["posteam"].notna() & (df["posteam"].astype(str).str.strip() != "") & df["epa"].notna()].copy()
+        if work.empty:
+            return work
+        work["posteam"] = work["posteam"].astype(str).str.strip()
+        if "defteam" in work.columns:
+            work["defteam"] = work["defteam"].fillna("").astype(str).str.strip()
+        else:
+            work["defteam"] = ""
+
+        pass_col = pd.to_numeric(work.get("pass_attempt", 0), errors="coerce").fillna(0)
+        rush_col = pd.to_numeric(work.get("rush_attempt", 0), errors="coerce").fillna(0)
+        drop_col = pd.to_numeric(work.get("qb_dropback", 0), errors="coerce").fillna(0)
+        ptype_col = work.get("play_type", pd.Series("", index=work.index)).fillna("").astype(str).str.lower()
+
+        is_scrimmage = (pass_col == 1) | (rush_col == 1) | (drop_col == 1) | ptype_col.isin(["pass", "run"])
+        work = work.loc[is_scrimmage].copy()
+        work["_is_pass"] = ((pass_col.loc[work.index] == 1) | (drop_col.loc[work.index] == 1) | (ptype_col.loc[work.index] == "pass")).astype(int)
+        work["_is_rush"] = ((rush_col.loc[work.index] == 1) & (work["_is_pass"] == 0)).astype(int)
+        work["epa"] = pd.to_numeric(work["epa"], errors="coerce").fillna(0.0)
+        work["success"] = pd.to_numeric(work.get("success", (work["epa"] > 0).astype(float)), errors="coerce").fillna(0.0)
+        return work
+
+    comp_scrim = _filter_scrimmage(comp_df)
+    raw_scrim = _filter_scrimmage(raw_df)
+    if comp_scrim.empty:
+        return []
+
+    teams = sorted(comp_scrim["posteam"].unique().tolist())
+    records: list[dict[str, Any]] = []
+
+    has_down = "down" in comp_scrim.columns
+    has_yl100 = "yardline_100" in comp_scrim.columns
+    has_3d_conv = "third_down_converted" in comp_scrim.columns
+    has_4d_conv = "fourth_down_converted" in comp_scrim.columns
+    has_td = "touchdown" in comp_scrim.columns
+
+    for team in teams:
+        off_c = comp_scrim.loc[comp_scrim["posteam"] == team]
+        off_r = raw_scrim.loc[raw_scrim["posteam"] == team]
+        def_c = comp_scrim.loc[comp_scrim["defteam"] == team] if "defteam" in comp_scrim.columns else pd.DataFrame()
+
+        off_plays = int(len(off_c))
+        raw_plays = max(int(len(off_r)), off_plays, 1)
+        gt_plays = max(raw_plays - off_plays, 0)
+        gt_share_pct = round((gt_plays / raw_plays) * 100.0, 1)
+
+        games_played = (
+            int(off_r["game_id"].dropna().nunique())
+            if "game_id" in off_r.columns and not off_r.empty
+            else 1
+        )
+
+        off_epa = float(off_c["epa"].mean()) if off_plays > 0 else 0.0
+        pass_c = off_c.loc[off_c["_is_pass"] == 1]
+        rush_c = off_c.loc[off_c["_is_rush"] == 1]
+        off_pass_epa = float(pass_c["epa"].mean()) if not pass_c.empty else 0.0
+        off_rush_epa = float(rush_c["epa"].mean()) if not rush_c.empty else 0.0
+        off_sr = float(off_c["success"].mean()) if off_plays > 0 else 0.0
+        pass_rate_pct = round((len(pass_c) / max(off_plays, 1)) * 100.0, 1)
+
+        # Defensa (EPA permitido por jugada: menor es mejor)
+        def_plays = int(len(def_c))
+        def_epa_allowed = float(def_c["epa"].mean()) if def_plays > 0 else 0.0
+        def_pass_c = def_c.loc[def_c["_is_pass"] == 1] if not def_c.empty else pd.DataFrame()
+        def_rush_c = def_c.loc[def_c["_is_rush"] == 1] if not def_c.empty else pd.DataFrame()
+        def_pass_epa = float(def_pass_c["epa"].mean()) if not def_pass_c.empty else 0.0
+        def_rush_epa = float(def_rush_c["epa"].mean()) if not def_rush_c.empty else 0.0
+        def_sr_allowed = float(def_c["success"].mean()) if def_plays > 0 else 0.0
+
+        # Situacional: 3er Down
+        third_plays = 0
+        third_conv_pct = 0.0
+        third_epa = 0.0
+        if has_down:
+            down_s = pd.to_numeric(off_c["down"], errors="coerce")
+            d3 = off_c.loc[down_s == 3]
+            third_plays = int(len(d3))
+            if third_plays > 0:
+                third_epa = float(d3["epa"].mean())
+                if has_3d_conv:
+                    conv_s = pd.to_numeric(d3["third_down_converted"], errors="coerce").fillna(0.0)
+                    third_conv_pct = round(float(conv_s.mean()) * 100.0, 1)
+                else:
+                    third_conv_pct = round(float(d3["success"].mean()) * 100.0, 1)
+
+        # Situacional: Zona Roja (yardline_100 <= 20)
+        rz_plays = 0
+        rz_epa = 0.0
+        rz_td_pct = 0.0
+        if has_yl100:
+            yl_s = pd.to_numeric(off_c["yardline_100"], errors="coerce")
+            rz = off_c.loc[(yl_s >= 1) & (yl_s <= 20)]
+            rz_plays = int(len(rz))
+            if rz_plays > 0:
+                rz_epa = float(rz["epa"].mean())
+                if has_td:
+                    td_s = pd.to_numeric(rz["touchdown"], errors="coerce").fillna(0.0)
+                    rz_td_pct = round(float(td_s.mean()) * 100.0, 1)
+                else:
+                    rz_td_pct = round(float(rz["success"].mean()) * 100.0, 1)
+
+        # Situacional: 4to Down (jugadas ofensivas en 4to down)
+        fourth_attempts = 0
+        fourth_conv_pct = 0.0
+        fourth_epa = 0.0
+        if has_down:
+            down_s = pd.to_numeric(off_c["down"], errors="coerce")
+            d4 = off_c.loc[down_s == 4]
+            fourth_attempts = int(len(d4))
+            if fourth_attempts > 0:
+                fourth_epa = float(d4["epa"].mean())
+                if has_4d_conv:
+                    c4_s = pd.to_numeric(d4["fourth_down_converted"], errors="coerce").fillna(0.0)
+                    fourth_conv_pct = round(float(c4_s.mean()) * 100.0, 1)
+                else:
+                    fourth_conv_pct = round(float(d4["success"].mean()) * 100.0, 1)
+
+        net_epa = off_epa - def_epa_allowed
+
+        records.append(
+            {
+                "team": team,
+                "games_played": games_played,
+                "off_plays": off_plays,
+                "raw_plays": raw_plays,
+                "garbage_time_plays": gt_plays,
+                "garbage_time_share_pct": gt_share_pct,
+                "off_epa_per_play": round(off_epa, 3),
+                "off_pass_epa": round(off_pass_epa, 3),
+                "off_rush_epa": round(off_rush_epa, 3),
+                "off_success_rate": round(off_sr, 4),
+                "off_success_rate_pct": round(off_sr * 100.0, 1),
+                "pass_rate_pct": pass_rate_pct,
+                "def_plays": def_plays,
+                "def_epa_allowed": round(def_epa_allowed, 3),
+                "def_pass_epa_allowed": round(def_pass_epa, 3),
+                "def_rush_epa_allowed": round(def_rush_epa, 3),
+                "def_success_allowed": round(def_sr_allowed, 4),
+                "def_success_allowed_pct": round(def_sr_allowed * 100.0, 1),
+                "net_epa_per_play": round(net_epa, 3),
+                "third_down_plays": third_plays,
+                "third_down_conv_pct": third_conv_pct,
+                "third_down_epa": round(third_epa, 3),
+                "red_zone_plays": rz_plays,
+                "red_zone_epa": round(rz_epa, 3),
+                "red_zone_td_pct": rz_td_pct,
+                "fourth_down_attempts": fourth_attempts,
+                "fourth_down_conv_pct": fourth_conv_pct,
+                "fourth_down_epa": round(fourth_epa, 3),
+            }
+        )
+
+    if not records:
+        return []
+
+    off_med = float(np.median([r["off_epa_per_play"] for r in records]))
+    def_med = float(np.median([r["def_epa_allowed"] for r in records]))
+
+    for r in records:
+        good_off = r["off_epa_per_play"] >= off_med
+        good_def = r["def_epa_allowed"] <= def_med
+        if good_off and good_def:
+            r["tier"] = "Contendiente Élite"
+        elif good_off and not good_def:
+            r["tier"] = "Potencia Ofensiva"
+        elif not good_off and good_def:
+            r["tier"] = "Muralla Defensiva"
+        else:
+            r["tier"] = "En Reconstrucción"
+
+    records.sort(key=lambda x: (x["net_epa_per_play"], x["off_epa_per_play"]), reverse=True)
+    for idx, r in enumerate(records, 1):
+        r["rank"] = idx
+
+    return records
+
+
 def _load_from_ingest() -> tuple[pd.DataFrame, pd.DataFrame, dict[str, Any]]:
     """Carga PBP y Rosters desde `src.ingest_nflverse` de forma resiliente."""
     from src import ingest_nflverse
@@ -854,6 +1041,7 @@ def run_valuation_pipeline(
             meta.setdefault(k, v)
 
     ranked_df = evaluate_players(pbp_df, roster_df)
+    teams_list = evaluate_teams(pbp_df)
 
     current_year = datetime.now(timezone.utc).year
     season = int(
@@ -921,6 +1109,7 @@ def run_valuation_pipeline(
                 "mvp_real": mvp_w,
                 "inflated_stat_leader": inf_w,
                 "players": list_w,
+                "teams": evaluate_teams(df_w),
             }
 
             # 2. Corte acumulado Semanas 1..w (si w > 1 y w < max(weeks_included))
@@ -938,6 +1127,7 @@ def run_valuation_pipeline(
                     "mvp_real": mvp_cum,
                     "inflated_stat_leader": inf_cum,
                     "players": list_cum,
+                    "teams": evaluate_teams(df_cum),
                 }
 
     payload: dict[str, Any] = {
@@ -968,6 +1158,7 @@ def run_valuation_pipeline(
         "mvp_real": mvp_real,
         "inflated_stat_leader": inflated_stat_leader,
         "players": players_list,
+        "teams": teams_list,
         "rankings_by_scope": rankings_by_scope,
     }
 

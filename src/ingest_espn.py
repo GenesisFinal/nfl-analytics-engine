@@ -1030,6 +1030,170 @@ def _parse_team_competitor(competitor: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _clock_to_seconds(clock_str: str) -> int:
+    """Convert MM:SS clock string to remaining seconds in the quarter."""
+    try:
+        parts = str(clock_str or "0:00").strip().split(":")
+        if len(parts) == 2:
+            return int(parts[0]) * 60 + int(parts[1])
+    except Exception:  # noqa: BLE001
+        pass
+    return 0
+
+
+def _build_wp_timeline(
+    all_moments: list[dict[str, Any]],
+    critical_moments: list[dict[str, Any]],
+    final_home_wp: float = 0.5,
+    max_points: int = 36,
+) -> list[dict[str, Any]]:
+    """Build a compact chronological Win Probability curve preserving all critical inflection points."""
+    crit_by_id = {str(m.get("play_id") or ""): m for m in critical_moments if isinstance(m, dict)}
+
+    if not all_moments:
+        return _synthesize_wp_timeline_from_critical(critical_moments, final_home_wp)
+
+    real_plays = [m for m in all_moments if not _is_non_play_marker(m)]
+    plays = real_plays if real_plays else all_moments
+    n = len(plays)
+
+    must_keep: set[int] = {0, n - 1}
+    for idx, m in enumerate(plays):
+        pid = str(m.get("play_id") or "")
+        if pid in crit_by_id or float(m.get("abs_delta_wp") or 0.0) >= 0.10:
+            if idx > 0:
+                must_keep.add(idx - 1)
+            must_keep.add(idx)
+
+    step = max(1, n // max(max_points - len(must_keep), 6))
+    for idx in range(0, n, step):
+        must_keep.add(idx)
+
+    selected_indices = sorted(must_keep)
+    timeline: list[dict[str, Any]] = [
+        {
+            "step": 0,
+            "qtr": 1,
+            "clock": "15:00",
+            "home_wp": 0.5,
+            "delta_wp": 0.0,
+            "label": "Kickoff",
+            "is_critical": False,
+        }
+    ]
+
+    for pos, idx in enumerate(selected_indices, 1):
+        m = plays[idx]
+        pid = str(m.get("play_id") or "")
+        c_info = crit_by_id.get(pid)
+        abs_d = float(m.get("abs_delta_wp") or 0.0)
+        is_crit = pid in crit_by_id or abs_d >= 0.12
+        label = (
+            str(c_info.get("play_label") or c_info.get("description") or "")
+            if c_info
+            else str(m.get("description") or "")[:90]
+        )
+        timeline.append(
+            {
+                "step": pos,
+                "play_id": pid,
+                "qtr": int(m.get("qtr") or 1),
+                "clock": str(m.get("clock") or "0:00"),
+                "home_wp": round(float(m.get("home_wp_after") or 0.5), 4),
+                "delta_wp": round(float(m.get("delta_wp") or 0.0), 4),
+                "label": label,
+                "is_critical": is_crit,
+            }
+        )
+
+    return timeline
+
+
+def _synthesize_wp_timeline_from_critical(
+    critical_moments: list[dict[str, Any]],
+    final_home_wp: float = 0.5,
+) -> list[dict[str, Any]]:
+    """Synthesize a chronological inflection-point WP curve from critical_moments when full PBP array is cached."""
+    timeline: list[dict[str, Any]] = [
+        {
+            "step": 0,
+            "qtr": 1,
+            "clock": "15:00",
+            "home_wp": 0.5,
+            "delta_wp": 0.0,
+            "label": "Kickoff (Inicio 50/50)",
+            "is_critical": False,
+        }
+    ]
+    if not critical_moments:
+        timeline.append(
+            {
+                "step": 1,
+                "qtr": 4,
+                "clock": "0:00",
+                "home_wp": round(float(final_home_wp), 4),
+                "delta_wp": round(float(final_home_wp) - 0.5, 4),
+                "label": "Final del partido",
+                "is_critical": False,
+            }
+        )
+        return timeline
+
+    sorted_crit = sorted(
+        critical_moments,
+        key=lambda m: (int(m.get("qtr") or 4), -_clock_to_seconds(str(m.get("clock") or "0:00"))),
+    )
+    step = 1
+    for m in sorted_crit:
+        qtr = int(m.get("qtr") or 4)
+        clock = str(m.get("clock") or "0:00")
+        wp_before = round(float(m.get("home_wp_before") or 0.5), 4)
+        wp_after = round(float(m.get("home_wp_after") or 0.5), 4)
+        delta = round(float(m.get("delta_wp") or (wp_after - wp_before)), 4)
+        label = str(m.get("play_label") or m.get("description") or "Jugada Bisagra")[:90]
+
+        timeline.append(
+            {
+                "step": step,
+                "qtr": qtr,
+                "clock": clock,
+                "home_wp": wp_before,
+                "delta_wp": 0.0,
+                "label": f"Pre-jugada (Q{qtr} {clock})",
+                "is_critical": False,
+            }
+        )
+        step += 1
+        timeline.append(
+            {
+                "step": step,
+                "play_id": str(m.get("play_id") or ""),
+                "qtr": qtr,
+                "clock": clock,
+                "home_wp": wp_after,
+                "delta_wp": delta,
+                "label": label,
+                "is_critical": True,
+            }
+        )
+        step += 1
+
+    last_wp = timeline[-1]["home_wp"]
+    if abs(float(final_home_wp) - float(last_wp)) > 0.005 or len(timeline) < 3:
+        timeline.append(
+            {
+                "step": step,
+                "qtr": max(4, int(sorted_crit[-1].get("qtr") or 4)),
+                "clock": "0:00",
+                "home_wp": round(float(final_home_wp), 4),
+                "delta_wp": round(float(final_home_wp) - float(last_wp), 4),
+                "label": "Resultado Final",
+                "is_critical": False,
+            }
+        )
+    return timeline
+
+
 def _load_completed_game_cache(target_path: Path) -> dict[str, dict[str, Any]]:
     """Load already-completed games from existing live_scoreboard.json if they have v2 play-specific video metadata."""
     cache: dict[str, dict[str, Any]] = {}
@@ -1051,6 +1215,11 @@ def _load_completed_game_cache(target_path: Path) -> dict[str, dict[str, Any]]:
                 and str(hp.get("video_url") or "").startswith("http")
                 and not _is_non_play_text(str(hp.get("description") or ""))
             ):
+                if not g.get("wp_timeline"):
+                    g["wp_timeline"] = _synthesize_wp_timeline_from_critical(
+                        g.get("critical_moments") or ([hp] if hp else []),
+                        float((g.get("win_probability") or {}).get("home_wp", 0.5)),
+                    )
                 cache[eid] = g
     except Exception:  # noqa: BLE001
         pass
@@ -1318,6 +1487,7 @@ def ingest_espn_scoreboard(
                 "game_links": game_links,
                 "critical_moments": critical_moments,
                 "hinge_play": hinge_play,
+                "wp_timeline": _build_wp_timeline(all_moments, critical_moments, home_wp),
             }
         )
 

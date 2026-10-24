@@ -711,6 +711,15 @@ def test_participation_minimums_and_inflation_index(
     assert rankings["inflated_stat_leader"] is not None
     assert rankings["inflated_stat_leader"]["player_id"] in {"QB2", "WR2"}
 
+    # Radiomapa de Equipos NFL (32 franquicias / equipos en el dataset)
+    assert "teams" in rankings and isinstance(rankings["teams"], list)
+    assert len(rankings["teams"]) >= 2
+    first_team = rankings["teams"][0]
+    assert "off_epa_per_play" in first_team
+    assert "def_epa_allowed" in first_team
+    assert "net_epa_per_play" in first_team
+    assert "tier" in first_team
+
 
 # ---------------------------------------------------------------------------
 # 4. Pruebas del Generador de Críticas (`src/critic_generator.py`)
@@ -805,6 +814,8 @@ def test_public_data_json_files_if_present() -> None:
         sb = _strict_loads(scoreboard_file.read_text(encoding="utf-8"))
         assert "updated_at" in sb
         assert "games" in sb and isinstance(sb["games"], list)
+        if sb["games"]:
+            assert "wp_timeline" in sb["games"][0]
 
     if rankings_file.exists():
         rk = _strict_loads(rankings_file.read_text(encoding="utf-8"))
@@ -813,6 +824,8 @@ def test_public_data_json_files_if_present() -> None:
         assert "inflated_stat_leader" in rk
         assert "players" in rk and isinstance(rk["players"], list)
         assert len(rk["players"]) > 0
+        assert "teams" in rk and isinstance(rk["teams"], list)
+        assert len(rk["teams"]) > 0
 
     if critiques_file.exists():
         cr_text = critiques_file.read_text(encoding="utf-8")
