@@ -881,13 +881,17 @@ function renderScoreboardSection() {
       : [scoreboard?.week || 1];
   const minW = Math.min(...weeksAvail);
   const maxW = Math.max(...weeksAvail);
+  const liveTotal = allGames.filter(
+    (g) => String(g?.status?.state || '').toLowerCase() === 'in'
+  ).length;
   const completedTotal = allGames.filter(
     (g) => String(g?.status?.state || '').toLowerCase() === 'post' || Boolean(g?.status?.completed)
   ).length;
   const hingeGamesTotal = allGames.filter(
     (g) =>
       Boolean(g?.hinge_play?.exceeds_threshold) ||
-      Math.abs(Number(g?.hinge_play?.abs_delta_wp ?? 0)) >= 0.12
+      Math.abs(Number(g?.hinge_play?.abs_delta_wp ?? 0)) >= 0.12 ||
+      (Array.isArray(g?.critical_moments) && g.critical_moments.length > 0)
   ).length;
   const covObj = rankings.season_coverage || {};
   const compPlaysText = covObj.competitive_plays
@@ -895,8 +899,27 @@ function renderScoreboardSection() {
     : '';
 
   if (covSummaryEl) {
-    covSummaryEl.innerHTML = ` Temporada ${escapeHtml(scoreboard?.season || 2026)} (Semanas ${minW} a ${maxW}): <strong class="text-white">${allGames.length} partidos oficiales</strong> (${completedTotal} finalizados, <strong class="text-amber-300">${hingeGamesTotal} con Jugada Bisagra</strong>)${escapeHtml(compPlaysText)}.`;
+    const liveBadgeHtml =
+      liveTotal > 0
+        ? `<strong class="text-emerald-300">${liveTotal} en vivo ahora</strong>, `
+        : '';
+    covSummaryEl.innerHTML = ` Temporada ${escapeHtml(scoreboard?.season || 2026)} (Semanas ${minW} a ${maxW}): <strong class="text-white">${allGames.length} partidos oficiales</strong> (${liveBadgeHtml}${completedTotal} finalizados, <strong class="text-amber-300">${hingeGamesTotal} con Jugada Bisagra</strong>)${escapeHtml(compPlaysText)}.`;
   }
+
+  // Actualizar contadores en los botones de filtro de estado (Todos / En Vivo / Jugada Bisagra / Finalizados)
+  const btnAll = document.querySelector('.game-filter-btn[data-game-filter="all"]');
+  const btnLive = document.querySelector('.game-filter-btn[data-game-filter="live"]');
+  const btnHinge = document.querySelector('.game-filter-btn[data-game-filter="hinge"]');
+  const btnFinal = document.querySelector('.game-filter-btn[data-game-filter="final"]');
+  if (btnAll) btnAll.textContent = `Todos (${allGames.length})`;
+  if (btnLive) {
+    btnLive.innerHTML =
+      liveTotal > 0
+        ? `<span class="inline-flex items-center gap-1.5"><span class="h-2 w-2 rounded-full bg-emerald-400 pulse-dot"></span>En Vivo (${liveTotal})</span>`
+        : `En Vivo (0)`;
+  }
+  if (btnHinge) btnHinge.textContent = `Con Jugada Bisagra (${hingeGamesTotal})`;
+  if (btnFinal) btnFinal.textContent = `Finalizados (${completedTotal})`;
 
   if (allGames.length === 0) {
     container.innerHTML = `
@@ -2550,6 +2573,42 @@ function bindUiEvents() {
       const filter = btn.getAttribute('data-game-filter') || 'all';
       appState.gameFilter = filter;
 
+      // Si el usuario selecciona 'En Vivo', asegurar que ningún filtro previo de semana o equipo oculte los partidos en curso
+      if (filter === 'live') {
+        const allGames = Array.isArray(appState.scoreboard?.games) ? appState.scoreboard.games : [];
+        const anyLiveGlobal = allGames.some(
+          (g) => String(g?.status?.state || '').toLowerCase() === 'in'
+        );
+        if (anyLiveGlobal) {
+          const wSelect = document.getElementById('scoreboard-week-select');
+          const tSelect = document.getElementById('scoreboard-team-select');
+          if (appState.gameWeekFilter !== 'ALL') {
+            const anyLiveInWeek = allGames.some(
+              (g) =>
+                String(g?.status?.state || '').toLowerCase() === 'in' &&
+                String(g.week || appState.scoreboard?.week || 1) === String(appState.gameWeekFilter)
+            );
+            if (!anyLiveInWeek) {
+              appState.gameWeekFilter = 'ALL';
+              if (wSelect) wSelect.value = 'ALL';
+            }
+          }
+          if (appState.gameTeamFilter !== 'ALL') {
+            const anyLiveForTeam = allGames.some(
+              (g) =>
+                String(g?.status?.state || '').toLowerCase() === 'in' &&
+                (g?.away_team?.abbreviation === appState.gameTeamFilter ||
+                  g?.home_team?.abbreviation === appState.gameTeamFilter)
+            );
+            if (!anyLiveForTeam) {
+              appState.gameTeamFilter = 'ALL';
+              if (tSelect) tSelect.value = 'ALL';
+            }
+          }
+          renderHeaderAndKpis();
+        }
+      }
+
       gameFilterButtons.forEach((b) => {
         const isActive = b.getAttribute('data-game-filter') === filter;
         b.className = isActive
@@ -2770,8 +2829,22 @@ async function loadAllDashboardData() {
   renderCritiquesSection();
 }
 
+async function refreshLiveScoreboardSilently() {
+  const scoreboard = await fetchLocalJson(DATA_ENDPOINTS.scoreboard);
+  if (!scoreboard || !Array.isArray(scoreboard.games)) return;
+  const prevUpdated = appState.scoreboard?.updated_at;
+  appState.scoreboard = scoreboard;
+  if (scoreboard.updated_at !== prevUpdated) {
+    renderHeaderAndKpis();
+    renderScoreboardSection();
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   bindUiEvents();
   loadAllDashboardData();
+  // Auto-refresco silencioso cada 60 segundos del JSON estático local para seguimiento de partidos en vivo
+  setInterval(refreshLiveScoreboardSilently, 60000);
 });
+
 

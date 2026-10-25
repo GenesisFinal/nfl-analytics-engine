@@ -872,15 +872,6 @@ def _extract_all_wp_deltas(summary_data: dict[str, Any]) -> list[dict[str, Any]]
         if curr_home_wp > 1.0:
             curr_home_wp = curr_home_wp / 100.0
 
-        if idx == 0:
-            home_wp_before = 0.5
-        else:
-            home_wp_before = prev_home_wp
-
-        delta_wp = round(curr_home_wp - home_wp_before, 6)
-        abs_delta_wp = round(abs(delta_wp), 6)
-        prev_home_wp = curr_home_wp
-
         nested_play = item.get("play") if isinstance(item.get("play"), dict) else {}
         raw_play_id = (
             item.get("playId")
@@ -891,6 +882,26 @@ def _extract_all_wp_deltas(summary_data: dict[str, Any]) -> list[dict[str, Any]]
         )
         play_id = str(raw_play_id)
         lookup_info = play_lookup.get(play_id, {})
+
+        # Pre-game opening WP baseline (idx == 0 with no matching play in drives and no text)
+        is_pregame_baseline = (
+            idx == 0
+            and bool(play_lookup)
+            and play_id not in play_lookup
+            and not nested_play.get("text")
+            and not item.get("text")
+            and not item.get("description")
+        )
+        if is_pregame_baseline:
+            home_wp_before = curr_home_wp
+        elif idx == 0:
+            home_wp_before = 0.5
+        else:
+            home_wp_before = prev_home_wp
+
+        delta_wp = round(curr_home_wp - home_wp_before, 6)
+        abs_delta_wp = round(abs(delta_wp), 6)
+        prev_home_wp = curr_home_wp
 
         # If this WP row is attached to an administrative marker (like END GAME on a walk-off FG)
         # and the immediately preceding play in the drive was not in winprobability, attribute the
@@ -975,7 +986,8 @@ def extract_critical_moments(
     all_moments = _extract_all_wp_deltas(summary_data)
     filtered = [m for m in all_moments if m["abs_delta_wp"] >= min_delta]
     real_plays = [m for m in filtered if not _is_non_play_marker(m)]
-    candidates = real_plays if real_plays else filtered
+    has_any_real_play = any(not _is_non_play_marker(m) for m in all_moments)
+    candidates = real_plays if has_any_real_play else filtered
     candidates.sort(key=lambda m: m["abs_delta_wp"], reverse=True)
     top_moments = candidates[:top_n]
 

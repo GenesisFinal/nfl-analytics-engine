@@ -2,14 +2,16 @@ name: Live Gameday ESPN Scoreboard & Win Probability
 
 on:
   schedule:
-    # Domingos de NFL (17:00 a 23:59 UTC cada 15 minutos)
-    - cron: '*/15 17-23 * * 0'
+    # Domingos y Sábados de NFL (13:00 a 23:59 UTC cada 5 minutos - cubre International Games 9:30 ET, 1:00 PM ET y 4:25 PM ET)
+    - cron: '*/5 13-23 * * 0,6'
     # Ventanas nocturnas TNF / SNF / MNF (00:00 a 04:59 UTC en lunes, martes y viernes UTC)
-    - cron: '*/15 0-4 * * 1,2,5'
+    - cron: '*/5 0-4 * * 1,2,5'
   workflow_dispatch:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 concurrency:
   group: nfl-data-pipeline
@@ -17,9 +19,12 @@ concurrency:
 
 jobs:
   update-live-scoreboard:
-    name: Update ESPN Scoreboard & Critical Win Probability Swings
+    name: Update ESPN Scoreboard & Deploy Live Pages
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Checkout repository
@@ -40,14 +45,32 @@ jobs:
         run: python -m src.ingest_espn
 
       - name: Commit and Push Updated Live Scoreboard JSON
+        id: commit_check
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add public/data/live_scoreboard.json
           if git diff --cached --quiet; then
             echo "No changes in public/data/live_scoreboard.json."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             git commit -m "chore(live): update ESPN scoreboard & win probability swings"
             git pull --rebase origin "${GITHUB_REF_NAME}" || true
             git push origin "HEAD:${GITHUB_REF_NAME}"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
+
+      - name: Setup Pages
+        if: steps.commit_check.outputs.changed == 'true' || github.event_name == 'workflow_dispatch'
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact from /public
+        if: steps.commit_check.outputs.changed == 'true' || github.event_name == 'workflow_dispatch'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './public'
+
+      - name: Deploy to GitHub Pages
+        if: steps.commit_check.outputs.changed == 'true' || github.event_name == 'workflow_dispatch'
+        id: deployment
+        uses: actions/deploy-pages@v4
