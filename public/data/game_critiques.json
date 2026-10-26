@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T14:55:28.211907+00:00",
+  "updated_at": "2026-10-26T23:01:32.174330+00:00",
   "season": 2026,
   "generation_mode": "deterministic_template",
   "executive_summary": "Auditoria cuantitativa temporada 2026 (excluyendo jugadas de 4to cuarto con WP < 5% o WP > 95%): El MVP Real es Zay Flowers (WR - BAL) con Impact Score de 98.4/100, EPA competitivo total de +38.45 (+0.754 EPA/jugada), WPA acumulado de +1.199, CPOE de +0.00% y Success Rate de 62.7%. En contraste, el Estadistico Inflado es Matthew Golden (WR - GB), quien registra 542 yardas brutas pero solo 387 yardas en tiempo competitivo (155 yardas en minutos basura), pasando de un EPA bruto de +7.10 a un EPA competitivo de -1.84 (WPA de -0.113, CPOE de +0.00%) con un Indice de Inflacion Estadistica de 56.09.",
@@ -22,12 +22,24 @@
     "wpa_total": 1.199,
     "cpoe": 0.0,
     "yac_epa": 18.77,
+    "xyac_epa": 34.629217361620775,
+    "air_yards_total": 451.0,
+    "adot": 8.4,
     "success_rate": 0.6275,
+    "explosive_plays": 9.0,
+    "red_zone_opps": 7.0,
+    "pressured_plays": 0.0,
+    "completions": 39.0,
+    "touchdowns": 3.0,
+    "interceptions": 0.0,
     "player_name": "Zay Flowers",
     "name": "Zay Flowers",
     "gsis_id": "00-0039064",
     "team": "BAL",
     "position": "WR",
+    "headshot_url": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/xzhto2dejy2pflkfx40c",
+    "jersey_number": 4,
+    "college": "Boston College",
     "weeks_played": 6,
     "opportunities": 53,
     "opportunities_per_week": 8.83,
@@ -41,6 +53,23 @@
     "epa_inflation_delta": -5.931,
     "yards_inflation_pct": 0.99,
     "inflation_index": 1.54,
+    "pff_grade": 97.6,
+    "pff_tier": "ELITE",
+    "rbsdm_composite": 0.448,
+    "explosive_play_rate_pct": 17.6,
+    "yac_over_expected_epa": -15.86,
+    "target_share_pct": 26.8,
+    "air_yards_share_pct": 26.6,
+    "wopr": 0.59,
+    "red_zone_share_pct": 25.0,
+    "pfr_pressure_or_bt_pct": 5.5,
+    "ngs_primary_metric": 3.05,
+    "ngs_secondary_metric": 6.07,
+    "contract_apy_m": 35.0,
+    "contract_guaranteed_m": 54.0,
+    "contract_cap_pct": 11.6,
+    "cap_roi_score": 90.9,
+    "cap_roi_tier": "Alto Retorno Cap",
     "success_rate_pct": 62.7,
     "rank": 1
   },
@@ -63,12 +92,24 @@
     "wpa_total": -0.113,
     "cpoe": 0.0,
     "yac_epa": -78.93,
+    "xyac_epa": 34.97859192936847,
+    "air_yards_total": 814.0,
+    "adot": 14.7,
     "success_rate": 0.4,
+    "explosive_plays": 6.0,
+    "red_zone_opps": 9.0,
+    "pressured_plays": 0.0,
+    "completions": 28.0,
+    "touchdowns": 2.0,
+    "interceptions": 0.0,
     "player_name": "Matthew Golden",
     "name": "Matthew Golden",
     "gsis_id": "00-0040667",
     "team": "GB",
     "position": "WR",
+    "headshot_url": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/dbjki6b0swksr7mk17wk",
+    "jersey_number": 0,
+    "college": "Texas; Houston",
     "weeks_played": 7,
     "opportunities": 70,
     "opportunities_per_week": 10.0,
@@ -82,8 +123,25 @@
     "epa_inflation_delta": 8.936,
     "yards_inflation_pct": 28.6,
     "inflation_index": 56.09,
+    "pff_grade": 55.7,
+    "pff_tier": "BACKUP",
+    "rbsdm_composite": -0.037,
+    "explosive_play_rate_pct": 10.9,
+    "yac_over_expected_epa": -113.91,
+    "target_share_pct": 24.7,
+    "air_yards_share_pct": 36.2,
+    "wopr": 0.62,
+    "red_zone_share_pct": 29.0,
+    "pfr_pressure_or_bt_pct": 4.0,
+    "ngs_primary_metric": 2.58,
+    "ngs_secondary_metric": 5.79,
+    "contract_apy_m": 4.39,
+    "contract_guaranteed_m": 17.58,
+    "contract_cap_pct": 1.6,
+    "cap_roi_score": 16.5,
+    "cap_roi_tier": "Contrato Pesado",
     "success_rate_pct": 40.0,
-    "rank": 141
+    "rank": 142
   },
   "inflated_stat_leader": {
     "player_id": "00-0040667",
@@ -104,12 +162,24 @@
     "wpa_total": -0.113,
     "cpoe": 0.0,
     "yac_epa": -78.93,
+    "xyac_epa": 34.97859192936847,
+    "air_yards_total": 814.0,
+    "adot": 14.7,
     "success_rate": 0.4,
+    "explosive_plays": 6.0,
+    "red_zone_opps": 9.0,
+    "pressured_plays": 0.0,
+    "completions": 28.0,
+    "touchdowns": 2.0,
+    "interceptions": 0.0,
     "player_name": "Matthew Golden",
     "name": "Matthew Golden",
     "gsis_id": "00-0040667",
     "team": "GB",
     "position": "WR",
+    "headshot_url": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/dbjki6b0swksr7mk17wk",
+    "jersey_number": 0,
+    "college": "Texas; Houston",
     "weeks_played": 7,
     "opportunities": 70,
     "opportunities_per_week": 10.0,
@@ -123,8 +193,25 @@
     "epa_inflation_delta": 8.936,
     "yards_inflation_pct": 28.6,
     "inflation_index": 56.09,
+    "pff_grade": 55.7,
+    "pff_tier": "BACKUP",
+    "rbsdm_composite": -0.037,
+    "explosive_play_rate_pct": 10.9,
+    "yac_over_expected_epa": -113.91,
+    "target_share_pct": 24.7,
+    "air_yards_share_pct": 36.2,
+    "wopr": 0.62,
+    "red_zone_share_pct": 29.0,
+    "pfr_pressure_or_bt_pct": 4.0,
+    "ngs_primary_metric": 2.58,
+    "ngs_secondary_metric": 5.79,
+    "contract_apy_m": 4.39,
+    "contract_guaranteed_m": 17.58,
+    "contract_cap_pct": 1.6,
+    "cap_roi_score": 16.5,
+    "cap_roi_tier": "Contrato Pesado",
     "success_rate_pct": 40.0,
-    "rank": 141
+    "rank": 142
   },
   "critiques": [
     {
@@ -220,99 +307,99 @@
       }
     },
     {
-      "id": "game-critique-401873010",
-      "title": "Auditoria de Partido: NE 24 - CHI 30",
-      "subtitle": "WP Local 100.0% - Max |delta_wp| 0.138",
-      "category": "Partido",
-      "teams": [
-        "NE",
-        "CHI"
-      ],
-      "body": "Marcador NE 24 - CHI 30 (WP local: 100.0%). Momento critico principal en Q2 con variacion de probabilidad de victoria delta_wp de +0.138 (|delta_wp| = 0.138, WPA equivalente +0.138): (Shotgun) D.Maye pass deep right intended for E.Raridon INTERCEPTED by D.Jackson at CHI -7. Touchback.",
-      "metrics_cited": {
-        "home_wp": 1.0,
-        "delta_wp": 0.1378,
-        "critical_plays_count": 2
-      }
-    },
-    {
-      "id": "game-critique-401873011",
-      "title": "Auditoria de Partido: PIT 16 - NO 10",
-      "subtitle": "WP Local 50.0% - Max |delta_wp| 0.169",
-      "category": "Partido",
-      "teams": [
-        "PIT",
-        "NO"
-      ],
-      "body": "Marcador PIT 16 - NO 10 (WP local: 50.0%). Momento critico principal en Q3 con variacion de probabilidad de victoria delta_wp de -0.169 (|delta_wp| = 0.169, WPA equivalente -0.169): (Shotgun) T.Shough pass short right intended for C.Olave INTERCEPTED by P.Wilson at PIT 11. P.Wilson to PIT 29 for 18 yards (B.Lance).",
-      "metrics_cited": {
-        "home_wp": 0.5,
-        "delta_wp": -0.169,
-        "critical_plays_count": 3
-      }
-    },
-    {
       "id": "game-critique-401873017",
-      "title": "Auditoria de Partido: SF 20 - ATL 29",
-      "subtitle": "WP Local 100.0% - Max |delta_wp| 0.226",
+      "title": "Auditoria de Partido: SF 14 - ATL 9",
+      "subtitle": "WP Local 19.4% - Max |delta_wp| 0.000",
       "category": "Partido",
       "teams": [
         "SF",
         "ATL"
       ],
-      "body": "Marcador SF 20 - ATL 29 (WP local: 100.0%). Momento critico principal en Q4 con variacion de probabilidad de victoria delta_wp de +0.226 (|delta_wp| = 0.226, WPA equivalente +0.226): (Shotgun) B.Purdy pass short middle intended for J.Watkins INTERCEPTED by K.Daniels at SF 48. K.Daniels pushed ob at SF 19 for 29 yards (T.Williams).",
+      "body": "Marcador SF 14 - ATL 9 (WP local: 19.4%). Sin jugadas con variacion |delta_wp| >= 0.12 registradas en el corte actual (EPA/WPA neutral: 0.000).",
       "metrics_cited": {
-        "home_wp": 1.0,
-        "delta_wp": 0.2258,
-        "critical_plays_count": 1
+        "home_wp": 0.1943,
+        "delta_wp": 0.0,
+        "critical_plays_count": 0
       }
     },
     {
       "id": "game-critique-401873013",
-      "title": "Auditoria de Partido: CLE 27 - TEN 24",
-      "subtitle": "WP Local 50.0% - Max |delta_wp| 0.239",
+      "title": "Auditoria de Partido: CLE 7 - TEN 14",
+      "subtitle": "WP Local 69.2% - Max |delta_wp| 0.000",
       "category": "Partido",
       "teams": [
         "CLE",
         "TEN"
       ],
-      "body": "Marcador CLE 27 - TEN 24 (WP local: 50.0%). Momento critico principal en Q4 con variacion de probabilidad de victoria delta_wp de +0.239 (|delta_wp| = 0.239, WPA equivalente +0.239): (Shotgun) C.Ward pass deep left to C.Tate pushed ob at CLV 1 for 18 yards (M.Harden).",
+      "body": "Marcador CLE 7 - TEN 14 (WP local: 69.2%). Sin jugadas con variacion |delta_wp| >= 0.12 registradas en el corte actual (EPA/WPA neutral: 0.000).",
       "metrics_cited": {
-        "home_wp": 0.5,
-        "delta_wp": 0.2387,
-        "critical_plays_count": 3
+        "home_wp": 0.6923,
+        "delta_wp": 0.0,
+        "critical_plays_count": 0
       }
     },
     {
       "id": "game-critique-401873014",
-      "title": "Auditoria de Partido: IND 10 - MIN 16",
-      "subtitle": "WP Local 100.0% - Max |delta_wp| 0.186",
+      "title": "Auditoria de Partido: IND 7 - MIN 6",
+      "subtitle": "WP Local 50.9% - Max |delta_wp| 0.000",
       "category": "Partido",
       "teams": [
         "IND",
         "MIN"
       ],
-      "body": "Marcador IND 10 - MIN 16 (WP local: 100.0%). Momento critico principal en Q4 con variacion de probabilidad de victoria delta_wp de +0.186 (|delta_wp| = 0.186, WPA equivalente +0.186): (No Huddle, Shotgun) D.Jones pass short right intended for W.Mallory INTERCEPTED by H.Smith at MIN 44. H.Smith to IND 41 for 15 yards (K.Allen).",
+      "body": "Marcador IND 7 - MIN 6 (WP local: 50.9%). Sin jugadas con variacion |delta_wp| >= 0.12 registradas en el corte actual (EPA/WPA neutral: 0.000).",
       "metrics_cited": {
-        "home_wp": 1.0,
-        "delta_wp": 0.1859,
-        "critical_plays_count": 3
+        "home_wp": 0.5087,
+        "delta_wp": 0.0,
+        "critical_plays_count": 0
       }
     },
     {
       "id": "game-critique-401873015",
-      "title": "Auditoria de Partido: MIA 28 - NYJ 25",
-      "subtitle": "WP Local 50.0% - Max |delta_wp| 0.198",
+      "title": "Auditoria de Partido: MIA 14 - NYJ 7",
+      "subtitle": "WP Local 30.4% - Max |delta_wp| 0.120",
       "category": "Partido",
       "teams": [
         "MIA",
         "NYJ"
       ],
-      "body": "Marcador MIA 28 - NYJ 25 (WP local: 50.0%). Momento critico principal en Q4 con variacion de probabilidad de victoria delta_wp de -0.198 (|delta_wp| = 0.198, WPA equivalente -0.198): M.Willis pass short left to C.Douglas for 63 yards, TOUCHDOWN.PENALTY on NYJ-B.Stephens, Roughing the Passer, 8 yards, enforced between downs. Z.Gonzalez extra point is GOOD, Center-T.Addington, Holder-B.Pinion.",
+      "body": "Marcador MIA 14 - NYJ 7 (WP local: 30.4%). Momento critico principal en Q2 con variacion de probabilidad de victoria delta_wp de -0.120 (|delta_wp| = 0.120, WPA equivalente -0.120): G.Smith pass short middle intended for M.Taylor INTERCEPTED by M.Taaffe at MIA 15. M.Taaffe to MIA 15 for no gain (J.Ruckert).",
       "metrics_cited": {
-        "home_wp": 0.5,
-        "delta_wp": -0.1977,
-        "critical_plays_count": 3
+        "home_wp": 0.3039,
+        "delta_wp": -0.1204,
+        "critical_plays_count": 1
+      }
+    },
+    {
+      "id": "game-critique-401873018",
+      "title": "Auditoria de Partido: TB 26 - CAR 6",
+      "subtitle": "WP Local 2.7% - Max |delta_wp| 0.130",
+      "category": "Partido",
+      "teams": [
+        "TB",
+        "CAR"
+      ],
+      "body": "Marcador TB 26 - CAR 6 (WP local: 2.7%). Momento critico principal en Q2 con variacion de probabilidad de victoria delta_wp de -0.130 (|delta_wp| = 0.130, WPA equivalente -0.130): (Shotgun) B.Young sacked at CAR 31 for -9 yards (A.Muhammad). FUMBLES (A.Muhammad) [A.Muhammad], RECOVERED by TB-C.Kancey at CAR 32. C.Kancey for 32 yards, TOUCHDOWN. C.McLaughlin extra point is GOOD, Center-E.Deckers, Holder-R.Dixon.",
+      "metrics_cited": {
+        "home_wp": 0.0272,
+        "delta_wp": -0.1303,
+        "critical_plays_count": 1
+      }
+    },
+    {
+      "id": "game-critique-401873012",
+      "title": "Auditoria de Partido: CIN 0 - BAL 10",
+      "subtitle": "WP Local 78.3% - Max |delta_wp| 0.141",
+      "category": "Partido",
+      "teams": [
+        "CIN",
+        "BAL"
+      ],
+      "body": "Marcador CIN 0 - BAL 10 (WP local: 78.3%). Momento critico principal en Q1 con variacion de probabilidad de victoria delta_wp de +0.141 (|delta_wp| = 0.141, WPA equivalente +0.141): (Shotgun) T.Huntley pass short right to Z.Flowers for 48 yards, TOUCHDOWN. T.Loop extra point is GOOD, Center-N.Moore, Holder-R.Eckley.",
+      "metrics_cited": {
+        "home_wp": 0.7827,
+        "delta_wp": 0.1409,
+        "critical_plays_count": 1
       }
     }
   ]

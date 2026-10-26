@@ -44,17 +44,20 @@ jobs:
       - name: Fetch ESPN Scoreboard & Extract Critical Moments (|delta_wp| >= 0.12)
         run: python -m src.ingest_espn
 
-      - name: Commit and Push Updated Live Scoreboard JSON
+      - name: Ingest 8-Source NFL News & Salary Cap Wire
+        run: python -m src.ingest_news
+
+      - name: Commit and Push Updated Live Scoreboard & News JSON
         id: commit_check
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public/data/live_scoreboard.json
+          git add public/data/live_scoreboard.json public/data/nfl_news.json
           if git diff --cached --quiet; then
-            echo "No changes in public/data/live_scoreboard.json."
+            echo "No changes in public/data/live_scoreboard.json or nfl_news.json."
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
-            git commit -m "chore(live): update ESPN scoreboard & win probability swings"
+            git commit -m "chore(live): update ESPN scoreboard, win probability & 8-source news wire"
             git pull --rebase origin "${GITHUB_REF_NAME}" || true
             git push origin "HEAD:${GITHUB_REF_NAME}"
             echo "changed=true" >> "$GITHUB_OUTPUT"

@@ -824,8 +824,18 @@ def test_public_data_json_files_if_present() -> None:
         assert "inflated_stat_leader" in rk
         assert "players" in rk and isinstance(rk["players"], list)
         assert len(rk["players"]) > 0
+        p0 = rk["players"][0]
+        assert "pff_grade" in p0 and 0.0 <= float(p0["pff_grade"]) <= 100.0
+        assert "rbsdm_composite" in p0
+        assert "ngs_primary_metric" in p0
+        assert "contract_apy_m" in p0
+        assert "cap_roi_score" in p0
         assert "teams" in rk and isinstance(rk["teams"], list)
         assert len(rk["teams"]) > 0
+        t0 = rk["teams"][0]
+        assert "dvoa_total_pct" in t0
+        assert "proe_pct" in t0
+        assert "pass_zones" in t0 and len(t0["pass_zones"]) == 6
 
     if critiques_file.exists():
         cr_text = critiques_file.read_text(encoding="utf-8")
@@ -834,4 +844,15 @@ def test_public_data_json_files_if_present() -> None:
         cr = _strict_loads(cr_text)
         assert "executive_summary" in cr
         assert "critiques" in cr and isinstance(cr["critiques"], list)
+
+    news_file = PUBLIC_DATA_DIR / "nfl_news.json"
+    if news_file.exists():
+        news_text = news_file.read_text(encoding="utf-8")
+        assert "\u2014" not in news_text
+        assert "\u2013" not in news_text
+        nw = _strict_loads(news_text)
+        assert len(nw.get("sources", [])) == 8
+        assert "items" in nw and isinstance(nw["items"], list)
+        assert len(nw["items"]) >= 8
+
 

@@ -45,6 +45,9 @@ jobs:
       - name: Run nflverse Play-by-Play Valuation Model (0-100)
         run: python -m src.valuation_model
 
+      - name: Ingest 8-Source NFL News & Salary Cap Wire
+        run: python -m src.ingest_news
+
       - name: Generate Quantitative Critiques (Gemini API / Deterministic Fallback)
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
