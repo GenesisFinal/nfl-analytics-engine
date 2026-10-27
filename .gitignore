@@ -1,33 +1,6 @@
-# Virtual environments
-.venv/
-venv/
-ENV/
-
-# Python cache and build artifacts
-__pycache__/
-*.py[cod]
-*$py.class
-.pytest_cache/
-*.egg-info/
-dist/
-build/
-
-# Environment variables and secrets
+GitHub token.txt
+*token*.txt
 .env
-.env.*
-
-# OS files
-desktop.ini
-.DS_Store
-Thumbs.db
-
-# Raw temporary parquet / cache files
-*.parquet
-data/raw/
-tmp/
-scratch/
-
-# Explicitly allow public/data/*.json so GitHub Pages serves updated data
-!public/
-!public/data/
-!public/data/*.json
+data/publisher_config.json
+__pycache__/
+*.pyc
