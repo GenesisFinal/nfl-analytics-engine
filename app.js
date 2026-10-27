@@ -664,6 +664,143 @@ function getActiveMatchupTeams() {
   };
 }
 
+function calcRowsStrengthSummary(rowsConfig) {
+  let totalLeft = 0;
+  let totalRight = 0;
+  rowsConfig.forEach((r) => {
+    const rMin = r.rightMinVal !== undefined && r.rightMinVal !== null ? r.rightMinVal : r.minVal;
+    const rMax = r.rightMaxVal !== undefined && r.rightMaxVal !== null ? r.rightMaxVal : r.maxVal;
+    const sL = computeUnitStrengthPct(r.leftVal, r.minVal, r.maxVal, r.leftHigherIsBetter ?? true);
+    const sR = computeUnitStrengthPct(r.rightVal, rMin, rMax, r.rightHigherIsBetter ?? false);
+    totalLeft += sL;
+    totalRight += sR;
+  });
+  const count = rowsConfig.length || 1;
+  return {
+    avgLeft: totalLeft / count,
+    avgRight: totalRight / count,
+    avgDiff: (totalLeft - totalRight) / count,
+  };
+}
+
+function computeMatchupProjection(aw, hm) {
+  if (!aw || !hm) return null;
+
+  // 1. Duelo Aéreo en ambos sentidos (Sentido 1: Ataca AW vs Def HM | Sentido 2: Ataca HM vs Def AW)
+  const buildAirRows = (offT, defT) => [
+    { leftVal: offT.off_pass_epa_play, rightVal: defT.def_pass_epa_allowed, minVal: -0.25, maxVal: 0.32, leftHigherIsBetter: true, rightHigherIsBetter: false },
+    { leftVal: offT.off_cpoe, rightVal: defT.def_cpoe_allowed, minVal: -6.0, maxVal: 7.5, leftHigherIsBetter: true, rightHigherIsBetter: false },
+    { leftVal: offT.off_explosive_pass_pct, rightVal: defT.def_explosive_pass_allowed_pct, minVal: 5.5, maxVal: 15.5, leftHigherIsBetter: true, rightHigherIsBetter: false },
+    { leftVal: offT.off_pass_ypg, rightVal: defT.def_pass_ypg_allowed, minVal: 155, maxVal: 295, leftHigherIsBetter: true, rightHigherIsBetter: false },
+  ];
+  const airS1 = calcRowsStrengthSummary(buildAirRows(aw, hm)); // positivo = ventaja Ataque AW, negativo = domina Defensa HM
+  const airS2 = calcRowsStrengthSummary(buildAirRows(hm, aw)); // positivo = ventaja Ataque HM, negativo = domina Defensa AW
+
+  // 2. Duelo Terrestre vs Front-7 en ambos sentidos
+  const buildGroundRows = (offT, defT) => [
+    { leftVal: offT.off_rush_epa_play, rightVal: defT.def_rush_epa_allowed, minVal: -0.22, maxVal: 0.16, leftHigherIsBetter: true, rightHigherIsBetter: false },
+    { leftVal: offT.off_rush_ypg, rightVal: defT.def_rush_ypg_allowed, minVal: 75, maxVal: 170, leftHigherIsBetter: true, rightHigherIsBetter: false },
+    { leftVal: offT.off_explosive_rush_pct, rightVal: defT.def_explosive_rush_allowed_pct, minVal: 6.0, maxVal: 16.5, leftHigherIsBetter: true, rightHigherIsBetter: false },
+    { leftVal: offT.off_ypp, rightVal: defT.def_tfl, minVal: 4.3, maxVal: 6.6, leftHigherIsBetter: true, rightHigherIsBetter: true, rightMinVal: 18, rightMaxVal: 52 },
+  ];
+  const groundS1 = calcRowsStrengthSummary(buildGroundRows(aw, hm));
+  const groundS2 = calcRowsStrengthSummary(buildGroundRows(hm, aw));
+
+  // 3. Situacional, Trincheras (Bolsillo, 3er Down, Zona Roja) y Margen de Entregas en ambos sentidos
+  const buildSitRows = (offT, defT) => [
+    { leftVal: offT.off_sack_rate_allowed, rightVal: defT.def_sack_rate, minVal: 3.0, maxVal: 11.5, leftHigherIsBetter: false, rightHigherIsBetter: true },
+    { leftVal: offT.off_3d_pct, rightVal: defT.def_3d_pct, minVal: 28.0, maxVal: 52.0, leftHigherIsBetter: true, rightHigherIsBetter: false },
+    { leftVal: offT.off_rz_td_pct, rightVal: defT.def_rz_td_pct, minVal: 38.0, maxVal: 72.0, leftHigherIsBetter: true, rightHigherIsBetter: false },
+  ];
+  const sitS1 = calcRowsStrengthSummary(buildSitRows(aw, hm));
+  const sitS2 = calcRowsStrengthSummary(buildSitRows(hm, aw));
+
+  // 4. Equipos Especiales (Kicking, Punting, Retornos y DVOA Rank)
+  const stRows = [
+    { leftVal: aw.fg_pct, rightVal: hm.fg_pct, minVal: 68, maxVal: 100, leftHigherIsBetter: true, rightHigherIsBetter: true },
+    { leftVal: aw.fg_50_plus, rightVal: hm.fg_50_plus, minVal: 0, maxVal: 7, leftHigherIsBetter: true, rightHigherIsBetter: true },
+    { leftVal: aw.punt_net_avg, rightVal: hm.punt_net_avg, minVal: 37.5, maxVal: 46.5, leftHigherIsBetter: true, rightHigherIsBetter: true },
+    { leftVal: aw.punt_in20_pct, rightVal: hm.punt_in20_pct, minVal: 22, maxVal: 55, leftHigherIsBetter: true, rightHigherIsBetter: true },
+    { leftVal: aw.pr_avg, rightVal: hm.pr_avg, minVal: 5.0, maxVal: 16.5, leftHigherIsBetter: true, rightHigherIsBetter: true },
+    { leftVal: aw.kr_avg, rightVal: hm.kr_avg, minVal: 20.0, maxVal: 33.0, leftHigherIsBetter: true, rightHigherIsBetter: true },
+    { leftVal: aw.rank_st, rightVal: hm.rank_st, minVal: 1, maxVal: 32, leftHigherIsBetter: false, rightHigherIsBetter: false },
+  ];
+  const stComp = calcRowsStrengthSummary(stRows);
+
+  // Conversión de ventajas tácticas a puntos esperados en el marcador (modelo híbrido ponderado)
+  const baseAway = +((aw.off_ppg + hm.def_ppg) / 2).toFixed(1);
+  const baseHome = +((hm.off_ppg + aw.def_ppg) / 2).toFixed(1);
+
+  const airPtsAway = +(airS1.avgDiff * 0.135).toFixed(1);
+  const airPtsHome = +(airS2.avgDiff * 0.135).toFixed(1);
+
+  const groundPtsAway = +(groundS1.avgDiff * 0.095).toFixed(1);
+  const groundPtsHome = +(groundS2.avgDiff * 0.095).toFixed(1);
+
+  const turnDiffAway = aw.turnover_margin - hm.turnover_margin;
+  const sitPtsAway = +(sitS1.avgDiff * 0.075 + turnDiffAway * 0.11).toFixed(1);
+  const sitPtsHome = +(sitS2.avgDiff * 0.075 - turnDiffAway * 0.11).toFixed(1);
+
+  const stPtsAway = +(stComp.avgDiff * 0.04).toFixed(1);
+  const stPtsHome = +(-stComp.avgDiff * 0.04).toFixed(1);
+
+  // Ventaja de localía estándar en la NFL (+1.4 pts netos a favor del equipo local)
+  const hfaAway = -0.7;
+  const hfaHome = +0.7;
+
+  const exactAwayPts = Math.max(10.0, Math.min(44.0, +(baseAway + airPtsAway + groundPtsAway + sitPtsAway + stPtsAway + hfaAway).toFixed(1)));
+  const exactHomePts = Math.max(10.0, Math.min(44.0, +(baseHome + airPtsHome + groundPtsHome + sitPtsHome + stPtsHome + hfaHome).toFixed(1)));
+
+  let scoreAway = Math.round(exactAwayPts);
+  let scoreHome = Math.round(exactHomePts);
+  if (scoreAway === scoreHome) {
+    if (exactAwayPts > exactHomePts) scoreAway += 1;
+    else scoreHome += 1;
+  }
+
+  // Diferencial de puntos esperados y conversión a % de Victoria mediante curva logística NFL (escala 5.8 pts)
+  const expectedMarginAway = +(exactAwayPts - exactHomePts).toFixed(1);
+  const rawWinProbAway = 100 / (1 + Math.exp(-expectedMarginAway / 5.8));
+  const winProbAway = Math.max(5.0, Math.min(95.0, +rawWinProbAway.toFixed(1)));
+  const winProbHome = +(100 - winProbAway).toFixed(1);
+
+  const favTeam = exactAwayPts > exactHomePts ? aw : hm;
+  const favMargin = Math.abs(expectedMarginAway).toFixed(1);
+  const projectedTotal = +(exactAwayPts + exactHomePts).toFixed(1);
+
+  return {
+    baseAway,
+    baseHome,
+    airS1,
+    airS2,
+    airPtsAway,
+    airPtsHome,
+    groundS1,
+    groundS2,
+    groundPtsAway,
+    groundPtsHome,
+    sitS1,
+    sitS2,
+    sitPtsAway,
+    sitPtsHome,
+    stComp,
+    stPtsAway,
+    stPtsHome,
+    hfaAway,
+    hfaHome,
+    exactAwayPts,
+    exactHomePts,
+    scoreAway,
+    scoreHome,
+    expectedMarginAway,
+    winProbAway,
+    winProbHome,
+    favTeam,
+    favMargin,
+    projectedTotal,
+  };
+}
+
 function renderMatchupBoard() {
   const m = getActiveMatchupTeams();
   if (!m || !m.away || !m.home) return;
@@ -676,11 +813,12 @@ function renderMatchupBoard() {
   if (dirBtnHome) dirBtnHome.textContent = `🏠 Sentido 2: Ataca ${hm.short} vs. Defiende ${aw.short}`;
 
   // Mostrar u ocultar los cuadros explicativos inline según preferencia del usuario
-  ["guideAirBlock", "guideGroundBlock", "guideSitBlock", "guideStBlock"].forEach((id) => {
+  ["guidePredBlock", "guideAirBlock", "guideGroundBlock", "guideSitBlock", "guideStBlock"].forEach((id) => {
     const el = document.getElementById(id);
     if (el) el.classList.toggle("hidden", !STATE.showInlineGuides);
   });
 
+  const proj = computeMatchupProjection(aw, hm);
   const hasScore = g.status_state === "in" || g.status_state === "post";
   const centerCircleHtml = hasScore
     ? `<div class="mb-vs-circle" style="width:auto; padding:0 12px; border-radius:16px; background:${g.status_state === "in" ? "#dc2626" : "#013369"}; color:#fff; font-size:14px;">${aw.abbr} ${g.away_score ?? 0} - ${g.home_score ?? 0} ${hm.abbr}</div>`
@@ -704,6 +842,7 @@ function renderMatchupBoard() {
           <span class="stat-mini-pill" title="Ranking general combinando ataque, defensa y equipos especiales">Rank Total #${aw.rank_total}</span>
           <span class="stat-mini-pill" title="Puntos anotados por partido">${aw.off_ppg} PPG</span>
           <span class="stat-mini-pill" title="Puntos Esperados Agregados por jugada ofensiva">EPA/jug ${aw.off_epa_play >= 0 ? "+" : ""}${aw.off_epa_play}</span>
+          ${proj ? `<span class="stat-mini-pill" style="background:#dbeafe; color:#1e3a8a; border-color:#93c5fd;">🔮 Victoria: ${proj.winProbAway}% (${proj.scoreAway} pts)</span>` : ""}
         </div>
       </div>
     </div>
@@ -723,10 +862,196 @@ function renderMatchupBoard() {
           <span class="stat-mini-pill" title="Ranking general combinando ataque, defensa y equipos especiales">Rank Total #${hm.rank_total}</span>
           <span class="stat-mini-pill" title="Puntos anotados por partido">${hm.off_ppg} PPG</span>
           <span class="stat-mini-pill" title="Puntos Esperados Agregados por jugada ofensiva">EPA/jug ${hm.off_epa_play >= 0 ? "+" : ""}${hm.off_epa_play}</span>
+          ${proj ? `<span class="stat-mini-pill" style="background:#fee2e2; color:#991b1b; border-color:#fca5a5;">🔮 Victoria: ${proj.winProbHome}% (${proj.scoreHome} pts)</span>` : ""}
         </div>
       </div>
     </div>
   `;
+
+  // =========================================================================
+  // 1.5 BLOQUE 0 (NUEVO): PRONÓSTICO INTEGRAL (% DE GANAR & RESULTADO PROBABLE)
+  // =========================================================================
+  const predLeftEl = document.getElementById("predLeftTitle");
+  const predRightEl = document.getElementById("predRightTitle");
+  if (predLeftEl) predLeftEl.textContent = `✈️ ${aw.abbr}: ${proj.winProbAway}% DE GANAR (${proj.scoreAway} PTS PROY.)`;
+  if (predRightEl) predRightEl.textContent = `🏠 ${hm.abbr}: ${proj.winProbHome}% DE GANAR (${proj.scoreHome} PTS PROY.)`;
+
+  const fmtSignedPts = (v) => `${v >= 0 ? "+" : ""}${v.toFixed(1)} pts`;
+  const fmtEdgeTag = (diffVal, offAbbr, defAbbr) => {
+    const r = Math.round(diffVal);
+    if (r >= 7) return `<span class="pred-factor-pill pos">🟢 Ventaja Ataque ${offAbbr} (+${r}%)</span>`;
+    if (r <= -7) return `<span class="pred-factor-pill neg">🔴 Domina Defensa ${defAbbr} (+${Math.abs(r)}%)</span>`;
+    return `<span class="pred-factor-pill neu">🟡 Duelo Parejo (${r >= 0 ? "+" : ""}${r}%)</span>`;
+  };
+  const stEdgeHtml =
+    Math.round(proj.stComp.avgDiff) >= 6
+      ? `<span class="pred-factor-pill pos">🟢 Ventaja ST ${aw.abbr} (+${Math.round(proj.stComp.avgDiff)}%)</span>`
+      : Math.round(proj.stComp.avgDiff) <= -6
+      ? `<span class="pred-factor-pill pos">🟢 Ventaja ST ${hm.abbr} (+${Math.abs(Math.round(proj.stComp.avgDiff))}%)</span>`
+      : `<span class="pred-factor-pill neu">🟡 Equipos Especiales Parejos</span>`;
+
+  const awWinnerHighlight = proj.scoreAway > proj.scoreHome ? "is-winner" : "";
+  const hmWinnerHighlight = proj.scoreHome > proj.scoreAway ? "is-winner" : "";
+
+  const predPanel = document.getElementById("matchupPredictionPanel");
+  if (predPanel && proj) {
+    predPanel.innerHTML = `
+      <div class="prediction-hero-grid">
+        <!-- LADO VISITANTE -->
+        <div class="pred-team-box away-side ${awWinnerHighlight}">
+          <div class="pred-team-top">
+            <img src="${aw.logo}" alt="${aw.abbr}" class="pred-team-logo" />
+            <div>
+              <div class="pred-role-tag">✈️ VISITANTE · ${aw.short.toUpperCase()}</div>
+              <div class="pred-team-name">${aw.name}</div>
+            </div>
+          </div>
+          <div class="pred-metrics-pair">
+            <div class="pred-prob-block">
+              <span class="pred-big-pct">${proj.winProbAway}%</span>
+              <span class="pred-sub-lbl">PROBABILIDAD DE GANAR</span>
+            </div>
+            <div class="pred-score-block">
+              <span class="pred-big-score">${proj.scoreAway}</span>
+              <span class="pred-sub-lbl">PUNTOS PROBABLES (${proj.exactAwayPts} exacto)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CENTRO: MARCADOR PROBABLE, BARRA DE PROBABILIDAD Y COMPARATIVA CON VEGAS -->
+        <div class="pred-center-scoreboard">
+          <div class="pcs-header-badge">🏆 RESULTADO PROBABLE DEL MODELO (4 FASES · AMBOS SENTIDOS)</div>
+          <div class="pcs-score-display">
+            <div class="pcs-team-score ${awWinnerHighlight}">
+              <img src="${aw.logo}" alt="${aw.abbr}" />
+              <span class="pcs-abbr">${aw.abbr}</span>
+              <span class="pcs-num">${proj.scoreAway}</span>
+            </div>
+            <div class="pcs-sep">FINAL<br>PROY.</div>
+            <div class="pcs-team-score ${hmWinnerHighlight}">
+              <span class="pcs-num">${proj.scoreHome}</span>
+              <span class="pcs-abbr">${hm.abbr}</span>
+              <img src="${hm.logo}" alt="${hm.abbr}" />
+            </div>
+          </div>
+
+          <!-- BARRA DE PROBABILIDAD DE VICTORIA ENFRENTADA -->
+          <div class="pcs-winprob-bar-wrap">
+            <div class="pcs-winprob-labels">
+              <span>👈 ${aw.short} gana: <strong>${proj.winProbAway}%</strong></span>
+              <span>CURVA DE VICTORIA NFL</span>
+              <span><strong>${proj.winProbHome}%</strong> :gana ${hm.short} 👉</span>
+            </div>
+            <div class="pcs-winprob-track">
+              <div class="pcs-winprob-fill away" style="width: ${proj.winProbAway}%">${proj.winProbAway >= 18 ? `${aw.abbr} ${proj.winProbAway}%` : ""}</div>
+              <div class="pcs-winprob-fill home" style="width: ${proj.winProbHome}%">${proj.winProbHome >= 18 ? `${hm.abbr} ${proj.winProbHome}%` : ""}</div>
+            </div>
+          </div>
+
+          <div class="pcs-lines-comparison">
+            <div class="pcs-line-chip">
+              <strong>📌 Favorito del Modelo:</strong> ${proj.favTeam.short} por <strong>-${proj.favMargin} pts</strong> (Exacto: ${aw.abbr} ${proj.exactAwayPts} - ${proj.exactHomePts} ${hm.abbr})
+            </div>
+            <div class="pcs-line-chip">
+              <strong>📊 Total Proyectado:</strong> <strong>${proj.projectedTotal} pts</strong> &nbsp;|&nbsp; <strong>Línea Vegas Oficial:</strong> ${g.spread} · O/U ${g.over_under}
+            </div>
+          </div>
+        </div>
+
+        <!-- LADO LOCAL -->
+        <div class="pred-team-box home-side ${hmWinnerHighlight}">
+          <div class="pred-team-top right">
+            <div>
+              <div class="pred-role-tag">🏠 LOCAL · ${hm.short.toUpperCase()}</div>
+              <div class="pred-team-name">${hm.name}</div>
+            </div>
+            <img src="${hm.logo}" alt="${hm.abbr}" class="pred-team-logo" />
+          </div>
+          <div class="pred-metrics-pair">
+            <div class="pred-score-block">
+              <span class="pred-big-score">${proj.scoreHome}</span>
+              <span class="pred-sub-lbl">PUNTOS PROBABLES (${proj.exactHomePts} exacto)</span>
+            </div>
+            <div class="pred-prob-block">
+              <span class="pred-big-pct">${proj.winProbHome}%</span>
+              <span class="pred-sub-lbl">PROBABILIDAD DE GANAR</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TABLA DE DESGLOSE MATEMÁTICO DE LOS 5 FACTORES QUE CONSTRUYEN EL RESULTADO PROBABLE -->
+      <div class="pred-breakdown-box">
+        <div class="pbb-title">
+          <span>🧮 DESGLOSE PASO A PASO: ¿CÓMO APORTA CADA FASE (EN AMBOS SENTIDOS) AL RESULTADO PROBABLE?</span>
+          <span class="pbb-formula-hint">Suma exacta: Base PPG + Ajuste Pase + Ajuste Carrera + Ajuste Situacional/Entregas + Eq. Especiales/Localía = Marcador Proyectado</span>
+        </div>
+        <div class="pbb-factors-grid">
+          <!-- Factor 1: Base PPG -->
+          <div class="pbb-factor-card">
+            <div class="pbb-f-head">1️⃣ Base de Puntos (PPG Cruzado)</div>
+            <div class="pbb-f-desc">Cruza los puntos que anota cada ataque con los que permite cada defensa por partido.</div>
+            <div class="pbb-f-scores">
+              <span class="away-val">✈️ ${aw.abbr}: <strong>${proj.baseAway.toFixed(1)} pts</strong> <small>(${aw.off_ppg} Off / ${hm.def_ppg} Def)</small></span>
+              <span class="home-val">🏠 ${hm.abbr}: <strong>${proj.baseHome.toFixed(1)} pts</strong> <small>(${hm.off_ppg} Off / ${aw.def_ppg} Def)</small></span>
+            </div>
+          </div>
+
+          <!-- Factor 2: Juego Aéreo en Ambos Sentidos -->
+          <div class="pbb-factor-card">
+            <div class="pbb-f-head">2️⃣ Juego Aéreo vs. Secundaria (35%)</div>
+            <div class="pbb-f-badges">
+              <div><small>Sentido 1 (${aw.abbr} pasa):</small> ${fmtEdgeTag(proj.airS1.avgDiff, aw.abbr, hm.abbr)}</div>
+              <div><small>Sentido 2 (${hm.abbr} pasa):</small> ${fmtEdgeTag(proj.airS2.avgDiff, hm.abbr, aw.abbr)}</div>
+            </div>
+            <div class="pbb-f-scores">
+              <span class="away-val">Impacto ${aw.abbr}: <strong class="${proj.airPtsAway >= 0 ? "txt-sig-pos" : "txt-sig-neg"}">${fmtSignedPts(proj.airPtsAway)}</strong></span>
+              <span class="home-val">Impacto ${hm.abbr}: <strong class="${proj.airPtsHome >= 0 ? "txt-sig-pos" : "txt-sig-neg"}">${fmtSignedPts(proj.airPtsHome)}</strong></span>
+            </div>
+          </div>
+
+          <!-- Factor 3: Juego Terrestre vs Front-7 en Ambos Sentidos -->
+          <div class="pbb-factor-card">
+            <div class="pbb-f-head">3️⃣ Juego Terrestre vs. Front-7 (25%)</div>
+            <div class="pbb-f-badges">
+              <div><small>Sentido 1 (${aw.abbr} corre):</small> ${fmtEdgeTag(proj.groundS1.avgDiff, aw.abbr, hm.abbr)}</div>
+              <div><small>Sentido 2 (${hm.abbr} corre):</small> ${fmtEdgeTag(proj.groundS2.avgDiff, hm.abbr, aw.abbr)}</div>
+            </div>
+            <div class="pbb-f-scores">
+              <span class="away-val">Impacto ${aw.abbr}: <strong class="${proj.groundPtsAway >= 0 ? "txt-sig-pos" : "txt-sig-neg"}">${fmtSignedPts(proj.groundPtsAway)}</strong></span>
+              <span class="home-val">Impacto ${hm.abbr}: <strong class="${proj.groundPtsHome >= 0 ? "txt-sig-pos" : "txt-sig-neg"}">${fmtSignedPts(proj.groundPtsHome)}</strong></span>
+            </div>
+          </div>
+
+          <!-- Factor 4: Situacional, Trincheras & Entregas -->
+          <div class="pbb-factor-card">
+            <div class="pbb-f-head">4️⃣ Zona Roja, 3er Down, Sacks y Robos (25%)</div>
+            <div class="pbb-f-badges">
+              <div><small>Sentido 1 (${aw.abbr} balón):</small> ${fmtEdgeTag(proj.sitS1.avgDiff, aw.abbr, hm.abbr)}</div>
+              <div><small>Sentido 2 (${hm.abbr} balón):</small> ${fmtEdgeTag(proj.sitS2.avgDiff, hm.abbr, aw.abbr)}</div>
+            </div>
+            <div class="pbb-f-scores">
+              <span class="away-val">Impacto ${aw.abbr}: <strong class="${proj.sitPtsAway >= 0 ? "txt-sig-pos" : "txt-sig-neg"}">${fmtSignedPts(proj.sitPtsAway)}</strong></span>
+              <span class="home-val">Impacto ${hm.abbr}: <strong class="${proj.sitPtsHome >= 0 ? "txt-sig-pos" : "txt-sig-neg"}">${fmtSignedPts(proj.sitPtsHome)}</strong></span>
+            </div>
+          </div>
+
+          <!-- Factor 5: Equipos Especiales y Localía -->
+          <div class="pbb-factor-card">
+            <div class="pbb-f-head">5️⃣ Equipos Especiales &amp; Localía (15%)</div>
+            <div class="pbb-f-badges">
+              <div>${stEdgeHtml}</div>
+              <div><small>Rank ST: ${aw.abbr} #${aw.rank_st} vs ${hm.abbr} #${hm.rank_st} · Localía NFL: +1.4 pts ${hm.abbr}</small></div>
+            </div>
+            <div class="pbb-f-scores">
+              <span class="away-val">ST + Visita ${aw.abbr}: <strong>${fmtSignedPts(proj.stPtsAway + proj.hfaAway)}</strong></span>
+              <span class="home-val">ST + Localía ${hm.abbr}: <strong>${fmtSignedPts(proj.stPtsHome + proj.hfaHome)}</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
 
   // =========================================================================
   // 2. BLOQUE 1: ATAQUE AÉREO vs. SECUNDARIA (EN AMBOS SENTIDOS)
@@ -1257,10 +1582,10 @@ function renderMatchupBoard() {
     });
     const avgDiff = totalDiff / (rowsConfig.length || 1);
     if (avgDiff >= 6) {
-      return `<span class="dsh-verdict-badge edge-off">🟢 Ventaja ${phaseLabel}: ${aw.abbr} (+${Math.round(avgDiff)} pts)</span>`;
+      return `<span class="dsh-verdict-badge edge-off">🟢 Ventaja ${phaseLabel}: ${aw.abbr} (+${Math.round(avgDiff)}% ventaja táctica)</span>`;
     }
     if (avgDiff <= -6) {
-      return `<span class="dsh-verdict-badge edge-off">🟢 Ventaja ${phaseLabel}: ${hm.abbr} (+${Math.round(Math.abs(avgDiff))} pts)</span>`;
+      return `<span class="dsh-verdict-badge edge-off">🟢 Ventaja ${phaseLabel}: ${hm.abbr} (+${Math.round(Math.abs(avgDiff))}% ventaja táctica)</span>`;
     }
     return `<span class="dsh-verdict-badge edge-even">🟡 ${phaseLabel} Parejos</span>`;
   };
@@ -2810,17 +3135,21 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("gameRibbonTrack")?.scrollBy({ left: 320, behavior: "smooth" });
   });
 
-  // Botón de crear tip del partido activo en la Pizarra Táctica (con números de jugadores y nueva imagen única 16:9)
+  // Botón de crear tip del partido activo en la Pizarra Táctica (con números de jugadores, pronóstico de victoria y nueva imagen única 16:9)
   document.getElementById("btnCreateMatchupTip")?.addEventListener("click", () => {
     const m = getActiveMatchupTeams();
     if (!m) return;
     const { away: aw, home: hm, game: g } = m;
+    const proj = computeMatchupProjection(aw, hm);
     const awSpec = TEAM_VISUAL_SPECS_JS[aw.abbr] || TEAM_VISUAL_SPECS_JS.DAL;
     const hmSpec = TEAM_VISUAL_SPECS_JS[hm.abbr] || TEAM_VISUAL_SPECS_JS.PHI;
     const [awQb, awQbNum] = awSpec.qb;
     const [hmPr, hmPrNum] = hmSpec.pr;
     const prompt = `3D claymation (caricatura de plastilina) full-bleed widescreen 16:9 illustration extending to the edges with NO border or frame: ${awSpec.name} quarterback ${awQb} in ${awSpec.jersey} with number ${awQbNum} and ${awSpec.helmet} facing pass pressure from ${hmSpec.name} defender ${hmPr} in ${hmSpec.jersey} with number ${hmPrNum} and ${hmSpec.helmet} at the line of scrimmage with ONE single football. Handcrafted plasticine clay texture, natural anatomy.`;
     const uniqueImg = buildUniqueDynamicClayUrl(prompt, `${aw.abbr} @ ${hm.abbr}`);
+    const predSnippet = proj
+      ? ` Pronóstico Modelo: ${proj.favTeam.abbr} ${Math.max(proj.winProbAway, proj.winProbHome)}% (${aw.abbr} ${proj.scoreAway}-${proj.scoreHome} ${hm.abbr}).`
+      : "";
 
     prependNewTipCard({
       id: `tip-matchup-${g.id}-${Date.now()}`,
@@ -2830,8 +3159,8 @@ document.addEventListener("DOMContentLoaded", () => {
       badge: `🏈 DUELO TÁCTICO · ${aw.abbr} @ ${hm.abbr}`,
       game_id: g.id,
       matchup_label: `${aw.abbr} (${awQb} ${awQbNum}) @ ${hm.abbr} (${hmPr} ${hmPrNum})`,
-      title: `Duelo Clave: ${awQb} (${awQbNum}, ${aw.abbr}) vs. ${hmPr} (${hmPrNum}, ${hm.abbr})`,
-      body: `🏈 En ${aw.abbr} @ ${hm.abbr}: ${awQb} (${awQbNum}) lidera a ${aw.short} con ${aw.off_epa_play >= 0 ? "+" : ""}${aw.off_epa_play.toFixed(2)} EPA/jugada y ${aw.off_rz_td_pct.toFixed(0)}% en Zona Roja frente a ${hmPr} (${hmPrNum}) y ${hm.short} (#${hm.rank_total} NFL, ${hm.def_sack_rate.toFixed(1)}% sack rate).`,
+      title: `Duelo y Pronóstico: ${awQb} (${awQbNum}, ${aw.abbr}) vs. ${hmPr} (${hmPrNum}, ${hm.abbr})`,
+      body: `🏈 En ${aw.abbr} @ ${hm.abbr}: ${awQb} (${awQbNum}) registra ${aw.off_epa_play >= 0 ? "+" : ""}${aw.off_epa_play.toFixed(2)} EPA/jug vs ${hmPr} (${hmPrNum}, ${hm.def_sack_rate.toFixed(1)}% sacks).${predSnippet}`,
       page_link: `${STATE.dashboardPublicUrl}#matchup-${g.id}`,
       source_link: "https://www.sharpfootballanalysis.com/stats-nfl/",
       source_name: "Sharp Football / FTN DVOA",
