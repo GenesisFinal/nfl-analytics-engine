@@ -277,8 +277,22 @@ function estimateXCharLength(tip) {
    ========================================================================== */
 async function loadDashboardData(preserveWeek = false) {
   try {
-    const resp = await fetch(`data/nfl_dashboard_data.json?t=${Date.now()}`);
-    const data = await resp.json();
+    let data = null;
+    if (window.location.protocol !== "file:") {
+      try {
+        const resp = await fetch(`data/nfl_dashboard_data.json?t=${Date.now()}`);
+        if (resp.ok) {
+          data = await resp.json();
+        }
+      } catch (_) {}
+    }
+    if (!data && window.NFL_DASHBOARD_EMBEDDED_DATA) {
+      data = JSON.parse(JSON.stringify(window.NFL_DASHBOARD_EMBEDDED_DATA));
+    }
+    if (!data) {
+      throw new Error("No se encontró data/nfl_dashboard_data.json ni NFL_DASHBOARD_EMBEDDED_DATA");
+    }
+
     STATE.data = data;
     if (!preserveWeek) {
       STATE.selectedWeek = Number(data.current_week || 7);
@@ -302,11 +316,13 @@ async function loadDashboardData(preserveWeek = false) {
 
     populateSimulatorSelects();
     renderAll();
-    loadServerConfig();
+    if (window.location.protocol !== "file:") {
+      loadServerConfig();
+    }
     scheduleAutoRefresh(Boolean(data.has_live_games));
   } catch (err) {
-    console.error("Error cargando nfl_dashboard_data.json:", err);
-    showToast("⚠️ Error al cargar data/nfl_dashboard_data.json");
+    console.error("Error cargando datos del tablero:", err);
+    showToast("⚠️ Error al cargar datos del tablero");
   }
 }
 
