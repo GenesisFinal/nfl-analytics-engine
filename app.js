@@ -732,10 +732,10 @@ function renderMatchupBoard() {
       {
         leftTag: `${offTeam.abbr} Ataque Pase`,
         leftVal: offTeam.off_pass_epa_play,
-        leftFmt: `${offTeam.off_pass_epa_play >= 0 ? "+" : ""}${offTeam.off_pass_epa_play.toFixed(2)}`,
+        leftFmt: `Genera ${offTeam.off_pass_epa_play >= 0 ? "+" : ""}${offTeam.off_pass_epa_play.toFixed(2)}`,
         metricLabel: "EPA / Dropback",
-        metricSub: "Puntos esperados por pase",
-        metricTooltip: "EPA por jugada de pase (RBSDM): Mide cuántos puntos suma el ataque aéreo vs. cuántos puntos permite la secundaria rival. Menos EPA permitido = mejor defensa.",
+        metricSub: "👈 Pts que suma Ataque | Pts que permite Def. 👉",
+        metricTooltip: "EPA por jugada de pase (RBSDM): Izquierda = puntos esperados que SUMA el ataque por pase. Derecha = puntos esperados que PERMITE (cede) la defensa rival por pase. En defensa, permitir menos es mejor.",
         rightVal: defTeam.def_pass_epa_allowed,
         rightFmt: `Cede ${defTeam.def_pass_epa_allowed >= 0 ? "+" : ""}${defTeam.def_pass_epa_allowed.toFixed(2)}`,
         rightTag: `${defTeam.abbr} Def. Pase`,
@@ -747,10 +747,10 @@ function renderMatchupBoard() {
       {
         leftTag: `${offTeam.abbr} Precisión QB`,
         leftVal: offTeam.off_cpoe,
-        leftFmt: `${offTeam.off_cpoe >= 0 ? "+" : ""}${offTeam.off_cpoe.toFixed(1)}%`,
+        leftFmt: `Genera ${offTeam.off_cpoe >= 0 ? "+" : ""}${offTeam.off_cpoe.toFixed(1)}%`,
         metricLabel: "CPOE (Precisión)",
-        metricSub: "% completos sobre lo esperado",
-        metricTooltip: "CPOE (Next Gen Stats): Porcentaje de pases completos por encima de la dificultad del tiro vs. CPOE que permite la secundaria rival.",
+        metricSub: "👈 Precisión QB | Cobertura rival permite 👉",
+        metricTooltip: "CPOE (Next Gen Stats): Izquierda = % de pases completos sobre lo esperado del QB atacante. Derecha = % sobre lo esperado que permite la secundaria (negativo en defensa = obliga al rival a fallar).",
         rightVal: defTeam.def_cpoe_allowed,
         rightFmt: `Cede ${defTeam.def_cpoe_allowed >= 0 ? "+" : ""}${defTeam.def_cpoe_allowed.toFixed(1)}%`,
         rightTag: `${defTeam.abbr} Cobertura`,
@@ -762,10 +762,10 @@ function renderMatchupBoard() {
       {
         leftTag: `${offTeam.abbr} Bombas +20y`,
         leftVal: offTeam.off_explosive_pass_pct,
-        leftFmt: `${offTeam.off_explosive_pass_pct.toFixed(1)}%`,
+        leftFmt: `Genera ${offTeam.off_explosive_pass_pct.toFixed(1)}%`,
         metricLabel: "Pases Explosivos",
-        metricSub: "% de pases de +20 yardas",
-        metricTooltip: "Tasa de Pases Explosivos (Sharp / Savant): Porcentaje de pases que ganan 20 o más yardas vs. porcentaje que permite la defensa profunda.",
+        metricSub: "👈 % bombas que logra | % bombas que permite 👉",
+        metricTooltip: "Tasa de Pases Explosivos (+20 yds): Izquierda = % de pases profundos que conecta el ataque. Derecha = % de pases de +20 yds que permite la defensa (menos % = mejor secundaria).",
         rightVal: defTeam.def_explosive_pass_allowed_pct,
         rightFmt: `Cede ${defTeam.def_explosive_pass_allowed_pct.toFixed(1)}%`,
         rightTag: `${defTeam.abbr} Profundo`,
@@ -777,10 +777,10 @@ function renderMatchupBoard() {
       {
         leftTag: `${offTeam.abbr} Volumen Aire`,
         leftVal: offTeam.off_pass_ypg,
-        leftFmt: `${offTeam.off_pass_ypg.toFixed(0)} yds`,
+        leftFmt: `Genera ${offTeam.off_pass_ypg.toFixed(0)}y`,
         metricLabel: "Yardas Aéreas / Jgo",
-        metricSub: "Yardas por aire por partido",
-        metricTooltip: "Yardas de pase generadas por partido (PFR) vs. Yardas de pase permitidas por partido por la defensa rival.",
+        metricSub: "👈 Yds ganadas/partido | Yds permitidas/partido 👉",
+        metricTooltip: "Yardas de pase por partido: Izquierda = yardas por aire que produce el ataque. Derecha = yardas por aire que permite la defensa rival.",
         rightVal: defTeam.def_pass_ypg_allowed,
         rightFmt: `Cede ${defTeam.def_pass_ypg_allowed.toFixed(0)}y`,
         rightTag: `${defTeam.abbr} Yds Cedidas`,
@@ -807,9 +807,9 @@ function renderMatchupBoard() {
           ${verdictBadge}
         </div>
         <div class="direction-unit-headers">
-          <span>👈 ATAQUE AÉREO ${offTeam.abbr} (Genera)</span>
-          <span>MÉTRICA Y SIGNIFICADO</span>
-          <span>SECUNDARIA ${defTeam.abbr} (Permite) 👉</span>
+          <span>👈 ATAQUE AÉREO ${offTeam.abbr} (Lo que produce)</span>
+          <span>DUELO DIRECTO (Largo de barra = Fortaleza 0-100%)</span>
+          <span>SECUNDARIA ${defTeam.abbr} (Lo que permite) 👉</span>
         </div>
         <div class="tactical-bars-list">
           ${rows.map((r) => buildTacticalCompRow(r)).join("")}
@@ -840,10 +840,10 @@ function renderMatchupBoard() {
       {
         leftTag: `${offTeam.abbr} Rush EPA`,
         leftVal: offTeam.off_rush_epa_play,
-        leftFmt: `${offTeam.off_rush_epa_play >= 0 ? "+" : ""}${offTeam.off_rush_epa_play.toFixed(2)}`,
+        leftFmt: `Genera ${offTeam.off_rush_epa_play >= 0 ? "+" : ""}${offTeam.off_rush_epa_play.toFixed(2)}`,
         metricLabel: "EPA / Acarreo",
-        metricSub: "Puntos esperados por corrida",
-        metricTooltip: "EPA por acarreo terrestre (RBSDM / SumerSports): Eficiencia del ataque por tierra vs. EPA terrestre que permite la caja defensiva rival.",
+        metricSub: "👈 Pts que suma Carrera | Pts que permite Caja 👉",
+        metricTooltip: "EPA por acarreo terrestre: Izquierda = puntos esperados que SUMA el ataque por corrida. Derecha = puntos esperados que PERMITE el Front-7 rival por corrida.",
         rightVal: defTeam.def_rush_epa_allowed,
         rightFmt: `Cede ${defTeam.def_rush_epa_allowed >= 0 ? "+" : ""}${defTeam.def_rush_epa_allowed.toFixed(2)}`,
         rightTag: `${defTeam.abbr} Def. Tierra`,
@@ -855,10 +855,10 @@ function renderMatchupBoard() {
       {
         leftTag: `${offTeam.abbr} Yds Tierra`,
         leftVal: offTeam.off_rush_ypg,
-        leftFmt: `${offTeam.off_rush_ypg.toFixed(1)} yds`,
+        leftFmt: `Genera ${offTeam.off_rush_ypg.toFixed(1)}y`,
         metricLabel: "Rush Yds / Partido",
-        metricSub: "Yardas por tierra por juego",
-        metricTooltip: "Yardas terrestres que produce el ataque por partido vs. Yardas terrestres que permite el Front-7 rival por partido.",
+        metricSub: "👈 Yds ganadas/partido | Yds permitidas/partido 👉",
+        metricTooltip: "Yardas terrestres por partido: Izquierda = yardas por tierra que genera el ataque. Derecha = yardas por tierra que permite el Front-7 rival.",
         rightVal: defTeam.def_rush_ypg_allowed,
         rightFmt: `Cede ${defTeam.def_rush_ypg_allowed.toFixed(1)}y`,
         rightTag: `${defTeam.abbr} Muro Front-7`,
@@ -870,10 +870,10 @@ function renderMatchupBoard() {
       {
         leftTag: `${offTeam.abbr} +10 Yds %`,
         leftVal: offTeam.off_explosive_rush_pct,
-        leftFmt: `${offTeam.off_explosive_rush_pct.toFixed(1)}%`,
+        leftFmt: `Genera ${offTeam.off_explosive_rush_pct.toFixed(1)}%`,
         metricLabel: "Acarreos Explosivos",
-        metricSub: "% corridas de +10 yardas (RYOE)",
-        metricTooltip: "Porcentaje de acarreos que rompen la línea y ganan 10 o más yardas (NGS / PlayerProfiler) vs. tasa permitida por la defensa.",
+        metricSub: "👈 % corridas +10y | % corridas +10y permitidas 👉",
+        metricTooltip: "Porcentaje de acarreos que ganan 10 o más yardas: Izquierda = lo que genera el ataque terrestre. Derecha = lo que permite la defensa.",
         rightVal: defTeam.def_explosive_rush_allowed_pct,
         rightFmt: `Cede ${defTeam.def_explosive_rush_allowed_pct.toFixed(1)}%`,
         rightTag: `${defTeam.abbr} Contención`,
@@ -885,12 +885,12 @@ function renderMatchupBoard() {
       {
         leftTag: `${offTeam.abbr} Avance/Jug`,
         leftVal: offTeam.off_ypp,
-        leftFmt: `${offTeam.off_ypp.toFixed(1)} YPP`,
+        leftFmt: `Genera ${offTeam.off_ypp.toFixed(1)} YPP`,
         metricLabel: "Trincheras & TFL",
-        metricSub: "Yardas/Jugada vs Tackles atrás",
+        metricSub: "👈 Yardas/Jugada OFF | Tackles para pérdida DEF 👉",
         metricTooltip: "Compara el avance promedio por jugada ofensiva (YPP) contra la capacidad del Front-7 rival para penetrar y derribar detrás de la línea (TFL = Tackles for Loss).",
         rightVal: defTeam.def_tfl,
-        rightFmt: `${defTeam.def_tfl} TFL`,
+        rightFmt: `Logra ${defTeam.def_tfl} TFL`,
         rightTag: `${defTeam.abbr} Penetración`,
         minVal: 4.3,
         maxVal: 6.6,
@@ -917,9 +917,9 @@ function renderMatchupBoard() {
           ${verdictBadge}
         </div>
         <div class="direction-unit-headers">
-          <span>👈 ATAQUE TERRESTRE ${offTeam.abbr} (Genera)</span>
-          <span>MÉTRICA Y SIGNIFICADO</span>
-          <span>FRONT-7 ${defTeam.abbr} (Permite / TFL) 👉</span>
+          <span>👈 ATAQUE TERRESTRE ${offTeam.abbr} (Lo que produce)</span>
+          <span>DUELO DIRECTO (Largo de barra = Fortaleza 0-100%)</span>
+          <span>FRONT-7 ${defTeam.abbr} (Lo que permite / TFL) 👉</span>
         </div>
         <div class="tactical-bars-list">
           ${rows.map((r) => buildTacticalCompRow(r)).join("")}
