@@ -1,0 +1,232 @@
+{
+  "updated_at": "2026-10-27T17:38:30.932775",
+  "entries": {
+    "tip-tnf-1-W7-NE-CHI": {
+      "tip_id": "tip-tnf-1-W7-NE-CHI",
+      "matchup": "NE @ CHI",
+      "headline": "Duelo Aéreo en TNF: Drake Maye (#10, NE) vs. Jaylon Johnson (#33, CHI)",
+      "illustration": "assets/clay/clay_ne_chi.jpg",
+      "sha256": "ae054ad44c5b3b2efa1f38bc382c3c6f1abd670bda137092d6fb39cd50c48fa6",
+      "players_numbers": [
+        "10",
+        "33",
+        "17"
+      ],
+      "clay_prompt": "3D claymation (caricatura de plastilina) full-bleed widescreen 16:9 illustration extending to the edges with NO border or frame: New England Patriots quarterback Drake Maye in white jersey with navy blue shoulders and red-trimmed navy numerals with number #10 and metallic silver helmet with Flying Elvis Patriot logo throwing ONE single deep spiral pass over Chicago Bears defender Jaylon Johnson in dark navy blue jersey with orange-outlined white numerals and GSH sleeve stripes with number #33 and dark navy blue helmet with orange wishbone C logo. Handcrafted plasticine clay texture, authentic NFL helmets and jersey numbers, natural two-arm anatomy, dramatic stadium floodlights, vibrant turf.",
+      "assigned_at": "2026-10-27T17:38:30.705879"
+    },
+    "tip-tnf-2-W7-NE-CHI": {
+      "tip_id": "tip-tnf-2-W7-NE-CHI",
+      "matchup": "NE @ CHI",
+      "headline": "Trincheras en Red Zone: Montez Sweat (#98, CHI) vs. Ben Brown (#77, NE)",
+      "illustration": "assets/clay/clay_ne_chi_trenches.jpg",
+      "sha256": "d92b70adde9211d6c3d6b5d44471b6eea127f1bc71a3225741ba75d52a81750e",
+      "players_numbers": [
+        "98",
+        "77"
+      ],
+      "clay_prompt": "3D claymation (caricatura de plastilina) full-bleed widescreen 16:9 illustration extending to the edges with NO border or frame: Chicago Bears defensive end Montez Sweat in dark navy blue jersey with orange-outlined white numerals and GSH sleeve stripes with number #98 and dark navy blue helmet with orange wishbone C logo bull-rushing New England Patriots offensive tackle Ben Brown in white jersey with navy blue shoulders and red-trimmed navy numerals with number #77 and metallic silver helmet with Flying Elvis Patriot logo at the line of scrimmage inside the Red Zone near the 10-yard line. Handcrafted plasticine clay texture, authentic NFL helmets and jersey numbers, natural two-arm anatomy, dramatic stadium floodlights, vibrant turf.",
+      "assigned_at": "2026-10-27T17:38:30.719844"
+    },
+    "tip-sun-1-W7-SF-ATL": {
+      "tip_id": "tip-sun-1-W7-SF-ATL",
+      "matchup": "SF @ ATL",
+      "headline": "Explosión Aérea: Christian McCaffrey (#23, SF) vs. Kaden Elliss (#55, ATL)",
+      "illustration": "assets/clay/clay_sf_atl.jpg",
+      "sha256": "6991784f4a3dc074a000761fbea18645a501a89762e91e470eac45df51d2b251",
+      "players_numbers": [
+        "23",
+        "2",
+        "55"
+      ],
+      "clay_prompt": "3D claymation (caricatura de plastilina) full-bleed widescreen 16:9 illustration extending to the edges with NO border or frame: San Francisco 49ers quarterback Brock Purdy in white jersey with scarlet red numerals and red sleeve stripes with number #13 and metallic gold helmet with red/white oval SF logo throwing ONE single deep spiral pass over Atlanta Falcons defender Jessie Bates III in black jersey with red trim and white numerals with number #3 and matte black helmet with red/silver Falcon logo. Handcrafted plasticine clay texture, authentic NFL helmets and jersey numbers, natural two-arm anatomy, dramatic stadium floodlights, vibrant turf.",
+      "assigned_at": "2026-10-27T17:38:30.733481"
+    },
+    "tip-sun-2-W7-SF-ATL": {
+      "tip_id": "tip-sun-2-W7-SF-ATL",
+      "matchup": "SF @ ATL",
+      "headline": "Choque Terrestre: Bijan Robinson (#7, ATL) vs. Fred Warner (#54, SF)",
+      "illustration": "assets/clay/clay_atl_sf_ground.jpg",
+      "sha256": "9e002500819bf418643b9c9454980de8e094afb7dc7c3a0f1dd2d1ee31dff5a4",
+      "players_numbers": [
+        "7",
+        "54"
+      ],
+      "clay_prompt": "3D claymation (caricatura de plastilina) full-bleed widescreen 16:9 illustration extending to the edges with NO border or frame: Atlanta Falcons running back Bijan Robinson in black jersey with red trim and white numerals with number #7 and matte black helmet with red/silver Falcon logo carrying ONE single football and stiff-arming San Francisco 49ers linebacker Fred Warner in white jersey with scarlet red numerals and red sleeve stripes with number #54 and metallic gold helmet with red/white oval SF logo on an explosive open-field run. Handcrafted plasticine clay texture, authentic NFL helmets and jersey numbers, natural two-arm anatomy, dramatic stadium floodlights, vibrant turf.",
+      "assigned_at": "2026-10-27T17:38:30.746542"
+    },
+    "tip-sun-3-W7-IND-MIN": {
+      "tip_id": "tip-sun-3-W7-IND-MIN",
+      "matchup": "IND @ MIN",
+      "headline": "Presión en Trincheras: Jonathan Greenard (#58, MIN) vs. Quenton Nelson (#56, IND)",
+      "illustration": "assets/clay/clay_ind_min.jpg",
+      "sha256": "bf4f1834b8e9e846b604311862103754415eee18613c2c94b598bf2184938299",
+      "players_numbers": [
+        "58",
+        "56"
+      ],
+      "clay_prompt": "3D claymation (caricatura de plastilina) full-bleed widescreen 16:9 illustration extending to the edges with NO border or frame: Indianapolis Colts offensive lineman Quenton Nelson in white jersey with royal blue numerals and blue shoulder stripes with number #56 and white helmet with royal blue Horseshoe logo clashing hand-to-hand in the trenches against Minnesota Vikings defensive tackle Jonathan Greenard in purple jersey with white numerals and gold trim with number #58 and matte purple helmet with white Viking horns at the line of scrimmage. Handcrafted plasticine clay texture, authentic NFL helmets and jersey numbers, natural two-arm anatomy, dramatic stadium floodlights, vibrant turf.",
+      "assigned_at": "2026-10-27T17:38:30.761096"
+    },
+    "tip-sun-4-W7-PIT-NO": {
+      "tip_id": "tip-sun-4-W7-PIT-NO",
+      "matchup": "PIT @ NO",
+      "headline": "Eficacia en Red Zone: Chris Olave (#12, NO) vs. T.J. Watt (#90, PIT)",
+      "illustration": "assets/clay/clay_pit_no.jpg",
+      "sha256": "db9a90e336235243c1e46d3f8880fd9ba476fcb1cd948ef629b8e57691fa28fb",
+      "players_numbers": [
+        "12",
+        "90"
+      ],
+      "clay_prompt": "3D claymation (caricatura de plastilina) full-bleed widescreen 16:9 illustration extending to the edges with NO border or frame: Pittsburgh Steelers wide receiver George Pickens in white jersey with black numerals and gold sleeve stripes with number #14 and glossy black helmet with Steelmark hypocycloid logo on right side making an acrobatic high-point catch of ONE single football in the end zone over New Orleans Saints cornerback Tyrann Mathieu in black jersey with old gold numerals with number #32 and metallic old gold helmet with black Fleur-de-Lis logo. Handcrafted plasticine clay texture, authentic NFL helmets and jersey numbers, natural two-arm anatomy, dramatic stadium floodlights, vibrant turf.",
+      "assigned_at": "2026-10-27T17:38:30.783219"
+    },
+    "tip-sun-5-W7-LA-LV": {
+      "tip_id": "tip-sun-5-W7-LA-LV",
+      "matchup": "LA @ LV",
+      "headline": "Gol de Campo de 55 Yds: Daniel Carlson (#17, LV) vs. Kobie Turner (#44, LA)",
+      "illustration": "assets/clay/clay_la_lv.jpg",
+      "sha256": "3f5f8e425eb49ef0dbae77c65e83de0096a2d99208a69eff2636dc367da3fc09",
+      "players_numbers": [
+        "17",
+        "7",
+        "44"
+      ],
+      "clay_prompt": "3D claymation (caricatura de plastilina) full-bleed widescreen 16:9 illustration extending to the edges with NO border or frame: Las Vegas Raiders kicker Daniel Carlson in black jersey with silver numerals with number #17 and metallic silver helmet with black Raiders shield logo kicking ONE single brown leather football through the yellow stadium uprights for a 55-yard field goal, while Los Angeles Rams defender Kobie Turner in bone white jersey with royal blue and yellow numerals with number #44 and metallic royal blue helmet with yellow curled Ram horns dives to block it. Handcrafted plasticine clay texture, authentic NFL helmets and jersey numbers, natural two-arm anatomy, dramatic stadium floodlights, vibrant turf.",
+      "assigned_at": "2026-10-27T17:38:30.803143"
+    },
+    "tip-mnf-1-W7-DAL-PHI": {
+      "tip_id": "tip-mnf-1-W7-DAL-PHI",
+      "matchup": "DAL @ PHI",
+      "headline": "Trincheras en MNF: Zack Martin (#70, DAL) vs. Jalen Carter (#98, PHI)",
+      "illustration": "assets/clay/clay_dal_phi.jpg",
+      "sha256": "cd55ea4878a8603438945a1ee03903c23d1ef5548dfabefcfde00e3e38fb40d3",
+      "players_numbers": [
+        "70",
+        "98"
+      ],
+      "clay_prompt": "3D claymation (caricatura de plastilina) full-bleed widescreen 16:9 illustration extending to the edges with NO border or frame: Dallas Cowboys offensive lineman Zack Martin in white jersey with royal blue numerals and navy star shoulders with number #70 and metallic silver helmet with navy blue Lone Star logo clashing hand-to-hand in the trenches against Philadelphia Eagles defensive tackle Jalen Carter in midnight green jersey with white numerals and black/silver trim with number #98 and metallic midnight green helmet with silver Eagles wings at the line of scrimmage. Handcrafted plasticine clay texture, authentic NFL helmets and jersey numbers, natural two-arm anatomy, dramatic stadium floodlights, vibrant turf.",
+      "assigned_at": "2026-10-27T17:38:30.816893"
+    },
+    "tip-mnf-2-W7-DAL-PHI": {
+      "tip_id": "tip-mnf-2-W7-DAL-PHI",
+      "matchup": "DAL @ PHI",
+      "headline": "Duelo en 3ra y Gol MNF: CeeDee Lamb (#88, DAL) vs. Quinyon Mitchell (#27, PHI)",
+      "illustration": "assets/clay/clay_dal_phi_mnf2.jpg",
+      "sha256": "23d4f4334d12173a304eb9b95c6b95b6fcd01a099b6323ceb14610b2a5cd91c0",
+      "players_numbers": [
+        "88",
+        "27"
+      ],
+      "clay_prompt": "3D claymation (caricatura de plastilina) full-bleed widescreen 16:9 illustration extending to the edges with NO border or frame: Dallas Cowboys wide receiver CeeDee Lamb in white jersey with royal blue numerals and navy star shoulders with number #88 and metallic silver helmet with navy blue Lone Star logo making an acrobatic high-point catch of ONE single football in the end zone over Philadelphia Eagles cornerback Quinyon Mitchell in midnight green jersey with white numerals and black/silver trim with number #27 and metallic midnight green helmet with silver Eagles wings. Handcrafted plasticine clay texture, authentic NFL helmets and jersey numbers, natural two-arm anatomy, dramatic stadium floodlights, vibrant turf.",
+      "assigned_at": "2026-10-27T17:38:30.832503"
+    },
+    "tip-player-qb-00-0033106": {
+      "tip_id": "tip-player-qb-00-0033106",
+      "matchup": "DET",
+      "headline": "Dominio en EPA y CPOE: Jared Goff (#16, DET)",
+      "illustration": "assets/clay/clay_det_goff.jpg",
+      "sha256": "6e752562330f85cc1757fff2a996cdf834593058439e5508d9138135d51299f7",
+      "players_numbers": [
+        "16"
+      ],
+      "clay_prompt": "3D claymation (caricatura de plastilina) full-bleed widescreen 16:9 illustration extending to the edges with NO border or frame: Detroit Lions star player in Honolulu blue jersey with silver numerals with number 16 and Honolulu blue metallic helmet with silver Lion logo making an explosive play with ONE single brown leather football on the NFL stadium turf. Handcrafted plasticine clay texture, authentic NFL helmets and jersey numbers, natural two-arm anatomy, dramatic stadium floodlights, vibrant turf.",
+      "assigned_at": "2026-10-27T17:38:30.853906"
+    },
+    "tip-player-wr-00-0038543": {
+      "tip_id": "tip-player-wr-00-0038543",
+      "matchup": "SEA",
+      "headline": "Imán de Targets: Jaxon Smith-Njigba (#11, SEA) lidera en yardas",
+      "illustration": "assets/clay/clay_sea_jsn.jpg",
+      "sha256": "7fb0315108f3757f6bfd238df39cd4a3544f4bfb498aeb34c35ef4def2b44c62",
+      "players_numbers": [
+        "11"
+      ],
+      "clay_prompt": "3D claymation (caricatura de plastilina) full-bleed widescreen 16:9 illustration extending to the edges with NO border or frame: Seattle Seahawks star player in college navy jersey with action green trim and white numerals with number 11 and college navy helmet with action green Seahawk logo making an explosive play with ONE single brown leather football on the NFL stadium turf. Handcrafted plasticine clay texture, authentic NFL helmets and jersey numbers, natural two-arm anatomy, dramatic stadium floodlights, vibrant turf.",
+      "assigned_at": "2026-10-27T17:38:30.873810"
+    },
+    "tip-news-1": {
+      "tip_id": "tip-news-1",
+      "matchup": "PHI",
+      "headline": "Evaluación Médica en Eagles: Saquon Barkley (#26, PHI) bajo observación",
+      "illustration": "assets/clay/clay_news_barkley_phi26.jpg",
+      "sha256": "63d263203b6f182642b20617d276f13ab5d7c18fef3ca08774b3cb37be8d435f",
+      "players_numbers": [
+        "26"
+      ],
+      "clay_prompt": "3D claymation (caricatura de plastilina) full-bleed widescreen 16:9 illustration extending to the edges with NO border or frame: Philadelphia Eagles star player in midnight green jersey with white numerals and black/silver trim with number 26 and metallic midnight green helmet with silver Eagles wings making an explosive play with ONE single brown leather football on the NFL stadium turf. Handcrafted plasticine clay texture, authentic NFL helmets and jersey numbers, natural two-arm anatomy, dramatic stadium floodlights, vibrant turf.",
+      "assigned_at": "2026-10-27T17:38:30.888240"
+    },
+    "tip-news-2": {
+      "tip_id": "tip-news-2",
+      "matchup": "DAL @ PHI",
+      "headline": "Explosión en MNF: Javonte Williams (#33, DAL) rompe la defensa de Eagles (#53)",
+      "illustration": "assets/clay/clay_news_javonte_dal33.jpg",
+      "sha256": "90d5e1a230296891685af609107387fd6418f125b3fad9cefdf36caf2bf58ec9",
+      "players_numbers": [
+        "33",
+        "53"
+      ],
+      "clay_prompt": "3D claymation (caricatura de plastilina) full-bleed widescreen 16:9 illustration extending to the edges with NO border or frame: Philadelphia Eagles kicker Jake Elliott in midnight green jersey with white numerals and black/silver trim with number #4 and metallic midnight green helmet with silver Eagles wings kicking ONE single brown leather football through the yellow stadium uprights for a 55-yard field goal, while Dallas Cowboys defender Trevon Diggs in white jersey with royal blue numerals and navy star shoulders with number #7 and metallic silver helmet with navy blue Lone Star logo dives to block it. Handcrafted plasticine clay texture, authentic NFL helmets and jersey numbers, natural two-arm anatomy, dramatic stadium floodlights, vibrant turf.",
+      "assigned_at": "2026-10-27T17:38:30.903093"
+    },
+    "tip-news-3": {
+      "tip_id": "tip-news-3",
+      "matchup": "CAR",
+      "headline": "Baja en Trincheras: Taylor Moton (#72, CAR) a cirugía de tobillo",
+      "illustration": "assets/clay/clay_news_moton_car72.jpg",
+      "sha256": "0ab15a716f543b6384ddf9e695c21a60c9c0d6268da796ee9e66551d98520c12",
+      "players_numbers": [
+        "72"
+      ],
+      "clay_prompt": "3D claymation (caricatura de plastilina) full-bleed widescreen 16:9 illustration extending to the edges with NO border or frame: Carolina Panthers star player in black jersey with electric Carolina blue trim and white numerals with number 72 and metallic silver helmet with black/blue Panther logo sitting on the stadium sideline medical bench while a team athletic trainer evaluates him under stadium lights. Handcrafted plasticine clay texture, authentic NFL helmets and jersey numbers, natural two-arm anatomy, dramatic stadium floodlights, vibrant turf.",
+      "assigned_at": "2026-10-27T17:38:30.917488"
+    },
+    "tip-news-4": {
+      "tip_id": "tip-news-4",
+      "matchup": "NYJ",
+      "headline": "Mercado de Trades NFL: Garrett Wilson (#5, NYJ) vinculado a Chiefs y 49ers",
+      "illustration": "assets/clay/clay_news_gwilson_nyj5.jpg",
+      "sha256": "9e4ed50e5ae433411c2ccf0623c63e3520d974e9c0a2ce9d1bc3d4b183f31532",
+      "players_numbers": [
+        "5"
+      ],
+      "clay_prompt": "3D claymation (caricatura de plastilina) full-bleed widescreen 16:9 illustration extending to the edges with NO border or frame: New York Jets star wide receiver in Gotham green jersey with white numerals and shoulder stripes with number 5 and metallic Gotham green helmet with white JETS logo holding ONE single football on the turf between rival NFL team helmets on pedestals symbolizing trade rumors. Handcrafted plasticine clay texture, authentic NFL helmets and jersey numbers, natural two-arm anatomy, dramatic stadium floodlights, vibrant turf.",
+      "assigned_at": "2026-10-27T17:38:30.932775"
+    }
+  },
+  "used_hashes": [
+    "0ab15a716f543b6384ddf9e695c21a60c9c0d6268da796ee9e66551d98520c12",
+    "23d4f4334d12173a304eb9b95c6b95b6fcd01a099b6323ceb14610b2a5cd91c0",
+    "3f5f8e425eb49ef0dbae77c65e83de0096a2d99208a69eff2636dc367da3fc09",
+    "63d263203b6f182642b20617d276f13ab5d7c18fef3ca08774b3cb37be8d435f",
+    "6991784f4a3dc074a000761fbea18645a501a89762e91e470eac45df51d2b251",
+    "6e752562330f85cc1757fff2a996cdf834593058439e5508d9138135d51299f7",
+    "7fb0315108f3757f6bfd238df39cd4a3544f4bfb498aeb34c35ef4def2b44c62",
+    "90d5e1a230296891685af609107387fd6418f125b3fad9cefdf36caf2bf58ec9",
+    "9e002500819bf418643b9c9454980de8e094afb7dc7c3a0f1dd2d1ee31dff5a4",
+    "9e4ed50e5ae433411c2ccf0623c63e3520d974e9c0a2ce9d1bc3d4b183f31532",
+    "ae054ad44c5b3b2efa1f38bc382c3c6f1abd670bda137092d6fb39cd50c48fa6",
+    "bf4f1834b8e9e846b604311862103754415eee18613c2c94b598bf2184938299",
+    "cd55ea4878a8603438945a1ee03903c23d1ef5548dfabefcfde00e3e38fb40d3",
+    "d92b70adde9211d6c3d6b5d44471b6eea127f1bc71a3225741ba75d52a81750e",
+    "db9a90e336235243c1e46d3f8880fd9ba476fcb1cd948ef629b8e57691fa28fb"
+  ],
+  "used_paths": [
+    "assets/clay/clay_atl_sf_ground.jpg",
+    "assets/clay/clay_dal_phi.jpg",
+    "assets/clay/clay_dal_phi_mnf2.jpg",
+    "assets/clay/clay_det_goff.jpg",
+    "assets/clay/clay_ind_min.jpg",
+    "assets/clay/clay_la_lv.jpg",
+    "assets/clay/clay_ne_chi.jpg",
+    "assets/clay/clay_ne_chi_trenches.jpg",
+    "assets/clay/clay_news_barkley_phi26.jpg",
+    "assets/clay/clay_news_gwilson_nyj5.jpg",
+    "assets/clay/clay_news_javonte_dal33.jpg",
+    "assets/clay/clay_news_moton_car72.jpg",
+    "assets/clay/clay_pit_no.jpg",
+    "assets/clay/clay_sea_jsn.jpg",
+    "assets/clay/clay_sf_atl.jpg"
+  ]
+}
