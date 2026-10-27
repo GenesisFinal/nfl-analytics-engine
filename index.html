@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20261027v5" />
+  <link rel="stylesheet" href="styles.css?v=20261027v6" />
 </head>
 <body>
   <div class="app-shell">
@@ -417,6 +417,13 @@
                 <p class="view-subtitle">Filtrado en tiempo real de NBC Rotoworld, The Athletic, ProFootballTalk, ESPN, NFL.com, Over The Cap, Spotrac y Reddit (r/NFL).</p>
               </div>
               <div class="toolbar-filters">
+                <button class="btn-toggle-inline-guides" id="btnToggleNewsGuide" title="Mostrar u ocultar la explicación de cómo se ordenan y puntúan las noticias">📘 Cómo se ordenan las noticias: VISIBLE</button>
+                <select id="sortNewsOrder" class="select-filter" title="Elegí el criterio para ordenar las noticias en pantalla">
+                  <option value="impact_desc" selected>🔥 Ordenar por: Mayor Impacto (99 → 25 pts)</option>
+                  <option value="recent_desc">🕒 Ordenar por: Más Recientes Primero (Hora)</option>
+                  <option value="team_asc">🏟️ Ordenar por: Equipo NFL (A → Z)</option>
+                  <option value="source_asc">📰 Ordenar por: Portal / Fuente (A → Z)</option>
+                </select>
                 <select id="filterNewsCategory" class="select-filter">
                   <option value="ALL">Todas las Categorías de Alto Impacto</option>
                   <option value="Lesión">🚨 Lesiones Clave / Parte Médico</option>
@@ -435,6 +442,34 @@
                   <option value="Spotrac NFL">Spotrac NFL</option>
                   <option value="Reddit (r/NFL)">Reddit (r/NFL)</option>
                 </select>
+              </div>
+            </div>
+
+            <!-- GUÍA EXPLICATIVA DEL ORDEN Y CÁLCULO DE IMPACTO DE LAS NOTICIAS -->
+            <div class="block-explainer-box" id="newsOrderGuide" style="margin-bottom: 14px;">
+              <div class="beb-title">🧭 ¿CÓMO SE ORDENAN LAS NOTICIAS Y CÓMO SE CALCULA EL PUNTAJE DE IMPACTO (25 A 99 PTS)?</div>
+              <div class="beb-grid">
+                <div class="beb-card">
+                  <strong>1. Orden por Defecto: Gravedad Táctica (`#1` a `#N`)</strong>
+                  Por defecto, las noticias se ordenan de <strong>Mayor a Menor Puntaje de Impacto (de 99 a 25 pts)</strong> y no simplemente por hora de llegada. Así evitás que una nota menor recién publicada tape una lesión grave de un QB titular, un traspaso confirmado o una baja en Reserva de Lesionados (IR).
+                </div>
+                <div class="beb-card">
+                  <strong>2. Fórmula del Puntaje de Impacto (`0 a 99 pts`)</strong>
+                  El motor analiza el titular y el resumen sumando puntos por palabras clave de alto impacto:
+                  <br>• <strong>+32 pts (Trades / Titularidad):</strong> <code>trade</code>, <code>waived</code>, <code>released</code>, <code>signed</code>, <code>starter</code>, <code>benched</code>.
+                  <br>• <strong>+30 pts (Parte Médico / Lesión):</strong> <code>IR</code>, <code>ACL</code>, <code>concussion</code>, <code>surgery</code>, <code>out</code>, <code>doubtful</code>, <code>questionable</code>.
+                  <br>• <strong>+28 pts (Salarial / Cap):</strong> <code>contract</code>, <code>cap</code>, <code>restructure</code>, <code>extension</code>, <code>dead money</code>.
+                </div>
+                <div class="beb-card">
+                  <strong>3. Bonus por Fuente, Equipo y Filtro Anti-Ruido</strong>
+                  <br>• <strong>+18 a +25 pts de Base por Fuente:</strong> Prioriza partes médicos directos (<em>Rotoworld</em>) y análisis salariales (<em>Over The Cap / Spotrac</em>).
+                  <br>• <strong>+18 pts por Franquicia Detectada:</strong> Si identifica al equipo afectado (ej. <code>NYG</code>, <code>CIN</code>, <code>PHI</code>), suma prioridad táctica (máximo <strong>99 pts</strong>).
+                  <br>• <strong>Filtro Anti-Humo:</strong> Toda noticia con menos de <strong>25 pts</strong> se descarta automáticamente.
+                </div>
+                <div class="beb-card">
+                  <strong>4. Cambiá el Orden a tu Gusto en 1 Clic</strong>
+                  En cada tarjeta verás su posición <strong><code>#1, #2, #3...</code></strong>, su semáforo de impacto (🔥 Crítico 90-99 · ⚡ Alto 75-89 · 📊 Relevante 25-74), el equipo y la hora de publicación. Usá el selector <strong>"Ordenar por:"</strong> de arriba para cambiar entre <strong>Mayor Impacto</strong>, <strong>Más Recientes Primero (Hora)</strong>, <strong>Equipo NFL</strong> o <strong>Portal</strong>.
+                </div>
               </div>
             </div>
 
@@ -582,6 +617,6 @@
   <!-- TOAST DE NOTIFICACIONES -->
   <div class="toast-notification hidden" id="toastNotification"></div>
 
-  <script src="app.js?v=20261027v5"></script>
+  <script src="app.js?v=20261027v6"></script>
 </body>
 </html>
