@@ -23,6 +23,16 @@ const STATE = {
 };
 
 const CLAY_GALLERY = [
+  { label: "CAR Analytics: Bryce Young #9 & Jadeveon Clowney #7 (Panthers)", path: "assets/clay/clay_car_young9.jpg" },
+  { label: "KC vs BUF: Patrick Mahomes #15 (KC) vs Josh Allen #17 (BUF)", path: "assets/clay/clay_kc_buf.jpg" },
+  { label: "BAL Terrestre: Lamar Jackson #8 & Derrick Henry #22 (Ravens)", path: "assets/clay/clay_bal_lamar8.jpg" },
+  { label: "GB vs HOU: Jordan Love #10 (GB) vs C.J. Stroud #7 (HOU)", path: "assets/clay/clay_gb_hou.jpg" },
+  { label: "CIN vs CLE: Joe Burrow #9 (CIN) vs Myles Garrett #95 (CLE)", path: "assets/clay/clay_cin_cle.jpg" },
+  { label: "WAS Analytics: Jayden Daniels #5 & Terry McLaurin #17 (Commanders)", path: "assets/clay/clay_was_daniels5.jpg" },
+  { label: "MIA vs TB: Tyreek Hill #10 (MIA) vs Baker Mayfield #6 (TB)", path: "assets/clay/clay_mia_tb.jpg" },
+  { label: "LAC vs DEN: Justin Herbert #10 (LAC) vs Pat Surtain II #2 (DEN)", path: "assets/clay/clay_den_lac.jpg" },
+  { label: "ARI vs JAX: Kyler Murray #1 (ARI) vs Trevor Lawrence #16 (JAX)", path: "assets/clay/clay_ari_jax.jpg" },
+  { label: "NYG vs TEN: Malik Nabers #1 (NYG) vs Tony Pollard #20 (TEN)", path: "assets/clay/clay_nyg_ten.jpg" },
   { label: "TNF Aéreo: Drake Maye #10 (NE) vs Jaylon Johnson #33 (CHI)", path: "assets/clay/clay_ne_chi.jpg" },
   { label: "TNF Trincheras: Montez Sweat #98 (CHI) vs Ben Brown #77 (NE)", path: "assets/clay/clay_ne_chi_trenches.jpg" },
   { label: "DOM Aéreo: Christian McCaffrey #23 (SF) vs Kaden Elliss #55 (ATL)", path: "assets/clay/clay_sf_atl.jpg" },
@@ -39,6 +49,41 @@ const CLAY_GALLERY = [
   { label: "News Cirugía Tobillo: Taylor Moton #72 (Carolina Panthers)", path: "assets/clay/clay_news_moton_car72.jpg" },
   { label: "News Trade Radar: Garrett Wilson #5 (NYJ · KC / SF)", path: "assets/clay/clay_news_gwilson_nyj5.jpg" },
 ];
+
+const TEAM_NANOBANANA_CLAY_MAP = {
+  ARI: ["assets/clay/clay_ari_jax.jpg"],
+  ATL: ["assets/clay/clay_atl_sf_ground.jpg", "assets/clay/clay_sf_atl.jpg"],
+  BAL: ["assets/clay/clay_bal_lamar8.jpg"],
+  BUF: ["assets/clay/clay_kc_buf.jpg"],
+  CAR: ["assets/clay/clay_car_young9.jpg", "assets/clay/clay_news_moton_car72.jpg"],
+  CHI: ["assets/clay/clay_ne_chi_trenches.jpg", "assets/clay/clay_ne_chi.jpg"],
+  CIN: ["assets/clay/clay_cin_cle.jpg"],
+  CLE: ["assets/clay/clay_cin_cle.jpg"],
+  DAL: ["assets/clay/clay_dal_phi.jpg", "assets/clay/clay_dal_phi_mnf2.jpg", "assets/clay/clay_news_javonte_dal33.jpg"],
+  DEN: ["assets/clay/clay_den_lac.jpg"],
+  DET: ["assets/clay/clay_det_goff.jpg"],
+  GB: ["assets/clay/clay_gb_hou.jpg"],
+  HOU: ["assets/clay/clay_gb_hou.jpg"],
+  IND: ["assets/clay/clay_ind_min.jpg"],
+  JAX: ["assets/clay/clay_ari_jax.jpg"],
+  KC: ["assets/clay/clay_kc_buf.jpg", "assets/clay/clay_news_gwilson_nyj5.jpg"],
+  LA: ["assets/clay/clay_la_lv.jpg"],
+  LAC: ["assets/clay/clay_den_lac.jpg"],
+  LV: ["assets/clay/clay_la_lv.jpg"],
+  MIA: ["assets/clay/clay_mia_tb.jpg"],
+  MIN: ["assets/clay/clay_ind_min.jpg"],
+  NE: ["assets/clay/clay_ne_chi.jpg", "assets/clay/clay_ne_chi_trenches.jpg"],
+  NO: ["assets/clay/clay_pit_no.jpg"],
+  NYG: ["assets/clay/clay_nyg_ten.jpg"],
+  NYJ: ["assets/clay/clay_news_gwilson_nyj5.jpg"],
+  PHI: ["assets/clay/clay_news_barkley_phi26.jpg", "assets/clay/clay_dal_phi.jpg", "assets/clay/clay_dal_phi_mnf2.jpg"],
+  PIT: ["assets/clay/clay_pit_no.jpg"],
+  SEA: ["assets/clay/clay_sea_jsn.jpg"],
+  SF: ["assets/clay/clay_sf_atl.jpg", "assets/clay/clay_atl_sf_ground.jpg"],
+  TB: ["assets/clay/clay_mia_tb.jpg"],
+  TEN: ["assets/clay/clay_nyg_ten.jpg"],
+  WAS: ["assets/clay/clay_was_daniels5.jpg"],
+};
 
 const TEAM_VISUAL_SPECS_JS = {
   ARI: { name: "Arizona Cardinals", helmet: "white helmet with red Cardinal logo", jersey: "cardinal red jersey with white numerals", qb: ["Kyler Murray", "#1"], rb: ["James Conner", "#6"], wr: ["Marvin Harrison Jr.", "#18"], ol: ["Paris Johnson Jr.", "#70"], pr: ["Zaven Collins", "#25"], db: ["Budda Baker", "#3"] },
@@ -75,52 +120,129 @@ const TEAM_VISUAL_SPECS_JS = {
   WAS: { name: "Washington Commanders", helmet: "matte burgundy helmet with gold W logo", jersey: "burgundy jersey with gold numerals", qb: ["Jayden Daniels", "#5"], rb: ["Brian Robinson Jr.", "#8"], wr: ["Terry McLaurin", "#17"], ol: ["Sam Cosmi", "#76"], pr: ["Daron Payne", "#94"], db: ["Bobby Wagner", "#54"] },
 };
 
-function getNextUniqueClaySeed() {
-  let prevSeeds = [];
-  try {
-    prevSeeds = JSON.parse(localStorage.getItem("nfl_used_clay_seeds") || "[]");
-  } catch (_) {}
-  let seed = Math.floor(100000 + Math.random() * 899999);
-  while (prevSeeds.includes(seed)) {
-    seed = Math.floor(100000 + Math.random() * 899999);
-  }
-  prevSeeds.push(seed);
-  try {
-    localStorage.setItem("nfl_used_clay_seeds", JSON.stringify(prevSeeds.slice(-500)));
-  } catch (_) {}
-  return seed;
-}
+function buildUniqueDynamicClayUrl(promptText, teamHint = "", currentIllustration = "") {
+  // Selecciona una ilustración 3D claymation 16:9 auténtica generada con Google Gemini Nano Banana (0% Pollinations)
+  const activeUsed = new Set(
+    (STATE.data?.tips_x || []).map((t) => STATE.cardState[t.id]?.illustration || t.illustration).filter(Boolean)
+  );
+  STATE.usedIllustrations.forEach((u) => activeUsed.add(u));
 
-function buildUniqueDynamicClayUrl(promptText) {
-  const seed = getNextUniqueClaySeed();
-  const cleanPrompt = `${promptText} [Unique render seed #${seed}]`;
-  const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(cleanPrompt)}?width=1600&height=900&nologo=true&model=flux&seed=${seed}`;
-  STATE.usedIllustrations.add(url);
-  return url;
+  const candidateTeams = [];
+  const cleanHint = String(teamHint || "").toUpperCase().trim();
+  const m = cleanHint.match(/^([A-Z]{2,3})\s*@\s*([A-Z]{2,3})$/);
+  if (m) {
+    candidateTeams.push(m[1], m[2]);
+  } else if (TEAM_NANOBANANA_CLAY_MAP[cleanHint]) {
+    candidateTeams.push(cleanHint);
+  }
+
+  const lowPrompt = String(promptText || "").toLowerCase();
+  for (const [abbr, spec] of Object.entries(TEAM_VISUAL_SPECS_JS)) {
+    if (!candidateTeams.includes(abbr)) {
+      if (lowPrompt.includes(spec.name.toLowerCase()) || lowPrompt.includes(`(${abbr.toLowerCase()})`)) {
+        candidateTeams.push(abbr);
+      }
+    }
+  }
+
+  const teamAssets = [];
+  for (const tm of candidateTeams) {
+    for (const p of TEAM_NANOBANANA_CLAY_MAP[tm] || []) {
+      if (!teamAssets.includes(p)) teamAssets.push(p);
+    }
+  }
+
+  if (candidateTeams.includes("CAR") && (lowPrompt.includes("#9") || lowPrompt.includes("young") || lowPrompt.includes("clowney"))) {
+    const idx = teamAssets.indexOf("assets/clay/clay_car_young9.jpg");
+    if (idx > 0) {
+      teamAssets.splice(idx, 1);
+      teamAssets.unshift("assets/clay/clay_car_young9.jpg");
+    }
+  }
+
+  for (const asset of teamAssets) {
+    if (asset !== currentIllustration && !activeUsed.has(asset)) {
+      STATE.usedIllustrations.add(asset);
+      return asset;
+    }
+  }
+  for (const asset of teamAssets) {
+    if (asset !== currentIllustration) {
+      STATE.usedIllustrations.add(asset);
+      return asset;
+    }
+  }
+  if (teamAssets.length > 0) {
+    return teamAssets[0];
+  }
+
+  for (const item of CLAY_GALLERY) {
+    if (item.path !== currentIllustration && !activeUsed.has(item.path)) {
+      STATE.usedIllustrations.add(item.path);
+      return item.path;
+    }
+  }
+  return CLAY_GALLERY[0].path;
 }
 
 async function generateAndAssignUniqueTipImage(tip) {
-  // Si el servidor local server_nfl.py está corriendo, persiste la imagen única en assets/clay/ y data/used_images_registry.json
-  try {
-    const resp = await fetch("/api/generate-tip-image", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ tip }),
-    });
-    if (resp.ok) {
-      const data = await resp.json();
-      if (data.ok && data.illustration) {
-        tip.illustration = data.illustration;
-        tip.clay_prompt = data.clay_prompt || tip.clay_prompt;
-        if (STATE.cardState[tip.id]) {
-          STATE.cardState[tip.id].illustration = data.illustration;
+  // 1. Si el usuario configuró GEMINI_API_KEY en el navegador, invoca directamente Gemini Nano Banana (gemini-nano-banana-2.1 / gemini-3.1-flash-image)
+  const localGeminiKey = (localStorage.getItem("nfl_gemini_api_key") || "").trim();
+  if (localGeminiKey && tip.clay_prompt) {
+    for (const nbModel of ["gemini-nano-banana-2.1", "gemini-3.1-flash-image", "gemini-3-pro-image"]) {
+      try {
+        const gResp = await fetch("https://generativelanguage.googleapis.com/v1beta/interactions", {
+          method: "POST",
+          headers: {
+            "x-goog-api-key": localGeminiKey,
+            "Content-Type": "application/json",
+            "Api-Revision": "2026-05-20",
+          },
+          body: JSON.stringify({
+            model: nbModel,
+            input: [{ type: "text", text: tip.clay_prompt }],
+          }),
+        });
+        if (gResp.ok) {
+          const gData = await gResp.json();
+          const outImg = gData.output_image || gData.interaction?.output_image;
+          if (outImg && outImg.data) {
+            const mime = outImg.mime_type || "image/jpeg";
+            const dataUrl = `data:${mime};base64,${outImg.data}`;
+            tip.illustration = dataUrl;
+            if (STATE.cardState[tip.id]) STATE.cardState[tip.id].illustration = dataUrl;
+            STATE.usedIllustrations.add(dataUrl);
+            renderXTipsFeed();
+            return;
+          }
         }
-        STATE.usedIllustrations.add(data.illustration);
-        renderXTipsFeed();
-        return;
-      }
+      } catch (_) {}
     }
-  } catch (_) {}
+  }
+
+  // 2. Si el servidor local server_nfl.py está corriendo, genera/selecciona con el motor Gemini Nano Banana
+  if (window.location.protocol !== "file:") {
+    try {
+      const resp = await fetch("/api/generate-tip-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tip }),
+      });
+      if (resp.ok) {
+        const data = await resp.json();
+        if (data.ok && data.illustration) {
+          tip.illustration = data.illustration;
+          tip.clay_prompt = data.clay_prompt || tip.clay_prompt;
+          if (STATE.cardState[tip.id]) {
+            STATE.cardState[tip.id].illustration = data.illustration;
+          }
+          STATE.usedIllustrations.add(data.illustration);
+          renderXTipsFeed();
+          return;
+        }
+      }
+    } catch (_) {}
+  }
 }
 
 function showToast(msg, duration = 3800) {
@@ -2137,7 +2259,7 @@ function bindXTipCardEvents() {
     });
   });
 
-  // Botón para generar una nueva imagen 16:9 única y concordante con el texto del tweet
+  // Botón para generar una nueva imagen 16:9 única y concordante con el texto del tweet (Google Gemini Nano Banana)
   feed.querySelectorAll(".btn-regen-unique-clay").forEach((btn) => {
     btn.addEventListener("click", async () => {
       const id = btn.dataset.tipid;
@@ -2148,11 +2270,11 @@ function bindXTipCardEvents() {
       tip.body = st.body;
       const newPrompt = `3D claymation (caricatura de plastilina) full-bleed widescreen 16:9 illustration extending to the edges with NO border or frame: NFL scene depicting ${st.title} — ${st.body}. Authentic NFL helmets, exact player jersey numbers mentioned, ONE single brown leather football, natural two-arm anatomy, stadium floodlights.`;
       tip.clay_prompt = newPrompt;
-      const dynUrl = buildUniqueDynamicClayUrl(newPrompt);
+      const dynUrl = buildUniqueDynamicClayUrl(newPrompt, tip.matchup || "", st.illustration || "");
       tip.illustration = dynUrl;
       st.illustration = dynUrl;
       renderXTipsFeed();
-      showToast("🎨 Generando nueva ilustración 16:9 única y concordante con el tweet...");
+      showToast("🎨 Asignando ilustración 3D de plastilina (Nano Banana 16:9) concordante...");
       await generateAndAssignUniqueTipImage(tip);
     });
   });
@@ -2345,7 +2467,7 @@ function prependNewTipCard(newTip) {
   document.querySelectorAll(".x-tab").forEach((b) => b.classList.toggle("active", b.dataset.tipgroup === "ALL"));
   renderXTipsFeed();
   generateAndAssignUniqueTipImage(newTip);
-  showToast("✨ Nuevo Tip creado con imagen 16:9 única y concordante (sin repetir imágenes)");
+  showToast("✨ Nuevo Tip creado con caricatura de plastilina 16:9 (Nano Banana) concordante");
 }
 
 function createCustomTeamTip(tm) {
@@ -2354,7 +2476,7 @@ function createCustomTeamTip(tm) {
   const [qbName, qbNum] = spec.qb;
   const [prName, prNum] = spec.pr;
   const prompt = `3D claymation (caricatura de plastilina) full-bleed widescreen 16:9 illustration extending to the edges with NO border or frame: ${spec.name} quarterback ${qbName} in ${spec.jersey} with number ${qbNum} and ${spec.helmet} throwing ONE single brown leather football alongside defensive star ${prName} (${prNum}) on the stadium turf. Handcrafted plasticine clay texture, natural anatomy.`;
-  const uniqueImgUrl = buildUniqueDynamicClayUrl(prompt);
+  const uniqueImgUrl = buildUniqueDynamicClayUrl(prompt, tm.abbr);
 
   prependNewTipCard({
     id,
@@ -2389,7 +2511,7 @@ function createCustomPlayerTip(pl) {
   }
   const mEntries = Object.entries(pl.metrics || {}).slice(0, 2).map(([k, v]) => `${k}: ${v}`).join(" · ");
   const prompt = `3D claymation (caricatura de plastilina) full-bleed widescreen 16:9 illustration extending to the edges with NO border or frame: ${spec.name} (${pl.team}) ${pl.pos} ${pl.name} in ${spec.jersey} with number ${num} and ${spec.helmet} in explosive NFL action with ONE single brown leather football. Handcrafted plasticine clay texture, natural two-arm anatomy.`;
-  const uniqueImgUrl = buildUniqueDynamicClayUrl(prompt);
+  const uniqueImgUrl = buildUniqueDynamicClayUrl(prompt, pl.team);
 
   prependNewTipCard({
     id,
@@ -2414,7 +2536,7 @@ function createCustomNewsTip(nw) {
   const spec = TEAM_VISUAL_SPECS_JS[nw.team] || TEAM_VISUAL_SPECS_JS.PHI;
   const [starName, starNum] = spec.qb;
   const prompt = `3D claymation (caricatura de plastilina) full-bleed widescreen 16:9 illustration extending to the edges with NO border or frame: ${spec.name} player in ${spec.jersey} with number ${starNum} and ${spec.helmet} on the NFL stadium sideline representing breaking news: ${nw.title}. Handcrafted plasticine clay texture, natural anatomy.`;
-  const uniqueImgUrl = buildUniqueDynamicClayUrl(prompt);
+  const uniqueImgUrl = buildUniqueDynamicClayUrl(prompt, nw.team || "PHI");
 
   prependNewTipCard({
     id,
@@ -2690,7 +2812,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const [awQb, awQbNum] = awSpec.qb;
     const [hmPr, hmPrNum] = hmSpec.pr;
     const prompt = `3D claymation (caricatura de plastilina) full-bleed widescreen 16:9 illustration extending to the edges with NO border or frame: ${awSpec.name} quarterback ${awQb} in ${awSpec.jersey} with number ${awQbNum} and ${awSpec.helmet} facing pass pressure from ${hmSpec.name} defender ${hmPr} in ${hmSpec.jersey} with number ${hmPrNum} and ${hmSpec.helmet} at the line of scrimmage with ONE single football. Handcrafted plasticine clay texture, natural anatomy.`;
-    const uniqueImg = buildUniqueDynamicClayUrl(prompt);
+    const uniqueImg = buildUniqueDynamicClayUrl(prompt, `${aw.abbr} @ ${hm.abbr}`);
 
     prependNewTipCard({
       id: `tip-matchup-${g.id}-${Date.now()}`,
@@ -2800,7 +2922,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const [awWr, awWrNum] = awSpec.wr;
     const [hmDb, hmDbNum] = hmSpec.db;
     const prompt = `3D claymation (caricatura de plastilina) full-bleed widescreen 16:9 illustration extending to the edges with NO border or frame: ${awSpec.name} wide receiver ${awWr} in ${awSpec.jersey} with number ${awWrNum} and ${awSpec.helmet} catching ONE single football against ${hmSpec.name} defensive back ${hmDb} in ${hmSpec.jersey} with number ${hmDbNum} and ${hmSpec.helmet}. Handcrafted plasticine texture.`;
-    const uniqueImg = buildUniqueDynamicClayUrl(prompt);
+    const uniqueImg = buildUniqueDynamicClayUrl(prompt, `${awAbbr} @ ${hmAbbr}`);
 
     prependNewTipCard({
       id: `tip-manual-${Date.now()}`,
@@ -2856,6 +2978,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // Modales
   document.getElementById("btnOpenConfig")?.addEventListener("click", () => {
     loadServerConfig();
+    const savedGeminiKey = localStorage.getItem("nfl_gemini_api_key") || "";
+    const geminiInp = document.getElementById("cfgGeminiKey");
+    if (geminiInp && savedGeminiKey && !geminiInp.value) geminiInp.value = savedGeminiKey;
     document.getElementById("configModal")?.classList.remove("hidden");
   });
   document.getElementById("btnCloseConfig")?.addEventListener("click", () => {
@@ -2869,17 +2994,23 @@ document.addEventListener("DOMContentLoaded", () => {
     const dashboard_public_url = document.getElementById("cfgDashboardUrl")?.value.trim();
     const buffer_access_token = document.getElementById("cfgBufferToken")?.value.trim();
     const buffer_channel_id = document.getElementById("cfgBufferChannel")?.value.trim();
+    const gemini_api_key = document.getElementById("cfgGeminiKey")?.value.trim();
     if (dashboard_public_url) STATE.dashboardPublicUrl = dashboard_public_url;
+    if (gemini_api_key) {
+      try {
+        localStorage.setItem("nfl_gemini_api_key", gemini_api_key);
+      } catch (_) {}
+    }
     try {
       await fetch("/api/config", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ dashboard_public_url, buffer_access_token, buffer_channel_id }),
+        body: JSON.stringify({ dashboard_public_url, buffer_access_token, buffer_channel_id, gemini_api_key }),
       });
-      showToast("💾 Configuración guardada correctamente");
+      showToast("💾 Configuración (Buffer + Gemini Nano Banana) guardada correctamente");
       document.getElementById("configModal")?.classList.add("hidden");
     } catch (_) {
-      showToast("💾 URL guardada en sesión local");
+      showToast("💾 Configuración guardada en sesión local");
       document.getElementById("configModal")?.classList.add("hidden");
     }
   });
