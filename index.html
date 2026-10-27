@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=20261027v4" />
 </head>
 <body>
   <div class="app-shell">
@@ -238,40 +238,52 @@
               <div class="situational-grid" id="situationalGrid"></div>
             </div>
 
-            <!-- BLOQUE 4: EQUIPOS ESPECIALES (DVOA / KICKING / PUNTING / RETURNS) + LEYENDA SEMAFÓRICA -->
-            <div class="tactical-card st-bottom-card">
-              <div class="st-legend-box">
-                <h4>Semáforo de Ventaja</h4>
-                <ul class="advantage-legend-list">
-                  <li><span class="adv-dot sig-pos"></span> Ventaja Clara (Verde Oscuro)</li>
-                  <li><span class="adv-dot mod-pos"></span> Ventaja Moderada (Verde Claro)</li>
-                  <li><span class="adv-dot neutral"></span> Duelo Parejo / Promedio NFL (Amarillo)</li>
-                  <li><span class="adv-dot mod-neg"></span> Desventaja Moderada (Naranja)</li>
-                  <li><span class="adv-dot sig-neg"></span> Desventaja / Peligro (Rojo)</li>
-                </ul>
-                <button class="btn-generate-custom-matchup-tip" id="btnCreateMatchupTip">
-                  ✨ Generar Nuevo Tip X de este Partido
-                </button>
+            <!-- BLOQUE 4: EQUIPOS ESPECIALES (DVOA / KICKING / PUNTING / RETURNS) CON EXPLICACIÓN COMPLETA -->
+            <div class="tactical-card">
+              <div class="tactical-card-header">
+                <span class="tc-side-title" id="stLeftTitle">✈️ EQUIPOS ESPECIALES VISITANTE</span>
+                <span class="tc-center-badge">4. EQUIPOS ESPECIALES: PATEADORES, DESPEJES Y DEVOLUCIONES (DVOA / PFR / TEAMRANKINGS)</span>
+                <span class="tc-side-title right" id="stRightTitle">🏠 EQUIPOS ESPECIALES LOCAL</span>
               </div>
-              <div class="st-gauges-area">
-                <h3 class="st-title">🦵 EQUIPOS ESPECIALES (PATEADORES, DESPEJES &amp; POSICIÓN DE CAMPO)</h3>
-                <div class="inline-stat-explainer" id="guideStBlock" style="margin-bottom:10px;">
-                  <div class="ise-grid" style="grid-template-columns: repeat(3, 1fr);">
-                    <div class="ise-item">
-                      <strong>Kicking (FG % y +50 Yds)</strong>
-                      <p>Porcentaje de acierto en Goles de Campo (3 puntos) y cuántos convirtieron desde larga distancia (50 o más yardas).</p>
-                    </div>
-                    <div class="ise-item">
-                      <strong>Punting (Net Avg y Dentro de la 20)</strong>
-                      <p>Yardas netas que avanza la patada de despeje en 4to down y % de veces que encierra al rival antes de su propia yarda 20 (<strong>In-20 %</strong>).</p>
-                    </div>
-                    <div class="ise-item">
-                      <strong>Returns &amp; Ranking ST (DVOA)</strong>
-                      <p>Posición #1 a #32 de la NFL en eficiencia global de equipos especiales y promedio de yardas al devolver despejes (<strong>PR Avg</strong>).</p>
-                    </div>
+
+              <!-- Explicativo Detallado de Equipos Especiales y siglas DVOA / PFR / TeamRankings -->
+              <div class="inline-stat-explainer" id="guideStBlock">
+                <div class="ise-title">📘 ¿Qué son los Equipos Especiales, qué significan las siglas (DVOA / PFR / TeamRankings) y qué mide cada estadística?</div>
+                <div class="ise-grid">
+                  <div class="ise-item">
+                    <strong>🏈 ¿Qué son los Equipos Especiales y las siglas del título?</strong>
+                    <p>Es la <strong>3ra fase del juego</strong> (junto al Ataque y la Defensa) que entra al campo en todas las <strong>jugadas con el pie</strong> (goles de campo, despejes y patadas de salida). Las siglas del título indican los <strong>3 motores de datos</strong> que usamos: <strong>DVOA</strong> (métrica de eficiencia ajustada de <em>FTN Fantasy</em>), <strong>PFR</strong> (<em>Pro Football Reference</em>) y <strong>TeamRankings</strong>.</p>
+                  </div>
+                  <div class="ise-item">
+                    <strong>🎯 1. Kicking (Pateo a los Postes: FG % y +50 Yds)</strong>
+                    <p>Cuando el ataque no logra el Touchdown pero llega cerca, el pateador (<em>Kicker</em>) busca un <strong>Gol de Campo (Field Goal = 3 puntos)</strong>. <strong>FG %</strong> mide qué porcentaje de patadas acierta (ej. 14 de 16 = 87.5%). <strong>+50 Yds</strong> cuenta cuántos goles de campo metió desde <strong>50 o más yardas</strong> (patadas de larguísima distancia). <em>Élite NFL: +88% FG.</em></p>
+                  </div>
+                  <div class="ise-item">
+                    <strong>🦵 2. Punting (Despejes en 4to Down: Net Avg e In-20 %)</strong>
+                    <p>Cuando el ataque se frena en 3er Down, en 4to Down patea lejos (<strong>Despeje / Punt</strong>) para que el rival empiece su serie muy atrás. <strong>Net Avg (Promedio Neto)</strong> son las yardas que viaja el despeje menos las yardas que devuelve el rival. <strong>In-20 % (Dentro de la 20)</strong> es el % de despejes que dejan al rival encerrado antes de su propia yarda 20. <em>Élite NFL: +43.5 yds netas / +42% In-20.</em></p>
+                  </div>
+                  <div class="ise-item">
+                    <strong>⚡ 3. Returns (Devoluciones: PR / KR) y Ranking ST (#1 a #32)</strong>
+                    <p>Mide cuántas yardas gana el equipo al atrapar y devolver una patada rival para empezar a atacar en mejor posición: <strong>PR Avg</strong> (yardas por devolución de despeje, <em>promedio NFL ~9.5 yds</em>) y <strong>KR Avg</strong> (yardas por devolución de salida inicial, <em>promedio ~26 yds</em>). <strong>Rank ST (#1 a #32)</strong> es la posición global en la NFL donde <em>#1 es el mejor equipo especial de la liga y #32 el peor</em>.</p>
                   </div>
                 </div>
-                <div class="st-columns-grid" id="specialTeamsGauges"></div>
+              </div>
+
+              <div class="st-detailed-Wrapper" id="specialTeamsGauges"></div>
+
+              <!-- Barra inferior de Leyenda Semafórica + Generador de Tip X -->
+              <div class="st-legend-footer-bar">
+                <div class="slf-items">
+                  <span class="slf-title">Semáforo de Ventaja en toda la Pizarra:</span>
+                  <span><i class="adv-dot sig-pos"></i> Ventaja Clara</span>
+                  <span><i class="adv-dot mod-pos"></i> Ventaja Moderada</span>
+                  <span><i class="adv-dot neutral"></i> Duelo Parejo / Promedio NFL</span>
+                  <span><i class="adv-dot mod-neg"></i> Desventaja Moderada</span>
+                  <span><i class="adv-dot sig-neg"></i> Desventaja / Peligro</span>
+                </div>
+                <button class="btn-generate-custom-matchup-tip" id="btnCreateMatchupTip" style="width:auto; margin-top:0; padding:8px 16px;">
+                  ✨ Generar Nuevo Tip X de este Partido
+                </button>
               </div>
             </div>
           </section>
@@ -523,6 +535,6 @@
   <!-- TOAST DE NOTIFICACIONES -->
   <div class="toast-notification hidden" id="toastNotification"></div>
 
-  <script src="app.js"></script>
+  <script src="app.js?v=20261027v4"></script>
 </body>
 </html>
