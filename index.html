@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20261027v11" />
+  <link rel="stylesheet" href="styles.css?v=20261027v12" />
 </head>
 <body>
   <div class="app-shell">
@@ -158,6 +158,40 @@
                   📖 Diccionario Completo
                 </button>
               </div>
+            </div>
+
+            <!-- BLOQUE 0 (NUEVO): PRONÓSTICO INTEGRAL — % DE GANAR Y RESULTADO PROBABLE (PASE + CARRERA + SITUACIONAL + EQUIPOS ESPECIALES EN AMBOS SENTIDOS) -->
+            <div class="tactical-card prediction-master-card" id="matchupPredictionCard">
+              <div class="tactical-card-header">
+                <span class="team-side-tag" id="predLeftTitle">PROBABILIDAD VISITANTE</span>
+                <h3>🔮 PRONÓSTICO INTEGRAL DEL MODELO: % DE VICTORIA &amp; RESULTADO PROBABLE (AMBOS SENTIDOS + 3 FASES)</h3>
+                <span class="team-side-tag right" id="predRightTitle">PROBABILIDAD LOCAL</span>
+              </div>
+
+              <!-- Explicativo Detallado del Modelo de Pronóstico -->
+              <div class="inline-stat-explainer" id="guidePredBlock">
+                <div class="ise-title">📘 ¿Cómo calcula el modelo el % de Ganar de cada equipo y el Resultado Probable?</div>
+                <div class="ise-grid">
+                  <div class="ise-item">
+                    <strong>1. Base de Puntos Cruzada (PPG Ofensivo vs. Defensivo)</strong>
+                    <p>Parte del promedio entre los puntos que anota el ataque de cada equipo por partido (<em>Off PPG</em>) y los puntos que permite la defensa rival por partido (<em>Def PPG</em>) en ambos sentidos.</p>
+                  </div>
+                  <div class="ise-item">
+                    <strong>2. Ajuste por Duelo Aéreo (35%) y Terrestre (25%) en Ambos Sentidos</strong>
+                    <p>Suma o resta puntos reales según la ventaja táctica (0-100%) en <strong>Sentido 1</strong> (<em>Ataca Visitante vs. Defiende Local</em>) y <strong>Sentido 2</strong> (<em>Ataca Local vs. Defiende Visitante</em>) tanto por aire (EPA, CPOE, +20y) como por tierra (Rush EPA, Front-7, TFL).</p>
+                  </div>
+                  <div class="ise-item">
+                    <strong>3. Ajuste Situacional, Trincheras (25%) y Equipos Especiales + Localía (15%)</strong>
+                    <p>Integra la eficiencia en <strong>Zona Roja (TD%)</strong>, <strong>3er Down</strong>, <strong>Capturas (Sacks)</strong>, <strong>Margen de Entregas (Robos de balón)</strong>, las 7 métricas de <strong>Equipos Especiales (FG%, Punts, Retornos, DVOA)</strong> y la ventaja de localía NFL (<em>+1.4 pts</em>).</p>
+                  </div>
+                  <div class="ise-item">
+                    <strong>4. Conversión a % de Ganar (Curva Logística NFL)</strong>
+                    <p>A partir de la diferencia exacta de puntos proyectados (<em>Margen del Modelo</em>), aplica la curva de probabilidad logística de la NFL ($\sigma \approx 13.5\text{ pts}$): <em>+3 pts de ventaja = ~62% de ganar; +7 pts = ~76% de ganar; +10 pts = ~84% de ganar</em>.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div id="matchupPredictionPanel"></div>
             </div>
 
             <!-- BLOQUE 1: ATAQUE AÉREO vs SECUNDARIA (EN AMBOS SENTIDOS) -->
@@ -645,7 +679,7 @@
   <!-- TOAST DE NOTIFICACIONES -->
   <div class="toast-notification hidden" id="toastNotification"></div>
 
-  <script src="data/nfl_dashboard_data.js?v=20261027v11"></script>
-  <script src="app.js?v=20261027v11"></script>
+  <script src="data/nfl_dashboard_data.js?v=20261027v12"></script>
+  <script src="app.js?v=20261027v12"></script>
 </body>
 </html>
