@@ -506,6 +506,12 @@ def main():
     with open(in_path, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
+    js_path = os.path.join(DATA_DIR, "nfl_dashboard_data.js")
+    with open(js_path, "w", encoding="utf-8") as f:
+        f.write("window.NFL_DASHBOARD_EMBEDDED_DATA = ")
+        json.dump(data, f, ensure_ascii=False)
+        f.write(";\n")
+
     unique_imgs = {t["illustration"] for t in tips}
     print(f"[OK] Generados {len(tips)} posteos sugeridos para X con {len(unique_imgs)} imágenes 100% únicas y concordantes en {in_path}")
 
