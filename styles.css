@@ -2507,5 +2507,89 @@ body {
   font-weight: 600;
 }
 
+/* ==========================================================================
+   MEJORAS VISUALES DE ORDEN Y PUNTAJE EN TOP NEWS (#view-news)
+   ========================================================================== */
+.news-impact-card.tier-critical {
+  border-left: 5px solid #dc2626;
+}
 
+.news-impact-card.tier-high {
+  border-left: 5px solid #ea580c;
+}
 
+.news-impact-card.tier-relevant {
+  border-left: 5px solid #0284c7;
+}
+
+.nic-left-badges {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.nic-rank-badge {
+  background: #0f172a;
+  color: #ffffff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 4px;
+  letter-spacing: 0.3px;
+}
+
+.nic-impact-pill {
+  font-size: 10.5px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-family: 'Inter', sans-serif;
+  cursor: help;
+}
+
+.nic-impact-pill.critical {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+.nic-impact-pill.high {
+  background: #ffedd5;
+  color: #9a3412;
+  border: 1px solid #fdba74;
+}
+
+.nic-impact-pill.relevant {
+  background: #e0f2fe;
+  color: #075985;
+  border: 1px solid #7dd3fc;
+}
+
+.nic-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+  padding: 4px 7px;
+  background: #f8fafc;
+  border: 1px solid var(--border-light);
+  border-radius: 5px;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.nic-team-chip {
+  color: var(--nfl-navy);
+  font-weight: 800;
+}
+
+.nic-time-chip {
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+}
