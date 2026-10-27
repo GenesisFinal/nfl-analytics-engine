@@ -1440,29 +1440,119 @@ function renderPlayersGrid() {
 /* ==========================================================================
    VISTA 4: RADAR DE TOP NEWS (SOLO ALTO IMPACTO - 8 SITIOS)
    ========================================================================== */
+function parseNewsEpochMs(pubStr) {
+  if (!pubStr) return 0;
+  if (pubStr === "Recién actualizado") return Date.now();
+  const parsed = Date.parse(pubStr);
+  return Number.isNaN(parsed) ? 0 : parsed;
+}
+
+function formatNewsPublishedLabel(pubStr) {
+  if (!pubStr) return "Hoy";
+  if (pubStr === "Recién actualizado") return "Recién actualizado";
+  const ms = Date.parse(pubStr);
+  if (Number.isNaN(ms)) return String(pubStr).slice(0, 22);
+  try {
+    const dt = new Date(ms);
+    return dt.toLocaleString("es-AR", {
+      timeZone: "America/Argentina/Buenos_Aires",
+      day: "2-digit",
+      month: "short",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    }) + " ART";
+  } catch (_) {
+    return String(pubStr).slice(0, 22);
+  }
+}
+
+function getImpactTierMeta(score) {
+  const s = Number(score || 50);
+  if (s >= 90) {
+    return {
+      cls: "critical",
+      cardCls: "tier-critical",
+      label: `🔥 Impacto Crítico · ${s}/99 pts`,
+      tooltip: "Impacto Crítico (90 a 99 pts): Lesión grave/IR de titular, cambio de QB o traspaso confirmado con efecto inmediato en la línea del partido.",
+    };
+  }
+  if (s >= 75) {
+    return {
+      cls: "high",
+      cardCls: "tier-high",
+      label: `⚡ Impacto Alto · ${s}/99 pts`,
+      tooltip: "Impacto Alto (75 a 89 pts): Reporte médico relevante, movimiento de roster titular o ajuste salarial importante.",
+    };
+  }
+  return {
+    cls: "relevant",
+    cardCls: "tier-relevant",
+    label: `📊 Impacto Relevante · ${s}/99 pts`,
+    tooltip: "Impacto Relevante (25 a 74 pts): Tendencia táctica, actualización de plantilla o análisis salarial que superó el filtro mínimo de 25 pts.",
+  };
+}
+
 function renderNewsGrid() {
   const grid = document.getElementById("newsCardsGrid");
   if (!grid || !STATE.data) return;
 
   const catFilter = document.getElementById("filterNewsCategory")?.value || "ALL";
   const srcFilter = document.getElementById("filterNewsSource")?.value || "ALL";
+  const sortOrder = document.getElementById("sortNewsOrder")?.value || "impact_desc";
 
-  const list = (STATE.data.news || []).filter((n) => {
-    const matchCat = catFilter === "ALL" || (n.category || "").toLowerCase().includes(catFilter.toLowerCase());
-    const matchSrc = srcFilter === "ALL" || n.source === srcFilter;
-    return matchCat && matchSrc;
+  const list = (STATE.data.news || [])
+    .filter((n) => {
+      const matchCat = catFilter === "ALL" || (n.category || "").toLowerCase().includes(catFilter.toLowerCase());
+      const matchSrc = srcFilter === "ALL" || n.source === srcFilter;
+      return matchCat && matchSrc;
+    })
+    .slice();
+
+  list.sort((a, b) => {
+    if (sortOrder === "recent_desc") {
+      const diffTime = parseNewsEpochMs(b.published) - parseNewsEpochMs(a.published);
+      if (diffTime !== 0) return diffTime;
+      return Number(b.impact_score || 0) - Number(a.impact_score || 0);
+    }
+    if (sortOrder === "team_asc") {
+      const tA = (a.team || "ZZZ").toUpperCase();
+      const tB = (b.team || "ZZZ").toUpperCase();
+      if (tA !== tB) return tA.localeCompare(tB);
+      return Number(b.impact_score || 0) - Number(a.impact_score || 0);
+    }
+    if (sortOrder === "source_asc") {
+      const sA = (a.source || "").toLowerCase();
+      const sB = (b.source || "").toLowerCase();
+      if (sA !== sB) return sA.localeCompare(sB);
+      return Number(b.impact_score || 0) - Number(a.impact_score || 0);
+    }
+    // Por defecto: impact_desc (Mayor Puntaje de Impacto 99 -> 25 pts, desempate por más reciente)
+    const diffScore = Number(b.impact_score || 0) - Number(a.impact_score || 0);
+    if (diffScore !== 0) return diffScore;
+    return parseNewsEpochMs(b.published) - parseNewsEpochMs(a.published);
   });
 
   grid.innerHTML = list
-    .map(
-      (n) => `
-      <article class="news-impact-card">
+    .map((n, idx) => {
+      const tier = getImpactTierMeta(n.impact_score);
+      const teamLabel = n.team ? `🏈 Equipo: ${n.team}` : "🏈 NFL General";
+      const timeLabel = formatNewsPublishedLabel(n.published);
+      return `
+      <article class="news-impact-card ${tier.cardCls}">
         <div>
           <div class="nic-header">
-            <span class="nic-source">${n.source}</span>
-            <span class="nic-cat">${n.category} · Impacto ${n.impact_score}</span>
+            <div class="nic-left-badges">
+              <span class="nic-rank-badge" title="Posición #${idx + 1} según el orden seleccionado">#${idx + 1}</span>
+              <span class="nic-source">${n.source}</span>
+            </div>
+            <span class="nic-impact-pill ${tier.cls}" title="${tier.tooltip}">${tier.label}</span>
           </div>
-          <h4 style="margin-top:7px;">${n.title}</h4>
+          <div class="nic-meta-row">
+            <span class="nic-team-chip">${teamLabel} · ${n.category}</span>
+            <span class="nic-time-chip" title="Fecha/hora original: ${n.published || ""}">🕒 ${timeLabel}</span>
+          </div>
+          <h4 style="margin-top:8px;">${n.title}</h4>
           <p style="margin-top:5px;">${n.summary}</p>
         </div>
         <div class="nic-footer">
@@ -1470,8 +1560,8 @@ function renderNewsGrid() {
           <button class="btn-primary-sm btn-news-to-tip" data-newsid="${n.id}">📲 Armar Post para X</button>
         </div>
       </article>
-    `
-    )
+    `;
+    })
     .join("");
 
   grid.querySelectorAll(".btn-news-to-tip").forEach((btn) => {
@@ -1736,6 +1826,19 @@ const NFL_STATS_GLOSSARY = [
     scale_avg: "🟡 Promedio NFL: 14-20 Pressures | Rating Permitido 82.0-92.0",
     scale_poor: "🔴 Vulnerable: Rating Permitido > 102.0",
     tactical_example: "Ejemplo: Un Pass Rusher con 30+ Pressures obliga al ataque rival a dejar un ala cerrada extra bloqueando.",
+  },
+  {
+    term: "Radar de Top News: Puntaje de Impacto (25 a 99 pts) y Ordenamiento",
+    category: "RADAR DE TOP NEWS (8 PORTALES)",
+    source: "Rotoworld / OTC / Spotrac / ESPN / PFT / The Athletic",
+    what_is_it:
+      "• Puntaje de Impacto (0 a 99 pts): Algoritmo que evalúa la gravedad táctica de cada noticia sumando puntos por términos clave: +32 pts por Trade/Titularidad (trade, waived, starter, benched), +30 pts por Parte Médico/Lesión (IR, ACL, concussion, surgery, out), +28 pts por Impacto Salarial (cap, restructure, extension), +18 a +25 pts de prioridad de fuente y +18 pts al detectar la franquicia NFL afectada.\n• Filtro Anti-Ruido: Toda nota menor a 25 pts se descarta.",
+    how_to_read:
+      "Por defecto las noticias se ordenan de Mayor a Menor Impacto (#1 a #N, de 99 a 25 pts) para que una nota menor recién subida nunca tape una baja crítica de último momento. Podés cambiar el orden con el selector superior a: Más Recientes Primero (Hora), Equipo NFL (A-Z) o Portal (A-Z).",
+    scale_elite: "🔥 Impacto Crítico: 90 a 99 pts (Baja en IR, ACL, Trade o cambio de QB titular)",
+    scale_avg: "⚡ Impacto Alto: 75 a 89 pts (Parte médico importante o movimiento de roster)",
+    scale_poor: "📊 Impacto Relevante: 25 a 74 pts (Nota táctica o salarial que superó el umbral)",
+    tactical_example: "Ejemplo: Una lesión de tobillo/IR de un titular reportada en Rotoworld alcanza 99/99 pts y se ubica #1 en el Radar.",
   },
 ];
 
@@ -2545,6 +2648,16 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  document.getElementById("btnToggleNewsGuide")?.addEventListener("click", (e) => {
+    const guideEl = document.getElementById("newsOrderGuide");
+    if (!guideEl) return;
+    const isHidden = guideEl.classList.toggle("hidden");
+    const btn = e.currentTarget;
+    btn.classList.toggle("off", isHidden);
+    btn.textContent = isHidden ? "📘 Cómo se ordenan las noticias: OCULTO" : "📘 Cómo se ordenan las noticias: VISIBLE";
+  });
+
+  document.getElementById("sortNewsOrder")?.addEventListener("change", renderNewsGrid);
   document.getElementById("filterNewsCategory")?.addEventListener("change", renderNewsGrid);
   document.getElementById("filterNewsSource")?.addEventListener("change", renderNewsGrid);
 
