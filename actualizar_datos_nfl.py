@@ -769,8 +769,8 @@ def fetch_espn_schedule_and_records(teams_dict: dict) -> tuple:
         if g["day_slot"] == "MNF" and g["status_state"] == "post":
             try:
                 kickoff_utc = datetime.datetime.fromisoformat(g["date_iso"].replace("Z", "+00:00"))
-                # Un partido dura ~3.5 horas; mantenemos la semana activa mientras se juega MNF y hasta el martes al mediodía
-                if (now_utc - kickoff_utc).total_seconds() < 14.0 * 3600:
+                # Mantenemos la semana activa durante todo el martes post-MNF (~36 horas desde el kickoff del lunes por la noche)
+                if (now_utc - kickoff_utc).total_seconds() < 36.0 * 3600:
                     mnf_recently_ended = True
             except Exception:
                 pass
@@ -778,7 +778,7 @@ def fetch_espn_schedule_and_records(teams_dict: dict) -> tuple:
     if any_unfinalized or mnf_recently_ended:
         current_week = espn_active_wk
     else:
-        # Si absolutamente todos los partidos (incluido MNF) ya finalizaron hace más de 3 horas, pasamos a la semana siguiente
+        # Si absolutamente todos los partidos (incluido MNF) ya finalizaron hace más de 36h, pasamos a la semana siguiente
         current_week = min(18, espn_active_wk + 1) if active_wk_games else espn_active_wk
 
     has_live_games = any(g["status_state"] == "in" for g in games_out)
@@ -801,6 +801,10 @@ def score_and_classify_news(title: str, summary: str, source_name: str) -> tuple
     score = 0
     category = "📊 Impacto Táctico"
 
+    # Ignorar links estáticos de menú de OTC sin jugador ni equipo
+    if title.strip().lower() in ("2026 nfl weekly player valuation", "2026 fa spending", "salary cap space", "contracts"):
+        return 0, category, ""
+
     for kw in HIGH_IMPACT_KEYWORDS["injury"]:
         if re.search(r"\b" + re.escape(kw) + r"\b", text):
             score += 30
@@ -819,7 +823,7 @@ def score_and_classify_news(title: str, summary: str, source_name: str) -> tuple
 
     # Fuentes especializadas en contratos o partes médicos reciben prioridad base
     if source_name in ("Over The Cap (OTC)", "Spotrac NFL"):
-        score += 35
+        score += 18
         category = "💰 Impacto Salarial (Cap / Contrato)"
     elif source_name == "NBC Sports Rotoworld":
         score += 25
@@ -829,7 +833,7 @@ def score_and_classify_news(title: str, summary: str, source_name: str) -> tuple
     for abbr, meta in NFL_TEAMS_META.items():
         if meta["short"].lower() in text or meta["name"].lower() in text:
             detected_team = abbr
-            score += 15
+            score += 18
             break
 
     return min(score, 99), category, detected_team
