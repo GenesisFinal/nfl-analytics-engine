@@ -170,17 +170,72 @@ function populateWeekSelector(data) {
   const weekSel = document.getElementById("selectWeek");
   if (!weekSel || !data) return;
   const avail = data.available_weeks && data.available_weeks.length ? data.available_weeks : [6, 7, 8];
-  const curr = Number(data.current_week || 7);
+  const allGames = data.games || [];
 
+  // Ordenar semanas de más reciente/próxima a anterior o en orden numérico claro
   weekSel.innerHTML = avail
     .map((wk) => {
+      const wkGames = allGames.filter((g) => Number(g.week) === Number(wk));
+      const anyLive = wkGames.some((g) => g.status_state === "in");
+      const preCount = wkGames.filter((g) => g.status_state === "pre").length;
       let suffix = "";
-      if (wk === curr) suffix = " (Semana Activa · MNF)";
-      else if (wk < curr) suffix = " (Anterior)";
-      else suffix = " (Próxima)";
-      return `<option value="${wk}" ${wk === STATE.selectedWeek ? "selected" : ""}>Semana ${wk}${suffix}</option>`;
+      if (anyLive) suffix = ` (🔴 EN VIVO · ${wkGames.length} partidos)`;
+      else if (preCount > 0) suffix = ` (Próximos · ${preCount} partidos por jugar)`;
+      else suffix = ` (Finalizada · ${wkGames.length} resultados + MNF)`;
+      return `<option value="${wk}" ${Number(wk) === Number(STATE.selectedWeek) ? "selected" : ""}>Semana ${wk}${suffix}</option>`;
     })
     .join("");
+}
+
+function populateGameDropdownSelectors() {
+  if (!STATE.data) return;
+  const allGames = STATE.data.games || [];
+  const availWeeks = STATE.data.available_weeks && STATE.data.available_weeks.length ? STATE.data.available_weeks : [6, 7, 8];
+
+  // Ordenamos para que la semana activa aparezca primero en el desplegable y luego el resto de semanas
+  const orderedWeeks = [
+    STATE.selectedWeek,
+    ...availWeeks.filter((w) => Number(w) !== Number(STATE.selectedWeek)).sort((a, b) => b - a),
+  ];
+
+  const groupsHtml = orderedWeeks
+    .map((wk) => {
+      const wkGames = allGames.filter((g) => Number(g.week) === Number(wk));
+      if (!wkGames.length) return "";
+      const preCount = wkGames.filter((g) => g.status_state === "pre").length;
+      const groupTitle =
+        preCount > 0
+          ? `📅 SEMANA ${wk} — PRÓXIMOS PARTIDOS (${preCount} por jugar)`
+          : `🏁 SEMANA ${wk} — RESULTADOS FINALES (${wkGames.length} partidos)`;
+
+      const optionsHtml = wkGames
+        .map((g) => {
+          const aw = STATE.data.teams[g.away_team] || { name: g.away_team, short: g.away_team };
+          const hm = STATE.data.teams[g.home_team] || { name: g.home_team, short: g.home_team };
+          const slotTag = g.day_slot === "TNF" ? "JUE (TNF)" : g.day_slot === "MNF" ? "LUN (MNF)" : "DOM";
+          const statusTxt =
+            g.status_state === "in"
+              ? `🔴 VIVO ${g.away_score ?? 0}-${g.home_score ?? 0}`
+              : g.status_state === "post"
+              ? `FINAL ${g.away_score ?? 0}-${g.home_score ?? 0}`
+              : g.display_time;
+          const isSel = !STATE.customMatchup && g.id === STATE.selectedGameId;
+          return `<option value="${g.id}" ${isSel ? "selected" : ""}>[Sem ${wk} · ${slotTag}] ${g.away_team} (${aw.short}) @ ${g.home_team} (${hm.short}) — ${statusTxt}</option>`;
+        })
+        .join("");
+
+      return `<optgroup label="${groupTitle}">${optionsHtml}</optgroup>`;
+    })
+    .join("");
+
+  const customSimOpt = STATE.customMatchup
+    ? `<option value="CUSTOM_SIM" selected>⚔️ Duelo Simulado: ${STATE.customMatchup.away_team} vs. ${STATE.customMatchup.home_team}</option>`
+    : "";
+
+  ["selectMatchupGame", "quickSelectGame"].forEach((id) => {
+    const sel = document.getElementById(id);
+    if (sel) sel.innerHTML = customSimOpt + groupsHtml;
+  });
 }
 
 function getDefaultFutureDatetimeART(addMinutes = 60) {
@@ -239,7 +294,7 @@ async function loadDashboardData(preserveWeek = false) {
     });
 
     // Seleccionar partido de la semana actual (priorizando MNF si es lunes/martes madrugada o partido en vivo)
-    const wkGames = (data.games || []).filter((g) => g.week === STATE.selectedWeek);
+    const wkGames = (data.games || []).filter((g) => Number(g.week) === Number(STATE.selectedWeek));
     if (wkGames.length > 0 && !STATE.selectedGameId) {
       const liveOrMnf = wkGames.find((g) => g.status_state === "in") || wkGames.find((g) => g.day_slot === "MNF") || wkGames[0];
       STATE.selectedGameId = liveOrMnf.id;
@@ -268,22 +323,30 @@ function renderAll() {
 }
 
 /* ==========================================================================
-   CINTA SUPERIOR DE PARTIDOS (GAME RIBBON)
+   CINTA SUPERIOR DE PARTIDOS (GAME RIBBON) + SELECTORES DESPLEGABLES
    ========================================================================== */
 function renderGameRibbon() {
   const track = document.getElementById("gameRibbonTrack");
   if (!track || !STATE.data) return;
 
-  const games = (STATE.data.games || []).filter((g) => {
-    const matchWeek = g.week === Number(STATE.selectedWeek);
+  let games = (STATE.data.games || []).filter((g) => {
+    const matchWeek = Number(g.week) === Number(STATE.selectedWeek);
     const matchSlot = STATE.selectedSlot === "ALL" || g.day_slot === STATE.selectedSlot;
     return matchWeek && matchSlot;
   });
+
+  // Si el filtro de día (TNF/MNF) no tiene partidos en esa semana, mostrar todos los de la semana
+  if (games.length === 0) {
+    games = (STATE.data.games || []).filter((g) => Number(g.week) === Number(STATE.selectedWeek));
+  }
 
   if (games.length > 0 && !games.some((g) => g.id === STATE.selectedGameId) && !STATE.customMatchup) {
     const mnfOrFirst = games.find((g) => g.status_state === "in") || games.find((g) => g.day_slot === "MNF") || games[0];
     STATE.selectedGameId = mnfOrFirst.id;
   }
+
+  populateWeekSelector(STATE.data);
+  populateGameDropdownSelectors();
 
   track.innerHTML = games
     .map((g) => {
@@ -1134,17 +1197,23 @@ function renderMatchupBoard() {
 function populateSimulatorSelects() {
   if (!STATE.data) return;
   const teamsArr = Object.values(STATE.data.teams).sort((a, b) => a.name.localeCompare(b.name));
-  const selA = document.getElementById("simTeamAway");
-  const selH = document.getElementById("simTeamHome");
-  if (!selA || !selH) return;
-
   const opts = teamsArr.map((t) => `<option value="${t.abbr}">${t.abbr} — ${t.name} (#${t.rank_total})</option>`).join("");
-  selA.innerHTML = opts;
-  selH.innerHTML = opts;
-  if (teamsArr.length > 1) {
-    selA.value = "KC";
-    selH.value = "BUF";
-  }
+
+  [
+    ["simTeamAway", "simTeamHome"],
+    ["quickSimAway", "quickSimHome"],
+  ].forEach(([awayId, homeId]) => {
+    const selA = document.getElementById(awayId);
+    const selH = document.getElementById(homeId);
+    if (selA && selH) {
+      selA.innerHTML = opts;
+      selH.innerHTML = opts;
+      if (teamsArr.length > 1) {
+        selA.value = "KC";
+        selH.value = "BUF";
+      }
+    }
+  });
 }
 
 function getHeatColor(val, min, max, higherBetter = true) {
@@ -2519,7 +2588,7 @@ document.addEventListener("DOMContentLoaded", () => {
     pill.addEventListener("click", () => {
       document.querySelectorAll("#directionModePills .dir-pill").forEach((p) => p.classList.remove("active"));
       pill.classList.add("active");
-      STATE.directionMode = pill.dataset.dirmode || "BOTH";
+      STATE.directionMode = pill.dataset.dir || pill.dataset.dirmode || "BOTH";
       renderMatchupBoard();
     });
   });
@@ -2529,7 +2598,7 @@ document.addEventListener("DOMContentLoaded", () => {
     STATE.showInlineGuides = !STATE.showInlineGuides;
     const btn = e.currentTarget;
     btn.classList.toggle("off", !STATE.showInlineGuides);
-    btn.textContent = STATE.showInlineGuides ? "📖 Explicativos de cada métrica: VISIBLES" : "📖 Explicativos de cada métrica: OCULTOS";
+    btn.textContent = STATE.showInlineGuides ? "📘 Ocultar / Ver Explicación de Estadísticas" : "📘 Explicaciones Ocultas (Clic para mostrar)";
     renderMatchupBoard();
   });
 
@@ -2550,6 +2619,28 @@ document.addEventListener("DOMContentLoaded", () => {
     renderGameRibbon();
     renderMatchupBoard();
   });
+
+  // Selectores desplegables directos de Partido (tanto en la barra superior como dentro del Panel de Control)
+  const handleGameDropdownChange = (e) => {
+    const val = e.target.value;
+    if (!val || val === "CUSTOM_SIM") return;
+    const chosenGame = (STATE.data?.games || []).find((g) => g.id === val);
+    if (chosenGame) {
+      STATE.customMatchup = null;
+      STATE.selectedGameId = chosenGame.id;
+      if (Number(chosenGame.week) !== Number(STATE.selectedWeek)) {
+        STATE.selectedWeek = Number(chosenGame.week);
+        STATE.selectedSlot = "ALL";
+        document.querySelectorAll("#daySlotFilterGroup .slot-pill").forEach((p) => p.classList.toggle("active", p.dataset.slot === "ALL"));
+      }
+      switchView("matchups");
+      renderGameRibbon();
+      renderMatchupBoard();
+    }
+  };
+
+  document.getElementById("selectMatchupGame")?.addEventListener("change", handleGameDropdownChange);
+  document.getElementById("quickSelectGame")?.addEventListener("change", handleGameDropdownChange);
 
   document.querySelectorAll("#daySlotFilterGroup .slot-pill").forEach((pill) => {
     pill.addEventListener("click", () => {
@@ -2603,13 +2694,26 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Simulador Libre de 2 equipos
+  // Simulador Libre de 2 equipos (desde vista Equipos o desde la barra rápida en Panel de Control)
   document.getElementById("btnLoadSimMatchup")?.addEventListener("click", () => {
     const aw = document.getElementById("simTeamAway")?.value;
     const hm = document.getElementById("simTeamHome")?.value;
     if (aw && hm) {
       STATE.customMatchup = { away_team: aw, home_team: hm };
       switchView("matchups");
+      renderGameRibbon();
+      renderMatchupBoard();
+      showToast(`⚔️ Pizarra Táctica abierta: ${aw} vs. ${hm}`);
+    }
+  });
+
+  document.getElementById("btnQuickLoadSim")?.addEventListener("click", () => {
+    const aw = document.getElementById("quickSimAway")?.value;
+    const hm = document.getElementById("quickSimHome")?.value;
+    if (aw && hm) {
+      STATE.customMatchup = { away_team: aw, home_team: hm };
+      switchView("matchups");
+      renderGameRibbon();
       renderMatchupBoard();
       showToast(`⚔️ Pizarra Táctica abierta: ${aw} vs. ${hm}`);
     }
