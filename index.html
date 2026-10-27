@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20261027v4" />
+  <link rel="stylesheet" href="styles.css?v=20261027v5" />
 </head>
 <body>
   <div class="app-shell">
@@ -343,10 +343,13 @@
           <section class="stage-view" id="view-players">
             <div class="view-toolbar">
               <div>
-                <h2>Scouting de Jugadores &amp; Métricas Avanzadas (2026)</h2>
-                <p class="view-subtitle">Percentiles empíricos (0-100), EPA, CPOE, Next Gen Stats (Separation / RYOE / Time to Throw), PlayerProfiler (Target Share / WOPR) y PFR Pressures.</p>
+                <h2>Scouting de Jugadores &amp; Métricas Avanzadas (2026) — Guía y Fórmulas</h2>
+                <p class="view-subtitle">Evaluación individual con Percentiles (0-100), EPA, CPOE, Next Gen Stats (Sensores RFID: Separation / RYOE / Time to Throw), PlayerProfiler (Target Share / WOPR) y PFR AdvStats.</p>
               </div>
               <div class="toolbar-filters">
+                <button class="btn-toggle-guides" id="btnTogglePlayerGuide" title="Mostrar u ocultar el explicativo de métricas y fórmulas de jugadores">
+                  📘 Guía de Métricas y Fórmulas: VISIBLE
+                </button>
                 <input type="text" id="searchPlayerInput" placeholder="Buscar jugador o equipo..." class="input-search" />
                 <div class="pos-filter-pills" id="posFilterPills">
                   <button class="pos-pill active" data-pos="ALL">Todos</button>
@@ -355,6 +358,50 @@
                   <button class="pos-pill" data-pos="WR">WR</button>
                   <button class="pos-pill" data-pos="TE">TE</button>
                   <button class="pos-pill" data-pos="DEF">DEF (Pass Rush &amp; DB)</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- EXPLICATIVO DETALLADO DE CADA MÉTRICA DE JUGADORES Y CÓMO SE CALCULA -->
+            <div class="inline-stat-explainer" id="playerScoutingGuide">
+              <div class="ise-title">📘 ¿Qué significa cada estadística en las tarjetas de jugadores y cómo se calcula exactamente?</div>
+              <div class="ise-grid" style="grid-template-columns: repeat(auto-fit, minmax(265px, 1fr));">
+                <div class="ise-item">
+                  <strong>🏅 Percentil de Posición (Pctl 1 a 99)</strong>
+                  <p><strong>¿Qué es?:</strong> Compara al jugador únicamente contra los demás de su misma posición en la NFL. Un <strong>Pctl 95</strong> significa que rinde mejor que el 95% de la liga.<br/>
+                  <strong>¿Cómo se calcula?:</strong> En <strong>QB</strong> se ordena por <em>EPA/Dropback</em>; en <strong>RB</strong> por <em>Yardas Terrestres</em>; en <strong>WR/TE</strong> por <em>Yardas de Recepción</em>; y en <strong>DEF</strong> por el <em>Puntaje de Impacto Defensivo</em> (<code>Sacks×3 + Hits×1.2 + TFL×1.5 + INT×3.5 + PD×1 + Tackles×0.25</code>).</p>
+                </div>
+
+                <div class="ise-item">
+                  <strong>🎯 Quarterbacks (QB): EPA, CPOE, Time to Throw, On-Target y Pressure %</strong>
+                  <p>• <strong>EPA/Dropback:</strong> <code>EPA de Pase Total ÷ (Intentos + Capturas)</code>. Puntos reales que suma cada vez que retrocede a pasar.<br/>
+                  • <strong>CPOE:</strong> <code>% Completos Real − % Esperado</code> según dificultad del tiro (distancia, presión y ventana).<br/>
+                  • <strong>NGS Time to Throw:</strong> Segundos promedio desde el <em>snap</em> hasta soltar el pase (chips RFID). <em>Promedio NFL: ~2.75s.</em><br/>
+                  • <strong>PFR On-Target %:</strong> <code>Pases precisos a las manos ÷ Pases lanzados</code> (<em>promedio ~75%</em>).<br/>
+                  • <strong>PFR Pressure %:</strong> <code>(Apresuramientos + Golpes + Sacks) ÷ Dropbacks</code>. % de jugadas bajo acoso defensivo.</p>
+                </div>
+
+                <div class="ise-item">
+                  <strong>🏃 Corredores (RB): Yds/Acarreo, EPA/Acarreo, RYOE/Att y Caja 8+ Def</strong>
+                  <p>• <strong>Yds/Acarreo (YPC):</strong> <code>Yardas Terrestres ÷ Acarreos</code> (<em>promedio NFL: ~4.3 yds</em>).<br/>
+                  • <strong>EPA/Acarreo:</strong> <code>EPA Terrestre ÷ Acarreos</code>. Mide si sus corridas acercan al equipo al Touchdown.<br/>
+                  • <strong>NGS RYOE/Att (Rush Yards Over Expected):</strong> <code>(Yardas Reales − Yardas Esperadas por bloqueo) ÷ Acarreos</code>. Calcula mediante sensores cuántas yardas <strong>extra</strong> gana el corredor por su propia potencia/elusividad más allá del hueco de su línea.<br/>
+                  • <strong>NGS Caja 8+ Def:</strong> % de corridas donde enfrentó <strong>8 o más defensores</strong> amontonados en la línea para frenarlo.</p>
+                </div>
+
+                <div class="ise-item">
+                  <strong>🙌 Receptores (WR y TE): Target Share, Air Yards Share, WOPR y Separation</strong>
+                  <p>• <strong>Target Share (Cuota de Objetivos):</strong> <code>Pases lanzados al jugador ÷ Total de pases del equipo</code> (<em>Estrella #1: +24%</em>).<br/>
+                  • <strong>Air Yards Share:</strong> <code>Yardas aéreas voladas hacia él ÷ Total de yardas aéreas del equipo</code> (amenaza profunda).<br/>
+                  • <strong>WOPR (Weighted Opportunity Rating):</strong> Fórmula de <em>PlayerProfiler</em> que mide el rol total del receptor: <code>(1.5 × Target Share) + (0.7 × Air Yards Share)</code>. <em>Élite: &gt; 0.60.</em><br/>
+                  • <strong>NGS Separation:</strong> Distancia promedio en yardas entre el receptor y su marcador al llegar el balón (<em>promedio NFL: ~2.8 yds</em>).</p>
+                </div>
+
+                <div class="ise-item">
+                  <strong>🛡️ Defensores (DEF): Sacks, QB Hits, TFL, Pressures y Rating Permitido</strong>
+                  <p>• <strong>Sacks / QB Hits / TFL:</strong> Capturas al QB, golpes al QB tras lanzar y derribos detrás de la línea que restan yardas.<br/>
+                  • <strong>PFR Pressures (Presiones Totales):</strong> <code>Sacks + QB Hits + Hurries (apresuramientos)</code>. Mide cuántas jugadas arruinó el defensor en el bolsillo.<br/>
+                  • <strong>PFR Rating Permitido:</strong> Índice de pasador (escala 0 a 158.3) que logran los QBs rivales cuando lanzan contra la cobertura de este defensor. <em>¡Cuanto MÁS BAJO mejor! (&lt; 75.0 es cerrojo élite).</em></p>
                 </div>
               </div>
             </div>
@@ -535,6 +582,6 @@
   <!-- TOAST DE NOTIFICACIONES -->
   <div class="toast-notification hidden" id="toastNotification"></div>
 
-  <script src="app.js?v=20261027v4"></script>
+  <script src="app.js?v=20261027v5"></script>
 </body>
 </html>
