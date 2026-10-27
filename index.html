@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20261027v6" />
+  <link rel="stylesheet" href="styles.css?v=20261027v7" />
 </head>
 <body>
   <div class="app-shell">
@@ -67,41 +67,49 @@
 
     <!-- ÁREA PRINCIPAL CENTRAL + RIBBON SUPERIOR DE PARTIDOS -->
     <div class="main-workspace">
-      <!-- TOP GAME RIBBON -->
+      <!-- TOP GAME RIBBON (2 FILAS: CONTROLES ARRIBA + CINTA DE PARTIDOS 100% ANCHO ABAJO) -->
       <header class="top-game-ribbon-bar">
-        <div class="ribbon-controls">
-          <div class="week-selector-group">
-            <label for="selectWeek">SEMANA ACTIVA</label>
-            <select id="selectWeek">
-              <option value="7" selected>Semana 7 (Actual · MNF)</option>
-              <option value="8">Semana 8 (Próxima)</option>
-              <option value="6">Semana 6 (Anterior)</option>
-            </select>
+        <div class="ribbon-top-row">
+          <div class="ribbon-controls">
+            <div class="week-selector-group">
+              <label for="selectWeek">📅 SEMANA:</label>
+              <select id="selectWeek">
+                <option value="8">Semana 8 (Próximos Partidos)</option>
+                <option value="7" selected>Semana 7 (Resultados · MNF)</option>
+                <option value="6">Semana 6 (Anterior)</option>
+              </select>
+            </div>
+            <div class="week-selector-group">
+              <label for="selectMatchupGame">🏈 ELEGIR PARTIDO:</label>
+              <select id="selectMatchupGame" class="select-matchup-dropdown" title="Seleccioná cualquier partido de la semana para abrir su análisis táctico">
+                <option value="">Cargando partidos de la semana...</option>
+              </select>
+            </div>
+            <div class="day-slot-pills" id="daySlotFilterGroup">
+              <button class="slot-pill active" data-slot="ALL">Todos</button>
+              <button class="slot-pill" data-slot="TNF">Jueves (TNF)</button>
+              <button class="slot-pill" data-slot="SUNDAY">Domingo</button>
+              <button class="slot-pill" data-slot="MNF">Lunes (MNF)</button>
+            </div>
           </div>
-          <div class="day-slot-pills" id="daySlotFilterGroup">
-            <button class="slot-pill active" data-slot="ALL">Todos</button>
-            <button class="slot-pill" data-slot="TNF">Jueves (TNF)</button>
-            <button class="slot-pill" data-slot="SUNDAY">Domingo (4-5 Tips)</button>
-            <button class="slot-pill" data-slot="MNF">Lunes (MNF)</button>
+
+          <div class="ribbon-status-box">
+            <div class="ribbon-update-meta">
+              <span class="ribbon-last-update" id="topUpdatedStamp">🕒 Última actualización: --</span>
+              <span class="ribbon-auto-badge" id="topAutoBadge">⏱️ Auto: 1h Noticias · 30m Partidos en Vivo</span>
+            </div>
+            <button class="btn-top-refresh" id="btnTopRefresh" title="Actualizar estadísticas, marcadores y noticias ahora mismo">
+              🔄 Actualizar Ahora
+            </button>
           </div>
         </div>
 
         <div class="game-cards-scroll-wrapper">
-          <button class="ribbon-arrow" id="ribbonPrev" title="Anterior">‹</button>
+          <button class="ribbon-arrow" id="ribbonPrev" title="Desplazar partidos a la izquierda">‹</button>
           <div class="game-ribbon-track" id="gameRibbonTrack">
             <!-- Tarjetas de partidos inyectadas por app.js -->
           </div>
-          <button class="ribbon-arrow" id="ribbonNext" title="Siguiente">›</button>
-        </div>
-
-        <div class="ribbon-status-box">
-          <div class="ribbon-update-meta">
-            <span class="ribbon-last-update" id="topUpdatedStamp">🕒 Última actualización: --</span>
-            <span class="ribbon-auto-badge" id="topAutoBadge">⏱️ Auto: 1h Noticias · 30m Partidos en Vivo</span>
-          </div>
-          <button class="btn-top-refresh" id="btnTopRefresh" title="Actualizar estadísticas, marcadores y noticias ahora mismo">
-            🔄 Actualizar Ahora
-          </button>
+          <button class="ribbon-arrow" id="ribbonNext" title="Desplazar partidos a la derecha">›</button>
         </div>
       </header>
 
@@ -112,6 +120,22 @@
 
           <!-- VISTA 1: PANEL DE CONTROL / PIZARRA TÁCTICA CARA A CARA (ESTILO 4 - BIDIRECCIONAL) -->
           <section class="stage-view active" id="view-matchups">
+            <!-- SELECTOR RÁPIDO DE PARTIDO DE LA SEMANA O SIMULADOR ENTRE 2 EQUIPOS -->
+            <div class="matchup-quick-picker-bar">
+              <div class="mqp-group">
+                <label for="quickSelectGame">🏈 <strong>PARTIDO EN ANÁLISIS:</strong></label>
+                <select id="quickSelectGame" class="select-filter mqp-select-game"></select>
+              </div>
+              <div class="mqp-divider"></div>
+              <div class="mqp-group">
+                <span>⚔️ <strong>O cruzar cualquier par de equipos:</strong></span>
+                <select id="quickSimAway" class="select-filter"></select>
+                <strong>vs.</strong>
+                <select id="quickSimHome" class="select-filter"></select>
+                <button class="btn-primary-sm" id="btnQuickLoadSim">Abrir Duelo</button>
+              </div>
+            </div>
+
             <div class="matchup-banner-header" id="matchupBannerHeader">
               <!-- Cabecera del partido seleccionado -->
             </div>
@@ -617,6 +641,6 @@
   <!-- TOAST DE NOTIFICACIONES -->
   <div class="toast-notification hidden" id="toastNotification"></div>
 
-  <script src="app.js?v=20261027v6"></script>
+  <script src="app.js?v=20261027v7"></script>
 </body>
 </html>
