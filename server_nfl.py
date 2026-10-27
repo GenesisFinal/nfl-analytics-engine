@@ -36,6 +36,7 @@ def load_config() -> dict:
     cfg = {
         "buffer_access_token": os.environ.get("BUFFER_ACCESS_TOKEN", ""),
         "buffer_channel_id": os.environ.get("BUFFER_CHANNEL_ID", ""),
+        "gemini_api_key": os.environ.get("GEMINI_API_KEY", os.environ.get("GOOGLE_API_KEY", "")),
         "dashboard_public_url": "https://genesisfinal.github.io/nfl-analytics-engine/",
     }
     if os.path.exists(CONFIG_PATH):
@@ -226,8 +227,9 @@ class NFLAnalyticsRequestHandler(SimpleHTTPRequestHandler):
                     pass
             self._send_json(200, {
                 "has_buffer_credentials": bool(cfg.get("buffer_access_token") and cfg.get("buffer_channel_id")),
+                "has_gemini_api_key": bool(cfg.get("gemini_api_key")),
                 "buffer_channel_id": cfg.get("buffer_channel_id", ""),
-                "dashboard_public_url": cfg.get("dashboard_public_url", "https://amoll.github.io/nfl-analytics-engine/"),
+                "dashboard_public_url": cfg.get("dashboard_public_url", "https://genesisfinal.github.io/nfl-analytics-engine/"),
                 "history": hist,
             })
             return
@@ -246,6 +248,7 @@ class NFLAnalyticsRequestHandler(SimpleHTTPRequestHandler):
             self._send_json(200, {
                 "ok": True,
                 "has_buffer_credentials": bool(updated.get("buffer_access_token") and updated.get("buffer_channel_id")),
+                "has_gemini_api_key": bool(updated.get("gemini_api_key")),
                 "buffer_channel_id": updated.get("buffer_channel_id", ""),
                 "dashboard_public_url": updated.get("dashboard_public_url", ""),
             })
