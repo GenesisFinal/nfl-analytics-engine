@@ -15,64 +15,110 @@ const STATE = {
   teamSortAsc: true,
   selectedTipIds: new Set(),
   cardState: {}, // { [tipId]: { linkType: 'source' | 'page', pubMode: 'now' | 'offset' | 'datetime', offsetVal: 30, offsetUnit: 'minutes', dtVal: '', title: '', body: '', illustration: '' } }
+  usedIllustrations: new Set(),
   dashboardPublicUrl: "https://genesisfinal.github.io/nfl-analytics-engine/",
   autoRefreshTimer: null,
 };
 
 const CLAY_GALLERY = [
-  { label: "Trincheras MNF: Cowboys vs Eagles (DAL @ PHI)", path: "assets/clay/clay_dal_phi.jpg" },
-  { label: "Duelo Nocturno TNF: Patriots vs Bears (NE @ CHI)", path: "assets/clay/clay_ne_chi.jpg" },
-  { label: "Ataque Aéreo Domingo: 49ers vs Falcons (SF @ ATL)", path: "assets/clay/clay_sf_atl.jpg" },
-  { label: "Pass Rush & Bolsillo: Colts vs Vikings (IND @ MIN)", path: "assets/clay/clay_ind_min.jpg" },
-  { label: "Zona Roja Domingo: Steelers vs Saints (PIT @ NO)", path: "assets/clay/clay_pit_no.jpg" },
-  { label: "Equipos Especiales: Rams vs Raiders (LA @ LV)", path: "assets/clay/clay_la_lv.jpg" },
-  { label: "QB Analytics: Jared Goff (Detroit Lions)", path: "assets/clay/clay_det_goff.jpg" },
-  { label: "WR Analytics: Jaxon Smith-Njigba (Seahawks)", path: "assets/clay/clay_sea_jsn.jpg" },
-  { label: "Duelo Aéreo General (QB vs DB)", path: "assets/clay/clay_tnf_pass_duel.jpg" },
-  { label: "Recepción Explosiva (WR)", path: "assets/clay/clay_sunday_air_attack.jpg" },
-  { label: "Juego Terrestre (RB vs LB)", path: "assets/clay/clay_sunday_ground_game.jpg" },
-  { label: "Zona Roja & Coach Táctico", path: "assets/clay/clay_redzone_coach.jpg" },
-  { label: "Equipos Especiales (Field Goal)", path: "assets/clay/clay_special_teams_kick.jpg" },
-  { label: "Breaking News / Contratos GM", path: "assets/clay/clay_breaking_newsdesk.jpg" },
+  { label: "TNF Aéreo: Drake Maye #10 (NE) vs Jaylon Johnson #33 (CHI)", path: "assets/clay/clay_ne_chi.jpg" },
+  { label: "TNF Trincheras: Montez Sweat #98 (CHI) vs Ben Brown #77 (NE)", path: "assets/clay/clay_ne_chi_trenches.jpg" },
+  { label: "DOM Aéreo: Christian McCaffrey #23 (SF) vs Kaden Elliss #55 (ATL)", path: "assets/clay/clay_sf_atl.jpg" },
+  { label: "DOM Terrestre: Bijan Robinson #7 (ATL) vs Fred Warner #54 (SF)", path: "assets/clay/clay_atl_sf_ground.jpg" },
+  { label: "DOM Pass Rush: Jonathan Greenard #58 (MIN) vs Quenton Nelson #56 (IND)", path: "assets/clay/clay_ind_min.jpg" },
+  { label: "DOM Zona Roja: Chris Olave #12 (NO) vs T.J. Watt #90 (PIT)", path: "assets/clay/clay_pit_no.jpg" },
+  { label: "DOM Equipos Especiales: Daniel Carlson #17 (LV) vs Kobie Turner #44 (LA)", path: "assets/clay/clay_la_lv.jpg" },
+  { label: "MNF Trincheras: Zack Martin #70 (DAL) vs Jalen Carter #98 (PHI)", path: "assets/clay/clay_dal_phi.jpg" },
+  { label: "MNF 3ra y Gol: CeeDee Lamb #88 (DAL) vs Quinyon Mitchell #27 (PHI)", path: "assets/clay/clay_dal_phi_mnf2.jpg" },
+  { label: "QB Analytics: Jared Goff #16 (Detroit Lions)", path: "assets/clay/clay_det_goff.jpg" },
+  { label: "WR Analytics: Jaxon Smith-Njigba #11 (Seattle Seahawks)", path: "assets/clay/clay_sea_jsn.jpg" },
+  { label: "News Parte Médico: Saquon Barkley #26 (Philadelphia Eagles)", path: "assets/clay/clay_news_barkley_phi26.jpg" },
+  { label: "News Explosión MNF: Javonte Williams #33 (DAL) vs Eagles #53", path: "assets/clay/clay_news_javonte_dal33.jpg" },
+  { label: "News Cirugía Tobillo: Taylor Moton #72 (Carolina Panthers)", path: "assets/clay/clay_news_moton_car72.jpg" },
+  { label: "News Trade Radar: Garrett Wilson #5 (NYJ · KC / SF)", path: "assets/clay/clay_news_gwilson_nyj5.jpg" },
 ];
 
-const TEAM_PAIR_CLAY_MAP = {
-  "DAL-PHI": "assets/clay/clay_dal_phi.jpg",
-  "NE-CHI": "assets/clay/clay_ne_chi.jpg",
-  "CHI-NE": "assets/clay/clay_ne_chi.jpg",
-  "SF-ATL": "assets/clay/clay_sf_atl.jpg",
-  "ATL-SF": "assets/clay/clay_sf_atl.jpg",
-  "IND-MIN": "assets/clay/clay_ind_min.jpg",
-  "MIN-IND": "assets/clay/clay_ind_min.jpg",
-  "PIT-NO": "assets/clay/clay_pit_no.jpg",
-  "NO-PIT": "assets/clay/clay_pit_no.jpg",
-  "LA-LV": "assets/clay/clay_la_lv.jpg",
-  "LV-LA": "assets/clay/clay_la_lv.jpg",
-  "PHI-DAL": "assets/clay/clay_dal_phi.jpg",
+const TEAM_VISUAL_SPECS_JS = {
+  ARI: { name: "Arizona Cardinals", helmet: "white helmet with red Cardinal logo", jersey: "cardinal red jersey with white numerals", qb: ["Kyler Murray", "#1"], rb: ["James Conner", "#6"], wr: ["Marvin Harrison Jr.", "#18"], ol: ["Paris Johnson Jr.", "#70"], pr: ["Zaven Collins", "#25"], db: ["Budda Baker", "#3"] },
+  ATL: { name: "Atlanta Falcons", helmet: "matte black helmet with red Falcon logo", jersey: "black jersey with red trim and white numerals", qb: ["Kirk Cousins", "#18"], rb: ["Bijan Robinson", "#7"], wr: ["Drake London", "#5"], ol: ["Chris Lindstrom", "#63"], pr: ["Kaden Elliss", "#55"], db: ["Jessie Bates III", "#3"] },
+  BAL: { name: "Baltimore Ravens", helmet: "metallic black helmet with purple Raven logo", jersey: "purple jersey with gold-trimmed white numerals", qb: ["Lamar Jackson", "#8"], rb: ["Derrick Henry", "#22"], wr: ["Zay Flowers", "#4"], ol: ["Tyler Linderbaum", "#64"], pr: ["Nnamdi Madubuike", "#92"], db: ["Kyle Hamilton", "#14"] },
+  BUF: { name: "Buffalo Bills", helmet: "white helmet with charging blue/red Buffalo logo", jersey: "royal blue jersey with white numerals", qb: ["Josh Allen", "#17"], rb: ["James Cook", "#4"], wr: ["Khalil Shakir", "#10"], ol: ["Dion Dawkins", "#73"], pr: ["Greg Rousseau", "#50"], db: ["Taron Johnson", "#7"] },
+  CAR: { name: "Carolina Panthers", helmet: "metallic silver helmet with black/blue Panther logo", jersey: "black jersey with electric blue trim and white numerals", qb: ["Bryce Young", "#9"], rb: ["Chuba Hubbard", "#30"], wr: ["Xavier Legette", "#17"], ol: ["Taylor Moton", "#72"], pr: ["Jadeveon Clowney", "#7"], db: ["Jaycee Horn", "#8"] },
+  CHI: { name: "Chicago Bears", helmet: "dark navy helmet with orange wishbone C logo", jersey: "dark navy jersey with orange-outlined white numerals", qb: ["Caleb Williams", "#18"], rb: ["D'Andre Swift", "#4"], wr: ["DJ Moore", "#2"], ol: ["Darnell Wright", "#58"], pr: ["Montez Sweat", "#98"], db: ["Jaylon Johnson", "#33"] },
+  CIN: { name: "Cincinnati Bengals", helmet: "orange helmet with black Bengal tiger stripes", jersey: "black jersey with orange tiger stripes and white numerals", qb: ["Joe Burrow", "#9"], rb: ["Chase Brown", "#30"], wr: ["Ja'Marr Chase", "#1"], ol: ["Orlando Brown Jr.", "#75"], pr: ["Trey Hendrickson", "#91"], db: ["Cam Taylor-Britt", "#29"] },
+  CLE: { name: "Cleveland Browns", helmet: "orange helmet with brown/white center stripe", jersey: "dark brown jersey with orange numerals", qb: ["Jameis Winston", "#5"], rb: ["Nick Chubb", "#24"], wr: ["Jerry Jeudy", "#3"], ol: ["Joel Bitonio", "#75"], pr: ["Myles Garrett", "#95"], db: ["Denzel Ward", "#21"] },
+  DAL: { name: "Dallas Cowboys", helmet: "metallic silver helmet with navy Lone Star logo", jersey: "white jersey with royal blue numerals", qb: ["Dak Prescott", "#4"], rb: ["Javonte Williams", "#33"], wr: ["CeeDee Lamb", "#88"], ol: ["Zack Martin", "#70"], pr: ["Micah Parsons", "#11"], db: ["Trevon Diggs", "#7"] },
+  DEN: { name: "Denver Broncos", helmet: "navy helmet with orange Bronco horse logo", jersey: "sunset orange jersey with white numerals", qb: ["Bo Nix", "#10"], rb: ["Jaleel McLaughlin", "#38"], wr: ["Courtland Sutton", "#14"], ol: ["Quinn Meinerz", "#77"], pr: ["Nik Bonitto", "#15"], db: ["Pat Surtain II", "#2"] },
+  DET: { name: "Detroit Lions", helmet: "Honolulu blue metallic helmet with silver Lion logo", jersey: "Honolulu blue jersey with silver numerals", qb: ["Jared Goff", "#16"], rb: ["Jahmyr Gibbs", "#26"], wr: ["Amon-Ra St. Brown", "#14"], ol: ["Penei Sewell", "#58"], pr: ["Aidan Hutchinson", "#97"], db: ["Brian Branch", "#32"] },
+  GB: { name: "Green Bay Packers", helmet: "golden yellow helmet with dark green G logo", jersey: "dark forest green jersey with white numerals", qb: ["Jordan Love", "#10"], rb: ["Josh Jacobs", "#8"], wr: ["Jayden Reed", "#11"], ol: ["Elgton Jenkins", "#74"], pr: ["Rashan Gary", "#52"], db: ["Xavier McKinney", "#29"] },
+  HOU: { name: "Houston Texans", helmet: "deep steel navy helmet with red/white Bull logo", jersey: "deep steel navy jersey with red trim and white numerals", qb: ["C.J. Stroud", "#7"], rb: ["Joe Mixon", "#28"], wr: ["Nico Collins", "#12"], ol: ["Laremy Tunsil", "#78"], pr: ["Will Anderson Jr.", "#51"], db: ["Derek Stingley Jr.", "#24"] },
+  IND: { name: "Indianapolis Colts", helmet: "white helmet with royal blue Horseshoe logo", jersey: "royal blue jersey with white numerals", qb: ["Anthony Richardson", "#5"], rb: ["Jonathan Taylor", "#28"], wr: ["Michael Pittman Jr.", "#11"], ol: ["Quenton Nelson", "#56"], pr: ["DeForest Buckner", "#99"], db: ["Kenny Moore II", "#23"] },
+  JAX: { name: "Jacksonville Jaguars", helmet: "glossy black helmet with gold/teal Jaguar logo", jersey: "teal jersey with white numerals", qb: ["Trevor Lawrence", "#16"], rb: ["Travis Etienne Jr.", "#1"], wr: ["Brian Thomas Jr.", "#7"], ol: ["Brandon Scherff", "#68"], pr: ["Josh Hines-Allen", "#41"], db: ["Tyson Campbell", "#3"] },
+  KC: { name: "Kansas City Chiefs", helmet: "bright red helmet with white KC arrowhead logo", jersey: "bright red jersey with white numerals", qb: ["Patrick Mahomes", "#15"], rb: ["Kareem Hunt", "#29"], wr: ["Travis Kelce", "#87"], ol: ["Creed Humphrey", "#52"], pr: ["Chris Jones", "#95"], db: ["Trent McDuffie", "#22"] },
+  LA: { name: "Los Angeles Rams", helmet: "metallic royal blue helmet with yellow Ram horns", jersey: "royal blue jersey with yellow numerals", qb: ["Matthew Stafford", "#9"], rb: ["Kyren Williams", "#23"], wr: ["Puka Nacua", "#17"], ol: ["Kevin Dotson", "#69"], pr: ["Jared Verse", "#8"], db: ["Kobie Turner", "#44"] },
+  LAC: { name: "Los Angeles Chargers", helmet: "white helmet with gold lightning bolt", jersey: "powder blue jersey with white numerals", qb: ["Justin Herbert", "#10"], rb: ["J.K. Dobbins", "#27"], wr: ["Ladd McConkey", "#15"], ol: ["Rashawn Slater", "#70"], pr: ["Khalil Mack", "#52"], db: ["Derwin James Jr.", "#3"] },
+  LV: { name: "Las Vegas Raiders", helmet: "metallic silver helmet with Raiders shield logo", jersey: "black jersey with silver numerals", qb: ["Gardner Minshew", "#15"], rb: ["Alexander Mattison", "#22"], wr: ["Brock Bowers", "#89"], ol: ["Kolton Miller", "#74"], pr: ["Maxx Crosby", "#98"], db: ["Daniel Carlson", "#17"] },
+  MIA: { name: "Miami Dolphins", helmet: "white helmet with aqua/orange Dolphin logo", jersey: "aqua jersey with white numerals", qb: ["Tua Tagovailoa", "#1"], rb: ["De'Von Achane", "#28"], wr: ["Tyreek Hill", "#10"], ol: ["Terron Armstead", "#72"], pr: ["Calais Campbell", "#93"], db: ["Jalen Ramsey", "#5"] },
+  MIN: { name: "Minnesota Vikings", helmet: "matte purple helmet with white Viking horns", jersey: "purple jersey with white numerals", qb: ["Sam Darnold", "#14"], rb: ["Aaron Jones", "#33"], wr: ["Justin Jefferson", "#18"], ol: ["Christian Darrisaw", "#71"], pr: ["Jonathan Greenard", "#58"], db: ["Byron Murphy Jr.", "#7"] },
+  NE: { name: "New England Patriots", helmet: "metallic silver helmet with Flying Elvis logo", jersey: "nautical navy jersey with red/white stripes and white numerals", qb: ["Drake Maye", "#10"], rb: ["Rhamondre Stevenson", "#38"], wr: ["DeMario Douglas", "#3"], ol: ["Ben Brown", "#77"], pr: ["Keion White", "#99"], db: ["Christian Gonzalez", "#0"] },
+  NO: { name: "New Orleans Saints", helmet: "metallic old gold helmet with black Fleur-de-Lis", jersey: "black jersey with old gold numerals", qb: ["Derek Carr", "#4"], rb: ["Alvin Kamara", "#41"], wr: ["Chris Olave", "#12"], ol: ["Erik McCoy", "#78"], pr: ["Cameron Jordan", "#94"], db: ["Tyrann Mathieu", "#32"] },
+  NYG: { name: "New York Giants", helmet: "metallic dark blue helmet with white NY logo", jersey: "royal blue jersey with white numerals", qb: ["Daniel Jones", "#8"], rb: ["Tyrone Tracy Jr.", "#29"], wr: ["Malik Nabers", "#1"], ol: ["Andrew Thomas", "#78"], pr: ["Dexter Lawrence", "#97"], db: ["Deonte Banks", "#3"] },
+  NYJ: { name: "New York Jets", helmet: "metallic Gotham green helmet with white JETS logo", jersey: "Gotham green jersey with white numerals", qb: ["Aaron Rodgers", "#8"], rb: ["Breece Hall", "#20"], wr: ["Garrett Wilson", "#5"], ol: ["Alijah Vera-Tucker", "#75"], pr: ["Quinnen Williams", "#95"], db: ["Sauce Gardner", "#1"] },
+  PHI: { name: "Philadelphia Eagles", helmet: "metallic midnight green helmet with silver Eagles wings", jersey: "midnight green jersey with white numerals", qb: ["Jalen Hurts", "#1"], rb: ["Saquon Barkley", "#26"], wr: ["A.J. Brown", "#11"], ol: ["Lane Johnson", "#65"], pr: ["Jalen Carter", "#98"], db: ["Quinyon Mitchell", "#27"] },
+  PIT: { name: "Pittsburgh Steelers", helmet: "glossy black helmet with Steelmark logo", jersey: "black jersey with gold/black stripes and white numerals", qb: ["Russell Wilson", "#3"], rb: ["Najee Harris", "#22"], wr: ["George Pickens", "#14"], ol: ["Isaac Seumalo", "#73"], pr: ["T.J. Watt", "#90"], db: ["Minkah Fitzpatrick", "#39"] },
+  SEA: { name: "Seattle Seahawks", helmet: "college navy helmet with action green Seahawk logo", jersey: "college navy jersey with action green trim and white numerals", qb: ["Geno Smith", "#7"], rb: ["Kenneth Walker III", "#9"], wr: ["Jaxon Smith-Njigba", "#11"], ol: ["Charles Cross", "#67"], pr: ["Leonard Williams", "#99"], db: ["Devon Witherspoon", "#21"] },
+  SF: { name: "San Francisco 49ers", helmet: "metallic gold helmet with red/white SF oval logo", jersey: "scarlet red jersey with white numerals", qb: ["Brock Purdy", "#13"], rb: ["Christian McCaffrey", "#23"], wr: ["Deebo Samuel", "#1"], ol: ["Trent Williams", "#71"], pr: ["Nick Bosa", "#97"], db: ["Fred Warner", "#54"] },
+  TB: { name: "Tampa Bay Buccaneers", helmet: "pewter helmet with red pirate flag logo", jersey: "red jersey with white numerals", qb: ["Baker Mayfield", "#6"], rb: ["Bucky Irving", "#7"], wr: ["Mike Evans", "#13"], ol: ["Tristan Wirfs", "#78"], pr: ["Vita Vea", "#50"], db: ["Antoine Winfield Jr.", "#31"] },
+  TEN: { name: "Tennessee Titans", helmet: "navy helmet with flaming Titan sword logo", jersey: "navy jersey with Titan blue shoulders and white numerals", qb: ["Will Levis", "#8"], rb: ["Tony Pollard", "#20"], wr: ["Calvin Ridley", "#0"], ol: ["Peter Skoronski", "#77"], pr: ["Jeffery Simmons", "#98"], db: ["Amani Hooker", "#37"] },
+  WAS: { name: "Washington Commanders", helmet: "matte burgundy helmet with gold W logo", jersey: "burgundy jersey with gold numerals", qb: ["Jayden Daniels", "#5"], rb: ["Brian Robinson Jr.", "#8"], wr: ["Terry McLaurin", "#17"], ol: ["Sam Cosmi", "#76"], pr: ["Daron Payne", "#94"], db: ["Bobby Wagner", "#54"] },
 };
 
-function getMatchupIllustration(awAbbr, hmAbbr, fallback = "assets/clay/clay_dal_phi.jpg") {
-  const key = `${awAbbr}-${hmAbbr}`;
-  if (TEAM_PAIR_CLAY_MAP[key]) return TEAM_PAIR_CLAY_MAP[key];
-  if (awAbbr === "DAL" || hmAbbr === "DAL" || awAbbr === "PHI" || hmAbbr === "PHI") {
-    return "assets/clay/clay_dal_phi.jpg";
+function getNextUniqueClaySeed() {
+  let prevSeeds = [];
+  try {
+    prevSeeds = JSON.parse(localStorage.getItem("nfl_used_clay_seeds") || "[]");
+  } catch (_) {}
+  let seed = Math.floor(100000 + Math.random() * 899999);
+  while (prevSeeds.includes(seed)) {
+    seed = Math.floor(100000 + Math.random() * 899999);
   }
-  if (awAbbr === "NE" || hmAbbr === "NE" || awAbbr === "CHI" || hmAbbr === "CHI") {
-    return "assets/clay/clay_ne_chi.jpg";
-  }
-  if (awAbbr === "SF" || hmAbbr === "SF" || awAbbr === "ATL" || hmAbbr === "ATL") {
-    return "assets/clay/clay_sf_atl.jpg";
-  }
-  if (awAbbr === "IND" || hmAbbr === "IND" || awAbbr === "MIN" || hmAbbr === "MIN") {
-    return "assets/clay/clay_ind_min.jpg";
-  }
-  if (awAbbr === "PIT" || hmAbbr === "PIT" || awAbbr === "NO" || hmAbbr === "NO") {
-    return "assets/clay/clay_pit_no.jpg";
-  }
-  if (awAbbr === "LA" || hmAbbr === "LA" || awAbbr === "LV" || hmAbbr === "LV") {
-    return "assets/clay/clay_la_lv.jpg";
-  }
-  return fallback;
+  prevSeeds.push(seed);
+  try {
+    localStorage.setItem("nfl_used_clay_seeds", JSON.stringify(prevSeeds.slice(-500)));
+  } catch (_) {}
+  return seed;
+}
+
+function buildUniqueDynamicClayUrl(promptText) {
+  const seed = getNextUniqueClaySeed();
+  const cleanPrompt = `${promptText} [Unique render seed #${seed}]`;
+  const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(cleanPrompt)}?width=1600&height=900&nologo=true&model=flux&seed=${seed}`;
+  STATE.usedIllustrations.add(url);
+  return url;
+}
+
+async function generateAndAssignUniqueTipImage(tip) {
+  // Si el servidor local server_nfl.py está corriendo, persiste la imagen única en assets/clay/ y data/used_images_registry.json
+  try {
+    const resp = await fetch("/api/generate-tip-image", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tip }),
+    });
+    if (resp.ok) {
+      const data = await resp.json();
+      if (data.ok && data.illustration) {
+        tip.illustration = data.illustration;
+        tip.clay_prompt = data.clay_prompt || tip.clay_prompt;
+        if (STATE.cardState[tip.id]) {
+          STATE.cardState[tip.id].illustration = data.illustration;
+        }
+        STATE.usedIllustrations.add(data.illustration);
+        renderXTipsFeed();
+        return;
+      }
+    }
+  } catch (_) {}
 }
 
 function showToast(msg, duration = 3800) {
@@ -869,9 +915,15 @@ function renderXTipsFeed() {
       const charClass = charCount <= 260 ? "" : charCount <= 280 ? "warn" : "over";
       const activeUrl = st.linkType === "page" ? tip.page_link : tip.source_link;
 
-      const clayOptionsHtml = CLAY_GALLERY.map(
-        (c) => `<option value="${c.path}" ${st.illustration === c.path ? "selected" : ""}>🎨 ${c.label}</option>`
-      ).join("");
+      const isGalleryPath = CLAY_GALLERY.some((c) => c.path === st.illustration);
+      const customOptionHtml = !isGalleryPath
+        ? `<option value="${st.illustration}" selected>✨ Imagen 16:9 Única Concordante (${(tip.matchup_label || st.title).slice(0, 32)})</option>`
+        : "";
+      const clayOptionsHtml =
+        customOptionHtml +
+        CLAY_GALLERY.map(
+          (c) => `<option value="${c.path}" ${st.illustration === c.path ? "selected" : ""}>🎨 ${c.label}</option>`
+        ).join("");
 
       return `
         <div class="x-tip-card ${isChecked ? "selected-for-batch" : ""}" data-tipid="${tip.id}">
@@ -886,12 +938,17 @@ function renderXTipsFeed() {
           <!-- ILUSTRACIÓN DE PLASTILINA (16:9) -->
           <div class="xtc-clay-wrapper" data-tipid="${tip.id}">
             <img src="${st.illustration}" alt="${st.title}" loading="lazy" />
-            <span class="xtc-clay-badge">🔍 Plastilina 16:9 · Clic para ampliar</span>
+            <span class="xtc-clay-badge">🔍 Plastilina 16:9 · 100% Concordante · Clic para ampliar</span>
           </div>
 
-          <select class="select-filter select-clay-scene" data-tipid="${tip.id}" style="font-size:11px; padding:4px 7px;">
-            ${clayOptionsHtml}
-          </select>
+          <div style="display:flex; gap:6px; align-items:center;">
+            <select class="select-filter select-clay-scene" data-tipid="${tip.id}" style="font-size:11px; padding:4px 7px; flex:1;">
+              ${clayOptionsHtml}
+            </select>
+            <button class="btn-secondary-sm btn-regen-unique-clay" data-tipid="${tip.id}" title="Generar una nueva imagen 16:9 única y concordante con el texto actual del tweet (sin repetir imágenes previas)" style="font-size:10.5px; padding:4px 8px; white-space:nowrap;">
+              🎨 Nueva 16:9 Única
+            </button>
+          </div>
 
           <!-- TÍTULO DEL POST -->
           <input type="text" class="xtc-title-input" data-tipid="${tip.id}" value="${st.title.replace(/"/g, "&quot;")}" title="Título del ángulo técnico" />
@@ -1002,6 +1059,26 @@ function bindXTipCardEvents() {
       const id = sel.dataset.tipid;
       STATE.cardState[id].illustration = sel.value;
       renderXTipsFeed();
+    });
+  });
+
+  // Botón para generar una nueva imagen 16:9 única y concordante con el texto del tweet
+  feed.querySelectorAll(".btn-regen-unique-clay").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const id = btn.dataset.tipid;
+      const tip = (STATE.data.tips_x || []).find((x) => x.id === id);
+      const st = STATE.cardState[id];
+      if (!tip || !st) return;
+      tip.title = st.title;
+      tip.body = st.body;
+      const newPrompt = `3D claymation (caricatura de plastilina) full-bleed widescreen 16:9 illustration extending to the edges with NO border or frame: NFL scene depicting ${st.title} — ${st.body}. Authentic NFL helmets, exact player jersey numbers mentioned, ONE single brown leather football, natural two-arm anatomy, stadium floodlights.`;
+      tip.clay_prompt = newPrompt;
+      const dynUrl = buildUniqueDynamicClayUrl(newPrompt);
+      tip.illustration = dynUrl;
+      st.illustration = dynUrl;
+      renderXTipsFeed();
+      showToast("🎨 Generando nueva ilustración 16:9 única y concordante con el tweet...");
+      await generateAndAssignUniqueTipImage(tip);
     });
   });
 
@@ -1152,15 +1229,14 @@ async function executePublishRequest(tipsList, mode, offsetMinutes, scheduledDat
         offset_minutes: offsetMinutes,
         scheduled_datetime_art: scheduledDatetimeArt,
       }),
-    });
+    }),
+      res = resp.ok ? await resp.json() : null;
 
-    if (resp.ok) {
-      const res = await resp.json();
+    if (resp.ok && res) {
       const first = (res.results || [])[0] || {};
       if (first.Buffer) {
         showToast(`🚀 ¡Éxito en Buffer! (${first.entry?.mode || mode})`);
       } else {
-        // Si no tiene token de Buffer aún, copiamos el texto y abrimos X Intent si es inmediato o dejamos agendado en el historial local con CDN URL
         const txt = payloadItems[0].full_text;
         await navigator.clipboard.writeText(txt);
         if (mode === "now") {
@@ -1176,7 +1252,6 @@ async function executePublishRequest(tipsList, mode, offsetMinutes, scheduledDat
       throw new Error("Servidor estático sin endpoint /api/publish");
     }
   } catch (err) {
-    // Fallback si se abre directo sin server_nfl.py
     const txt = payloadItems[0].full_text;
     await navigator.clipboard.writeText(txt);
     const intentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(txt)}`;
@@ -1186,7 +1261,7 @@ async function executePublishRequest(tipsList, mode, offsetMinutes, scheduledDat
 }
 
 /* ==========================================================================
-   CREADORES DINÁMICOS DE TIPS PARA X DESDE CUALQUIER VISTA
+   CREADORES DINÁMICOS DE TIPS PARA X (100% CONCORDANTES + IMAGEN 16:9 ÚNICA)
    ========================================================================== */
 function prependNewTipCard(newTip) {
   STATE.data.tips_x.unshift(newTip);
@@ -1194,67 +1269,93 @@ function prependNewTipCard(newTip) {
   STATE.tipGroupFilter = "ALL";
   document.querySelectorAll(".x-tab").forEach((b) => b.classList.toggle("active", b.dataset.tipgroup === "ALL"));
   renderXTipsFeed();
-  showToast("✨ Nuevo Tip agregado al principio de la columna derecha (Ángulos Técnicos)");
+  generateAndAssignUniqueTipImage(newTip);
+  showToast("✨ Nuevo Tip creado con imagen 16:9 única y concordante (sin repetir imágenes)");
 }
 
 function createCustomTeamTip(tm) {
   const id = `tip-custom-team-${tm.abbr}-${Date.now()}`;
-  const teamImg = getMatchupIllustration(tm.abbr, tm.abbr, "assets/clay/clay_dal_phi.jpg");
+  const spec = TEAM_VISUAL_SPECS_JS[tm.abbr] || TEAM_VISUAL_SPECS_JS.KC;
+  const [qbName, qbNum] = spec.qb;
+  const [prName, prNum] = spec.pr;
+  const prompt = `3D claymation (caricatura de plastilina) full-bleed widescreen 16:9 illustration extending to the edges with NO border or frame: ${spec.name} quarterback ${qbName} in ${spec.jersey} with number ${qbNum} and ${spec.helmet} throwing ONE single brown leather football alongside defensive star ${prName} (${prNum}) on the stadium turf. Handcrafted plasticine clay texture, natural anatomy.`;
+  const uniqueImgUrl = buildUniqueDynamicClayUrl(prompt);
+
   prependNewTipCard({
     id,
     day_group: "SUNDAY",
+    category: "SUNDAY",
+    matchup: tm.abbr,
     badge: `⚔️ EQUIPO · ${tm.abbr} (#${tm.rank_total} NFL)`,
     game_id: "ALL",
-    matchup_label: tm.name,
-    title: `Radiografía Técnica de ${tm.name} (${tm.record})`,
-    body: `📊 Radiografía 2026 de ${tm.name} (#${tm.rank_total} NFL): ataque con ${tm.off_epa_play >= 0 ? "+" : ""}${tm.off_epa_play.toFixed(2)} EPA/jugada (${tm.off_ppg} PPG y ${tm.off_rz_td_pct}% TD en Zona Roja) y defensa con ${tm.def_sacks} sacks (${tm.def_sack_rate}% pass rush).`,
+    matchup_label: `${tm.name} (${qbName} ${qbNum})`,
+    title: `Radiografía Técnica de ${tm.name}: ${qbName} (${qbNum}) y ${prName} (${prNum})`,
+    body: `📊 Radiografía 2026 de ${tm.name} (#${tm.rank_total} NFL): ${qbName} (${qbNum}) comanda un ataque de ${tm.off_epa_play >= 0 ? "+" : ""}${tm.off_epa_play.toFixed(2)} EPA/jugada (${tm.off_ppg} PPG), mientras ${prName} (${prNum}) lidera la defensa con ${tm.def_sacks} sacks (${tm.def_sack_rate}% pass rush).`,
     page_link: `${STATE.dashboardPublicUrl}#teams`,
     source_link: tm.links.pfr,
     source_name: "Pro Football Reference / RBSDM",
-    illustration: teamImg,
-    clay_prompt: `3D claymation (caricatura de plastilina) 16:9 illustration of ${tm.name} players in action on an NFL field. Handcrafted plasticine texture.`,
+    illustration: uniqueImgUrl,
+    clay_prompt: prompt,
   });
 }
 
 function createCustomPlayerTip(pl) {
   const id = `tip-custom-player-${pl.id}-${Date.now()}`;
-  const mEntries = Object.entries(pl.metrics || {}).slice(0, 3).map(([k, v]) => `${k}: ${v}`).join(" · ");
-  let playerImg = pl.pos === "QB" ? "assets/clay/clay_det_goff.jpg" : pl.pos === "RB" ? "assets/clay/clay_sunday_ground_game.jpg" : "assets/clay/clay_sea_jsn.jpg";
-  if (pl.team === "DET" && pl.pos === "QB") playerImg = "assets/clay/clay_det_goff.jpg";
-  else if (pl.team === "SEA" && pl.pos === "WR") playerImg = "assets/clay/clay_sea_jsn.jpg";
-  else playerImg = getMatchupIllustration(pl.team, pl.team, playerImg);
+  const spec = TEAM_VISUAL_SPECS_JS[pl.team] || TEAM_VISUAL_SPECS_JS.DET;
+  let num = "#1";
+  for (const unit of ["qb", "rb", "wr", "ol", "pr", "db"]) {
+    if (spec[unit] && spec[unit][0].toLowerCase() === pl.name.toLowerCase()) {
+      num = spec[unit][1];
+      break;
+    }
+  }
+  if (num === "#1" && spec[pl.pos.toLowerCase()]) {
+    num = spec[pl.pos.toLowerCase()][1];
+  }
+  const mEntries = Object.entries(pl.metrics || {}).slice(0, 2).map(([k, v]) => `${k}: ${v}`).join(" · ");
+  const prompt = `3D claymation (caricatura de plastilina) full-bleed widescreen 16:9 illustration extending to the edges with NO border or frame: ${spec.name} (${pl.team}) ${pl.pos} ${pl.name} in ${spec.jersey} with number ${num} and ${spec.helmet} in explosive NFL action with ONE single brown leather football. Handcrafted plasticine clay texture, natural two-arm anatomy.`;
+  const uniqueImgUrl = buildUniqueDynamicClayUrl(prompt);
 
   prependNewTipCard({
     id,
     day_group: "SUNDAY",
-    badge: `🏃 SCOUTING · ${pl.pos} (${pl.team})`,
+    category: "SUNDAY",
+    matchup: pl.team,
+    badge: `🏃 SCOUTING · ${pl.pos} (${pl.team} ${num})`,
     game_id: "ALL",
-    matchup_label: `${pl.name} (${pl.team})`,
-    title: `Impacto Estadístico: ${pl.name} (${pl.pos} · ${pl.team})`,
-    body: `⭐ Scouting NFL 2026: ${pl.name} (${pl.team}) se ubica en el percentil ${pl.percentile} de su posición con ${pl.primary_label}: ${pl.primary_val} (${pl.secondary_label}: ${pl.secondary_val} · ${mEntries}).`,
+    matchup_label: `${pl.name} (${num}, ${pl.team})`,
+    title: `Impacto Estadístico: ${pl.name} (${num}, ${pl.pos} · ${pl.team})`,
+    body: `⭐ Scouting NFL 2026: ${pl.name} (${num}, ${pl.team}) se ubica en el percentil ${pl.percentile} de su posición con ${pl.primary_label}: ${pl.primary_val} (${pl.secondary_label}: ${pl.secondary_val} · ${mEntries}).`,
     page_link: `${STATE.dashboardPublicUrl}#players`,
     source_link: Object.values(pl.links || {})[0] || "https://www.pro-football-reference.com/",
     source_name: "Next Gen Stats / PlayerProfiler",
-    illustration: playerImg,
-    clay_prompt: `3D claymation (caricatura de plastilina) 16:9 illustration of ${pl.name} (${pl.team}) in NFL action. Handcrafted plasticine style.`,
+    illustration: uniqueImgUrl,
+    clay_prompt: prompt,
   });
 }
 
 function createCustomNewsTip(nw) {
   const id = `tip-custom-news-${nw.id}-${Date.now()}`;
+  const spec = TEAM_VISUAL_SPECS_JS[nw.team] || TEAM_VISUAL_SPECS_JS.PHI;
+  const [starName, starNum] = spec.qb;
+  const prompt = `3D claymation (caricatura de plastilina) full-bleed widescreen 16:9 illustration extending to the edges with NO border or frame: ${spec.name} player in ${spec.jersey} with number ${starNum} and ${spec.helmet} on the NFL stadium sideline representing breaking news: ${nw.title}. Handcrafted plasticine clay texture, natural anatomy.`;
+  const uniqueImgUrl = buildUniqueDynamicClayUrl(prompt);
+
   prependNewTipCard({
     id,
     day_group: "NEWS",
+    category: "NEWS",
+    matchup: nw.team || "NFL",
     badge: `${nw.category} · ${nw.source.toUpperCase()}`,
     game_id: "NEWS",
-    matchup_label: nw.source,
+    matchup_label: `${nw.source}${nw.team ? " · " + nw.team : ""}`,
     title: nw.title,
     body: `🚨 [${nw.source}] ${nw.title}. ${nw.summary.slice(0, 105)}`,
     page_link: `${STATE.dashboardPublicUrl}#news`,
     source_link: nw.url,
     source_name: nw.source,
-    illustration: "assets/clay/clay_breaking_newsdesk.jpg",
-    clay_prompt: `3D claymation (caricatura de plastilina) 16:9 illustration of NFL breaking news: ${nw.title}. Handcrafted plasticine style.`,
+    illustration: uniqueImgUrl,
+    clay_prompt: prompt,
   });
 }
 
@@ -1272,7 +1373,6 @@ async function refreshLiveFromBrowser(isManual = false) {
     showToast("🔄 Actualizando marcadores en vivo, estado de MNF y Top News...");
   }
 
-  // 1. Si corre localmente con server_nfl.py, intenta disparar /api/refresh
   let localRefreshed = false;
   if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
     try {
@@ -1281,11 +1381,8 @@ async function refreshLiveFromBrowser(isManual = false) {
     } catch (_) {}
   }
 
-  // 2. Recargar JSON base (actualizado por GitHub Actions cada 30m/1h o servidor local)
   await loadDashboardData(true);
 
-  // 3. Consultar directamente desde el navegador la API pública en vivo de ESPN (Scoreboard + News)
-  //    para reflejar marcadores al instante y asegurar que no cambie de semana mientras MNF se juega
   let liveGameDetected = false;
   try {
     const sbResp = await fetch(`https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?t=${Date.now()}`);
@@ -1305,7 +1402,6 @@ async function refreshLiveFromBrowser(isManual = false) {
         const detail = stObj.shortDetail || "";
         if (state === "in") liveGameDetected = true;
 
-        // Actualizar partido correspondiente en STATE.data.games
         const matchGame = (STATE.data.games || []).find((g) => g.away_team === aAbbr && g.home_team === hAbbr);
         if (matchGame) {
           matchGame.status_state = state;
@@ -1319,7 +1415,6 @@ async function refreshLiveFromBrowser(isManual = false) {
     console.warn("Live ESPN scoreboard check:", e);
   }
 
-  // 4. Consultar últimas noticias de ESPN NFL API en vivo para sumar alertas recién publicadas
   try {
     const nwResp = await fetch(`https://site.api.espn.com/apis/site/v2/sports/football/nfl/news?limit=15&t=${Date.now()}`);
     if (nwResp.ok && STATE.data) {
@@ -1378,7 +1473,6 @@ function scheduleAutoRefresh(hasLiveGames = false) {
   if (STATE.autoRefreshTimer) {
     clearInterval(STATE.autoRefreshTimer);
   }
-  // 30 minutos cuando hay partidos en vivo; 60 minutos (1 hora) para noticias cuando no hay partidos en vivo
   const intervalMs = (hasLiveGames ? 30 : 60) * 60 * 1000;
   STATE.autoRefreshTimer = setInterval(() => {
     refreshLiveFromBrowser(false);
@@ -1426,12 +1520,10 @@ async function loadServerConfig() {
 document.addEventListener("DOMContentLoaded", () => {
   loadDashboardData();
 
-  // Navegación barra lateral
   document.querySelectorAll(".nav-btn").forEach((btn) => {
     btn.addEventListener("click", () => switchView(btn.dataset.view));
   });
 
-  // Selector de Semana y Día en el Ribbon
   document.getElementById("selectWeek")?.addEventListener("change", (e) => {
     STATE.selectedWeek = Number(e.target.value);
     STATE.customMatchup = null;
@@ -1455,7 +1547,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Flechas del carrusel de partidos
   document.getElementById("ribbonPrev")?.addEventListener("click", () => {
     document.getElementById("gameRibbonTrack")?.scrollBy({ left: -320, behavior: "smooth" });
   });
@@ -1463,25 +1554,33 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("gameRibbonTrack")?.scrollBy({ left: 320, behavior: "smooth" });
   });
 
-  // Botón de crear tip del partido activo en la Pizarra Táctica
+  // Botón de crear tip del partido activo en la Pizarra Táctica (con números de jugadores y nueva imagen única 16:9)
   document.getElementById("btnCreateMatchupTip")?.addEventListener("click", () => {
     const m = getActiveMatchupTeams();
     if (!m) return;
     const { away: aw, home: hm, game: g } = m;
-    const matchImg = getMatchupIllustration(aw.abbr, hm.abbr, "assets/clay/clay_dal_phi.jpg");
+    const awSpec = TEAM_VISUAL_SPECS_JS[aw.abbr] || TEAM_VISUAL_SPECS_JS.DAL;
+    const hmSpec = TEAM_VISUAL_SPECS_JS[hm.abbr] || TEAM_VISUAL_SPECS_JS.PHI;
+    const [awQb, awQbNum] = awSpec.qb;
+    const [hmPr, hmPrNum] = hmSpec.pr;
+    const prompt = `3D claymation (caricatura de plastilina) full-bleed widescreen 16:9 illustration extending to the edges with NO border or frame: ${awSpec.name} quarterback ${awQb} in ${awSpec.jersey} with number ${awQbNum} and ${awSpec.helmet} facing pass pressure from ${hmSpec.name} defender ${hmPr} in ${hmSpec.jersey} with number ${hmPrNum} and ${hmSpec.helmet} at the line of scrimmage with ONE single football. Handcrafted plasticine clay texture, natural anatomy.`;
+    const uniqueImg = buildUniqueDynamicClayUrl(prompt);
+
     prependNewTipCard({
       id: `tip-matchup-${g.id}-${Date.now()}`,
       day_group: g.day_slot === "TNF" || g.day_slot === "MNF" ? g.day_slot : "SUNDAY",
+      category: g.day_slot === "TNF" || g.day_slot === "MNF" ? g.day_slot : "SUNDAY",
+      matchup: `${aw.abbr} @ ${hm.abbr}`,
       badge: `🏈 DUELO TÁCTICO · ${aw.abbr} @ ${hm.abbr}`,
       game_id: g.id,
-      matchup_label: `${aw.abbr} @ ${hm.abbr}`,
-      title: `Clave Táctica: ${aw.short} vs. ${hm.short}`,
-      body: `🏈 En ${aw.abbr} vs ${hm.abbr}: ${aw.short} registra ${aw.off_epa_play >= 0 ? "+" : ""}${aw.off_epa_play.toFixed(2)} EPA/jugada y ${aw.off_rz_td_pct.toFixed(0)}% en Zona Roja frente a ${hm.short} (#${hm.rank_total} NFL, ${hm.def_sack_rate.toFixed(1)}% pass rush y ${hm.off_3d_pct.toFixed(0)}% en 3er down).`,
+      matchup_label: `${aw.abbr} (${awQb} ${awQbNum}) @ ${hm.abbr} (${hmPr} ${hmPrNum})`,
+      title: `Duelo Clave: ${awQb} (${awQbNum}, ${aw.abbr}) vs. ${hmPr} (${hmPrNum}, ${hm.abbr})`,
+      body: `🏈 En ${aw.abbr} @ ${hm.abbr}: ${awQb} (${awQbNum}) lidera a ${aw.short} con ${aw.off_epa_play >= 0 ? "+" : ""}${aw.off_epa_play.toFixed(2)} EPA/jugada y ${aw.off_rz_td_pct.toFixed(0)}% en Zona Roja frente a ${hmPr} (${hmPrNum}) y ${hm.short} (#${hm.rank_total} NFL, ${hm.def_sack_rate.toFixed(1)}% sack rate).`,
       page_link: `${STATE.dashboardPublicUrl}#matchup-${g.id}`,
       source_link: "https://www.sharpfootballanalysis.com/stats-nfl/",
       source_name: "Sharp Football / FTN DVOA",
-      illustration: matchImg,
-      clay_prompt: `3D claymation (caricatura de plastilina) 16:9 illustration of ${aw.name} vs ${hm.name} clashing at the line of scrimmage.`,
+      illustration: uniqueImg,
+      clay_prompt: prompt,
     });
   });
 
@@ -1497,7 +1596,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Filtros y ordenamiento en Tabla de Equipos
   document.getElementById("searchTeamInput")?.addEventListener("input", renderTeamsTable);
   document.getElementById("filterConfSelect")?.addEventListener("change", renderTeamsTable);
   document.querySelectorAll("#teamsTable th[data-sort]").forEach((th) => {
@@ -1512,7 +1610,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Filtros en Jugadores
   document.getElementById("searchPlayerInput")?.addEventListener("input", renderPlayersGrid);
   document.querySelectorAll("#posFilterPills .pos-pill").forEach((pill) => {
     pill.addEventListener("click", () => {
@@ -1523,11 +1620,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Filtros en Noticias
   document.getElementById("filterNewsCategory")?.addEventListener("change", renderNewsGrid);
   document.getElementById("filterNewsSource")?.addEventListener("change", renderNewsGrid);
 
-  // Filtros de pestañas en columna derecha de Tips X
   document.querySelectorAll("#xTipFilterTabs .x-tab").forEach((tab) => {
     tab.addEventListener("click", () => {
       document.querySelectorAll("#xTipFilterTabs .x-tab").forEach((t) => t.classList.remove("active"));
@@ -1537,21 +1632,33 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Nuevo post manual en blanco
+  // Nuevo post manual con imagen 16:9 única generada al instante
   document.getElementById("btnAddCustomTip")?.addEventListener("click", () => {
+    const m = getActiveMatchupTeams();
+    const awAbbr = m?.away?.abbr || "KC";
+    const hmAbbr = m?.home?.abbr || "BUF";
+    const awSpec = TEAM_VISUAL_SPECS_JS[awAbbr] || TEAM_VISUAL_SPECS_JS.KC;
+    const hmSpec = TEAM_VISUAL_SPECS_JS[hmAbbr] || TEAM_VISUAL_SPECS_JS.BUF;
+    const [awWr, awWrNum] = awSpec.wr;
+    const [hmDb, hmDbNum] = hmSpec.db;
+    const prompt = `3D claymation (caricatura de plastilina) full-bleed widescreen 16:9 illustration extending to the edges with NO border or frame: ${awSpec.name} wide receiver ${awWr} in ${awSpec.jersey} with number ${awWrNum} and ${awSpec.helmet} catching ONE single football against ${hmSpec.name} defensive back ${hmDb} in ${hmSpec.jersey} with number ${hmDbNum} and ${hmSpec.helmet}. Handcrafted plasticine texture.`;
+    const uniqueImg = buildUniqueDynamicClayUrl(prompt);
+
     prependNewTipCard({
       id: `tip-manual-${Date.now()}`,
       day_group: "SUNDAY",
-      badge: "✍️ POST PERSONALIZADO",
+      category: "SUNDAY",
+      matchup: `${awAbbr} @ ${hmAbbr}`,
+      badge: `✍️ POST PERSONALIZADO · ${awAbbr} @ ${hmAbbr}`,
       game_id: "ALL",
-      matchup_label: "NFL Analytics",
-      title: "Nuevo Ángulo Técnico NFL",
-      body: "🏈 Dato técnico NFL: ingresá aquí tu comentario basado en EPA/play, DVOA, Next Gen Stats o situación salarial.",
+      matchup_label: `${awWr} (${awWrNum}, ${awAbbr}) vs ${hmDb} (${hmDbNum}, ${hmAbbr})`,
+      title: `Ángulo Táctico: ${awWr} (${awWrNum}, ${awAbbr}) vs. ${hmDb} (${hmDbNum}, ${hmAbbr})`,
+      body: `🏈 Duelo individual clave (${awAbbr} @ ${hmAbbr}): el receptor ${awWr} (${awWrNum}) de ${awSpec.name} enfrenta en cobertura al esquinero ${hmDb} (${hmDbNum}) de ${hmSpec.name} según métricas de separación Next Gen Stats y EPA/target.`,
       page_link: STATE.dashboardPublicUrl,
-      source_link: "https://rbsdm.com/stats/stats/",
-      source_name: "RBSDM / PFR",
-      illustration: "assets/clay/clay_dal_phi.jpg",
-      clay_prompt: "3D claymation (caricatura de plastilina) 16:9 NFL illustration.",
+      source_link: "https://nextgenstats.nfl.com/",
+      source_name: "Next Gen Stats / RBSDM",
+      illustration: uniqueImg,
+      clay_prompt: prompt,
     });
   });
 
