@@ -1085,8 +1085,14 @@ def main():
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
 
+    js_out_path = os.path.join(DATA_DIR, "nfl_dashboard_data.js")
+    with open(js_out_path, "w", encoding="utf-8") as f:
+        f.write("window.NFL_DASHBOARD_EMBEDDED_DATA = ")
+        json.dump(payload, f, ensure_ascii=False)
+        f.write(";\n")
+
     print(f"[5/5] ¡Ingesta completada! Equipos: {len(teams)} | Jugadores: {len(players)} | Partidos: {len(games)} | Top News: {len(news)}")
-    print(f"      Archivo generado: {out_path}")
+    print(f"      Archivos generados: {out_path} y {js_out_path}")
 
 
 if __name__ == "__main__":
