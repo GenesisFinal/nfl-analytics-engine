@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NFL Analytics & Social Tips Studio — Sharp Matchup & Trench Board</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <!-- BARRA LATERAL IZQUIERDA (ESTILO 4: SHARP MATCHUP & TRENCH BOARD) -->
+    <aside class="left-sidebar">
+      <div class="brand-box">
+        <div class="nfl-shield">
+          <span class="shield-stars">★★★★</span>
+          <span class="shield-title">NFL</span>
+          <span class="shield-sub">ANALYTICS</span>
+        </div>
+        <div class="brand-text">
+          <h1>SHARP TRENCH</h1>
+          <span>DATA &amp; X STUDIO</span>
+        </div>
+      </div>
+
+      <nav class="side-nav">
+        <button class="nav-btn active" data-view="matchups">
+          <span class="nav-icon">⊞</span>
+          <span class="nav-label">PANEL DE CONTROL</span>
+        </button>
+        <button class="nav-btn" data-view="teams">
+          <span class="nav-icon">⚔️</span>
+          <span class="nav-label">TRINCHERAS &amp; EQUIPOS</span>
+        </button>
+        <button class="nav-btn" data-view="players">
+          <span class="nav-icon">🏃</span>
+          <span class="nav-label">JUGADORES (SCOUT)</span>
+        </button>
+        <button class="nav-btn" data-view="news">
+          <span class="nav-icon">📰</span>
+          <span class="nav-label">TOP NEWS</span>
+          <span class="nav-badge" id="newsCountBadge">0</span>
+        </button>
+        <button class="nav-btn" data-view="sources">
+          <span class="nav-icon">🔗</span>
+          <span class="nav-label">18 FUENTES OFICIALES</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button class="btn-config-sidebar" id="btnOpenConfig">
+          ⚙️ Configurar Buffer / Links
+        </button>
+        <button class="btn-refresh-sidebar" id="btnRefreshData">
+          🔄 Actualizar Ahora
+        </button>
+        <div class="updated-stamp" id="updatedStamp">🕒 Última act.: --</div>
+        <div class="updated-stamp" id="autoUpdateHint" style="color:#38bdf8; font-size:9.5px;">⏱️ Auto: 1h News · 30m En Vivo</div>
+      </div>
+    </aside>
+
+    <!-- ÁREA PRINCIPAL CENTRAL + RIBBON SUPERIOR DE PARTIDOS -->
+    <div class="main-workspace">
+      <!-- TOP GAME RIBBON -->
+      <header class="top-game-ribbon-bar">
+        <div class="ribbon-controls">
+          <div class="week-selector-group">
+            <label for="selectWeek">SEMANA ACTIVA</label>
+            <select id="selectWeek">
+              <option value="7" selected>Semana 7 (Actual · MNF)</option>
+              <option value="8">Semana 8 (Próxima)</option>
+              <option value="6">Semana 6 (Anterior)</option>
+            </select>
+          </div>
+          <div class="day-slot-pills" id="daySlotFilterGroup">
+            <button class="slot-pill active" data-slot="ALL">Todos</button>
+            <button class="slot-pill" data-slot="TNF">Jueves (TNF)</button>
+            <button class="slot-pill" data-slot="SUNDAY">Domingo (4-5 Tips)</button>
+            <button class="slot-pill" data-slot="MNF">Lunes (MNF)</button>
+          </div>
+        </div>
+
+        <div class="game-cards-scroll-wrapper">
+          <button class="ribbon-arrow" id="ribbonPrev" title="Anterior">‹</button>
+          <div class="game-ribbon-track" id="gameRibbonTrack">
+            <!-- Tarjetas de partidos inyectadas por app.js -->
+          </div>
+          <button class="ribbon-arrow" id="ribbonNext" title="Siguiente">›</button>
+        </div>
+
+        <div class="ribbon-status-box">
+          <div class="ribbon-update-meta">
+            <span class="ribbon-last-update" id="topUpdatedStamp">🕒 Última actualización: --</span>
+            <span class="ribbon-auto-badge" id="topAutoBadge">⏱️ Auto: 1h Noticias · 30m Partidos en Vivo</span>
+          </div>
+          <button class="btn-top-refresh" id="btnTopRefresh" title="Actualizar estadísticas, marcadores y noticias ahora mismo">
+            🔄 Actualizar Ahora
+          </button>
+        </div>
+      </header>
+
+      <!-- CUERPO DE DOS COLUMNAS: CENTRO (VISTAS DE DATOS) + DERECHA (ÁNGULOS TÉCNICOS / TIPS PARA X) -->
+      <div class="content-split-grid">
+        <!-- COLUMNA CENTRAL: CAMBIA SEGÚN LA PESTAÑA ACTIVA -->
+        <main class="center-stage">
+
+          <!-- VISTA 1: PANEL DE CONTROL / PIZARRA TÁCTICA CARA A CARA (ESTILO 4) -->
+          <section class="stage-view active" id="view-matchups">
+            <div class="matchup-banner-header" id="matchupBannerHeader">
+              <!-- Cabecera del partido seleccionado -->
+            </div>
+
+            <!-- BLOQUE 1: ATAQUE AÉREO vs SECUNDARIA -->
+            <div class="tactical-card">
+              <div class="tactical-card-header">
+                <span class="team-side-tag" id="airLeftTitle">AWAY PASSING OFFENSE</span>
+                <h3>ATAQUE AÉREO vs. SECUNDARIA (EPA / CPOE / EXPLOSIVOS)</h3>
+                <span class="team-side-tag right" id="airRightTitle">HOME PASS DEFENSE (DVOA)</span>
+              </div>
+              <div class="tactical-bars-container" id="airVsSecBars"></div>
+            </div>
+
+            <!-- BLOQUE 2: JUEGO TERRESTRE vs FRONT-7 -->
+            <div class="tactical-card">
+              <div class="tactical-card-header">
+                <span class="team-side-tag" id="groundLeftTitle">AWAY RUSHING OFFENSE</span>
+                <h3>JUEGO TERRESTRE vs. FRONT-7 (EPA / RYOE / TRINCHERAS)</h3>
+                <span class="team-side-tag right" id="groundRightTitle">HOME RUN DEFENSE</span>
+              </div>
+              <div class="tactical-bars-container" id="groundVsFrontBars"></div>
+            </div>
+
+            <!-- BLOQUE 3: ZONA ROJA, 3ER DOWN & PRESIÓN AL QB -->
+            <div class="tactical-card">
+              <div class="tactical-card-header">
+                <span class="team-side-tag" id="sitLeftTitle">SITUACIONAL VISITANTE</span>
+                <h3>ZONA ROJA, 3ER DOWN &amp; PRESIÓN EN EL BOLSILLO</h3>
+                <span class="team-side-tag right" id="sitRightTitle">SITUACIONAL LOCAL</span>
+              </div>
+              <div class="situational-grid" id="situationalGrid"></div>
+            </div>
+
+            <!-- BLOQUE 4: EQUIPOS ESPECIALES (DVOA / KICKING / PUNTING / RETURNS) + LEYENDA SEMAFÓRICA -->
+            <div class="tactical-card st-bottom-card">
+              <div class="st-legend-box">
+                <h4>Indicadores de Ventaja</h4>
+                <ul class="advantage-legend-list">
+                  <li><span class="adv-dot sig-pos"></span> Significativa (+Ventaja)</li>
+                  <li><span class="adv-dot mod-pos"></span> Moderada</li>
+                  <li><span class="adv-dot neutral"></span> Duelo Parejo / Neutra</li>
+                  <li><span class="adv-dot mod-neg"></span> Desventaja Moderada</li>
+                  <li><span class="adv-dot sig-neg"></span> Desventaja Significativa</li>
+                </ul>
+                <button class="btn-generate-custom-matchup-tip" id="btnCreateMatchupTip">
+                  ✨ Generar Nuevo Tip X de este Partido
+                </button>
+              </div>
+              <div class="st-gauges-area">
+                <h3 class="st-title">EQUIPOS ESPECIALES (DVOA / PFR / TEAMRANKINGS)</h3>
+                <div class="st-columns-grid" id="specialTeamsGauges"></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- VISTA 2: TRINCHERAS & 32 EQUIPOS (TABLA COMPLETA + SIMULADOR LIBRE) -->
+          <section class="stage-view" id="view-teams">
+            <div class="view-toolbar">
+              <div>
+                <h2>Evaluación Integral de las 32 Franquicias NFL (Temporada 2026)</h2>
+                <p class="view-subtitle">Datos reales cruzados de RBSDM (EPA/CPOE), SumerSports, PFR, TeamRankings (Red Zone &amp; 3rd Down) y FTN DVOA.</p>
+              </div>
+              <div class="toolbar-filters">
+                <input type="text" id="searchTeamInput" placeholder="Buscar equipo (ej. KC, Bills, Lions)..." class="input-search" />
+                <select id="filterConfSelect" class="select-filter">
+                  <option value="ALL">Toda la NFL (32)</option>
+                  <option value="AFC">Conferencia Americana (AFC)</option>
+                  <option value="NFC">Conferencia Nacional (NFC)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Comparador Libre de 2 Equipos -->
+            <div class="custom-matchup-builder">
+              <span>⚔️ <strong>Simulador Libre Cara a Cara:</strong></span>
+              <select id="simTeamAway" class="select-filter"></select>
+              <span>vs.</span>
+              <select id="simTeamHome" class="select-filter"></select>
+              <button class="btn-primary-sm" id="btnLoadSimMatchup">Abrir en Pizarra Táctica</button>
+            </div>
+
+            <div class="table-responsive-card">
+              <table class="data-table" id="teamsTable">
+                <thead>
+                  <tr>
+                    <th data-sort="rank_total">RK</th>
+                    <th data-sort="name">EQUIPO</th>
+                    <th data-sort="record">RÉCORD</th>
+                    <th data-sort="total_dvoa_proxy">ÍNDICE DVOA</th>
+                    <th data-sort="off_epa_play">EPA/JUG ATAQ</th>
+                    <th data-sort="off_pass_epa_play">EPA PASE</th>
+                    <th data-sort="off_rush_epa_play">EPA CARRERA</th>
+                    <th data-sort="off_cpoe">CPOE</th>
+                    <th data-sort="def_epa_allowed">EPA/JUG DEF</th>
+                    <th data-sort="def_sack_rate">PASS RUSH %</th>
+                    <th data-sort="off_rz_td_pct">ZONA ROJA %</th>
+                    <th data-sort="off_3d_pct">3ER DOWN %</th>
+                    <th data-sort="rank_st">RK ST</th>
+                    <th>FUENTES &amp; TIP X</th>
+                  </tr>
+                </thead>
+                <tbody id="teamsTableBody"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- VISTA 3: JUGADORES (SCOUTING HUB: PFF / NGS / PLAYERPROFILER / PFR / SAVANT) -->
+          <section class="stage-view" id="view-players">
+            <div class="view-toolbar">
+              <div>
+                <h2>Scouting de Jugadores &amp; Métricas Avanzadas (2026)</h2>
+                <p class="view-subtitle">Percentiles empíricos (0-100), EPA, CPOE, Next Gen Stats (Separation / RYOE / Time to Throw), PlayerProfiler (Target Share / WOPR) y PFR Pressures.</p>
+              </div>
+              <div class="toolbar-filters">
+                <input type="text" id="searchPlayerInput" placeholder="Buscar jugador o equipo..." class="input-search" />
+                <div class="pos-filter-pills" id="posFilterPills">
+                  <button class="pos-pill active" data-pos="ALL">Todos</button>
+                  <button class="pos-pill" data-pos="QB">QB</button>
+                  <button class="pos-pill" data-pos="RB">RB</button>
+                  <button class="pos-pill" data-pos="WR">WR</button>
+                  <button class="pos-pill" data-pos="TE">TE</button>
+                  <button class="pos-pill" data-pos="DEF">DEF (Pass Rush &amp; DB)</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="players-cards-grid" id="playersCardsGrid"></div>
+          </section>
+
+          <!-- VISTA 4: TOP NEWS DE ALTO IMPACTO (8 SITIOS FILTRADOS) -->
+          <section class="stage-view" id="view-news">
+            <div class="view-toolbar">
+              <div>
+                <h2>Radar de Top News — Solo Alto Impacto</h2>
+                <p class="view-subtitle">Filtrado en tiempo real de NBC Rotoworld, The Athletic, ProFootballTalk, ESPN, NFL.com, Over The Cap, Spotrac y Reddit (r/NFL).</p>
+              </div>
+              <div class="toolbar-filters">
+                <select id="filterNewsCategory" class="select-filter">
+                  <option value="ALL">Todas las Categorías de Alto Impacto</option>
+                  <option value="Lesión">🚨 Lesiones Clave / Parte Médico</option>
+                  <option value="Salarial">💰 Impacto Salarial (OTC / Spotrac)</option>
+                  <option value="Trade">🔄 Trades &amp; Movimientos de Roster</option>
+                  <option value="Táctico">📊 Récords &amp; Tendencias Tácticas</option>
+                </select>
+                <select id="filterNewsSource" class="select-filter">
+                  <option value="ALL">Todas las 8 Fuentes</option>
+                  <option value="NBC Sports Rotoworld">NBC Sports Rotoworld</option>
+                  <option value="The Athletic NFL">The Athletic NFL</option>
+                  <option value="ProFootballTalk (PFT)">ProFootballTalk (PFT)</option>
+                  <option value="ESPN NFL">ESPN NFL</option>
+                  <option value="NFL.com News">NFL.com News</option>
+                  <option value="Over The Cap (OTC)">Over The Cap (OTC)</option>
+                  <option value="Spotrac NFL">Spotrac NFL</option>
+                  <option value="Reddit (r/NFL)">Reddit (r/NFL)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="news-cards-grid" id="newsCardsGrid"></div>
+          </section>
+
+          <!-- VISTA 5: DIRECTORIO DE LAS 18 FUENTES OFICIALES GRATUITAS -->
+          <section class="stage-view" id="view-sources">
+            <div class="view-toolbar">
+              <div>
+                <h2>Directorio Directo de las 18 Fuentes Oficiales Conectadas</h2>
+                <p class="view-subtitle">Acceso rápido a los 10 motores de estadísticas avanzadas y los 8 portales de noticias de alto impacto.</p>
+              </div>
+            </div>
+            <div class="sources-directory-grid" id="sourcesDirectoryGrid"></div>
+          </section>
+
+        </main>
+
+        <!-- COLUMNA DERECHA FIJA: ÁNGULOS TÉCNICOS PARA HOY (TIPS PARA X + SELECTOR DE LINK + PUBLICACIÓN MANUAL/PROGRAMADA) -->
+        <aside class="right-x-panel">
+          <div class="x-panel-header">
+            <div class="x-panel-title-row">
+              <div>
+                <h2>ÁNGULOS TÉCNICOS PARA HOY</h2>
+                <span class="x-panel-subtitle" id="xPanelSubtitle">(4-5 Tips Domingos · 1-2 Jue/Lun · Top News)</span>
+              </div>
+              <button class="btn-new-blank-tip" id="btnAddCustomTip" title="Crear nuevo posteo manual">+ Nuevo Post</button>
+            </div>
+
+            <!-- Filtro de Tips por Jornada -->
+            <div class="x-tip-filter-tabs" id="xTipFilterTabs">
+              <button class="x-tab active" data-tipgroup="ALL">Todos (<span id="countAllTips">0</span>)</button>
+              <button class="x-tab" data-tipgroup="SUNDAY">Domingo (5+)</button>
+              <button class="x-tab" data-tipgroup="TNF">Jueves TNF</button>
+              <button class="x-tab" data-tipgroup="MNF">Lunes MNF</button>
+              <button class="x-tab" data-tipgroup="NEWS">🚨 News</button>
+            </div>
+
+            <!-- BARRA GLOBAL DE ENVÍO EN LOTE (SOLO CUANDO EL USUARIO SELECCIONA TARJETAS) -->
+            <div class="batch-publish-bar hidden" id="batchPublishBar">
+              <div class="batch-top-row">
+                <span><strong id="selectedTipsCount">0</strong> seleccionados para publicar</span>
+                <button class="btn-link-clear" id="btnClearSelection">Limpiar</button>
+              </div>
+              <div class="batch-controls-row">
+                <select id="batchPublishMode" class="select-publish-mode">
+                  <option value="now">⚡ Publicar Ahora (Inmediato)</option>
+                  <option value="offset" selected>⏱️ Dentro de "X" min/horas (+10m entre posts)</option>
+                  <option value="datetime">📅 Fecha y Hora exacta (+10m entre posts)</option>
+                </select>
+                <div class="batch-offset-group" id="batchOffsetGroup">
+                  <input type="number" id="batchOffsetValue" value="30" min="1" max="1440" class="input-offset-num" />
+                  <select id="batchOffsetUnit" class="select-offset-unit">
+                    <option value="minutes" selected>minutos</option>
+                    <option value="hours">horas</option>
+                  </select>
+                </div>
+                <div class="batch-datetime-group hidden" id="batchDatetimeGroup">
+                  <input type="datetime-local" id="batchDatetimeInput" class="input-datetime" />
+                </div>
+                <button class="btn-publish-batch" id="btnExecuteBatchPublish">
+                  🚀 Enviar Lote Seleccionado
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- LISTA VERTICAL DE TARJETAS DE POSTEOS SUGERIDOS -->
+          <div class="x-tips-feed" id="xTipsFeed">
+            <!-- Tarjetas renderizadas dinámicamente por app.js -->
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE CONFIGURACIÓN DE BUFFER / LINKS Y COLA DE HISTORIAL -->
+  <div class="modal-backdrop hidden" id="configModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>⚙️ Configuración de Publicación (X / Buffer) y Links</h3>
+        <button class="modal-close" id="btnCloseConfig">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-help">
+          Los posteos <strong>nunca se publican solos</strong>: siempre vos decidís cuáles enviar y si salen como <strong>Post Inmediato</strong>, <strong>Dentro de X minutos/horas</strong> o en una <strong>Fecha y Hora exacta</strong>.
+        </p>
+        <div class="form-group">
+          <label>URL Pública de Nuestra Página (para la opción "Link a Nuestra Página")</label>
+          <input type="text" id="cfgDashboardUrl" value="https://genesisfinal.github.io/nfl-analytics-engine/" class="input-full" />
+        </div>
+        <div class="form-group">
+          <label>Buffer Access Token (Opcional — para agendar directo en Buffer GraphQL API)</label>
+          <input type="password" id="cfgBufferToken" placeholder="Pegá tu Bearer Token de Buffer..." class="input-full" />
+        </div>
+        <div class="form-group">
+          <label>Buffer Channel ID (Perfil de X / Twitter en Buffer)</label>
+          <input type="text" id="cfgBufferChannel" placeholder="Ej: 64f1a2b3c4d5e6f7a8b9c0d1" class="input-full" />
+        </div>
+        <div class="modal-actions">
+          <button class="btn-primary" id="btnSaveConfig">💾 Guardar Configuración</button>
+        </div>
+
+        <hr class="modal-divider" />
+        <h4>📜 Últimos Posteos Enviados / Programados</h4>
+        <div class="publish-history-list" id="publishHistoryList">
+          <p class="muted-text">Aún no enviaste posteos en esta sesión.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE VISTA AMPLIADA DE ILUSTRACIÓN EN PLASTILINA -->
+  <div class="modal-backdrop hidden" id="imagePreviewModal">
+    <div class="modal-card modal-lg">
+      <div class="modal-header">
+        <h3 id="previewModalTitle">Ilustración Caricatura de Plastilina (16:9)</h3>
+        <button class="modal-close" id="btnClosePreview">✕</button>
+      </div>
+      <div class="modal-body">
+        <img id="previewModalImg" src="" alt="Ilustración de Plastilina NFL" class="preview-full-img" />
+        <div class="prompt-box-wrapper">
+          <label>Prompt de Plastilina (Claymation 16:9) asociado:</label>
+          <textarea id="previewModalPrompt" rows="3" class="input-full" readonly></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST DE NOTIFICACIONES -->
+  <div class="toast-notification hidden" id="toastNotification"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
