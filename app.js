@@ -1221,8 +1221,145 @@ function renderTeamsTable() {
 }
 
 /* ==========================================================================
-   VISTA 3: JUGADORES (SCOUTING HUB)
+   VISTA 3: JUGADORES (SCOUTING HUB — EXPLICACIONES Y FÓRMULAS POR MÉTRICA)
    ========================================================================== */
+const PLAYER_METRIC_EXPLAINERS = {
+  // Quarterbacks (QB)
+  "Yds Pase": {
+    sub: "Yardas totales por aire",
+    tip: "Suma total de yardas ganadas en todos los pases completados por el Quarterback en la temporada.",
+  },
+  "TD / INT": {
+    sub: "Pases de TD vs Intercepciones",
+    tip: "Relación entre pases de Touchdown anotados y pases interceptados por la defensa rival. Ideal: al menos 3 TDs por cada 1 INT.",
+  },
+  "EPA/Dropback": {
+    sub: "Puntos esperados por pase",
+    tip: "Fórmula: EPA Total de Pase ÷ (Intentos de Pase + Capturas sufridas). Mide cuántos puntos reales suma el QB cada vez que retrocede a lanzar.",
+  },
+  "CPOE": {
+    sub: "% completos sobre lo esperado",
+    tip: "Fórmula: % Real de Pases Completos − % Esperado según sensores NGS (distancia del tiro, separación del receptor y presión al QB).",
+  },
+  "NGS Time to Throw": {
+    sub: "Segundos en soltar el balón",
+    tip: "Tiempo promedio en segundos (medido con chips RFID de Next Gen Stats) desde el snap hasta que el QB lanza el balón. Promedio NFL: ~2.75s.",
+  },
+  "PFR On-Target %": {
+    sub: "% tiros precisos a las manos",
+    tip: "Fórmula (Pro Football Reference): Pases precisos al blanco ÷ Total de pases lanzados (sin contar balones tirados afuera deliberadamente). Promedio NFL: ~75%.",
+  },
+  "PFR Pressure %": {
+    sub: "% jugadas bajo acoso defensivo",
+    tip: "Fórmula (PFR): (Apresuramientos + Golpes al QB + Capturas) ÷ Total de Dropbacks. Mide en qué % de jugadas el QB lanzó presionado.",
+  },
+  "Yds Tierra": {
+    sub: "Yardas ganadas corriendo",
+    tip: "Total de yardas avanzadas por vía terrestre en acarreos.",
+  },
+
+  // Running Backs (RB)
+  "Acarreos": {
+    sub: "Corridas totales con el balón",
+    tip: "Cantidad total de veces que el jugador recibió el balón en mano para correr por tierra.",
+  },
+  "Yds/Acarreo": {
+    sub: "Yardas ÷ Acarreos (YPC)",
+    tip: "Fórmula: Yardas Terrestres Totales ÷ Total de Acarreos. Promedio NFL: ~4.3 yardas por corrida.",
+  },
+  "TDs Tierra": {
+    sub: "Touchdowns por carrera",
+    tip: "Cantidad de veces que el corredor ingresó a la zona de anotación acarreando el balón.",
+  },
+  "EPA/Acarreo": {
+    sub: "Puntos esperados por corrida",
+    tip: "Fórmula: EPA Terrestre Total ÷ Acarreos. Mide si las corridas del jugador aumentan la probabilidad de anotar según down y distancia.",
+  },
+  "NGS RYOE/Att": {
+    sub: "Yardas extra sobre el bloqueo",
+    tip: "Rush Yards Over Expected per Attempt (Next Gen Stats): (Yardas Reales − Yardas Esperadas según ubicación/velocidad de bloqueadores y defensores) ÷ Acarreos. Mide cuántas yardas extra crea el RB por sí solo.",
+  },
+  "NGS Caja 8+ Def": {
+    sub: "% corridas vs 8+ defensores",
+    tip: "Porcentaje de acarreos en los que la defensa rival puso 8 o más jugadores dentro de la 'caja' (frente a la línea) para frenar la carrera.",
+  },
+  "Target Share": {
+    sub: "% de pases del equipo hacia él",
+    tip: "Fórmula: (Pases lanzados a este jugador ÷ Total de pases lanzados por su equipo) × 100. Mide qué tan seguido el QB lo busca.",
+  },
+
+  // Wide Receivers & Tight Ends (WR / TE)
+  "Recepciones / Tgts": {
+    sub: "Atrapados ÷ Pases buscados",
+    tip: "Cantidad de pases atrapados (Recepciones) sobre el total de veces que el QB lanzó hacia él (Targets).",
+  },
+  "Yds Recepción": {
+    sub: "Yardas totales tras atrapar",
+    tip: "Total de yardas ganadas en pases atrapados (incluye yardas en el aire + yardas corridas después de la recepción).",
+  },
+  "TDs": {
+    sub: "Touchdowns de recepción",
+    tip: "Pases atrapados que terminaron en Touchdown.",
+  },
+  "Air Yards Share": {
+    sub: "% yardas aéreas del equipo",
+    tip: "Fórmula: (Yardas que viajó el balón por el aire hacia este jugador ÷ Total de yardas aéreas lanzadas por el equipo) × 100. Indica quién es la amenaza profunda.",
+  },
+  "WOPR (Opportunity)": {
+    sub: "1.5×Target% + 0.7×AirYds%",
+    tip: "Weighted Opportunity Rating (PlayerProfiler): Se calcula como (1.5 × Target Share) + (0.7 × Air Yards Share). Es la métrica reina para medir el rol ofensivo de un receptor (> 0.60 es estrella #1).",
+  },
+  "EPA/Target": {
+    sub: "Puntos esperados por pase buscado",
+    tip: "Fórmula: EPA de Recepción Total ÷ Targets. Mide cuántos puntos esperados genera cada vez que el QB decide lanzarle a este receptor.",
+  },
+  "NGS Separation": {
+    sub: "Distancia al defensor al atrapar",
+    tip: "Separación promedio en yardas (medida con sensores RFID de Next Gen Stats) entre el receptor y el defensor más cercano cuando llega el pase. Promedio NFL: ~2.8 yds.",
+  },
+
+  // Defensores (DEF)
+  "Sacks": {
+    sub: "Capturas al QB atrás de la línea",
+    tip: "Veces que el defensor derriba al Quarterback rival detrás de la línea de golpeo antes de que pueda lanzar.",
+  },
+  "QB Hits": {
+    sub: "Golpes al QB al lanzar",
+    tip: "Veces que el defensor derriba o impacta legalmente al QB rival justo después de soltar el pase.",
+  },
+  "Tackles For Loss": {
+    sub: "Derribos para pérdida de yardas",
+    tip: "TFL: Tacleadas realizadas detrás de la línea de golpeo que hacen retroceder al corredor o receptor rival.",
+  },
+  "Tackles Solo": {
+    sub: "Tacleadas individuales sin ayuda",
+    tip: "Derribos defensivos completados íntegramente por este jugador sin asistencia de otro compañero.",
+  },
+  "Intercepciones": {
+    sub: "Pases rivales robados en el aire",
+    tip: "Pases del QB rival atrapados por el defensor que cambian inmediatamente la posesión del balón.",
+  },
+  "Pases Defendidos": {
+    sub: "Pases desviados en cobertura",
+    tip: "Pases rivales que el defensor logra manotear, desviar o romper en el aire para evitar la recepción.",
+  },
+  "PFR Pressures": {
+    sub: "Sacks + Golpes + Apresuramientos",
+    tip: "Fórmula (Pro Football Reference): Sacks + QB Hits + Hurries (veces que obligó al QB a lanzar antes de tiempo o huir del bolsillo).",
+  },
+  "PFR Rating Permitido": {
+    sub: "Rating QB rival al lanzarle (↓ mejor)",
+    tip: "Índice de pasador (0 a 158.3) que consiguen los QBs rivales cuando lanzan hacia el receptor cubierto por este defensor. ¡Cuanto MÁS BAJO mejor! (< 75.0 es cobertura élite).",
+  },
+};
+
+function getPosPercentileExplanation(pos, pctl) {
+  if (pos === "QB") return `Percentil ${pctl} entre los QBs NFL (calculado por EPA/Dropback: supera al ${pctl}% de los mariscales).`;
+  if (pos === "RB") return `Percentil ${pctl} entre los RBs NFL (calculado por producción terrestre y eficiencia: supera al ${pctl}% de los corredores).`;
+  if (pos === "WR" || pos === "TE") return `Percentil ${pctl} entre los ${pos}s NFL (calculado por yardas y volumen de recepción: supera al ${pctl}% de su posición).`;
+  return `Percentil ${pctl} entre los Defensores NFL (calculado por Puntaje de Impacto: Sacks×3 + Hits×1.2 + TFL×1.5 + INT×3.5 + PD×1 + Tackles×0.25).`;
+}
+
 function renderPlayersGrid() {
   const grid = document.getElementById("playersCardsGrid");
   if (!grid || !STATE.data) return;
@@ -1244,8 +1381,21 @@ function renderPlayersGrid() {
     .map((p) => {
       const badgeBg =
         p.percentile >= 80 ? "#15803d" : p.percentile >= 55 ? "#65a30d" : p.percentile >= 35 ? "#ca8a04" : "#dc2626";
+      const pctlTip = getPosPercentileExplanation(p.pos, p.percentile);
+
       const metricsHtml = Object.entries(p.metrics || {})
-        .map(([k, v]) => `<div class="psc-metric-item"><span>${k}</span><strong>${v}</strong></div>`)
+        .map(([k, v]) => {
+          const exp = PLAYER_METRIC_EXPLAINERS[k] || { sub: "Métrica oficial 2026", tip: k };
+          return `
+            <div class="psc-metric-item" title="${exp.tip}">
+              <div class="psc-metric-label-wrap">
+                <span>${k} ℹ️</span>
+                <small class="psc-metric-sub">${exp.sub}</small>
+              </div>
+              <strong>${v}</strong>
+            </div>
+          `;
+        })
         .join("");
 
       const linksHtml = Object.entries(p.links || {})
@@ -1260,10 +1410,11 @@ function renderPlayersGrid() {
             <img src="${p.headshot || fallbackAvatar}" onerror="this.src='${fallbackAvatar}'" alt="${p.name}" class="psc-headshot" loading="lazy" />
             <div class="psc-title-box">
               <h4>${p.name}</h4>
-              <div class="psc-meta">${p.pos} · ${p.team} · ${p.games} PJ</div>
+              <div class="psc-meta">${p.pos} · ${p.team} · ${p.games} partidos jugados</div>
             </div>
-            <div class="psc-percentile-badge" style="background:${badgeBg}">
-              Pctl ${p.percentile}
+            <div class="psc-percentile-badge" style="background:${badgeBg}; cursor:help;" title="${pctlTip}">
+              Pctl ${p.percentile} ℹ️
+              <small style="display:block; font-size:9px; font-weight:600; opacity:0.92;">Top ${Math.max(1, 100 - p.percentile)}% ${p.pos}</small>
             </div>
           </div>
           <div class="psc-metrics-grid">
@@ -1520,6 +1671,71 @@ const NFL_STATS_GLOSSARY = [
     scale_avg: "🟡 Promedio NFL: FG 84%-88% | Net Punt 40.5-42.5 yds",
     scale_poor: "🔴 Débil: FG < 80% | Net Punt < 39.5 yds",
     tactical_example: "Ejemplo: Ganar 8 yardas netas en cada despeje equivale a casi un 1er Down oculto gratis en cada intercambio de posesión.",
+  },
+  {
+    term: "Scouting Jugadores: Percentil (Pctl 1 a 99) y Puntaje de Impacto",
+    category: "SCOUTING DE JUGADORES (2026)",
+    source: "nflverse / Next Gen Stats / PFR",
+    what_is_it:
+      "Ubica a cada jugador en una escala de 1 a 99 comparándolo exclusivamente contra los demás jugadores de su misma posición en la NFL. Un Pctl 94 significa que supera al 94% de la liga en su puesto.",
+    how_to_read:
+      "¿Cómo se calcula?: En QBs se ordena por EPA/Dropback; en RBs por Yardas Terrestres; en WRs y TEs por Yardas de Recepción; y en Defensores (DEF) por el Puntaje de Impacto Defensivo = (Sacks × 3.0) + (QB Hits × 1.2) + (TFL × 1.5) + (Intercepciones × 3.5) + (Pases Defendidos × 1.0) + (Tackles Solo × 0.25).",
+    scale_elite: "🟢 Estrella Élite: Pctl 80 a 99 (Top 20% NFL)",
+    scale_avg: "🟡 Titular Sólido: Pctl 50 a 79",
+    scale_poor: "🔴 Rotación / Bajo: Menor a Pctl 40",
+    tactical_example: "Ejemplo: Un receptor con Pctl 96 es un arma ofensiva Top-5 de toda la NFL.",
+  },
+  {
+    term: "Scouting QB: Time to Throw, On-Target % y Pressure %",
+    category: "SCOUTING DE JUGADORES (QB)",
+    source: "Next Gen Stats (RFID) / Pro Football Reference",
+    what_is_it:
+      "Tres métricas avanzadas de mariscales: 1) 'NGS Time to Throw' mide con chips RFID los segundos promedio desde el snap hasta soltar el pase; 2) 'PFR On-Target %' calcula (Pases precisos a las manos ÷ Pases lanzados descartando spikes); 3) 'PFR Pressure %' calcula ((Apresuramientos + Golpes + Sacks) ÷ Total de Dropbacks).",
+    how_to_read:
+      "Un QB con On-Target > 78% y buen EPA pese a sufrir un Pressure % alto (> 25%) demuestra temple élite bajo presión.",
+    scale_elite: "🟢 Élite: On-Target > 78% | Pressure sufrida < 18%",
+    scale_avg: "🟡 Promedio NFL: Time to Throw ~2.75s | On-Target ~75%",
+    scale_poor: "🔴 En problemas: On-Target < 71% | Pressure sufrida > 27%",
+    tactical_example: "Ejemplo: Si un QB suelta el balón en 2.55s neutraliza incluso al mejor Pass Rush rival.",
+  },
+  {
+    term: "Scouting RB: NGS RYOE/Att y Caja con 8+ Defensores %",
+    category: "SCOUTING DE JUGADORES (RB)",
+    source: "NFL Next Gen Stats",
+    what_is_it:
+      "'RYOE/Att' (Rush Yards Over Expected per Attempt) se calcula como: (Yardas Reales − Yardas Esperadas según velocidad y ubicación de los 11 bloqueadores y 11 defensores) ÷ Acarreos. 'Caja 8+ Def %' mide en qué porcentaje de corridas había 8 o más defensores cerca de la línea.",
+    how_to_read:
+      "Un RYOE/Att positivo (+0.60 o más) prueba que el corredor gana yardas extra por su propio talento rompiendo tacleadas, sin depender solo de su línea ofensiva.",
+    scale_elite: "🟢 Élite: RYOE/Att +0.50 a +1.50 yds extra por corrida",
+    scale_avg: "🟡 Promedio NFL: -0.10 a +0.35 yds/acarreo",
+    scale_poor: "🔴 Bajo: Menor a -0.30 yds/acarreo",
+    tactical_example: "Ejemplo: Un RB con RYOE +0.90 frente a 30% de cajas de 8+ hombres es imparable.",
+  },
+  {
+    term: "Scouting WR/TE: Target Share, Air Yards Share, WOPR y NGS Separation",
+    category: "SCOUTING DE JUGADORES (WR & TE)",
+    source: "PlayerProfiler / Next Gen Stats",
+    what_is_it:
+      "• Target Share = Pases hacia el jugador ÷ Pases totales del equipo.\n• Air Yards Share = Yardas aéreas voladas hacia él ÷ Yardas aéreas totales del equipo.\n• WOPR (Weighted Opportunity Rating) = (1.5 × Target Share) + (0.7 × Air Yards Share).\n• NGS Separation = Yardas promedio de distancia al defensor más cercano al llegar el balón.",
+    how_to_read:
+      "WOPR combina volumen y profundidad en un solo número: cualquier receptor con WOPR > 0.60 y Separation > 3.0 yds es el motor aéreo indiscutido de su franquicia.",
+    scale_elite: "🟢 Élite: WOPR > 0.60 | Target Share > 25% | Separation > 3.1 yds",
+    scale_avg: "🟡 Promedio NFL: WOPR 0.38-0.52 | Separation ~2.8 yds",
+    scale_poor: "🔴 Secundario: WOPR < 0.30 | Separation < 2.3 yds",
+    tactical_example: "Ejemplo: Jaxon Smith-Njigba o CeeDee Lamb destacan cuando combinan alto WOPR con más de 3 yardas de separación.",
+  },
+  {
+    term: "Scouting DEF: PFR Pressures y Passer Rating Permitido",
+    category: "SCOUTING DE JUGADORES (DEF)",
+    source: "Pro Football Reference AdvStats / PFF",
+    what_is_it:
+      "• PFR Pressures = Sacks (Capturas) + QB Hits (Golpes al QB) + Hurries (Apresuramientos que obligan al QB a lanzar antes o escapar).\n• PFR Rating Permitido = Índice de pasador (0 a 158.3) de los QBs rivales cuando lanzan contra la cobertura de este defensor.",
+    how_to_read:
+      "En Pressures, cuanto MÁS ALTO mejor (mide disrupción constante aunque no llegue al sack). En Rating Permitido, cuanto MÁS BAJO mejor (menos de 70.0 es un esquinero o safety cerrojo).",
+    scale_elite: "🟢 Élite: 25+ Pressures | Rating Permitido < 72.0",
+    scale_avg: "🟡 Promedio NFL: 14-20 Pressures | Rating Permitido 82.0-92.0",
+    scale_poor: "🔴 Vulnerable: Rating Permitido > 102.0",
+    tactical_example: "Ejemplo: Un Pass Rusher con 30+ Pressures obliga al ataque rival a dejar un ala cerrada extra bloqueando.",
   },
 ];
 
@@ -2308,6 +2524,15 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       renderTeamsTable();
     });
+  });
+
+  document.getElementById("btnTogglePlayerGuide")?.addEventListener("click", (e) => {
+    const guideEl = document.getElementById("playerScoutingGuide");
+    if (!guideEl) return;
+    const isHidden = guideEl.classList.toggle("hidden");
+    const btn = e.currentTarget;
+    btn.classList.toggle("off", isHidden);
+    btn.textContent = isHidden ? "📘 Guía de Métricas y Fórmulas: OCULTA" : "📘 Guía de Métricas y Fórmulas: VISIBLE";
   });
 
   document.getElementById("searchPlayerInput")?.addEventListener("input", renderPlayersGrid);
