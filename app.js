@@ -24,6 +24,7 @@ const STATE = {
 
 const CLAY_GALLERY = [
   { label: "CAR Analytics: Bryce Young #9 & Jadeveon Clowney #7 (Panthers)", path: "assets/clay/clay_car_young9.jpg" },
+  { label: "CAR Scramble: Bryce Young #9 en Acción (Panthers)", path: "assets/clay/clay_car_young9_run.jpg" },
   { label: "KC vs BUF: Patrick Mahomes #15 (KC) vs Josh Allen #17 (BUF)", path: "assets/clay/clay_kc_buf.jpg" },
   { label: "BAL Terrestre: Lamar Jackson #8 & Derrick Henry #22 (Ravens)", path: "assets/clay/clay_bal_lamar8.jpg" },
   { label: "GB vs HOU: Jordan Love #10 (GB) vs C.J. Stroud #7 (HOU)", path: "assets/clay/clay_gb_hou.jpg" },
@@ -55,7 +56,7 @@ const TEAM_NANOBANANA_CLAY_MAP = {
   ATL: ["assets/clay/clay_atl_sf_ground.jpg", "assets/clay/clay_sf_atl.jpg"],
   BAL: ["assets/clay/clay_bal_lamar8.jpg"],
   BUF: ["assets/clay/clay_kc_buf.jpg"],
-  CAR: ["assets/clay/clay_car_young9.jpg", "assets/clay/clay_news_moton_car72.jpg"],
+  CAR: ["assets/clay/clay_car_young9.jpg", "assets/clay/clay_car_young9_run.jpg", "assets/clay/clay_news_moton_car72.jpg"],
   CHI: ["assets/clay/clay_ne_chi_trenches.jpg", "assets/clay/clay_ne_chi.jpg"],
   CIN: ["assets/clay/clay_cin_cle.jpg"],
   CLE: ["assets/clay/clay_cin_cle.jpg"],
