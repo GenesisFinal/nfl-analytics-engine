@@ -2484,4 +2484,28 @@ body {
   color: var(--text-main);
 }
 
+.psc-metric-item {
+  align-items: center;
+  padding: 3px 4px;
+  border-radius: 4px;
+  cursor: help;
+}
+
+.psc-metric-item:hover {
+  background: #e2e8f0;
+}
+
+.psc-metric-label-wrap {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.psc-metric-sub {
+  font-size: 9px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+
 
