@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T14:55:22.290066+00:00",
+  "updated_at": "2026-10-27T04:29:41.752467+00:00",
   "source": "ESPN JSON API",
   "season": 2026,
   "season_type": "REG",
@@ -15,7 +15,7 @@
     7
   ],
   "total_games": 107,
-  "completed_games": 106,
+  "completed_games": 107,
   "hinge_games_count": 79,
   "games": [
     {
@@ -6109,6 +6109,427 @@
           "home_wp": 0.999,
           "delta_wp": 0.0,
           "label": "Direct snap to A.Barner.  A.Barner up the middle to KC 23 for 1 yard (J.Cochrane).",
+          "is_critical": false
+        }
+      ]
+    },
+    {
+      "event_id": "401873009",
+      "week": 7,
+      "season_type": "REG",
+      "name": "Dallas Cowboys at Philadelphia Eagles",
+      "short_name": "DAL @ PHI",
+      "date": "2026-10-27T00:15Z",
+      "status": {
+        "state": "post",
+        "detail": "Final",
+        "period": 4,
+        "clock": "0:00",
+        "completed": true
+      },
+      "home_team": {
+        "id": "21",
+        "abbreviation": "PHI",
+        "name": "Philadelphia Eagles",
+        "score": 21,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/phi.png"
+      },
+      "away_team": {
+        "id": "6",
+        "abbreviation": "DAL",
+        "name": "Dallas Cowboys",
+        "score": 38,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/dal.png"
+      },
+      "win_probability": {
+        "home_wp": 0.0,
+        "away_wp": 1.0
+      },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873009/cowboys-eagles",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873009",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873009"
+      },
+      "critical_moments": [],
+      "hinge_play": {
+        "play_id": "4018730092717",
+        "qtr": 3,
+        "clock": "5:44",
+        "description": "(Shotgun) T.McKee pass short right to M.Lemon for 4 yards, TOUCHDOWN. J.Elliott extra point is GOOD, Center-R.Underwood, Holder-B.Mann.",
+        "home_wp_before": 0.297,
+        "home_wp_after": 0.3853,
+        "delta_wp": 0.0883,
+        "abs_delta_wp": 0.0883,
+        "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873009",
+        "play_label": "Tanner McKee a Makai Lemon TD (4 yds)",
+        "video_query": "Tanner McKee Makai Lemon 4 yard touchdown Cowboys Eagles",
+        "video_query_v2": "Tanner McKee Makai Lemon 4 yard touchdown Cowboys Eagles",
+        "video_url": "https://www.youtube.com/results?search_query=Tanner+McKee+Makai+Lemon+4+yard+touchdown+Cowboys+Eagles&sp=EgIYAQ%3D%3D",
+        "video_source": "Clip Puntual (<4m)",
+        "video_title": "Jugada Puntual: Tanner McKee a Makai Lemon TD (4 yds) (DAL @ PHI Q3)",
+        "has_direct_video": false,
+        "youtube_search_url": "https://www.youtube.com/results?search_query=Tanner+McKee+Makai+Lemon+4+yard+touchdown+Cowboys+Eagles&sp=EgIYAQ%3D%3D",
+        "x_video_url": "https://x.com/search?q=Tanner+McKee+Makai+Lemon+4+yard+touchdown+Cowboys+Eagles&f=video",
+        "exceeds_threshold": false
+      },
+      "wp_timeline": [
+        {
+          "step": 0,
+          "qtr": 1,
+          "clock": "15:00",
+          "home_wp": 0.5,
+          "delta_wp": 0.0,
+          "label": "Kickoff",
+          "is_critical": false
+        },
+        {
+          "step": 1,
+          "play_id": "40187300940",
+          "qtr": 1,
+          "clock": "15:00",
+          "home_wp": 0.2559,
+          "delta_wp": -0.0239,
+          "label": "J.Elliott kicks 55 yards from PHI 35 to DAL 10. J.Mingo to DAL 35 for 25 yards (K.Moore).",
+          "is_critical": false
+        },
+        {
+          "step": 2,
+          "play_id": "401873009168",
+          "qtr": 1,
+          "clock": "13:19",
+          "home_wp": 0.2497,
+          "delta_wp": -0.0008,
+          "label": "J.Williams left end to PHI 37 for 2 yards (M.Ojomo; J.Campbell).",
+          "is_critical": false
+        },
+        {
+          "step": 3,
+          "play_id": "401873009274",
+          "qtr": 1,
+          "clock": "12:24",
+          "home_wp": 0.2504,
+          "delta_wp": 0.0114,
+          "label": "T.McKee pass short right to S.Barkley pushed ob at PHI 37 for 12 yards (C.Downs; J.Barham)",
+          "is_critical": false
+        },
+        {
+          "step": 4,
+          "play_id": "401873009416",
+          "qtr": 1,
+          "clock": "10:25",
+          "home_wp": 0.3662,
+          "delta_wp": 0.0,
+          "label": "Official Timeout at 10:25.",
+          "is_critical": false
+        },
+        {
+          "step": 5,
+          "play_id": "401873009538",
+          "qtr": 1,
+          "clock": "9:05",
+          "home_wp": 0.3112,
+          "delta_wp": -0.0722,
+          "label": "(Shotgun) D.Prescott pass deep right to R.Flournoy pushed ob at PHI 34 for 35 yards (A.Muk",
+          "is_critical": false
+        },
+        {
+          "step": 6,
+          "play_id": "401873009658",
+          "qtr": 1,
+          "clock": "5:32",
+          "home_wp": 0.2461,
+          "delta_wp": -0.0332,
+          "label": "(Shotgun) D.Prescott pass short right to C.Lamb for 9 yards, TOUCHDOWN. B.Aubrey extra poi",
+          "is_critical": false
+        },
+        {
+          "step": 7,
+          "play_id": "401873009780",
+          "qtr": 1,
+          "clock": "4:32",
+          "home_wp": 0.2559,
+          "delta_wp": -0.0028,
+          "label": "S.Barkley up the middle to PHI 39 for 4 yards (O.Ogbonnia).",
+          "is_critical": false
+        },
+        {
+          "step": 8,
+          "play_id": "401873009919",
+          "qtr": 1,
+          "clock": "2:14",
+          "home_wp": 0.2927,
+          "delta_wp": -0.0065,
+          "label": "D.Pierce right tackle to DAL 40 for 2 yards (Q.Williams).",
+          "is_critical": false
+        },
+        {
+          "step": 9,
+          "play_id": "4018730091062",
+          "qtr": 2,
+          "clock": "15:00",
+          "home_wp": 0.3301,
+          "delta_wp": -0.0205,
+          "label": "(Shotgun) S.Barkley right guard to DAL 10 for 2 yards (E.Garcia).",
+          "is_critical": false
+        },
+        {
+          "step": 10,
+          "play_id": "4018730091190",
+          "qtr": 2,
+          "clock": "13:25",
+          "home_wp": 0.4084,
+          "delta_wp": 0.0043,
+          "label": "J.Elliott kicks 56 yards from PHI 35 to DAL 9. T.Goodson for 91 yards, TOUCHDOWN NULLIFIED",
+          "is_critical": false
+        },
+        {
+          "step": 11,
+          "play_id": "4018730091329",
+          "qtr": 2,
+          "clock": "11:15",
+          "home_wp": 0.3731,
+          "delta_wp": -0.0183,
+          "label": "J.Williams right guard to DAL 47 for 11 yards (J.Trotter).",
+          "is_critical": false
+        },
+        {
+          "step": 12,
+          "play_id": "4018730091452",
+          "qtr": 2,
+          "clock": "8:35",
+          "home_wp": 0.347,
+          "delta_wp": -0.0102,
+          "label": "(Shotgun) D.Prescott pass short right to B.Spann-Ford to PHI 34 for 6 yards (Z.Baun; A.Ebi",
+          "is_critical": false
+        },
+        {
+          "step": 13,
+          "play_id": "4018730091585",
+          "qtr": 2,
+          "clock": "5:37",
+          "home_wp": 0.2581,
+          "delta_wp": -0.0024,
+          "label": "Official Timeout at 05:37.",
+          "is_critical": false
+        },
+        {
+          "step": 14,
+          "play_id": "4018730091698",
+          "qtr": 2,
+          "clock": "4:09",
+          "home_wp": 0.3038,
+          "delta_wp": 0.0185,
+          "label": "D.Pierce left end to DAL 45 for 12 yards (A.Clark; M.Hooker).",
+          "is_critical": false
+        },
+        {
+          "step": 15,
+          "play_id": "4018730091812",
+          "qtr": 2,
+          "clock": "2:37",
+          "home_wp": 0.258,
+          "delta_wp": 0.0131,
+          "label": "B.Mann punts 48 yards to DAL 2, Center-R.Underwood, downed by PHI-D.Cooper.",
+          "is_critical": false
+        },
+        {
+          "step": 16,
+          "play_id": "4018730091916",
+          "qtr": 2,
+          "clock": "1:52",
+          "home_wp": 0.2845,
+          "delta_wp": -0.018,
+          "label": "B.Anger punts 41 yards to DAL 49, Center-T.Sieg, downed by DAL-J.Thomas.\nPENALTY on PHI-E.",
+          "is_critical": false
+        },
+        {
+          "step": 17,
+          "play_id": "4018730092039",
+          "qtr": 2,
+          "clock": "1:24",
+          "home_wp": 0.2473,
+          "delta_wp": 0.008,
+          "label": "B.Mann punts 41 yards to DAL 13, Center-R.Underwood, downed by PHI-K.James-Newby.",
+          "is_critical": false
+        },
+        {
+          "step": 18,
+          "play_id": "4018730092161",
+          "qtr": 2,
+          "clock": "0:44",
+          "home_wp": 0.1994,
+          "delta_wp": -0.0159,
+          "label": "(No Huddle, Shotgun) D.Prescott pass short right to C.Lamb to PHI 39 for 14 yards (T.Woole",
+          "is_critical": false
+        },
+        {
+          "step": 19,
+          "play_id": "4018730092310",
+          "qtr": 3,
+          "clock": "15:00",
+          "home_wp": 0.2023,
+          "delta_wp": 0.0156,
+          "label": "B.Aubrey kicks 64 yards from DAL 35 to PHI 1. D.Pierce to PHI 16 for 15 yards (H.Luepke; J",
+          "is_critical": false
+        },
+        {
+          "step": 20,
+          "play_id": "4018730092428",
+          "qtr": 3,
+          "clock": "12:42",
+          "home_wp": 0.2052,
+          "delta_wp": -0.0258,
+          "label": "D.Pierce left end to 50 for -2 yards (D.Overshown, M.Bell).",
+          "is_critical": false
+        },
+        {
+          "step": 21,
+          "play_id": "4018730092552",
+          "qtr": 3,
+          "clock": "9:42",
+          "home_wp": 0.269,
+          "delta_wp": -0.0011,
+          "label": "(No Huddle) D.Pierce right tackle to DAL 19 for 2 yards (A.Clark; M.Lawrence).",
+          "is_critical": false
+        },
+        {
+          "step": 22,
+          "play_id": "4018730092670",
+          "qtr": 3,
+          "clock": "6:33",
+          "home_wp": 0.3168,
+          "delta_wp": -0.0193,
+          "label": "F.Johnson reported in as eligible.  D.Pierce left guard to DAL 4 for -3 yards (Q.Williams)",
+          "is_critical": false
+        },
+        {
+          "step": 23,
+          "play_id": "4018730092788",
+          "qtr": 3,
+          "clock": "5:38",
+          "home_wp": 0.3767,
+          "delta_wp": 0.0182,
+          "label": "B.Jones reported in as eligible.  J.Williams left tackle to DAL 40 for 1 yard (Z.Baun; M.O",
+          "is_critical": false
+        },
+        {
+          "step": 24,
+          "play_id": "4018730092924",
+          "qtr": 3,
+          "clock": "3:28",
+          "home_wp": 0.2989,
+          "delta_wp": -0.0282,
+          "label": "(Shotgun) D.Prescott pass deep right to R.Flournoy pushed ob at PHI 27 for 16 yards (T.Woo",
+          "is_critical": false
+        },
+        {
+          "step": 25,
+          "play_id": "4018730093093",
+          "qtr": 3,
+          "clock": "1:30",
+          "home_wp": 0.1598,
+          "delta_wp": -0.0327,
+          "label": "Official Timeout at 01:30.",
+          "is_critical": false
+        },
+        {
+          "step": 26,
+          "play_id": "4018730093234",
+          "qtr": 3,
+          "clock": "0:19",
+          "home_wp": 0.109,
+          "delta_wp": 0.0014,
+          "label": "(Shotgun) T.McKee pass short right to M.Lemon pushed ob at PHI 10 for 5 yards (J.Porter).",
+          "is_critical": false
+        },
+        {
+          "step": 27,
+          "play_id": "4018730093381",
+          "qtr": 4,
+          "clock": "14:11",
+          "home_wp": 0.1051,
+          "delta_wp": -0.0079,
+          "label": "J.Williams left tackle to DAL 41 for 8 yards (A.Ebiketie).",
+          "is_critical": false
+        },
+        {
+          "step": 28,
+          "play_id": "4018730093501",
+          "qtr": 4,
+          "clock": "10:49",
+          "home_wp": 0.0555,
+          "delta_wp": 0.0071,
+          "label": "J.Williams left guard to PHI 9 for 2 yards (A.Epenesa).",
+          "is_critical": false
+        },
+        {
+          "step": 29,
+          "play_id": "4018730093588",
+          "qtr": 4,
+          "clock": "9:10",
+          "home_wp": 0.068,
+          "delta_wp": 0.0118,
+          "label": "B.Aubrey kicks 53 yards from DAL 35 to PHI 12. D.Pierce to PHI 34 for 22 yards (H.Luepke; ",
+          "is_critical": false
+        },
+        {
+          "step": 30,
+          "play_id": "4018730093717",
+          "qtr": 4,
+          "clock": "7:47",
+          "home_wp": 0.0304,
+          "delta_wp": -0.001,
+          "label": "Official Timeout at 07:47.",
+          "is_critical": false
+        },
+        {
+          "step": 31,
+          "play_id": "4018730093816",
+          "qtr": 4,
+          "clock": "6:18",
+          "home_wp": 0.0382,
+          "delta_wp": 0.0019,
+          "label": "(Run formation) PENALTY on DAL, Delay of Game, 5 yards, enforced at DAL 43 - No Play.",
+          "is_critical": false
+        },
+        {
+          "step": 32,
+          "play_id": "4018730093933",
+          "qtr": 4,
+          "clock": "4:54",
+          "home_wp": 0.0053,
+          "delta_wp": -0.0035,
+          "label": "(No Huddle, Shotgun) T.McKee pass incomplete deep left to M.Brown.",
+          "is_critical": false
+        },
+        {
+          "step": 33,
+          "play_id": "4018730094060",
+          "qtr": 4,
+          "clock": "3:08",
+          "home_wp": 0.0018,
+          "delta_wp": -0.0019,
+          "label": "J.Williams left guard to PHI 2 for 3 yards (B.Young; A.Epenesa).",
+          "is_critical": false
+        },
+        {
+          "step": 34,
+          "play_id": "4018730094220",
+          "qtr": 4,
+          "clock": "1:55",
+          "home_wp": 0.001,
+          "delta_wp": 0.0,
+          "label": "(Shotgun) T.McKee pass incomplete short left to E.Stowers (A.Clark).",
+          "is_critical": false
+        },
+        {
+          "step": 35,
+          "play_id": "4018730094337",
+          "qtr": 4,
+          "clock": "0:07",
+          "home_wp": 0.001,
+          "delta_wp": 0.0,
+          "label": "(No Huddle, Shotgun) T.McKee pass short right to E.Mitchell to 50 for no gain (J.Barron; J",
           "is_critical": false
         }
       ]
@@ -27023,66 +27444,6 @@
           "home_wp": 1.0,
           "delta_wp": 0.0914,
           "label": "Resultado Final",
-          "is_critical": false
-        }
-      ]
-    },
-    {
-      "event_id": "401873009",
-      "week": 7,
-      "season_type": "REG",
-      "name": "Dallas Cowboys at Philadelphia Eagles",
-      "short_name": "DAL @ PHI",
-      "date": "2026-10-27T00:15Z",
-      "status": {
-        "state": "pre",
-        "detail": "10/26 - 8:15 PM EDT",
-        "period": 0,
-        "clock": "0:00",
-        "completed": false
-      },
-      "home_team": {
-        "id": "21",
-        "abbreviation": "PHI",
-        "name": "Philadelphia Eagles",
-        "score": 0,
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/phi.png"
-      },
-      "away_team": {
-        "id": "6",
-        "abbreviation": "DAL",
-        "name": "Dallas Cowboys",
-        "score": 0,
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/dal.png"
-      },
-      "win_probability": {
-        "home_wp": 0.5,
-        "away_wp": 0.5
-      },
-      "game_links": {
-        "summary": "https://www.espn.com/nfl/game/_/gameId/401873009/cowboys-eagles",
-        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873009",
-        "recap": "https://www.espn.com/nfl/recap?gameId=401873009"
-      },
-      "critical_moments": [],
-      "hinge_play": null,
-      "wp_timeline": [
-        {
-          "step": 0,
-          "qtr": 1,
-          "clock": "15:00",
-          "home_wp": 0.5,
-          "delta_wp": 0.0,
-          "label": "Kickoff (Inicio 50/50)",
-          "is_critical": false
-        },
-        {
-          "step": 1,
-          "qtr": 4,
-          "clock": "0:00",
-          "home_wp": 0.5,
-          "delta_wp": 0.0,
-          "label": "Final del partido",
           "is_critical": false
         }
       ]
