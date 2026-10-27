@@ -71,16 +71,38 @@ def append_publish_history(entry: dict):
         json.dump(hist[:100], f, ensure_ascii=False, indent=2)
 
 
+from nfl_clay_image_engine import (
+    build_concordant_clay_prompt,
+    generate_new_unique_clay_image,
+    load_used_images_registry,
+    save_used_images_registry,
+    compute_file_sha256,
+    extract_numbers_from_text,
+)
+
+
 def upload_image_to_cdn(local_rel_path: str) -> str:
     """
     Sube la ilustración de plastilina a Uploadcare (`7d6b9baa89bfe29d27c2`)
     y usa automáticamente `https://pomf2.lain.la/upload.php` como respaldo permanente
-    si Uploadcare devuelve 403 / límite de cuota.
+    si Uploadcare devuelve 403 / límite de cuota. Si ya es una URL https externa, la descarga primero.
     """
-    clean_rel = local_rel_path.lstrip("/").replace("/", os.sep)
-    abs_path = os.path.join(BASE_DIR, clean_rel)
-    if not os.path.exists(abs_path):
-        raise FileNotFoundError(f"No se encontró la ilustración en: {abs_path}")
+    if local_rel_path.startswith("http://") or local_rel_path.startswith("https://"):
+        if "ucarecdn.com" in local_rel_path or "lain.la" in local_rel_path:
+            return local_rel_path
+        tmp_name = f"clay_dyn_{int(time.time()*1000)}.jpg"
+        abs_path = os.path.join(BASE_DIR, "assets", "clay", tmp_name)
+        r_dl = requests.get(local_rel_path, timeout=30, headers={"User-Agent": "NFLAnalyticsEngine/2.0"})
+        if r_dl.status_code == 200 and len(r_dl.content) > 5000:
+            with open(abs_path, "wb") as f:
+                f.write(r_dl.content)
+        else:
+            return local_rel_path
+    else:
+        clean_rel = local_rel_path.lstrip("/").replace("/", os.sep)
+        abs_path = os.path.join(BASE_DIR, clean_rel)
+        if not os.path.exists(abs_path):
+            raise FileNotFoundError(f"No se encontró la ilustración en: {abs_path}")
 
     filename = os.path.basename(abs_path)
 
@@ -234,6 +256,37 @@ class NFLAnalyticsRequestHandler(SimpleHTTPRequestHandler):
                 subprocess.run(["python", "actualizar_datos_nfl.py"], cwd=BASE_DIR, check=True)
                 subprocess.run(["python", "generador_tips_x.py"], cwd=BASE_DIR, check=True)
                 self._send_json(200, {"ok": True, "message": "Datos y Top News actualizados en vivo."})
+            except Exception as e:
+                self._send_json(500, {"ok": False, "error": str(e)})
+            return
+
+        if self.path == "/api/generate-tip-image":
+            try:
+                tip_payload = body.get("tip", body)
+                reg = load_used_images_registry()
+                concordant_prompt = build_concordant_clay_prompt(tip_payload)
+                tip_payload["clay_prompt"] = concordant_prompt
+                new_rel = generate_new_unique_clay_image(tip_payload, reg)
+                abs_p = os.path.join(BASE_DIR, new_rel.replace("/", os.sep))
+                f_hash = compute_file_sha256(abs_p)
+                tip_id = str(tip_payload.get("id", f"tip-dyn-{int(time.time())}"))
+                reg["entries"][tip_id] = {
+                    "tip_id": tip_id,
+                    "matchup": tip_payload.get("matchup", ""),
+                    "headline": tip_payload.get("headline", tip_payload.get("title", "")),
+                    "illustration": new_rel,
+                    "sha256": f_hash,
+                    "players_numbers": extract_numbers_from_text(tip_payload.get("body", "")),
+                    "clay_prompt": concordant_prompt,
+                    "assigned_at": datetime.datetime.now().isoformat(),
+                }
+                save_used_images_registry(reg)
+                self._send_json(200, {
+                    "ok": True,
+                    "illustration": new_rel,
+                    "clay_prompt": concordant_prompt,
+                    "sha256": f_hash,
+                })
             except Exception as e:
                 self._send_json(500, {"ok": False, "error": str(e)})
             return
