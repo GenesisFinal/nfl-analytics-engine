@@ -917,35 +917,213 @@ function renderMatchupBoard() {
     </div>
   `;
 
-  // 5. Bloque 4: Equipos Especiales (Kicking, Punting, Returns)
-  const buildStGauge = (label, leftText, rightText, markerPct) => `
-    <div class="st-gauge-row">
-      <span>${leftText}</span>
-      <div class="st-spectrum-bar">
-        <span class="st-marker" style="left: ${Math.max(6, Math.min(94, markerPct))}%"></span>
-      </div>
-      <span class="st-rank-badge">${rightText}</span>
-    </div>
-  `;
+  // =========================================================================
+  // 5. BLOQUE 4: EQUIPOS ESPECIALES DETALLADOS (KICKING, PUNTING, RETURNS & DVOA RANK)
+  // =========================================================================
+  const stLeftEl = document.getElementById("stLeftTitle");
+  const stRightEl = document.getElementById("stRightTitle");
+  if (stLeftEl) stLeftEl.textContent = `✈️ ${aw.abbr} EQUIPOS ESPECIALES (RANK #${aw.rank_st} DE 32 EN NFL)`;
+  if (stRightEl) stRightEl.textContent = `🏠 ${hm.abbr} EQUIPOS ESPECIALES (RANK #${hm.rank_st} DE 32 EN NFL)`;
+
+  const kickingRows = [
+    {
+      leftTag: `${aw.abbr} Acierto FG`,
+      leftVal: aw.fg_pct,
+      leftFmt: `${aw.fg_pct.toFixed(1)}% (${aw.fg_made}/${aw.fg_att})`,
+      metricLabel: "Efectividad FG %",
+      metricSub: "% Goles de Campo (3 pts) acertados",
+      metricTooltip: "Porcentaje de Goles de Campo convertidos sobre el total de intentos (entre paréntesis: anotados/intentados). Promedio NFL: ~85%.",
+      rightVal: hm.fg_pct,
+      rightFmt: `${hm.fg_pct.toFixed(1)}% (${hm.fg_made}/${hm.fg_att})`,
+      rightTag: `${hm.abbr} Acierto FG`,
+      minVal: 68,
+      maxVal: 100,
+      leftHigherIsBetter: true,
+      rightHigherIsBetter: true,
+    },
+    {
+      leftTag: `${aw.abbr} Larga Dist.`,
+      leftVal: aw.fg_50_plus,
+      leftFmt: `${aw.fg_50_plus} de +50 yds`,
+      metricLabel: "Goles de +50 Yardas",
+      metricSub: "Patadas de larga distancia anotadas",
+      metricTooltip: "Cantidad de Goles de Campo convertidos desde 50 o más yardas de distancia en la temporada (muestra potencia y alcance de pierna del pateador).",
+      rightVal: hm.fg_50_plus,
+      rightFmt: `${hm.fg_50_plus} de +50 yds`,
+      rightTag: `${hm.abbr} Larga Dist.`,
+      minVal: 0,
+      maxVal: 7,
+      leftHigherIsBetter: true,
+      rightHigherIsBetter: true,
+    },
+  ];
+
+  const puntingRows = [
+    {
+      leftTag: `${aw.abbr} Despeje Neto`,
+      leftVal: aw.punt_net_avg,
+      leftFmt: `${aw.punt_net_avg.toFixed(1)} yds`,
+      metricLabel: "Promedio Neto (Net Avg)",
+      metricSub: "Yardas de despeje menos devolución",
+      metricTooltip: "Yardas netas que gana el equipo en cada despeje de 4to down (distancia del despeje menos las yardas que regresa el rival). Élite NFL: +43.5 yardas.",
+      rightVal: hm.punt_net_avg,
+      rightFmt: `${hm.punt_net_avg.toFixed(1)} yds`,
+      rightTag: `${hm.abbr} Despeje Neto`,
+      minVal: 37.5,
+      maxVal: 46.5,
+      leftHigherIsBetter: true,
+      rightHigherIsBetter: true,
+    },
+    {
+      leftTag: `${aw.abbr} Encierros`,
+      leftVal: aw.punt_in20_pct,
+      leftFmt: `${aw.punt_in20_pct.toFixed(1)}%`,
+      metricLabel: "Encierro Dentro de la 20",
+      metricSub: "% despejes que dejan al rival < yd 20",
+      metricTooltip: "In-20 %: Porcentaje de patadas de despeje que caen y se detienen antes de la yarda 20 del rival, obligándolo a recorrer más de 80 yardas para anotar.",
+      rightVal: hm.punt_in20_pct,
+      rightFmt: `${hm.punt_in20_pct.toFixed(1)}%`,
+      rightTag: `${hm.abbr} Encierros`,
+      minVal: 22,
+      maxVal: 55,
+      leftHigherIsBetter: true,
+      rightHigherIsBetter: true,
+    },
+  ];
+
+  const returnsAndRankRows = [
+    {
+      leftTag: `${aw.abbr} Regreso Punt`,
+      leftVal: aw.pr_avg,
+      leftFmt: `${aw.pr_avg.toFixed(1)} yds/dev`,
+      metricLabel: "Devolución de Despeje (PR Avg)",
+      metricSub: "Yardas ganadas al devolver un Punt",
+      metricTooltip: "Punt Return Average (PFR): Yardas promedio que gana el regresador cada vez que atrapa y devuelve una patada de despeje del rival. Promedio NFL: ~9.5 yardas.",
+      rightVal: hm.pr_avg,
+      rightFmt: `${hm.pr_avg.toFixed(1)} yds/dev`,
+      rightTag: `${hm.abbr} Regreso Punt`,
+      minVal: 5.0,
+      maxVal: 16.5,
+      leftHigherIsBetter: true,
+      rightHigherIsBetter: true,
+    },
+    {
+      leftTag: `${aw.abbr} Regreso Salida`,
+      leftVal: aw.kr_avg,
+      leftFmt: `${aw.kr_avg.toFixed(1)} yds/dev`,
+      metricLabel: "Devolución de Salida (KR Avg)",
+      metricSub: "Yardas ganadas en patada inicial (Kickoff)",
+      metricTooltip: "Kickoff Return Average (PFR): Yardas promedio ganadas al devolver la patada inicial después de recibir puntos. Promedio NFL con el nuevo Dynamic Kickoff: ~26 yardas.",
+      rightVal: hm.kr_avg,
+      rightFmt: `${hm.kr_avg.toFixed(1)} yds/dev`,
+      rightTag: `${hm.abbr} Regreso Salida`,
+      minVal: 20.0,
+      maxVal: 33.0,
+      leftHigherIsBetter: true,
+      rightHigherIsBetter: true,
+    },
+    {
+      leftTag: `${aw.abbr} Ranking NFL`,
+      leftVal: aw.rank_st,
+      leftFmt: `#${aw.rank_st} NFL (${aw.st_index >= 0 ? "+" : ""}${aw.st_index})`,
+      metricLabel: "Ranking Global ST (DVOA)",
+      metricSub: "Puesto #1 (mejor) a #32 (peor) en la NFL",
+      metricTooltip: "Posición entre las 32 franquicias de la NFL combinando pateo, despejes, devoluciones y cobertura (estilo FTN DVOA). El puesto #1 es el mejor equipo especial de la liga.",
+      rightVal: hm.rank_st,
+      rightFmt: `#${hm.rank_st} NFL (${hm.st_index >= 0 ? "+" : ""}${hm.st_index})`,
+      rightTag: `${hm.abbr} Ranking NFL`,
+      minVal: 1,
+      maxVal: 32,
+      leftHigherIsBetter: false,
+      rightHigherIsBetter: false,
+    },
+  ];
+
+  const buildStVerdict = (rowsConfig, phaseLabel) => {
+    let totalDiff = 0;
+    rowsConfig.forEach((r) => {
+      const sL = computeUnitStrengthPct(r.leftVal, r.minVal, r.maxVal, r.leftHigherIsBetter ?? true);
+      const sR = computeUnitStrengthPct(r.rightVal, r.minVal, r.maxVal, r.rightHigherIsBetter ?? true);
+      totalDiff += sL - sR;
+    });
+    const avgDiff = totalDiff / (rowsConfig.length || 1);
+    if (avgDiff >= 6) {
+      return `<span class="dsh-verdict-badge edge-off">🟢 Ventaja ${phaseLabel}: ${aw.abbr} (+${Math.round(avgDiff)} pts)</span>`;
+    }
+    if (avgDiff <= -6) {
+      return `<span class="dsh-verdict-badge edge-off">🟢 Ventaja ${phaseLabel}: ${hm.abbr} (+${Math.round(Math.abs(avgDiff))} pts)</span>`;
+    }
+    return `<span class="dsh-verdict-badge edge-even">🟡 ${phaseLabel} Parejos</span>`;
+  };
+
+  const kickVerdict = buildStVerdict(kickingRows, "Pateador");
+  const puntVerdict = buildStVerdict(puntingRows, "Despejes");
+  const retVerdict = buildStVerdict(returnsAndRankRows, "Retornos y Ranking ST");
 
   document.getElementById("specialTeamsGauges").innerHTML = `
-    <div class="st-col-box">
-      <h5 title="Efectividad en Goles de Campo (Field Goals) y aciertos de larga distancia (+50 yardas)">KICKING (FG % &amp; +50 YDS)</h5>
-      ${buildStGauge(aw.abbr, aw.abbr, `${aw.fg_pct.toFixed(0)}%`, 100 - aw.pct_st)}
-      ${buildStGauge(hm.abbr, hm.abbr, `${hm.fg_pct.toFixed(0)}%`, 100 - hm.pct_st)}
-      ${buildStGauge("50+ Yds", "+50y", `${aw.fg_50_plus} vs ${hm.fg_50_plus}`, 38)}
-    </div>
-    <div class="st-col-box">
-      <h5 title="Promedio Neto de Despeje descontando devolución (Net Avg) y % de despejes que acorralan al rival dentro de su yarda 20 (In-20)">PUNTING (NET AVG &amp; IN-20)</h5>
-      ${buildStGauge(aw.abbr, aw.abbr, `${aw.punt_net_avg.toFixed(1)}y`, Math.max(10, 100 - (aw.punt_net_avg - 36) * 8))}
-      ${buildStGauge(hm.abbr, hm.abbr, `${hm.punt_net_avg.toFixed(1)}y`, Math.max(10, 100 - (hm.punt_net_avg - 36) * 8))}
-      ${buildStGauge("In20", "In20", `${aw.punt_in20_pct.toFixed(0)}%/${hm.punt_in20_pct.toFixed(0)}%`, 42)}
-    </div>
-    <div class="st-col-box">
-      <h5 title="Ranking global de Equipos Especiales (FTN DVOA #1 a #32) y yardas por devolución de despeje (PR Avg)">RETURNS &amp; RANK ST (DVOA)</h5>
-      ${buildStGauge(aw.abbr, `${aw.abbr} RK`, `#${aw.rank_st}`, (aw.rank_st / 32) * 100)}
-      ${buildStGauge(hm.abbr, `${hm.abbr} RK`, `#${hm.rank_st}`, (hm.rank_st / 32) * 100)}
-      ${buildStGauge("PR Avg", "PR Yd", `${aw.pr_avg.toFixed(1)}/${hm.pr_avg.toFixed(1)}`, 48)}
+    <div class="st-phase-grid">
+      <!-- TARJETA 1: KICKING (PATEO A LOS POSTES) -->
+      <div class="st-phase-card">
+        <div class="st-phase-header">
+          <div>
+            <div class="st-phase-title">🎯 1. KICKING: PATEO A LOS POSTES (GOLES DE CAMPO — 3 PUNTOS)</div>
+            <div class="st-phase-desc">
+              Compara la puntería de cada pateador (<strong>FG %</strong>) y cuántos goles de campo metieron desde <strong>más de 50 yardas</strong> (datos de <em>Pro Football Reference</em>).
+            </div>
+          </div>
+          ${kickVerdict}
+        </div>
+        <div class="direction-unit-headers">
+          <span>👈 PATEADOR ${aw.abbr}</span>
+          <span>ESTADÍSTICA Y QUÉ MIDE</span>
+          <span>PATEADOR ${hm.abbr} 👉</span>
+        </div>
+        <div class="tactical-bars-list">
+          ${kickingRows.map((r) => buildTacticalCompRow(r)).join("")}
+        </div>
+      </div>
+
+      <!-- TARJETA 2: PUNTING (DESPEJES Y POSICIÓN DE CAMPO) -->
+      <div class="st-phase-card">
+        <div class="st-phase-header">
+          <div>
+            <div class="st-phase-title">🦵 2. PUNTING: DESPEJES EN 4TO DOWN Y ENCIERRO RIVAL</div>
+            <div class="st-phase-desc">
+              Cuando el ataque no logra avanzar y despeja con el pie en 4to down: ¿quién patea más lejos (<strong>Net Avg</strong>) y encierra más veces al rival antes de su yarda 20 (<strong>In-20 %</strong>)?
+            </div>
+          </div>
+          ${puntVerdict}
+        </div>
+        <div class="direction-unit-headers">
+          <span>👈 DESPEJADOR ${aw.abbr}</span>
+          <span>ESTADÍSTICA Y QUÉ MIDE</span>
+          <span>DESPEJADOR ${hm.abbr} 👉</span>
+        </div>
+        <div class="tactical-bars-list">
+          ${puntingRows.map((r) => buildTacticalCompRow(r)).join("")}
+        </div>
+      </div>
+
+      <!-- TARJETA 3: DEVOLUCIONES (RETURNS) Y RANKING GLOBAL DVOA (#1 A #32) -->
+      <div class="st-phase-card full-span">
+        <div class="st-phase-header">
+          <div>
+            <div class="st-phase-title">⚡ 3. RETURNS (DEVOLUCIONES DE PATADA) Y RANKING GLOBAL DVOA (#1 A #32 NFL)</div>
+            <div class="st-phase-desc">
+              Compara las yardas ganadas al devolver despejes (<strong>PR Avg</strong>), al devolver la patada inicial (<strong>KR Avg</strong>) y la posición general <strong>#1 a #32 en toda la NFL</strong> (según índice compuesto <em>DVOA / TeamRankings</em>, donde <strong>#1 es el mejor</strong> de los 32 equipos).
+            </div>
+          </div>
+          ${retVerdict}
+        </div>
+        <div class="direction-unit-headers">
+          <span>👈 UNIDAD ESPECIAL ${aw.abbr} (TDs de retorno: ${aw.st_tds})</span>
+          <span>ESTADÍSTICA Y QUÉ MIDE</span>
+          <span>UNIDAD ESPECIAL ${hm.abbr} (TDs de retorno: ${hm.st_tds}) 👉</span>
+        </div>
+        <div class="tactical-bars-list">
+          ${returnsAndRankRows.map((r) => buildTacticalCompRow(r)).join("")}
+        </div>
+      </div>
     </div>
   `;
 }
