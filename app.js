@@ -607,22 +607,29 @@ function buildTacticalCompRow({
 }
 
 function buildDirectionVerdictBadge(offTeam, defTeam, rowsConfig) {
-  let totalDiff = 0;
+  let totalLeft = 0;
+  let totalRight = 0;
   rowsConfig.forEach((r) => {
     const rMin = r.rightMinVal !== undefined && r.rightMinVal !== null ? r.rightMinVal : r.minVal;
     const rMax = r.rightMaxVal !== undefined && r.rightMaxVal !== null ? r.rightMaxVal : r.maxVal;
     const sL = computeUnitStrengthPct(r.leftVal, r.minVal, r.maxVal, r.leftHigherIsBetter ?? true);
     const sR = computeUnitStrengthPct(r.rightVal, rMin, rMax, r.rightHigherIsBetter ?? false);
-    totalDiff += sL - sR;
+    totalLeft += sL;
+    totalRight += sR;
   });
-  const avgDiff = totalDiff / (rowsConfig.length || 1);
+  const count = rowsConfig.length || 1;
+  const avgLeft = Math.round(totalLeft / count);
+  const avgRight = Math.round(totalRight / count);
+  const avgDiff = (totalLeft - totalRight) / count;
+  const tooltipText = `Índice de Fortaleza Táctica (escala 0% a 100% del largo de las 4 barras): Ataque ${offTeam.abbr} promedia ${avgLeft}% vs. Defensa ${defTeam.abbr} promedia ${avgRight}%. NO son puntos del marcador del partido.`;
+
   if (avgDiff >= 7) {
-    return `<span class="dsh-verdict-badge edge-off">🟢 Ventaja Ataque ${offTeam.abbr} (+${Math.round(avgDiff)} pts)</span>`;
+    return `<span class="dsh-verdict-badge edge-off" title="${tooltipText}">🟢 Ventaja Ataque ${offTeam.abbr} (+${Math.round(avgDiff)}% ventaja táctica)</span>`;
   }
   if (avgDiff <= -7) {
-    return `<span class="dsh-verdict-badge edge-def">🔴 Domina Defensa ${defTeam.abbr} (+${Math.round(Math.abs(avgDiff))} pts)</span>`;
+    return `<span class="dsh-verdict-badge edge-def" title="${tooltipText}">🔴 Domina Defensa ${defTeam.abbr} (+${Math.round(Math.abs(avgDiff))}% ventaja táctica)</span>`;
   }
-  return `<span class="dsh-verdict-badge edge-even">🟡 Duelo Parejo en Trincheras</span>`;
+  return `<span class="dsh-verdict-badge edge-even" title="${tooltipText}">🟡 Duelo Parejo (${avgLeft}% vs ${avgRight}%)</span>`;
 }
 
 /* ==========================================================================
