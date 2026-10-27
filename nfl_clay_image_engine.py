@@ -404,22 +404,101 @@ def build_concordant_clay_prompt(tip: dict) -> str:
     )
 
 
+# Mapa de activos 3D Claymation generados con Google Gemini Nano Banana (16:9, plastilina artesanal) para las 32 franquicias NFL
+TEAM_NANOBANANA_CLAY_ASSETS = {
+    "ARI": ["assets/clay/clay_ari_jax.jpg"],
+    "ATL": ["assets/clay/clay_atl_sf_ground.jpg", "assets/clay/clay_sf_atl.jpg"],
+    "BAL": ["assets/clay/clay_bal_lamar8.jpg"],
+    "BUF": ["assets/clay/clay_kc_buf.jpg"],
+    "CAR": ["assets/clay/clay_car_young9.jpg", "assets/clay/clay_news_moton_car72.jpg"],
+    "CHI": ["assets/clay/clay_ne_chi_trenches.jpg", "assets/clay/clay_ne_chi.jpg"],
+    "CIN": ["assets/clay/clay_cin_cle.jpg"],
+    "CLE": ["assets/clay/clay_cin_cle.jpg"],
+    "DAL": ["assets/clay/clay_dal_phi.jpg", "assets/clay/clay_dal_phi_mnf2.jpg", "assets/clay/clay_news_javonte_dal33.jpg"],
+    "DEN": ["assets/clay/clay_den_lac.jpg"],
+    "DET": ["assets/clay/clay_det_goff.jpg"],
+    "GB":  ["assets/clay/clay_gb_hou.jpg"],
+    "HOU": ["assets/clay/clay_gb_hou.jpg"],
+    "IND": ["assets/clay/clay_ind_min.jpg"],
+    "JAX": ["assets/clay/clay_ari_jax.jpg"],
+    "KC":  ["assets/clay/clay_kc_buf.jpg", "assets/clay/clay_news_gwilson_nyj5.jpg"],
+    "LA":  ["assets/clay/clay_la_lv.jpg"],
+    "LAC": ["assets/clay/clay_den_lac.jpg"],
+    "LV":  ["assets/clay/clay_la_lv.jpg"],
+    "MIA": ["assets/clay/clay_mia_tb.jpg"],
+    "MIN": ["assets/clay/clay_ind_min.jpg"],
+    "NE":  ["assets/clay/clay_ne_chi.jpg", "assets/clay/clay_ne_chi_trenches.jpg"],
+    "NO":  ["assets/clay/clay_pit_no.jpg"],
+    "NYG": ["assets/clay/clay_nyg_ten.jpg"],
+    "NYJ": ["assets/clay/clay_news_gwilson_nyj5.jpg"],
+    "PHI": ["assets/clay/clay_news_barkley_phi26.jpg", "assets/clay/clay_dal_phi.jpg", "assets/clay/clay_dal_phi_mnf2.jpg"],
+    "PIT": ["assets/clay/clay_pit_no.jpg"],
+    "SEA": ["assets/clay/clay_sea_jsn.jpg"],
+    "SF":  ["assets/clay/clay_sf_atl.jpg", "assets/clay/clay_atl_sf_ground.jpg"],
+    "TB":  ["assets/clay/clay_mia_tb.jpg"],
+    "TEN": ["assets/clay/clay_nyg_ten.jpg"],
+    "WAS": ["assets/clay/clay_was_daniels5.jpg"],
+}
+
+ALL_NANOBANANA_CLAY_ASSETS = [
+    "assets/clay/clay_car_young9.jpg",
+    "assets/clay/clay_kc_buf.jpg",
+    "assets/clay/clay_bal_lamar8.jpg",
+    "assets/clay/clay_gb_hou.jpg",
+    "assets/clay/clay_cin_cle.jpg",
+    "assets/clay/clay_was_daniels5.jpg",
+    "assets/clay/clay_mia_tb.jpg",
+    "assets/clay/clay_den_lac.jpg",
+    "assets/clay/clay_ari_jax.jpg",
+    "assets/clay/clay_nyg_ten.jpg",
+    "assets/clay/clay_ne_chi.jpg",
+    "assets/clay/clay_ne_chi_trenches.jpg",
+    "assets/clay/clay_sf_atl.jpg",
+    "assets/clay/clay_atl_sf_ground.jpg",
+    "assets/clay/clay_ind_min.jpg",
+    "assets/clay/clay_pit_no.jpg",
+    "assets/clay/clay_la_lv.jpg",
+    "assets/clay/clay_dal_phi.jpg",
+    "assets/clay/clay_dal_phi_mnf2.jpg",
+    "assets/clay/clay_det_goff.jpg",
+    "assets/clay/clay_sea_jsn.jpg",
+    "assets/clay/clay_news_barkley_phi26.jpg",
+    "assets/clay/clay_news_javonte_dal33.jpg",
+    "assets/clay/clay_news_moton_car72.jpg",
+    "assets/clay/clay_news_gwilson_nyj5.jpg",
+]
+
+
 def _get_gemini_api_key() -> str:
-    """Busca GEMINI_API_KEY en variables de entorno o en archivos .env locales."""
-    key = os.environ.get("GEMINI_API_KEY", "").strip()
-    if key:
-        return key
+    """Busca GEMINI_API_KEY / GOOGLE_API_KEY en variables de entorno, publisher_config.json o archivos .env locales."""
+    for env_var in ("GEMINI_API_KEY", "GOOGLE_API_KEY"):
+        key = os.environ.get(env_var, "").strip()
+        if key:
+            return key
+
+    cfg_path = os.path.join(DATA_DIR, "publisher_config.json")
+    if os.path.exists(cfg_path):
+        try:
+            with open(cfg_path, "r", encoding="utf-8") as f:
+                cfg = json.load(f)
+                k = str(cfg.get("gemini_api_key", "")).strip()
+                if k:
+                    return k
+        except Exception:
+            pass
+
     candidate_envs = [
         os.path.join(BASE_DIR, ".env"),
-        os.path.join( os.path.dirname(BASE_DIR), "Efemérides", ".env"),
+        os.path.join(os.path.dirname(BASE_DIR), "Efemérides", ".env"),
     ]
     for env_path in candidate_envs:
         if os.path.exists(env_path):
             try:
                 with open(env_path, "r", encoding="utf-8-sig") as f:
                     for line in f:
-                        if line.strip().startswith("GEMINI_API_KEY="):
-                            val = line.strip().split("=", 1)[1].strip().strip('"').strip("'")
+                        s = line.strip()
+                        if s.startswith("GEMINI_API_KEY=") or s.startswith("GOOGLE_API_KEY="):
+                            val = s.split("=", 1)[1].strip().strip('"').strip("'")
                             if val:
                                 return val
             except Exception:
@@ -427,54 +506,154 @@ def _get_gemini_api_key() -> str:
     return ""
 
 
+def select_concordant_nanobanana_asset(tip: dict, registry: dict) -> str:
+    """
+    Selecciona una ilustración 3D claymation 16:9 auténtica generada con Google Gemini Nano Banana
+    de nuestro catálogo local `assets/clay/`, garantizando concordancia con el equipo/jugadores
+    del tweet y priorizando imágenes no utilizadas en el lote actual.
+    """
+    matchup = str(tip.get("matchup", "")).strip().upper()
+    headline = str(tip.get("headline", tip.get("title", ""))).lower()
+    body = str(tip.get("body", "")).lower()
+    full_txt = f"{headline} {body}"
+
+    used_paths = {
+        v.get("illustration", "")
+        for v in (registry or {}).get("entries", {}).values()
+        if v.get("illustration")
+    }
+
+    candidate_teams = []
+    m = re.match(r"^([A-Z]{2,3})\s*@\s*([A-Z]{2,3})$", matchup)
+    if m:
+        candidate_teams.extend([m.group(1), m.group(2)])
+    elif matchup in TEAM_NANOBANANA_CLAY_ASSETS:
+        candidate_teams.append(matchup)
+
+    for abbr, spec in TEAM_VISUAL_SPECS.items():
+        if abbr not in candidate_teams:
+            if spec["name"].lower() in full_txt or f"({abbr.lower()})" in full_txt:
+                candidate_teams.append(abbr)
+
+    team_assets = []
+    for tm in candidate_teams:
+        for p in TEAM_NANOBANANA_CLAY_ASSETS.get(tm, []):
+            if p not in team_assets:
+                team_assets.append(p)
+
+    # Si es Carolina Panthers y menciona #9 / Bryce Young / Clowney, priorizar clay_car_young9.jpg
+    if "CAR" in candidate_teams and ("#9" in full_txt or "young" in full_txt or "clowney" in full_txt):
+        if "assets/clay/clay_car_young9.jpg" in team_assets:
+            team_assets.remove("assets/clay/clay_car_young9.jpg")
+        team_assets.insert(0, "assets/clay/clay_car_young9.jpg")
+
+    for asset in team_assets:
+        if asset not in used_paths:
+            return asset
+    if team_assets:
+        return team_assets[0]
+
+    for asset in ALL_NANOBANANA_CLAY_ASSETS:
+        if asset not in used_paths:
+            return asset
+    return ALL_NANOBANANA_CLAY_ASSETS[0]
+
+
 def generate_new_unique_clay_image(tip: dict, registry: dict) -> str:
     """
     Genera automáticamente una nueva imagen 3D claymation 16:9 única y concordante
-    cuando se crea un tweet nuevo que no tiene imagen dedicada o cuya imagen ya fue usada.
+    usando exclusivamente Google Gemini Nano Banana (`gemini-nano-banana-2.1` / `gemini-3.1-flash-image` / `gemini-3-pro-image`).
+    Si no hay GEMINI_API_KEY activa en vivo, selecciona una ilustración 3D claymation auténtica
+    de Nano Banana desde `assets/clay/` concordante con el equipo (NUNCA usa Pollinations).
     """
     tip_id = re.sub(r"[^a-zA-Z0-9_-]+", "_", str(tip.get("id", f"tip_{int(time.time())}")))
     prompt = tip.get("clay_prompt") or build_concordant_clay_prompt(tip)
     seed = int(hashlib.sha256(f"{tip_id}:{prompt}:{time.time()}".encode("utf-8")).hexdigest()[:8], 16) % 900000 + 100000
-    filename = f"clay_auto_{tip_id}_{seed}.jpg"
+    filename = f"clay_nanobanana_{tip_id}_{seed}.jpg"
     abs_path = os.path.join(CLAY_DIR, filename)
     rel_path = f"assets/clay/{filename}"
 
-    # 1. Intentar con Gemini API (gemini-3.1-flash-image) si hay GEMINI_API_KEY configurada
     api_key = _get_gemini_api_key()
     if api_key:
+        # 1A. Intentar mediante SDK oficial `google-genai` Interactions API (Nano Banana 2.1 / 2 / Pro)
         try:
-            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp-image-generation:generateContent?key={api_key}"
-            payload = {
-                "contents": [{"parts": [{"text": prompt}]}],
-                "generationConfig": {"responseModalities": ["TEXT", "IMAGE"]},
-            }
-            resp = requests.post(url, json=payload, timeout=35)
-            if resp.status_code == 200:
-                candidates = resp.json().get("candidates", [])
-                for cand in candidates:
-                    for part in cand.get("content", {}).get("parts", []):
-                        inline = part.get("inlineData")
-                        if inline and inline.get("data"):
-                            img_bytes = base64.b64decode(inline["data"])
-                            with open(abs_path, "wb") as f:
-                                f.write(img_bytes)
-                            return rel_path
-        except Exception as e:
-            print(f"[WARN] Gemini Image API fallback a FLUX 16:9: {e}")
+            from google import genai  # type: ignore
 
-    # 2. Fallback: Pollinations FLUX 16:9 con seed único garantizado
-    try:
-        encoded = urllib.parse.quote(prompt)
-        flux_url = f"https://image.pollinations.ai/prompt/{encoded}?width=1600&height=900&nologo=true&model=flux&seed={seed}"
-        r = requests.get(flux_url, timeout=40, headers={"User-Agent": "NFLAnalyticsEngine/2.0"})
-        if r.status_code == 200 and len(r.content) > 15000:
-            with open(abs_path, "wb") as f:
-                f.write(r.content)
-            return rel_path
-    except Exception as e:
-        print(f"[WARN] Pollinations FLUX 16:9 error: {e}")
+            client = genai.Client(api_key=api_key)
+            for nb_model in ("gemini-nano-banana-2.1", "gemini-3.1-flash-image", "gemini-3-pro-image", "gemini-2.5-flash-image"):
+                try:
+                    interaction = client.interactions.create(
+                        model=nb_model,
+                        input=prompt,
+                    )
+                    out_img = getattr(interaction, "output_image", None)
+                    if out_img and getattr(out_img, "data", None):
+                        img_bytes = base64.b64decode(out_img.data)
+                        with open(abs_path, "wb") as f:
+                            f.write(img_bytes)
+                        return rel_path
+                except Exception:
+                    continue
+        except Exception:
+            pass
 
-    return rel_path
+        # 1B. Intentar vía REST Interactions API (/v1beta/interactions) de Gemini Nano Banana
+        for nb_model in ("gemini-nano-banana-2.1", "gemini-3.1-flash-image", "gemini-3-pro-image", "gemini-2.5-flash-image"):
+            try:
+                resp = requests.post(
+                    "https://generativelanguage.googleapis.com/v1beta/interactions",
+                    headers={
+                        "x-goog-api-key": api_key,
+                        "Content-Type": "application/json",
+                        "Api-Revision": "2026-05-20",
+                    },
+                    json={
+                        "model": nb_model,
+                        "input": [{"type": "text", "text": prompt}],
+                    },
+                    timeout=40,
+                )
+                if resp.status_code == 200:
+                    data = resp.json()
+                    out_img = data.get("output_image") or data.get("interaction", {}).get("output_image")
+                    if out_img and out_img.get("data"):
+                        img_bytes = base64.b64decode(out_img["data"])
+                        with open(abs_path, "wb") as f:
+                            f.write(img_bytes)
+                        return rel_path
+                    for step in data.get("steps", []):
+                        for item in step.get("content", []):
+                            if item.get("type") == "image" and item.get("data"):
+                                img_bytes = base64.b64decode(item["data"])
+                                with open(abs_path, "wb") as f:
+                                    f.write(img_bytes)
+                                return rel_path
+            except Exception as e:
+                print(f"[WARN] Gemini Interactions API ({nb_model}): {e}")
+
+        # 1C. Respaldo Gemini generateContent multimodal
+        for gc_model in ("gemini-3.1-flash-image", "gemini-2.5-flash-image", "gemini-2.0-flash-exp-image-generation"):
+            try:
+                url = f"https://generativelanguage.googleapis.com/v1beta/models/{gc_model}:generateContent?key={api_key}"
+                payload = {
+                    "contents": [{"parts": [{"text": prompt}]}],
+                    "generationConfig": {"responseModalities": ["TEXT", "IMAGE"]},
+                }
+                resp = requests.post(url, json=payload, timeout=35)
+                if resp.status_code == 200:
+                    for cand in resp.json().get("candidates", []):
+                        for part in cand.get("content", {}).get("parts", []):
+                            inline = part.get("inlineData")
+                            if inline and inline.get("data"):
+                                img_bytes = base64.b64decode(inline["data"])
+                                with open(abs_path, "wb") as f:
+                                    f.write(img_bytes)
+                                return rel_path
+            except Exception:
+                pass
+
+    # 2. Selección concordante del catálogo local pre-generado con Google Gemini Nano Banana (0% Pollinations)
+    return select_concordant_nanobanana_asset(tip, registry)
 
 
 def enforce_unique_concordant_images(tips_list: list) -> list:
