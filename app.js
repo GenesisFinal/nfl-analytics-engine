@@ -9,6 +9,8 @@ const STATE = {
   selectedGameId: null,
   customMatchup: null, // { away_team, home_team }
   activeView: "matchups",
+  directionMode: "BOTH", // 'BOTH' (Ida y Vuelta), 'AWAY_OFF' (Sentido 1), 'HOME_OFF' (Sentido 2)
+  showInlineGuides: true,
   tipGroupFilter: "ALL",
   selectedPos: "ALL",
   teamSortCol: "rank_total",
@@ -261,6 +263,7 @@ function renderAll() {
   renderPlayersGrid();
   renderNewsGrid();
   renderSourcesDirectory();
+  renderGlossaryView();
   renderXTipsFeed();
 }
 
@@ -333,49 +336,95 @@ function renderGameRibbon() {
 }
 
 /* ==========================================================================
-   HELPERS DE BARRAS TÁCTICAS Y COLORES DE VENTAJA (ESTILO 4)
+   HELPERS DE BARRAS TÁCTICAS EN AMBOS SENTIDOS (ATAQUE VS. DEFENSA)
    ========================================================================== */
-function getAdvantageClasses(valA, valB, higherIsBetter = true, scaleRef = 1.0) {
-  const diff = higherIsBetter ? valA - valB : valB - valA;
-  const norm = diff / (scaleRef || 1);
-  if (norm >= 0.35) return { bg: "bg-sig-pos", txt: "txt-sig-pos" };
-  if (norm >= 0.12) return { bg: "bg-mod-pos", txt: "txt-mod-pos" };
-  if (norm > -0.12) return { bg: "bg-neutral", txt: "txt-neutral" };
-  if (norm > -0.35) return { bg: "bg-mod-neg", txt: "txt-mod-neg" };
+function computeUnitStrengthPct(val, minVal, maxVal, higherIsBetter = true) {
+  const rawRatio = ((val - minVal) / (maxVal - minVal || 1)) * 100;
+  const clamped = Math.max(12, Math.min(98, rawRatio));
+  return higherIsBetter ? clamped : Math.max(12, Math.min(98, 110 - clamped));
+}
+
+function getStrengthComparisonClasses(scoreA, scoreB) {
+  const diff = scoreA - scoreB;
+  if (diff >= 18) return { bg: "bg-sig-pos", txt: "txt-sig-pos" };
+  if (diff >= 6) return { bg: "bg-mod-pos", txt: "txt-mod-pos" };
+  if (diff > -6) return { bg: "bg-neutral", txt: "txt-neutral" };
+  if (diff > -18) return { bg: "bg-mod-neg", txt: "txt-mod-neg" };
   return { bg: "bg-sig-neg", txt: "txt-sig-neg" };
 }
 
-function buildTacticalCompRow({ leftTag, leftVal, leftFmt, metricLabel, rightVal, rightFmt, rightTag, minVal, maxVal, higherIsBetter = true }) {
-  const pctLeft = Math.max(12, Math.min(98, ((leftVal - minVal) / (maxVal - minVal || 1)) * 100));
-  const pctRight = Math.max(12, Math.min(98, ((rightVal - minVal) / (maxVal - minVal || 1)) * 100));
+function buildTacticalCompRow({
+  leftTag,
+  leftVal,
+  leftFmt,
+  metricLabel,
+  metricSub = "",
+  metricTooltip = "",
+  rightVal,
+  rightFmt,
+  rightTag,
+  minVal,
+  maxVal,
+  leftHigherIsBetter = true,
+  rightHigherIsBetter = false,
+  rightMinVal = null,
+  rightMaxVal = null,
+}) {
+  const rMin = rightMinVal !== null ? rightMinVal : minVal;
+  const rMax = rightMaxVal !== null ? rightMaxVal : maxVal;
 
-  const scale = (maxVal - minVal) * 0.35 || 1;
-  const clsL = getAdvantageClasses(leftVal, rightVal, higherIsBetter, scale);
-  const clsR = getAdvantageClasses(rightVal, leftVal, higherIsBetter, scale);
+  // Convertimos cada lado a un puntaje de Fortaleza Táctica (12..98), donde más barra = unidad más dominante
+  const scoreLeft = computeUnitStrengthPct(leftVal, minVal, maxVal, leftHigherIsBetter);
+  const scoreRight = computeUnitStrengthPct(rightVal, rMin, rMax, rightHigherIsBetter);
+
+  const clsL = getStrengthComparisonClasses(scoreLeft, scoreRight);
+  const clsR = getStrengthComparisonClasses(scoreRight, scoreLeft);
 
   return `
-    <div class="tactical-comp-row">
+    <div class="tactical-comp-row" title="${metricTooltip || metricLabel}">
       <div class="tc-source-tag" title="${leftTag}">${leftTag}</div>
       <div class="tc-bar-track left-track">
-        <div class="tc-bar-fill ${clsL.bg}" style="width: ${higherIsBetter ? pctLeft : 110 - pctLeft}%"></div>
+        <div class="tc-bar-fill ${clsL.bg}" style="width: ${scoreLeft}%"></div>
       </div>
       <div class="tc-val left-val ${clsL.txt}">
         <span>→</span> <span>${leftFmt}</span>
       </div>
-      <div class="tc-metric-label">${metricLabel}</div>
+      <div class="tc-metric-center-col">
+        <div class="tc-metric-label">${metricLabel}</div>
+        ${metricSub ? `<div class="tc-metric-sub">${metricSub}</div>` : ""}
+      </div>
       <div class="tc-val right-val ${clsR.txt}">
         <span>${rightFmt}</span> <span>←</span>
       </div>
       <div class="tc-bar-track right-track">
-        <div class="tc-bar-fill ${clsR.bg}" style="width: ${higherIsBetter ? pctRight : 110 - pctRight}%"></div>
+        <div class="tc-bar-fill ${clsR.bg}" style="width: ${scoreRight}%"></div>
       </div>
       <div class="tc-source-tag right" title="${rightTag}">${rightTag}</div>
     </div>
   `;
 }
 
+function buildDirectionVerdictBadge(offTeam, defTeam, rowsConfig) {
+  let totalDiff = 0;
+  rowsConfig.forEach((r) => {
+    const rMin = r.rightMinVal !== undefined && r.rightMinVal !== null ? r.rightMinVal : r.minVal;
+    const rMax = r.rightMaxVal !== undefined && r.rightMaxVal !== null ? r.rightMaxVal : r.maxVal;
+    const sL = computeUnitStrengthPct(r.leftVal, r.minVal, r.maxVal, r.leftHigherIsBetter ?? true);
+    const sR = computeUnitStrengthPct(r.rightVal, rMin, rMax, r.rightHigherIsBetter ?? false);
+    totalDiff += sL - sR;
+  });
+  const avgDiff = totalDiff / (rowsConfig.length || 1);
+  if (avgDiff >= 7) {
+    return `<span class="dsh-verdict-badge edge-off">🟢 Ventaja Ataque ${offTeam.abbr} (+${Math.round(avgDiff)} pts)</span>`;
+  }
+  if (avgDiff <= -7) {
+    return `<span class="dsh-verdict-badge edge-def">🔴 Domina Defensa ${defTeam.abbr} (+${Math.round(Math.abs(avgDiff))} pts)</span>`;
+  }
+  return `<span class="dsh-verdict-badge edge-even">🟡 Duelo Parejo en Trincheras</span>`;
+}
+
 /* ==========================================================================
-   VISTA 1: PIZARRA TÁCTICA CARA A CARA (MATCHUP BOARD - ESTILO 4)
+   VISTA 1: PIZARRA TÁCTICA CARA A CARA EN AMBOS SENTIDOS (IDA Y VUELTA)
    ========================================================================== */
 function getActiveMatchupTeams() {
   if (!STATE.data) return null;
@@ -411,6 +460,18 @@ function renderMatchupBoard() {
   if (!m || !m.away || !m.home) return;
   const { away: aw, home: hm, game: g } = m;
 
+  // Actualizar textos de los botones de sentido con los nombres reales de los equipos
+  const dirBtnAway = document.getElementById("dirBtnAwayOff");
+  const dirBtnHome = document.getElementById("dirBtnHomeOff");
+  if (dirBtnAway) dirBtnAway.textContent = `✈️ Sentido 1: Ataca ${aw.short} vs. Defiende ${hm.short}`;
+  if (dirBtnHome) dirBtnHome.textContent = `🏠 Sentido 2: Ataca ${hm.short} vs. Defiende ${aw.short}`;
+
+  // Mostrar u ocultar los cuadros explicativos inline según preferencia del usuario
+  ["guideAirBlock", "guideGroundBlock", "guideSitBlock", "guideStBlock"].forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle("hidden", !STATE.showInlineGuides);
+  });
+
   const hasScore = g.status_state === "in" || g.status_state === "post";
   const centerCircleHtml = hasScore
     ? `<div class="mb-vs-circle" style="width:auto; padding:0 12px; border-radius:16px; background:${g.status_state === "in" ? "#dc2626" : "#013369"}; color:#fff; font-size:14px;">${aw.abbr} ${g.away_score ?? 0} - ${g.home_score ?? 0} ${hm.abbr}</div>`
@@ -429,11 +490,11 @@ function renderMatchupBoard() {
       <img src="${aw.logo}" alt="${aw.name}" class="mb-team-logo" />
       <div class="mb-team-info">
         <h2>${aw.name.toUpperCase()}</h2>
-        <div class="mb-team-sub">AWAY · Récord (${g.away_record || aw.record}) · ${aw.div}</div>
+        <div class="mb-team-sub">VISITANTE (AWAY) · Récord (${g.away_record || aw.record}) · ${aw.div}</div>
         <div class="mb-pills-row">
-          <span class="stat-mini-pill">Rank Total #${aw.rank_total}</span>
-          <span class="stat-mini-pill">${aw.off_ppg} PPG</span>
-          <span class="stat-mini-pill">EPA/jug ${aw.off_epa_play >= 0 ? "+" : ""}${aw.off_epa_play}</span>
+          <span class="stat-mini-pill" title="Ranking general combinando ataque, defensa y equipos especiales">Rank Total #${aw.rank_total}</span>
+          <span class="stat-mini-pill" title="Puntos anotados por partido">${aw.off_ppg} PPG</span>
+          <span class="stat-mini-pill" title="Puntos Esperados Agregados por jugada ofensiva">EPA/jug ${aw.off_epa_play >= 0 ? "+" : ""}${aw.off_epa_play}</span>
         </div>
       </div>
     </div>
@@ -448,178 +509,410 @@ function renderMatchupBoard() {
       <img src="${hm.logo}" alt="${hm.name}" class="mb-team-logo" />
       <div class="mb-team-info">
         <h2>${hm.name.toUpperCase()}</h2>
-        <div class="mb-team-sub">HOME · Récord (${g.home_record || hm.record}) · ${hm.div}</div>
+        <div class="mb-team-sub">LOCAL (HOME) · Récord (${g.home_record || hm.record}) · ${hm.div}</div>
         <div class="mb-pills-row">
-          <span class="stat-mini-pill">Rank Total #${hm.rank_total}</span>
-          <span class="stat-mini-pill">${hm.off_ppg} PPG</span>
-          <span class="stat-mini-pill">EPA/jug ${hm.off_epa_play >= 0 ? "+" : ""}${hm.off_epa_play}</span>
+          <span class="stat-mini-pill" title="Ranking general combinando ataque, defensa y equipos especiales">Rank Total #${hm.rank_total}</span>
+          <span class="stat-mini-pill" title="Puntos anotados por partido">${hm.off_ppg} PPG</span>
+          <span class="stat-mini-pill" title="Puntos Esperados Agregados por jugada ofensiva">EPA/jug ${hm.off_epa_play >= 0 ? "+" : ""}${hm.off_epa_play}</span>
         </div>
       </div>
     </div>
   `;
 
-  // 2. Bloque 1: Ataque Aéreo vs Secundaria
-  document.getElementById("airLeftTitle").textContent = `${aw.abbr} PASSING OFFENSE (#${aw.rank_off} NFL)`;
-  document.getElementById("airRightTitle").textContent = `${hm.abbr} PASS DEFENSE (#${hm.rank_def} DVOA/EPA)`;
+  // =========================================================================
+  // 2. BLOQUE 1: ATAQUE AÉREO vs. SECUNDARIA (EN AMBOS SENTIDOS)
+  // =========================================================================
+  document.getElementById("airLeftTitle").textContent = `✈️ SENTIDO 1: ATACA ${aw.abbr} (#${aw.rank_off} OFF) vs. DEFIENDE ${hm.abbr} (#${hm.rank_def} DEF)`;
+  document.getElementById("airRightTitle").textContent = `🏠 SENTIDO 2: ATACA ${hm.abbr} (#${hm.rank_off} OFF) vs. DEFIENDE ${aw.abbr} (#${aw.rank_def} DEF)`;
 
-  const airHtml = [
-    buildTacticalCompRow({
-      leftTag: `${aw.abbr} Ataque Pase`,
-      leftVal: aw.off_pass_epa_play,
-      leftFmt: `${aw.off_pass_epa_play >= 0 ? "+" : ""}${aw.off_pass_epa_play.toFixed(2)}`,
-      metricLabel: "EPA / Dropback",
-      rightVal: hm.def_pass_epa_allowed,
-      rightFmt: `${hm.def_pass_epa_allowed >= 0 ? "+" : ""}${hm.def_pass_epa_allowed.toFixed(2)}`,
-      rightTag: `${hm.abbr} Def Pase (Cede)`,
-      minVal: -0.25,
-      maxVal: 0.35,
-      higherIsBetter: true,
-    }),
-    buildTacticalCompRow({
-      leftTag: `RBSDM / NGS CPOE`,
-      leftVal: aw.off_cpoe,
-      leftFmt: `${aw.off_cpoe >= 0 ? "+" : ""}${aw.off_cpoe.toFixed(1)}%`,
-      metricLabel: "CPOE (Precisión)",
-      rightVal: hm.off_cpoe,
-      rightFmt: `${hm.off_cpoe >= 0 ? "+" : ""}${hm.off_cpoe.toFixed(1)}%`,
-      rightTag: `${hm.abbr} Ataque CPOE`,
-      minVal: -6.0,
-      maxVal: 8.0,
-      higherIsBetter: true,
-    }),
-    buildTacticalCompRow({
-      leftTag: `Sharp Explosivos`,
-      leftVal: aw.off_explosive_pass_pct,
-      leftFmt: `${aw.off_explosive_pass_pct.toFixed(1)}%`,
-      metricLabel: "Pases +20 Yds %",
-      rightVal: hm.off_explosive_pass_pct,
-      rightFmt: `${hm.off_explosive_pass_pct.toFixed(1)}%`,
-      rightTag: `PFF / Savant`,
-      minVal: 5.0,
-      maxVal: 16.0,
-      higherIsBetter: true,
-    }),
-    buildTacticalCompRow({
-      leftTag: `PFR Aéreo/Partido`,
-      leftVal: aw.off_pass_ypg,
-      leftFmt: `${aw.off_pass_ypg.toFixed(0)} yds`,
-      metricLabel: "Yds Aéreas / Jgo",
-      rightVal: hm.off_pass_ypg,
-      rightFmt: `${hm.off_pass_ypg.toFixed(0)} yds`,
-      rightTag: `PFR Aéreo/Partido`,
-      minVal: 150,
-      maxVal: 310,
-      higherIsBetter: true,
-    }),
-  ].join("");
-  document.getElementById("airVsSecBars").innerHTML = airHtml;
+  const buildAirDirectionCard = (offTeam, defTeam, dirClass, dirIcon, dirLabel) => {
+    const rows = [
+      {
+        leftTag: `${offTeam.abbr} Ataque Pase`,
+        leftVal: offTeam.off_pass_epa_play,
+        leftFmt: `${offTeam.off_pass_epa_play >= 0 ? "+" : ""}${offTeam.off_pass_epa_play.toFixed(2)}`,
+        metricLabel: "EPA / Dropback",
+        metricSub: "Puntos esperados por pase",
+        metricTooltip: "EPA por jugada de pase (RBSDM): Mide cuántos puntos suma el ataque aéreo vs. cuántos puntos permite la secundaria rival. Menos EPA permitido = mejor defensa.",
+        rightVal: defTeam.def_pass_epa_allowed,
+        rightFmt: `Cede ${defTeam.def_pass_epa_allowed >= 0 ? "+" : ""}${defTeam.def_pass_epa_allowed.toFixed(2)}`,
+        rightTag: `${defTeam.abbr} Def. Pase`,
+        minVal: -0.25,
+        maxVal: 0.32,
+        leftHigherIsBetter: true,
+        rightHigherIsBetter: false, // Para la defensa, permitir menos EPA (-0.15) es mejor que permitir +0.15
+      },
+      {
+        leftTag: `${offTeam.abbr} Precisión QB`,
+        leftVal: offTeam.off_cpoe,
+        leftFmt: `${offTeam.off_cpoe >= 0 ? "+" : ""}${offTeam.off_cpoe.toFixed(1)}%`,
+        metricLabel: "CPOE (Precisión)",
+        metricSub: "% completos sobre lo esperado",
+        metricTooltip: "CPOE (Next Gen Stats): Porcentaje de pases completos por encima de la dificultad del tiro vs. CPOE que permite la secundaria rival.",
+        rightVal: defTeam.def_cpoe_allowed,
+        rightFmt: `Cede ${defTeam.def_cpoe_allowed >= 0 ? "+" : ""}${defTeam.def_cpoe_allowed.toFixed(1)}%`,
+        rightTag: `${defTeam.abbr} Cobertura`,
+        minVal: -6.0,
+        maxVal: 7.5,
+        leftHigherIsBetter: true,
+        rightHigherIsBetter: false,
+      },
+      {
+        leftTag: `${offTeam.abbr} Bombas +20y`,
+        leftVal: offTeam.off_explosive_pass_pct,
+        leftFmt: `${offTeam.off_explosive_pass_pct.toFixed(1)}%`,
+        metricLabel: "Pases Explosivos",
+        metricSub: "% de pases de +20 yardas",
+        metricTooltip: "Tasa de Pases Explosivos (Sharp / Savant): Porcentaje de pases que ganan 20 o más yardas vs. porcentaje que permite la defensa profunda.",
+        rightVal: defTeam.def_explosive_pass_allowed_pct,
+        rightFmt: `Cede ${defTeam.def_explosive_pass_allowed_pct.toFixed(1)}%`,
+        rightTag: `${defTeam.abbr} Profundo`,
+        minVal: 5.5,
+        maxVal: 15.5,
+        leftHigherIsBetter: true,
+        rightHigherIsBetter: false,
+      },
+      {
+        leftTag: `${offTeam.abbr} Volumen Aire`,
+        leftVal: offTeam.off_pass_ypg,
+        leftFmt: `${offTeam.off_pass_ypg.toFixed(0)} yds`,
+        metricLabel: "Yardas Aéreas / Jgo",
+        metricSub: "Yardas por aire por partido",
+        metricTooltip: "Yardas de pase generadas por partido (PFR) vs. Yardas de pase permitidas por partido por la defensa rival.",
+        rightVal: defTeam.def_pass_ypg_allowed,
+        rightFmt: `Cede ${defTeam.def_pass_ypg_allowed.toFixed(0)}y`,
+        rightTag: `${defTeam.abbr} Yds Cedidas`,
+        minVal: 155,
+        maxVal: 295,
+        leftHigherIsBetter: true,
+        rightHigherIsBetter: false,
+      },
+    ];
 
-  // 3. Bloque 2: Juego Terrestre vs Front-7
-  document.getElementById("groundLeftTitle").textContent = `${aw.abbr} RUSHING OFFENSE`;
-  document.getElementById("groundRightTitle").textContent = `${hm.abbr} RUN DEFENSE & FRONT-7`;
+    const verdictBadge = buildDirectionVerdictBadge(offTeam, defTeam, rows);
 
-  const groundHtml = [
-    buildTacticalCompRow({
-      leftTag: `${aw.abbr} Rush EPA`,
-      leftVal: aw.off_rush_epa_play,
-      leftFmt: `${aw.off_rush_epa_play >= 0 ? "+" : ""}${aw.off_rush_epa_play.toFixed(2)}`,
-      metricLabel: "EPA / Acarreo",
-      rightVal: hm.off_rush_epa_play,
-      rightFmt: `${hm.off_rush_epa_play >= 0 ? "+" : ""}${hm.off_rush_epa_play.toFixed(2)}`,
-      rightTag: `${hm.abbr} Rush EPA`,
-      minVal: -0.22,
-      maxVal: 0.18,
-      higherIsBetter: true,
-    }),
-    buildTacticalCompRow({
-      leftTag: `Yds Tierra/Jgo`,
-      leftVal: aw.off_rush_ypg,
-      leftFmt: `${aw.off_rush_ypg.toFixed(1)}`,
-      metricLabel: "Rush Yds / Partido",
-      rightVal: hm.off_rush_ypg,
-      rightFmt: `${hm.off_rush_ypg.toFixed(1)}`,
-      rightTag: `Yds Tierra/Jgo`,
-      minVal: 75,
-      maxVal: 175,
-      higherIsBetter: true,
-    }),
-    buildTacticalCompRow({
-      leftTag: `Acarreos +10 Yds`,
-      leftVal: aw.off_explosive_rush_pct,
-      leftFmt: `${aw.off_explosive_rush_pct.toFixed(1)}%`,
-      metricLabel: "Explosive Rush %",
-      rightVal: hm.off_explosive_rush_pct,
-      rightFmt: `${hm.off_explosive_rush_pct.toFixed(1)}%`,
-      rightTag: `NGS / Sumer`,
-      minVal: 6.0,
-      maxVal: 18.0,
-      higherIsBetter: true,
-    }),
-    buildTacticalCompRow({
-      leftTag: `${aw.abbr} Def Cede Tierra`,
-      leftVal: aw.def_rush_ypg_allowed,
-      leftFmt: `${aw.def_rush_ypg_allowed.toFixed(1)}`,
-      metricLabel: "Rush Yds Permitidas",
-      rightVal: hm.def_rush_ypg_allowed,
-      rightFmt: `${hm.def_rush_ypg_allowed.toFixed(1)}`,
-      rightTag: `${hm.abbr} Def Cede Tierra`,
-      minVal: 75,
-      maxVal: 170,
-      higherIsBetter: false,
-    }),
-  ].join("");
-  document.getElementById("groundVsFrontBars").innerHTML = groundHtml;
+    return `
+      <div class="direction-subcard ${dirClass}">
+        <div class="direction-subcard-header">
+          <div>
+            <div class="dsh-title">
+              <img src="${offTeam.logo}" alt="${offTeam.abbr}" />
+              <span>${dirIcon} ${dirLabel}: Ataca ${offTeam.short} vs. Secundaria ${defTeam.short}</span>
+              <img src="${defTeam.logo}" alt="${defTeam.abbr}" />
+            </div>
+            <div class="dsh-sub">Compara la potencia aérea de <strong>${offTeam.abbr} (#${offTeam.rank_off} OFF)</strong> contra lo que permite por aire <strong>${defTeam.abbr} (#${defTeam.rank_def} DEF)</strong></div>
+          </div>
+          ${verdictBadge}
+        </div>
+        <div class="direction-unit-headers">
+          <span>👈 ATAQUE AÉREO ${offTeam.abbr} (Genera)</span>
+          <span>MÉTRICA Y SIGNIFICADO</span>
+          <span>SECUNDARIA ${defTeam.abbr} (Permite) 👉</span>
+        </div>
+        <div class="tactical-bars-list">
+          ${rows.map((r) => buildTacticalCompRow(r)).join("")}
+        </div>
+      </div>
+    `;
+  };
 
-  // 4. Bloque 3: Zona Roja, 3er Down y Trincheras
-  document.getElementById("sitLeftTitle").textContent = `${aw.abbr} RED ZONE & 3RD DOWN`;
-  document.getElementById("sitRightTitle").textContent = `${hm.abbr} RED ZONE & 3RD DOWN`;
+  const airContainer = document.getElementById("airVsSecBars");
+  airContainer.classList.toggle("single-dir", STATE.directionMode !== "BOTH");
+  const airCards = [];
+  if (STATE.directionMode === "BOTH" || STATE.directionMode === "AWAY_OFF") {
+    airCards.push(buildAirDirectionCard(aw, hm, "away-attacks", "✈️", "SENTIDO 1"));
+  }
+  if (STATE.directionMode === "BOTH" || STATE.directionMode === "HOME_OFF") {
+    airCards.push(buildAirDirectionCard(hm, aw, "home-attacks", "🏠", "SENTIDO 2"));
+  }
+  airContainer.innerHTML = airCards.join("");
+
+  // =========================================================================
+  // 3. BLOQUE 2: JUEGO TERRESTRE vs. FRONT-7 (EN AMBOS SENTIDOS)
+  // =========================================================================
+  document.getElementById("groundLeftTitle").textContent = `✈️ SENTIDO 1: CORRE ${aw.abbr} vs. FRONT-7 DE ${hm.abbr}`;
+  document.getElementById("groundRightTitle").textContent = `🏠 SENTIDO 2: CORRE ${hm.abbr} vs. FRONT-7 DE ${aw.abbr}`;
+
+  const buildGroundDirectionCard = (offTeam, defTeam, dirClass, dirIcon, dirLabel) => {
+    const rows = [
+      {
+        leftTag: `${offTeam.abbr} Rush EPA`,
+        leftVal: offTeam.off_rush_epa_play,
+        leftFmt: `${offTeam.off_rush_epa_play >= 0 ? "+" : ""}${offTeam.off_rush_epa_play.toFixed(2)}`,
+        metricLabel: "EPA / Acarreo",
+        metricSub: "Puntos esperados por corrida",
+        metricTooltip: "EPA por acarreo terrestre (RBSDM / SumerSports): Eficiencia del ataque por tierra vs. EPA terrestre que permite la caja defensiva rival.",
+        rightVal: defTeam.def_rush_epa_allowed,
+        rightFmt: `Cede ${defTeam.def_rush_epa_allowed >= 0 ? "+" : ""}${defTeam.def_rush_epa_allowed.toFixed(2)}`,
+        rightTag: `${defTeam.abbr} Def. Tierra`,
+        minVal: -0.22,
+        maxVal: 0.16,
+        leftHigherIsBetter: true,
+        rightHigherIsBetter: false,
+      },
+      {
+        leftTag: `${offTeam.abbr} Yds Tierra`,
+        leftVal: offTeam.off_rush_ypg,
+        leftFmt: `${offTeam.off_rush_ypg.toFixed(1)} yds`,
+        metricLabel: "Rush Yds / Partido",
+        metricSub: "Yardas por tierra por juego",
+        metricTooltip: "Yardas terrestres que produce el ataque por partido vs. Yardas terrestres que permite el Front-7 rival por partido.",
+        rightVal: defTeam.def_rush_ypg_allowed,
+        rightFmt: `Cede ${defTeam.def_rush_ypg_allowed.toFixed(1)}y`,
+        rightTag: `${defTeam.abbr} Muro Front-7`,
+        minVal: 75,
+        maxVal: 170,
+        leftHigherIsBetter: true,
+        rightHigherIsBetter: false,
+      },
+      {
+        leftTag: `${offTeam.abbr} +10 Yds %`,
+        leftVal: offTeam.off_explosive_rush_pct,
+        leftFmt: `${offTeam.off_explosive_rush_pct.toFixed(1)}%`,
+        metricLabel: "Acarreos Explosivos",
+        metricSub: "% corridas de +10 yardas (RYOE)",
+        metricTooltip: "Porcentaje de acarreos que rompen la línea y ganan 10 o más yardas (NGS / PlayerProfiler) vs. tasa permitida por la defensa.",
+        rightVal: defTeam.def_explosive_rush_allowed_pct,
+        rightFmt: `Cede ${defTeam.def_explosive_rush_allowed_pct.toFixed(1)}%`,
+        rightTag: `${defTeam.abbr} Contención`,
+        minVal: 6.0,
+        maxVal: 16.5,
+        leftHigherIsBetter: true,
+        rightHigherIsBetter: false,
+      },
+      {
+        leftTag: `${offTeam.abbr} Avance/Jug`,
+        leftVal: offTeam.off_ypp,
+        leftFmt: `${offTeam.off_ypp.toFixed(1)} YPP`,
+        metricLabel: "Trincheras & TFL",
+        metricSub: "Yardas/Jugada vs Tackles atrás",
+        metricTooltip: "Compara el avance promedio por jugada ofensiva (YPP) contra la capacidad del Front-7 rival para penetrar y derribar detrás de la línea (TFL = Tackles for Loss).",
+        rightVal: defTeam.def_tfl,
+        rightFmt: `${defTeam.def_tfl} TFL`,
+        rightTag: `${defTeam.abbr} Penetración`,
+        minVal: 4.3,
+        maxVal: 6.6,
+        leftHigherIsBetter: true,
+        rightHigherIsBetter: true,
+        rightMinVal: 18,
+        rightMaxVal: 52,
+      },
+    ];
+
+    const verdictBadge = buildDirectionVerdictBadge(offTeam, defTeam, rows);
+
+    return `
+      <div class="direction-subcard ${dirClass}">
+        <div class="direction-subcard-header">
+          <div>
+            <div class="dsh-title">
+              <img src="${offTeam.logo}" alt="${offTeam.abbr}" />
+              <span>${dirIcon} ${dirLabel}: Corre ${offTeam.short} vs. Front-7 ${defTeam.short}</span>
+              <img src="${defTeam.logo}" alt="${defTeam.abbr}" />
+            </div>
+            <div class="dsh-sub">Compara el ataque terrestre de <strong>${offTeam.abbr}</strong> contra la línea defensiva y linebackers de <strong>${defTeam.abbr}</strong></div>
+          </div>
+          ${verdictBadge}
+        </div>
+        <div class="direction-unit-headers">
+          <span>👈 ATAQUE TERRESTRE ${offTeam.abbr} (Genera)</span>
+          <span>MÉTRICA Y SIGNIFICADO</span>
+          <span>FRONT-7 ${defTeam.abbr} (Permite / TFL) 👉</span>
+        </div>
+        <div class="tactical-bars-list">
+          ${rows.map((r) => buildTacticalCompRow(r)).join("")}
+        </div>
+      </div>
+    `;
+  };
+
+  const groundContainer = document.getElementById("groundVsFrontBars");
+  groundContainer.classList.toggle("single-dir", STATE.directionMode !== "BOTH");
+  const groundCards = [];
+  if (STATE.directionMode === "BOTH" || STATE.directionMode === "AWAY_OFF") {
+    groundCards.push(buildGroundDirectionCard(aw, hm, "away-attacks", "✈️", "SENTIDO 1"));
+  }
+  if (STATE.directionMode === "BOTH" || STATE.directionMode === "HOME_OFF") {
+    groundCards.push(buildGroundDirectionCard(hm, aw, "home-attacks", "🏠", "SENTIDO 2"));
+  }
+  groundContainer.innerHTML = groundCards.join("");
+
+  // =========================================================================
+  // 4. BLOQUE 3: MAPA DE 3 ZONAS DEL CAMPO EN AMBOS SENTIDOS (BOLSILLO, 3ER DOWN, ZONA ROJA) + ENTREGAS
+  // =========================================================================
+  document.getElementById("sitLeftTitle").textContent = `✈️ SENTIDO 1: ${aw.abbr} CON EL BALÓN vs. DEFENSA ${hm.abbr}`;
+  document.getElementById("sitRightTitle").textContent = `🏠 SENTIDO 2: ${hm.abbr} CON EL BALÓN vs. DEFENSA ${aw.abbr}`;
+
+  const buildSituationalFieldCard = (offTeam, defTeam, dirClass, dirIcon, dirLabel) => {
+    // ZONA 1: Bolsillo y Protección del QB (menor % de sacks permitidos por OL es mejor para el ataque; mayor % de sacks generados por Pass Rush es mejor para la defensa)
+    const sackRiskAvg = (offTeam.off_sack_rate_allowed + defTeam.def_sack_rate) / 2;
+    const pocketZoneClass = sackRiskAvg <= 6.2 ? "zone-green" : sackRiskAvg <= 7.8 ? "zone-yellow" : "zone-red";
+    const pocketVerdict =
+      sackRiskAvg <= 6.2
+        ? `🟢 BOLSILLO LIMPIO: Ventaja OL de ${offTeam.abbr}`
+        : sackRiskAvg <= 7.8
+        ? `🟡 PRESIÓN MEDIA: Duelo parejo en trincheras`
+        : `🔴 PELIGRO DE CAPTURA: Pass Rush de ${defTeam.abbr} domina`;
+
+    // ZONA 2: Mediocampo y 3er Down (mayor % de conversión ofensiva y mayor % cedido por la defensa rival favorece al ataque)
+    const thirdDownEdge = (offTeam.off_3d_pct + defTeam.def_3d_pct) / 2;
+    const thirdZoneClass = thirdDownEdge >= 42.5 ? "zone-green" : thirdDownEdge >= 37.5 ? "zone-yellow" : "zone-red";
+    const thirdVerdict =
+      thirdDownEdge >= 42.5
+        ? `🟢 ATAQUE MUEVE CADENAS (${offTeam.abbr} convierte 3er Down)`
+        : thirdDownEdge >= 37.5
+        ? `🟡 3ER DOWN DISPUTADO (Promedio NFL: 39%)`
+        : `🔴 DEFENSA FRENA SERIES (${defTeam.abbr} fuerza despeje)`;
+
+    // ZONA 3: Zona Roja (Últimas 20 yardas: % de visitas que terminan en Touchdown de 7 puntos en vez de Gol de Campo de 3 puntos)
+    const rzEdge = (offTeam.off_rz_td_pct + defTeam.def_rz_td_pct) / 2;
+    const rzZoneClass = rzEdge >= 58.0 ? "zone-green" : rzEdge >= 50.0 ? "zone-yellow" : "zone-red";
+    const rzVerdict =
+      rzEdge >= 58.0
+        ? `🟢 ALTA LETALIDAD DE TD (${offTeam.abbr} define con 7 pts)`
+        : rzEdge >= 50.0
+        ? `🟡 ZONA ROJA PAREJA (Promedio NFL: 55%)`
+        : `🔴 MURALLA ROJA (${defTeam.abbr} obliga a patear FG de 3 pts)`;
+
+    return `
+      <div class="direction-subcard ${dirClass}">
+        <div class="direction-subcard-header">
+          <div>
+            <div class="dsh-title">
+              <img src="${offTeam.logo}" alt="${offTeam.abbr}" />
+              <span>${dirIcon} ${dirLabel}: Mapa del Campo cuando Ataca ${offTeam.short} vs. Defensa ${defTeam.short}</span>
+              <img src="${defTeam.logo}" alt="${defTeam.abbr}" />
+            </div>
+            <div class="dsh-sub">Recorrido de la ofensiva de <strong>${offTeam.abbr}</strong> avanzando de izquierda a derecha ➡️ a través de las <strong>3 Zonas Clave</strong> frente a la defensa de <strong>${defTeam.abbr}</strong></div>
+          </div>
+        </div>
+
+        <div class="field-zones-diagram">
+          <!-- ZONA 1: BOLSILLO Y PASS RUSH -->
+          <div class="fz-zone-box ${pocketZoneClass}">
+            <div>
+              <div class="fz-zone-header">
+                <span class="fz-zone-name">1️⃣ ZONA DE BOLSILLO (PASS RUSH)</span>
+                <span class="fz-zone-yardline">Trincheras</span>
+              </div>
+              <div class="fz-zone-desc" style="margin-top:4px;">
+                ¿La Línea Ofensiva (OL) de <strong>${offTeam.abbr}</strong> protege a su QB o el Pass Rush de <strong>${defTeam.abbr}</strong> lo captura?
+              </div>
+            </div>
+            <div class="fz-zone-stats-row">
+              <div class="fz-stat-col">
+                <span>${offTeam.off_sack_rate_allowed.toFixed(1)}%</span>
+                <small>OL ${offTeam.abbr} permite Sacks</small>
+              </div>
+              <div style="font-size:10px; color:#64748b;">VS</div>
+              <div class="fz-stat-col right">
+                <span>${defTeam.def_sack_rate.toFixed(1)}% (${defTeam.def_sacks})</span>
+                <small>Pass Rush ${defTeam.abbr} (${defTeam.def_qb_hits} Hits)</small>
+              </div>
+            </div>
+            <div class="fz-zone-verdict">${pocketVerdict}</div>
+          </div>
+
+          <!-- ZONA 2: MEDIOCAMPO Y 3ER DOWN -->
+          <div class="fz-zone-box ${thirdZoneClass}">
+            <div>
+              <div class="fz-zone-header">
+                <span class="fz-zone-name">2️⃣ MEDIOCAMPO (3ER DOWN)</span>
+                <span class="fz-zone-yardline">Yarda 20 a 20</span>
+              </div>
+              <div class="fz-zone-desc" style="margin-top:4px;">
+                En 3ra oportunidad, ¿<strong>${offTeam.abbr}</strong> logra el 1er Down para seguir avanzando o <strong>${defTeam.abbr}</strong> lo detiene?
+              </div>
+            </div>
+            <div class="fz-zone-stats-row">
+              <div class="fz-stat-col">
+                <span>${offTeam.off_3d_pct.toFixed(1)}%</span>
+                <small>Éxito 3er Down ${offTeam.abbr}</small>
+              </div>
+              <div style="font-size:10px; color:#64748b;">VS</div>
+              <div class="fz-stat-col right">
+                <span>${defTeam.def_3d_pct.toFixed(1)}%</span>
+                <small>3er Down que cede ${defTeam.abbr}</small>
+              </div>
+            </div>
+            <div class="fz-zone-verdict">${thirdVerdict}</div>
+          </div>
+
+          <!-- ZONA 3: ZONA ROJA (ÚLTIMAS 20 YARDAS) -->
+          <div class="fz-zone-box ${rzZoneClass}">
+            <div>
+              <div class="fz-zone-header">
+                <span class="fz-zone-name">3️⃣ ZONA ROJA (TOUCHDOWN %)</span>
+                <span class="fz-zone-yardline">Yarda 20 a Gol</span>
+              </div>
+              <div class="fz-zone-desc" style="margin-top:4px;">
+                Al pisar la yarda 20 rival, ¿qué % de veces <strong>${offTeam.abbr}</strong> anota <strong>Touchdown (7 pts)</strong> en vez de Gol de Campo (3 pts)?
+              </div>
+            </div>
+            <div class="fz-zone-stats-row">
+              <div class="fz-stat-col">
+                <span>${offTeam.off_rz_td_pct.toFixed(1)}%</span>
+                <small>TD % en Zona Roja ${offTeam.abbr}</small>
+              </div>
+              <div style="font-size:10px; color:#64748b;">VS</div>
+              <div class="fz-stat-col right">
+                <span>${defTeam.def_rz_td_pct.toFixed(1)}%</span>
+                <small>TD % que permite ${defTeam.abbr}</small>
+              </div>
+            </div>
+            <div class="fz-zone-verdict">${rzVerdict}</div>
+          </div>
+        </div>
+      </div>
+    `;
+  };
+
+  const sitCards = [];
+  if (STATE.directionMode === "BOTH" || STATE.directionMode === "AWAY_OFF") {
+    sitCards.push(buildSituationalFieldCard(aw, hm, "away-attacks", "✈️", "SENTIDO 1"));
+  }
+  if (STATE.directionMode === "BOTH" || STATE.directionMode === "HOME_OFF") {
+    sitCards.push(buildSituationalFieldCard(hm, aw, "home-attacks", "🏠", "SENTIDO 2"));
+  }
+
+  const awTurnCls = aw.turnover_margin > 0 ? "txt-sig-pos" : aw.turnover_margin < 0 ? "txt-sig-neg" : "txt-neutral";
+  const hmTurnCls = hm.turnover_margin > 0 ? "txt-sig-pos" : hm.turnover_margin < 0 ? "txt-sig-neg" : "txt-neutral";
 
   document.getElementById("situationalGrid").innerHTML = `
-    <div class="sit-heatmap-box">
-      <div class="sit-Readout-col">
-        <div>${aw.off_rz_td_pct.toFixed(0)}%<small>RZ TD Ataq</small></div>
-        <div>${aw.off_3d_pct.toFixed(0)}%<small>3er Down</small></div>
+    <div class="situational-two-way-wrapper">
+      <div class="two-way-matchup-grid ${STATE.directionMode !== "BOTH" ? "single-dir" : ""}">
+        ${sitCards.join("")}
       </div>
-      <div class="field-heatmap-visual">
-        <div class="field-heatmap-gridlines"></div>
-        <span class="field-heatmap-tag">${aw.abbr} ZONA ROJA</span>
-      </div>
-      <div class="sit-Readout-col right">
-        <div>${aw.def_rz_td_pct.toFixed(0)}%<small>RZ Def Cede</small></div>
-        <div>${aw.def_3d_pct.toFixed(0)}%<small>3D Def Cede</small></div>
-      </div>
-    </div>
 
-    <div class="sit-center-metrics">
-      <div class="sit-center-row">
-        <span class="txt-sig-pos">${aw.def_sack_rate.toFixed(1)}% (${aw.def_sacks})</span>
-        <span>PASS RUSH SACK %</span>
-        <span class="txt-sig-pos">${hm.def_sack_rate.toFixed(1)}% (${hm.def_sacks})</span>
-      </div>
-      <div class="sit-center-row">
-        <span>${aw.off_sack_rate_allowed.toFixed(1)}%</span>
-        <span>SACKS PERMITIDOS OL</span>
-        <span>${hm.off_sack_rate_allowed.toFixed(1)}%</span>
-      </div>
-      <div class="sit-center-row">
-        <span>${aw.turnover_margin >= 0 ? "+" : ""}${aw.turnover_margin}</span>
-        <span>MARGEN ENTREGAS</span>
-        <span>${hm.turnover_margin >= 0 ? "+" : ""}${hm.turnover_margin}</span>
-      </div>
-    </div>
+      <div class="turnover-summary-strip">
+        <div class="tss-side">
+          <img src="${aw.logo}" alt="${aw.abbr}" style="width:28px; height:28px;" />
+          <div>
+            <div style="font-size:12px; font-weight:900;">
+              ${aw.abbr} Margen de Entregas: <span class="${awTurnCls}">${aw.turnover_margin >= 0 ? "+" : ""}${aw.turnover_margin}</span>
+            </div>
+            <div style="font-size:10.5px; color:#475569;">
+              Robos de balón (Takeaways): <strong>${aw.def_takeaways}</strong> (${aw.def_int} Intercepciones) · Pérdidas (Giveaways): <strong>${aw.off_giveaways}</strong>
+            </div>
+          </div>
+        </div>
 
-    <div class="sit-heatmap-box">
-      <div class="sit-Readout-col">
-        <div>${hm.off_rz_td_pct.toFixed(0)}%<small>RZ TD Ataq</small></div>
-        <div>${hm.off_3d_pct.toFixed(0)}%<small>3er Down</small></div>
-      </div>
-      <div class="field-heatmap-visual">
-        <div class="field-heatmap-gridlines"></div>
-        <span class="field-heatmap-tag">${hm.abbr} ZONA ROJA</span>
-      </div>
-      <div class="sit-Readout-col right">
-        <div>${hm.def_rz_td_pct.toFixed(0)}%<small>RZ Def Cede</small></div>
-        <div>${hm.def_3d_pct.toFixed(0)}%<small>3D Def Cede</small></div>
+        <div class="tss-center">
+          <strong>🏈 SEGURIDAD DEL BALÓN (TURNOVER MARGIN)</strong>
+          <span>Balance entre balones robados por la defensa y balones perdidos por el ataque</span>
+        </div>
+
+        <div class="tss-side right">
+          <div>
+            <div style="font-size:12px; font-weight:900;">
+              ${hm.abbr} Margen de Entregas: <span class="${hmTurnCls}">${hm.turnover_margin >= 0 ? "+" : ""}${hm.turnover_margin}</span>
+            </div>
+            <div style="font-size:10.5px; color:#475569;">
+              Robos de balón (Takeaways): <strong>${hm.def_takeaways}</strong> (${hm.def_int} Intercepciones) · Pérdidas (Giveaways): <strong>${hm.off_giveaways}</strong>
+            </div>
+          </div>
+          <img src="${hm.logo}" alt="${hm.abbr}" style="width:28px; height:28px;" />
+        </div>
       </div>
     </div>
   `;
@@ -637,19 +930,19 @@ function renderMatchupBoard() {
 
   document.getElementById("specialTeamsGauges").innerHTML = `
     <div class="st-col-box">
-      <h5>KICKING (FG % &amp; +50 YDS)</h5>
+      <h5 title="Efectividad en Goles de Campo (Field Goals) y aciertos de larga distancia (+50 yardas)">KICKING (FG % &amp; +50 YDS)</h5>
       ${buildStGauge(aw.abbr, aw.abbr, `${aw.fg_pct.toFixed(0)}%`, 100 - aw.pct_st)}
       ${buildStGauge(hm.abbr, hm.abbr, `${hm.fg_pct.toFixed(0)}%`, 100 - hm.pct_st)}
       ${buildStGauge("50+ Yds", "+50y", `${aw.fg_50_plus} vs ${hm.fg_50_plus}`, 38)}
     </div>
     <div class="st-col-box">
-      <h5>PUNTING (NET AVG &amp; IN-20)</h5>
+      <h5 title="Promedio Neto de Despeje descontando devolución (Net Avg) y % de despejes que acorralan al rival dentro de su yarda 20 (In-20)">PUNTING (NET AVG &amp; IN-20)</h5>
       ${buildStGauge(aw.abbr, aw.abbr, `${aw.punt_net_avg.toFixed(1)}y`, Math.max(10, 100 - (aw.punt_net_avg - 36) * 8))}
       ${buildStGauge(hm.abbr, hm.abbr, `${hm.punt_net_avg.toFixed(1)}y`, Math.max(10, 100 - (hm.punt_net_avg - 36) * 8))}
       ${buildStGauge("In20", "In20", `${aw.punt_in20_pct.toFixed(0)}%/${hm.punt_in20_pct.toFixed(0)}%`, 42)}
     </div>
     <div class="st-col-box">
-      <h5>RETURNS &amp; RANK ST (DVOA)</h5>
+      <h5 title="Ranking global de Equipos Especiales (FTN DVOA #1 a #32) y yardas por devolución de despeje (PR Avg)">RETURNS &amp; RANK ST (DVOA)</h5>
       ${buildStGauge(aw.abbr, `${aw.abbr} RK`, `#${aw.rank_st}`, (aw.rank_st / 32) * 100)}
       ${buildStGauge(hm.abbr, `${hm.abbr} RK`, `#${hm.rank_st}`, (hm.rank_st / 32) * 100)}
       ${buildStGauge("PR Avg", "PR Yd", `${aw.pr_avg.toFixed(1)}/${hm.pr_avg.toFixed(1)}`, 48)}
@@ -888,6 +1181,206 @@ function renderSourcesDirectory() {
   );
 
   grid.innerHTML = [...statsCards, ...newsCards].join("");
+}
+
+/* ==========================================================================
+   VISTA 6: GUÍA DETALLADA Y DICCIONARIO DE ESTADÍSTICAS NFL (22 MÉTRICAS)
+   ========================================================================== */
+const NFL_STATS_GLOSSARY = [
+  {
+    term: "EPA / Jugada y EPA / Dropback (Puntos Esperados Agregados)",
+    category: "ATAQUE AÉREO & GENERAL",
+    source: "RBSDM / nflfastR",
+    what_is_it:
+      "Mide cuántos puntos reales le suma (o le resta) cada jugada a la probabilidad de anotar de un equipo según el down, la distancia y la yarda del campo. Un pase de 8 yardas en 3ra y 7 vale mucho más (+EPA) que un pase de 8 yardas en 3ra y 18 (-EPA).",
+    how_to_read:
+      "En Ataque: cuanto MÁS ALTO y POSITIVO mejor (+0.15 es élite). En Defensa ('EPA Permitido / Cede'): cuanto MÁS BAJO y NEGATIVO mejor (-0.12 significa que la defensa le quita puntos esperados al ataque rival en cada jugada).",
+    scale_elite: "🟢 Élite: +0.12 a +0.25 (Ataque) | -0.08 a -0.20 (Defensa)",
+    scale_avg: "🟡 Promedio NFL: -0.02 a +0.05",
+    scale_poor: "🔴 Débil: Menor a -0.08 (Ataque) | Mayor a +0.08 (Defensa)",
+    tactical_example: "Ejemplo: Si el ataque aéreo visitante tiene +0.16 EPA/Dropback y la secundaria local cede +0.10 EPA, el QB visitante tiene ventaja significativa.",
+  },
+  {
+    term: "CPOE (Completion Percentage Over Expected — Precisión Real)",
+    category: "ATAQUE AÉREO vs. SECUNDARIA",
+    source: "NFL Next Gen Stats / RBSDM",
+    what_is_it:
+      "Calcula qué porcentaje de pases completa un Quarterback por encima (o por debajo) de lo esperado según la dificultad real del pase (distancia aérea, separación del receptor, presión al QB y cercanía a las bandas).",
+    how_to_read:
+      "Un CPOE de +4.5% significa que si por la dificultad de los tiros se esperaba que completara el 63%, en realidad completó el 67.5%. En defensa, un CPOE permitido negativo (-3.0%) indica una secundaria que fuerza pases incómodos e incompletos.",
+    scale_elite: "🟢 Élite: +3.5% a +7.5% (QB) | Menor a -2.5% (Defensa)",
+    scale_avg: "🟡 Promedio NFL: -0.5% a +2.0%",
+    scale_poor: "🔴 Impreciso / Vulnerable: Menor a -2.0% (QB) | Mayor a +2.5% (Defensa)",
+    tactical_example: "Ejemplo: No es lo mismo completar pases cortos de 2 yardas que pases de 25 yardas en ventana cerrada; el CPOE premia la precisión difícil.",
+  },
+  {
+    term: "Pases Explosivos (+20 Yardas %)",
+    category: "ATAQUE AÉREO vs. SECUNDARIA",
+    source: "Sharp Football Analysis / NFL Savant",
+    what_is_it:
+      "Porcentaje de jugadas aéreas que consiguen una ganancia de 20 o más yardas en un solo tiro. Es el indicador número uno de capacidad de anotar rápido (Big Plays).",
+    how_to_read:
+      "En ataque, superar el 11% indica un ataque vertical letal. En defensa ('Cede %'), permitir más de 11% significa que los safeties y esquineros sufren desconexiones en cobertura profunda.",
+    scale_elite: "🟢 Élite: 11.5% o más (Ataque) | 7.5% o menos (Defensa)",
+    scale_avg: "🟡 Promedio NFL: 8.5% a 10.5%",
+    scale_poor: "🔴 Débil: Menos de 7.5% (Ataque) | Más de 11.5% (Defensa)",
+    tactical_example: "Ejemplo: Cuando un equipo con 13% de pases explosivos enfrenta a una secundaria que cede 12%, hay altísimo riesgo de Touchdown largo.",
+  },
+  {
+    term: "EPA / Acarreo (Rushing EPA)",
+    category: "JUEGO TERRESTRE vs. FRONT-7",
+    source: "RBSDM / SumerSports",
+    what_is_it:
+      "Mide la eficiencia en puntos esperados de cada corrida por tierra. En la NFL moderna, correr suele ser menos eficiente que pasar, por lo que el promedio de la liga en acarreos ronda -0.05 EPA/jugada.",
+    how_to_read:
+      "Cualquier ataque terrestre con EPA/Acarreo cercano a 0.00 o positivo (+0.04 a +0.12) es dominante y controla el reloj. Una defensa Front-7 élite mantiene al rival en -0.12 o menos.",
+    scale_elite: "🟢 Élite: +0.02 a +0.14 (Ataque) | -0.12 o mejor (Defensa)",
+    scale_avg: "🟡 Promedio NFL: -0.08 a +0.01",
+    scale_poor: "🔴 Débil: Menor a -0.11 (Ataque) | Mayor a 0.00 (Defensa)",
+    tactical_example: "Ejemplo: Un ataque con +0.06 EPA/Acarreo obliga a la defensa a bajar un safety a la caja, abriendo el pase profundo.",
+  },
+  {
+    term: "RYOE y Acarreos Explosivos (+10 Yardas %)",
+    category: "JUEGO TERRESTRE vs. FRONT-7",
+    source: "Next Gen Stats / PlayerProfiler",
+    what_is_it:
+      "RYOE (Rush Yards Over Expected) mide cuántas yardas extra gana el corredor por su cuenta después de lo que le bloqueó su línea ofensiva. Los Acarreos Explosivos (+10 Yds %) miden qué porcentaje de corridas superan las 10 yardas.",
+    how_to_read:
+      "Separa el mérito de la línea ofensiva del talento del Running Back para romper tacleadas. Más de 12% de acarreos de +10 yardas indica un ataque terrestre capaz de romper el partido.",
+    scale_elite: "🟢 Élite: 12.5% o más (+10 Yds) | RYOE +0.8 yds/acarreo",
+    scale_avg: "🟡 Promedio NFL: 9.5% a 11.5%",
+    scale_poor: "🔴 Débil: Menos de 8.0% (Ataque) | Cede más de 12.5% (Defensa)",
+    tactical_example: "Ejemplo: Corredores como Saquon Barkley o Bijan Robinson generan yardas extra incluso cuando el Front-7 cierra el hueco inicial.",
+  },
+  {
+    term: "Trincheras: YPP (Yardas por Jugada) vs. TFL (Tackles Para Pérdida)",
+    category: "JUEGO TERRESTRE & TRINCHERAS",
+    source: "Pro Football Reference / PFF",
+    what_is_it:
+      "YPP mide el avance promedio del ataque en cada jugada. TFL (Tackles For Loss) cuenta cuántas veces la línea defensiva y los linebackers penetran la línea de golpeo y derriban al corredor o receptor detrás de la línea (pérdida de yardas).",
+    how_to_read:
+      "Si una ofensiva promedia 6.0+ YPP domina el ritmo; pero si enfrenta a un Front-7 con más de 38 TFL acumulados, corre riesgo de quedar en 2da y 13 o 3ra y largo.",
+    scale_elite: "🟢 Élite: 5.8+ YPP (Ataque) | 38+ TFL (Defensa)",
+    scale_avg: "🟡 Promedio NFL: 5.1 a 5.6 YPP | 28 a 35 TFL",
+    scale_poor: "🔴 Débil: Menos de 4.8 YPP | Menos de 24 TFL",
+    tactical_example: "Ejemplo: Un TFL en 1er Down reduce a menos de la mitad la probabilidad de que esa serie ofensiva consiga un 1er Down.",
+  },
+  {
+    term: "Zona 1 del Mapa: Bolsillo — Sacks Permitidos OL % vs. Pass Rush Sack %",
+    category: "ZONA ROJA, 3ER DOWN & BOLSILLO",
+    source: "Next Gen Stats / PFF / PFR",
+    what_is_it:
+      "Evalúa el duelo en la trinchera de pase: 'OL Sacks Permitidos %' es el porcentaje de intentos de pase en los que la Línea Ofensiva deja que capturen a su QB. 'Pass Rush Sack %' es el porcentaje de jugadas en que la defensa rival logra capturar al QB.",
+    how_to_read:
+      "Para la Línea Ofensiva (OL), MENOS porcentaje es mejor (menos de 5.5% es un bolsillo limpio 🟢). Para el Pass Rush defensivo, MÁS porcentaje es mejor (más de 8.0% es presión devastadora 🔴 para el ataque).",
+    scale_elite: "🟢 Bolsillo Limpio: OL permite < 5.5% | Pass Rush élite: genera > 8.0%",
+    scale_avg: "🟡 Promedio NFL: 6.0% a 7.5% de capturas",
+    scale_poor: "🔴 Peligro de Captura: OL permite > 8.5% de Sacks",
+    tactical_example: "Ejemplo: Si una OL cede 9.5% de sacks y enfrenta a un Pass Rush de 9.0%, el mapa marca Zona 1 en ROJO (Alerta de Captura).",
+  },
+  {
+    term: "Zona 2 del Mapa: Mediocampo — Conversión de 3er Down %",
+    category: "ZONA ROJA, 3ER DOWN & BOLSILLO",
+    source: "TeamRankings / Sharp Football",
+    what_is_it:
+      "Porcentaje de veces que el ataque logra las yardas necesarias en 3ra oportunidad para conseguir un nuevo 1er Down ('mover las cadenas') y mantener la posesión de la pelota.",
+    how_to_read:
+      "En Ataque: más de 43% es élite (series largas que agotan al rival 🟢). En Defensa ('3er Down que cede'): permitir menos de 35% indica una defensa que obliga a despejar rápido (🔴 frena al ataque).",
+    scale_elite: "🟢 Élite: 43% o más (Ataque) | Cede 35% o menos (Defensa)",
+    scale_avg: "🟡 Promedio NFL: 38% a 41%",
+    scale_poor: "🔴 Débil: Menos de 35% (Ataque) | Cede más de 44% (Defensa)",
+    tactical_example: "Ejemplo: Ganar la Zona 2 (Mediocampo) permite dominar el tiempo de posesión y llegar descansado al último cuarto.",
+  },
+  {
+    term: "Zona 3 del Mapa: Zona Roja — Eficiencia de Touchdown (RZ TD %)",
+    category: "ZONA ROJA, 3ER DOWN & BOLSILLO",
+    source: "TeamRankings / Pro Football Reference",
+    what_is_it:
+      "La Zona Roja comprende las últimas 20 yardas antes de la zona de anotación rival (Yarda 20 hasta la línea de gol). Esta estadística mide qué porcentaje de visitas a la Zona Roja terminan en TOUCHDOWN (6-7 puntos) en lugar de conformarse con un Gol de Campo (3 puntos) o perder el balón.",
+    how_to_read:
+      "No mide goles de campo: mide exclusivamente letalidad de Touchdown. Si el ataque tiene 64% RZ TD y la defensa rival permite 62%, la Zona 3 se pinta de VERDE (Alta letalidad de 7 puntos). Si la defensa permite menos de 48%, se pinta de ROJO (Muralla que fuerza goles de campo).",
+    scale_elite: "🟢 Élite: 60% o más de TD (Ataque) | Permite menos de 48% (Defensa)",
+    scale_avg: "🟡 Promedio NFL: 52% a 58% de visitas terminan en TD",
+    scale_poor: "🔴 Baja definición: Menos de 48% (Ataque) | Permite más de 62% (Defensa)",
+    tactical_example: "Ejemplo: En partidos cerrados, cambiar dos goles de campo (6 pts) por dos touchdowns (14 pts) en Zona Roja define el ganador.",
+  },
+  {
+    term: "Seguridad del Balón: Margen de Entregas (Turnover Margin)",
+    category: "ZONA ROJA, 3ER DOWN & BOLSILLO",
+    source: "Pro Football Reference / ESPN",
+    what_is_it:
+      "Es la resta exacta entre los balones robados por la defensa (Takeaways = Intercepciones + Fumbles recuperados) y los balones regalados por el propio ataque (Giveaways = Intercepciones lanzadas + Fumbles perdidos).",
+    how_to_read:
+      "Un margen positivo (+5 o más) significa que el equipo roba muchos más balones de los que pierde y suele ganar el campo corto. Un margen negativo (-4 o peor) indica alto riesgo de entregas fatales.",
+    scale_elite: "🟢 Élite: +5 a +12 en la temporada",
+    scale_avg: "🟡 Neutral: -2 a +3",
+    scale_poor: "🔴 Peligroso: -4 o peor",
+    tactical_example: "Ejemplo: En la NFL, el equipo que gana el duelo de entregas de balón en un partido tiene un 77% de probabilidad histórica de victoria.",
+  },
+  {
+    term: "DVOA Total (Defense-Adjusted Value Over Average)",
+    category: "TABLA 32 EQUIPOS & RANKINGS",
+    source: "FTN Fantasy (creado por Aaron Schatz)",
+    what_is_it:
+      "Compara el éxito de un equipo en cada jugada de la temporada contra el promedio de la NFL, ajustando por la dificultad del calendario (qué tan fuertes fueron las defensas o ataques rivales que enfrentó) y la situación del partido.",
+    how_to_read:
+      "Se expresa en porcentaje donde 0.0% es un equipo promedio de la NFL. En DVOA Total y Ofensivo, cuanto más positivo mejor (+20% es candidato al Super Bowl).",
+    scale_elite: "🟢 Candidato Élite: +15.0% a +30.0%",
+    scale_avg: "🟡 Promedio NFL: -5.0% a +8.0%",
+    scale_poor: "🔴 Reconstrucción: Menor a -12.0%",
+    tactical_example: "Ejemplo: Un equipo con récord 4-2 pero DVOA de +22% es estadísticamente mucho más peligroso que un 5-1 con DVOA de -4%.",
+  },
+  {
+    term: "Equipos Especiales: FG %, +50 Yds, Net Punt Avg e In-20 %",
+    category: "EQUIPOS ESPECIALES (KICKING & PUNTING)",
+    source: "FTN DVOA / TeamRankings / PFR",
+    what_is_it:
+      "Evalúa la tercera fase del juego: 'FG %' es el porcentaje de acierto en goles de campo; '+50 Yds' cuenta goles de campo anotados desde 50+ yardas; 'Net Punt Avg' son las yardas netas de despeje descontando la devolución; 'In-20 %' es el porcentaje de despejes que dejan al rival encerrado antes de su yarda 20.",
+    how_to_read:
+      "En el termómetro visual de cada barra, cuanto más a la IZQUIERDA (zona verde) se ubica el marcador negro, mejor posicionado está ese equipo en la NFL.",
+    scale_elite: "🟢 Élite: FG > 90% | Net Punt > 43.5 yds | In-20 > 42%",
+    scale_avg: "🟡 Promedio NFL: FG 84%-88% | Net Punt 40.5-42.5 yds",
+    scale_poor: "🔴 Débil: FG < 80% | Net Punt < 39.5 yds",
+    tactical_example: "Ejemplo: Ganar 8 yardas netas en cada despeje equivale a casi un 1er Down oculto gratis en cada intercambio de posesión.",
+  },
+];
+
+function renderGlossaryView() {
+  const grid = document.getElementById("glossaryCardsGrid");
+  if (!grid) return;
+
+  const q = (document.getElementById("searchGlossaryInput")?.value || "").trim().toLowerCase();
+  const list = NFL_STATS_GLOSSARY.filter((item) => {
+    if (!q) return true;
+    return (
+      item.term.toLowerCase().includes(q) ||
+      item.category.toLowerCase().includes(q) ||
+      item.what_is_it.toLowerCase().includes(q) ||
+      item.how_to_read.toLowerCase().includes(q)
+    );
+  });
+
+  grid.innerHTML = list
+    .map(
+      (item) => `
+      <article class="glossary-card">
+        <div class="gc-header">
+          <span class="gc-cat">${item.category}</span>
+          <span class="gc-source">Fuente: ${item.source}</span>
+        </div>
+        <h3 class="gc-title">${item.term}</h3>
+        <p class="gc-what"><strong>¿Qué mide?:</strong> ${item.what_is_it}</p>
+        <div class="gc-how"><strong>¿Cómo se lee en el tablero?:</strong> ${item.how_to_read}</div>
+        <div class="gc-scales">
+          <div class="gc-scale-pill elite">${item.scale_elite}</div>
+          <div class="gc-scale-pill avg">${item.scale_avg}</div>
+          <div class="gc-scale-pill poor">${item.scale_poor}</div>
+        </div>
+        <div class="gc-example">💡 ${item.tactical_example}</div>
+      </article>
+    `
+    )
+    .join("");
 }
 
 /* ==========================================================================
@@ -1523,6 +2016,35 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".nav-btn").forEach((btn) => {
     btn.addEventListener("click", () => switchView(btn.dataset.view));
   });
+
+  // Selector de sentido de comparación (Ambos Sentidos / Sentido 1 / Sentido 2)
+  document.querySelectorAll("#directionModePills .dir-pill").forEach((pill) => {
+    pill.addEventListener("click", () => {
+      document.querySelectorAll("#directionModePills .dir-pill").forEach((p) => p.classList.remove("active"));
+      pill.classList.add("active");
+      STATE.directionMode = pill.dataset.dirmode || "BOTH";
+      renderMatchupBoard();
+    });
+  });
+
+  // Botón para mostrar/ocultar los explicativos estadísticos inline dentro de cada bloque
+  document.getElementById("btnToggleInlineGuides")?.addEventListener("click", (e) => {
+    STATE.showInlineGuides = !STATE.showInlineGuides;
+    const btn = e.currentTarget;
+    btn.classList.toggle("off", !STATE.showInlineGuides);
+    btn.textContent = STATE.showInlineGuides ? "📖 Explicativos de cada métrica: VISIBLES" : "📖 Explicativos de cada métrica: OCULTOS";
+    renderMatchupBoard();
+  });
+
+  // Botón para abrir la vista completa del Diccionario de Estadísticas
+  document.getElementById("btnOpenFullGlossary")?.addEventListener("click", () => {
+    switchView("glossary");
+    renderGlossaryView();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  // Buscador dentro del Diccionario de Estadísticas
+  document.getElementById("searchGlossaryInput")?.addEventListener("input", renderGlossaryView);
 
   document.getElementById("selectWeek")?.addEventListener("change", (e) => {
     STATE.selectedWeek = Number(e.target.value);
