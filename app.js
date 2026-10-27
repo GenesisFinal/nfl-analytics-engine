@@ -670,8 +670,10 @@ function calcRowsStrengthSummary(rowsConfig) {
   rowsConfig.forEach((r) => {
     const rMin = r.rightMinVal !== undefined && r.rightMinVal !== null ? r.rightMinVal : r.minVal;
     const rMax = r.rightMaxVal !== undefined && r.rightMaxVal !== null ? r.rightMaxVal : r.maxVal;
-    const sL = computeUnitStrengthPct(r.leftVal, r.minVal, r.maxVal, r.leftHigherIsBetter ?? true);
-    const sR = computeUnitStrengthPct(r.rightVal, rMin, rMax, r.rightHigherIsBetter ?? false);
+    const lVal = Number.isFinite(Number(r.leftVal)) ? Number(r.leftVal) : (r.minVal + r.maxVal) / 2;
+    const rVal = Number.isFinite(Number(r.rightVal)) ? Number(r.rightVal) : (rMin + rMax) / 2;
+    const sL = computeUnitStrengthPct(lVal, r.minVal, r.maxVal, r.leftHigherIsBetter ?? true);
+    const sR = computeUnitStrengthPct(rVal, rMin, rMax, r.rightHigherIsBetter ?? false);
     totalLeft += sL;
     totalRight += sR;
   });
@@ -727,9 +729,14 @@ function computeMatchupProjection(aw, hm) {
   ];
   const stComp = calcRowsStrengthSummary(stRows);
 
+  const awOffPpg = Number(aw.off_ppg ?? 21.5);
+  const hmOffPpg = Number(hm.off_ppg ?? 21.5);
+  const awDefPpg = Number(aw.def_ppg_allowed ?? aw.def_ppg ?? 21.5);
+  const hmDefPpg = Number(hm.def_ppg_allowed ?? hm.def_ppg ?? 21.5);
+
   // Conversión de ventajas tácticas a puntos esperados en el marcador (modelo híbrido ponderado)
-  const baseAway = +((aw.off_ppg + hm.def_ppg) / 2).toFixed(1);
-  const baseHome = +((hm.off_ppg + aw.def_ppg) / 2).toFixed(1);
+  const baseAway = +((awOffPpg + hmDefPpg) / 2).toFixed(1);
+  const baseHome = +((hmOffPpg + awDefPpg) / 2).toFixed(1);
 
   const airPtsAway = +(airS1.avgDiff * 0.135).toFixed(1);
   const airPtsHome = +(airS2.avgDiff * 0.135).toFixed(1);
@@ -737,7 +744,7 @@ function computeMatchupProjection(aw, hm) {
   const groundPtsAway = +(groundS1.avgDiff * 0.095).toFixed(1);
   const groundPtsHome = +(groundS2.avgDiff * 0.095).toFixed(1);
 
-  const turnDiffAway = aw.turnover_margin - hm.turnover_margin;
+  const turnDiffAway = Number(aw.turnover_margin ?? 0) - Number(hm.turnover_margin ?? 0);
   const sitPtsAway = +(sitS1.avgDiff * 0.075 + turnDiffAway * 0.11).toFixed(1);
   const sitPtsHome = +(sitS2.avgDiff * 0.075 - turnDiffAway * 0.11).toFixed(1);
 
@@ -769,6 +776,10 @@ function computeMatchupProjection(aw, hm) {
   const projectedTotal = +(exactAwayPts + exactHomePts).toFixed(1);
 
   return {
+    awOffPpg,
+    hmOffPpg,
+    awDefPpg,
+    hmDefPpg,
     baseAway,
     baseHome,
     airS1,
@@ -992,8 +1003,8 @@ function renderMatchupBoard() {
             <div class="pbb-f-head">1️⃣ Base de Puntos (PPG Cruzado)</div>
             <div class="pbb-f-desc">Cruza los puntos que anota cada ataque con los que permite cada defensa por partido.</div>
             <div class="pbb-f-scores">
-              <span class="away-val">✈️ ${aw.abbr}: <strong>${proj.baseAway.toFixed(1)} pts</strong> <small>(${aw.off_ppg} Off / ${hm.def_ppg} Def)</small></span>
-              <span class="home-val">🏠 ${hm.abbr}: <strong>${proj.baseHome.toFixed(1)} pts</strong> <small>(${hm.off_ppg} Off / ${aw.def_ppg} Def)</small></span>
+              <span class="away-val">✈️ ${aw.abbr}: <strong>${proj.baseAway.toFixed(1)} pts</strong> <small>(${proj.awOffPpg} Off / ${proj.hmDefPpg} Def)</small></span>
+              <span class="home-val">🏠 ${hm.abbr}: <strong>${proj.baseHome.toFixed(1)} pts</strong> <small>(${proj.hmOffPpg} Off / ${proj.awDefPpg} Def)</small></span>
             </div>
           </div>
 
