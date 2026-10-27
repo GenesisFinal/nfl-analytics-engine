@@ -47,6 +47,10 @@
           <span class="nav-icon">🔗</span>
           <span class="nav-label">18 FUENTES OFICIALES</span>
         </button>
+        <button class="nav-btn" data-view="glossary">
+          <span class="nav-icon">📖</span>
+          <span class="nav-label">GUÍA DE ESTADÍSTICAS</span>
+        </button>
       </nav>
 
       <div class="sidebar-footer">
@@ -106,59 +110,167 @@
         <!-- COLUMNA CENTRAL: CAMBIA SEGÚN LA PESTAÑA ACTIVA -->
         <main class="center-stage">
 
-          <!-- VISTA 1: PANEL DE CONTROL / PIZARRA TÁCTICA CARA A CARA (ESTILO 4) -->
+          <!-- VISTA 1: PANEL DE CONTROL / PIZARRA TÁCTICA CARA A CARA (ESTILO 4 - BIDIRECCIONAL) -->
           <section class="stage-view active" id="view-matchups">
             <div class="matchup-banner-header" id="matchupBannerHeader">
               <!-- Cabecera del partido seleccionado -->
             </div>
 
-            <!-- BLOQUE 1: ATAQUE AÉREO vs SECUNDARIA -->
-            <div class="tactical-card">
-              <div class="tactical-card-header">
-                <span class="team-side-tag" id="airLeftTitle">AWAY PASSING OFFENSE</span>
-                <h3>ATAQUE AÉREO vs. SECUNDARIA (EPA / CPOE / EXPLOSIVOS)</h3>
-                <span class="team-side-tag right" id="airRightTitle">HOME PASS DEFENSE (DVOA)</span>
+            <!-- BARRA DE CONTROL DE DIRECCIÓN (AMBOS SENTIDOS) Y GUÍA EXPLICATIVA -->
+            <div class="direction-control-bar">
+              <div class="dcb-left">
+                <span class="dcb-title">🔄 MODO DE COMPARACIÓN:</span>
+                <div class="dcb-pills" id="directionModePills">
+                  <button class="dir-pill active" data-dir="BOTH">🔀 Ambos Sentidos (Ida y Vuelta)</button>
+                  <button class="dir-pill" data-dir="AWAY_OFF" id="dirBtnAwayOff">✈️ Sentido 1: Ataca Visitante vs. Defiende Local</button>
+                  <button class="dir-pill" data-dir="HOME_OFF" id="dirBtnHomeOff">🏠 Sentido 2: Ataca Local vs. Defiende Visitante</button>
+                </div>
               </div>
-              <div class="tactical-bars-container" id="airVsSecBars"></div>
+              <div class="dcb-right">
+                <button class="btn-toggle-guides active" id="btnToggleInlineGuides">
+                  📘 Ocultar / Ver Explicación de Estadísticas
+                </button>
+                <button class="btn-open-glossary-view" id="btnOpenFullGlossary">
+                  📖 Diccionario Completo
+                </button>
+              </div>
             </div>
 
-            <!-- BLOQUE 2: JUEGO TERRESTRE vs FRONT-7 -->
+            <!-- BLOQUE 1: ATAQUE AÉREO vs SECUNDARIA (EN AMBOS SENTIDOS) -->
             <div class="tactical-card">
               <div class="tactical-card-header">
-                <span class="team-side-tag" id="groundLeftTitle">AWAY RUSHING OFFENSE</span>
-                <h3>JUEGO TERRESTRE vs. FRONT-7 (EPA / RYOE / TRINCHERAS)</h3>
-                <span class="team-side-tag right" id="groundRightTitle">HOME RUN DEFENSE</span>
+                <span class="team-side-tag" id="airLeftTitle">SENTIDO 1: ATAQUE VISITANTE vs DEFENSA LOCAL</span>
+                <h3>✈️ ATAQUE AÉREO vs. SECUNDARIA — COMPARATIVA EN AMBOS SENTIDOS (IDA Y VUELTA)</h3>
+                <span class="team-side-tag right" id="airRightTitle">SENTIDO 2: ATAQUE LOCAL vs DEFENSA VISITANTE</span>
               </div>
-              <div class="tactical-bars-container" id="groundVsFrontBars"></div>
+
+              <!-- Explicativo Detallado del Bloque 1 -->
+              <div class="inline-stat-explainer" id="guideAirBlock">
+                <div class="ise-title">📘 ¿Qué mide este bloque y qué significa cada estadística aérea?</div>
+                <div class="ise-grid">
+                  <div class="ise-item">
+                    <strong>1. EPA / Dropback (Puntos Esperados por Pase)</strong>
+                    <p>Mide cuántos puntos reales le suma (o le resta) cada jugada de pase al marcador esperado según la yarda y el down. <em>Referencia NFL:</em> 🟢 <strong>+0.12 o más</strong> es ataque élite (o defensa muy permisiva); 🟡 <strong>0.00 a +0.05</strong> es promedio; 🔴 <strong>negativo (-0.05 o menos)</strong> en defensa significa una secundaria dominante que resta puntos al rival.</p>
+                  </div>
+                  <div class="ise-item">
+                    <strong>2. CPOE % (Precisión sobre lo Esperado — Next Gen Stats)</strong>
+                    <p>Mide el porcentaje de pases completados por encima (o por debajo) de la probabilidad matemática de cada envío según la distancia y qué tan cubierto está el receptor. <em>Referencia NFL:</em> 🟢 <strong>+3.0% o más</strong> indica un Quarterback sumamente preciso; 🔴 <strong>negativo</strong> en la defensa indica que obliga a pases incompletos difíciles.</p>
+                  </div>
+                  <div class="ise-item">
+                    <strong>3. Pases Explosivos (+20 Yardas %)</strong>
+                    <p>Porcentaje de intentos de pase que ganan <strong>20 o más yardas en una sola jugada</strong>. Es el indicador número 1 de capacidad para romper un partido rápido. <em>Referencia NFL:</em> 🟢 <strong>10.5% o más</strong> es ataque explosivo; en defensa, permitir <strong>menos de 8.0%</strong> es un cerrojo profundo.</p>
+                  </div>
+                  <div class="ise-item">
+                    <strong>4. Yardas Aéreas por Partido (Pass YPG)</strong>
+                    <p>Promedio de yardas netas ganadas por pase en cada partido (ataque) versus el promedio de yardas aéreas que la secundaria rival concede por encuentro. <em>Referencia NFL:</em> Promedio ~215 yds/partido (🟢 +245 yds es alto volumen; 🛡️ permitir &lt;195 yds es élite).</p>
+                  </div>
+                </div>
+              </div>
+
+              <div id="airVsSecBars"></div>
             </div>
 
-            <!-- BLOQUE 3: ZONA ROJA, 3ER DOWN & PRESIÓN AL QB -->
+            <!-- BLOQUE 2: JUEGO TERRESTRE vs FRONT-7 (EN AMBOS SENTIDOS) -->
             <div class="tactical-card">
               <div class="tactical-card-header">
-                <span class="team-side-tag" id="sitLeftTitle">SITUACIONAL VISITANTE</span>
-                <h3>ZONA ROJA, 3ER DOWN &amp; PRESIÓN EN EL BOLSILLO</h3>
-                <span class="team-side-tag right" id="sitRightTitle">SITUACIONAL LOCAL</span>
+                <span class="team-side-tag" id="groundLeftTitle">SENTIDO 1: CARRERA VISITANTE vs FRONT-7 LOCAL</span>
+                <h3>🏃 JUEGO TERRESTRE vs. FRONT-7 — COMPARATIVA EN AMBOS SENTIDOS (IDA Y VUELTA)</h3>
+                <span class="team-side-tag right" id="groundRightTitle">SENTIDO 2: CARRERA LOCAL vs FRONT-7 VISITANTE</span>
               </div>
+
+              <!-- Explicativo Detallado del Bloque 2 -->
+              <div class="inline-stat-explainer" id="guideGroundBlock">
+                <div class="ise-title">📘 ¿Qué es el "Front-7" y qué significa cada estadística terrestre?</div>
+                <div class="ise-grid">
+                  <div class="ise-item">
+                    <strong>¿Qué es el Front-7 (Frente de 7)?</strong>
+                    <p>Son los <strong>7 defensores que se paran cerca de la pelota</strong> (los 3 o 4 hombres pesados de la Línea Defensiva + los 3 o 4 Linebackers). Su trabajo principal es cerrar los huecos en las trincheras para frenar al corredor antes de que avance.</p>
+                  </div>
+                  <div class="ise-item">
+                    <strong>1. EPA / Acarreo (Eficiencia por Carrera)</strong>
+                    <p>Puntos esperados que gana o pierde el equipo cada vez que corre con la pelota. Como correr avanza menos yardas que pasar, el promedio NFL es <strong>-0.05</strong>. 🟢 Un ataque con <strong>0.00 o positivo (+0.05)</strong> domina las trincheras; 🛡️ una defensa que fuerza <strong>-0.12 o menos</strong> es una muralla.</p>
+                  </div>
+                  <div class="ise-item">
+                    <strong>2. Yardas por Tierra / Partido y Acarreos Explosivos (+10 Yds %)</strong>
+                    <p><strong>Rush YPG</strong> mide el volumen total por tierra (Promedio NFL: ~115 yds/jgo). <strong>Explosive Rush %</strong> mide qué porcentaje de corridas superan las <strong>10 o más yardas</strong> (rompiendo tacleadas de los Linebackers; 🟢 +12% es élite).</p>
+                  </div>
+                  <div class="ise-item">
+                    <strong>3. Tacleadas para Pérdida (TFL — Tackles For Loss)</strong>
+                    <p>Cantidad de veces que el Front-7 defensivo penetra la línea ofensiva y derriba al corredor o al QB <strong>detrás de la línea de golpeo</strong> (haciéndole perder yardas y arruinando la serie ofensiva).</p>
+                  </div>
+                </div>
+              </div>
+
+              <div id="groundVsFrontBars"></div>
+            </div>
+
+            <!-- BLOQUE 3: ZONA ROJA, 3ER DOWN & PRESIÓN EN EL BOLSILLO (DIAGRAMA DE ZONAS CLARO EN AMBOS SENTIDOS) -->
+            <div class="tactical-card">
+              <div class="tactical-card-header">
+                <span class="team-side-tag" id="sitLeftTitle">SITUACIONAL &amp; TRINCHERAS (SENTIDO 1)</span>
+                <h3>🎯 ZONA ROJA, 3ER DOWN &amp; PRESIÓN EN EL BOLSILLO — MAPA DE ZONAS EN AMBOS SENTIDOS</h3>
+                <span class="team-side-tag right" id="sitRightTitle">SITUACIONAL &amp; TRINCHERAS (SENTIDO 2)</span>
+              </div>
+
+              <!-- Explicativo Detallado del Bloque 3 y del Mapa de Calor por Zonas -->
+              <div class="inline-stat-explainer" id="guideSitBlock">
+                <div class="ise-title">📘 ¿Cómo leer el Mapa de Calor por Zonas del Campo y qué significa cada métrica situacional?</div>
+                <div class="ise-grid">
+                  <div class="ise-item">
+                    <strong>🗺️ Cómo leer el Mapa de Zonas del Campo</strong>
+                    <p>El campo se divide en <strong>3 zonas críticas</strong> para cada ataque: <strong>1) Bolsillo de Protección</strong>, <strong>2) Mediocampo (3er Down)</strong> y <strong>3) Zona Roja (últimas 20 yardas)</strong>. El color indica quién domina esa zona: 🟢 <strong>Verde = Ventaja del Ataque</strong>, 🟡 <strong>Amarillo = Duelo Parejo</strong>, 🔴 <strong>Rojo = Peligro / Dominio de la Defensa rival</strong>.</p>
+                  </div>
+                  <div class="ise-item">
+                    <strong>1. Presión en el Bolsillo: Sacks Permitidos OL % vs. Pass Rush Sack %</strong>
+                    <p>Un <strong>Sack (Captura)</strong> ocurre cuando la defensa derriba al Quarterback atrás de la línea antes de que pueda lanzar. Comparamos qué % de pases termina en captura contra la Línea Ofensiva (OL) frente a la capacidad de caza-mariscales (Pass Rush) de la defensa rival. <em>Promedio NFL: ~6.5%.</em></p>
+                  </div>
+                  <div class="ise-item">
+                    <strong>2. Conversión de 3er Down (3rd Down %)</strong>
+                    <p>El ataque tiene 4 intentos (downs) para avanzar 10 yardas. Como en el 4to suelen despejar con patada, el <strong>3er Down es la jugada decisiva para seguir con la pelota</strong>. Mide qué % de veces el ataque logra el 1er Down frente a qué % permite la defensa rival. <em>Promedio NFL: ~39%.</em></p>
+                  </div>
+                  <div class="ise-item">
+                    <strong>3. Eficiencia en Zona Roja (Red Zone TD %) y Margen de Entregas</strong>
+                    <p><strong>Zona Roja</strong> son las últimas 20 yardas antes del Touchdown. Mide qué % de veces que el equipo llega ahí anota <strong>Touchdown (6-7 pts)</strong> en lugar de conformarse con un Gol de Campo (3 pts). <strong>Margen de Entregas</strong> es Balones Robados (Intercepciones + Fumbles) menos Balones Perdidos.</p>
+                  </div>
+                </div>
+              </div>
+
               <div class="situational-grid" id="situationalGrid"></div>
             </div>
 
             <!-- BLOQUE 4: EQUIPOS ESPECIALES (DVOA / KICKING / PUNTING / RETURNS) + LEYENDA SEMAFÓRICA -->
             <div class="tactical-card st-bottom-card">
               <div class="st-legend-box">
-                <h4>Indicadores de Ventaja</h4>
+                <h4>Semáforo de Ventaja</h4>
                 <ul class="advantage-legend-list">
-                  <li><span class="adv-dot sig-pos"></span> Significativa (+Ventaja)</li>
-                  <li><span class="adv-dot mod-pos"></span> Moderada</li>
-                  <li><span class="adv-dot neutral"></span> Duelo Parejo / Neutra</li>
-                  <li><span class="adv-dot mod-neg"></span> Desventaja Moderada</li>
-                  <li><span class="adv-dot sig-neg"></span> Desventaja Significativa</li>
+                  <li><span class="adv-dot sig-pos"></span> Ventaja Clara (Verde Oscuro)</li>
+                  <li><span class="adv-dot mod-pos"></span> Ventaja Moderada (Verde Claro)</li>
+                  <li><span class="adv-dot neutral"></span> Duelo Parejo / Promedio NFL (Amarillo)</li>
+                  <li><span class="adv-dot mod-neg"></span> Desventaja Moderada (Naranja)</li>
+                  <li><span class="adv-dot sig-neg"></span> Desventaja / Peligro (Rojo)</li>
                 </ul>
                 <button class="btn-generate-custom-matchup-tip" id="btnCreateMatchupTip">
                   ✨ Generar Nuevo Tip X de este Partido
                 </button>
               </div>
               <div class="st-gauges-area">
-                <h3 class="st-title">EQUIPOS ESPECIALES (DVOA / PFR / TEAMRANKINGS)</h3>
+                <h3 class="st-title">🦵 EQUIPOS ESPECIALES (PATEADORES, DESPEJES &amp; POSICIÓN DE CAMPO)</h3>
+                <div class="inline-stat-explainer" id="guideStBlock" style="margin-bottom:10px;">
+                  <div class="ise-grid" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="ise-item">
+                      <strong>Kicking (FG % y +50 Yds)</strong>
+                      <p>Porcentaje de acierto en Goles de Campo (3 puntos) y cuántos convirtieron desde larga distancia (50 o más yardas).</p>
+                    </div>
+                    <div class="ise-item">
+                      <strong>Punting (Net Avg y Dentro de la 20)</strong>
+                      <p>Yardas netas que avanza la patada de despeje en 4to down y % de veces que encierra al rival antes de su propia yarda 20 (<strong>In-20 %</strong>).</p>
+                    </div>
+                    <div class="ise-item">
+                      <strong>Returns &amp; Ranking ST (DVOA)</strong>
+                      <p>Posición #1 a #32 de la NFL en eficiencia global de equipos especiales y promedio de yardas al devolver despejes (<strong>PR Avg</strong>).</p>
+                    </div>
+                  </div>
+                </div>
                 <div class="st-columns-grid" id="specialTeamsGauges"></div>
               </div>
             </div>
@@ -169,7 +281,7 @@
             <div class="view-toolbar">
               <div>
                 <h2>Evaluación Integral de las 32 Franquicias NFL (Temporada 2026)</h2>
-                <p class="view-subtitle">Datos reales cruzados de RBSDM (EPA/CPOE), SumerSports, PFR, TeamRankings (Red Zone &amp; 3rd Down) y FTN DVOA.</p>
+                <p class="view-subtitle">Datos reales cruzados de RBSDM (EPA/CPOE), SumerSports, PFR, TeamRankings (Red Zone &amp; 3rd Down) y FTN DVOA. Pasá el cursor sobre cada columna para ver su explicación.</p>
               </div>
               <div class="toolbar-filters">
                 <input type="text" id="searchTeamInput" placeholder="Buscar equipo (ej. KC, Bills, Lions)..." class="input-search" />
@@ -194,19 +306,19 @@
               <table class="data-table" id="teamsTable">
                 <thead>
                   <tr>
-                    <th data-sort="rank_total">RK</th>
+                    <th data-sort="rank_total" title="Ranking Global #1 a #32 combinando Ataque, Defensa y Equipos Especiales">RK ℹ️</th>
                     <th data-sort="name">EQUIPO</th>
-                    <th data-sort="record">RÉCORD</th>
-                    <th data-sort="total_dvoa_proxy">ÍNDICE DVOA</th>
-                    <th data-sort="off_epa_play">EPA/JUG ATAQ</th>
-                    <th data-sort="off_pass_epa_play">EPA PASE</th>
-                    <th data-sort="off_rush_epa_play">EPA CARRERA</th>
-                    <th data-sort="off_cpoe">CPOE</th>
-                    <th data-sort="def_epa_allowed">EPA/JUG DEF</th>
-                    <th data-sort="def_sack_rate">PASS RUSH %</th>
-                    <th data-sort="off_rz_td_pct">ZONA ROJA %</th>
-                    <th data-sort="off_3d_pct">3ER DOWN %</th>
-                    <th data-sort="rank_st">RK ST</th>
+                    <th data-sort="record" title="Partidos Ganados - Perdidos (- Empatados)">RÉCORD</th>
+                    <th data-sort="total_dvoa_proxy" title="Eficiencia Total ajustada (Ataque + Defensa + Especiales). Positivo alto es élite.">ÍNDICE DVOA ℹ️</th>
+                    <th data-sort="off_epa_play" title="Puntos Esperados Añadidos por cada jugada ofensiva. Más alto (+) es mejor ataque.">EPA/JUG ATAQ ℹ️</th>
+                    <th data-sort="off_pass_epa_play" title="Puntos Esperados Añadidos por cada jugada de pase.">EPA PASE ℹ️</th>
+                    <th data-sort="off_rush_epa_play" title="Puntos Esperados Añadidos por cada acarreo terrestre.">EPA CARRERA ℹ️</th>
+                    <th data-sort="off_cpoe" title="Porcentaje de pases completados por encima de lo esperado según dificultad (Next Gen Stats).">CPOE ℹ️</th>
+                    <th data-sort="def_epa_allowed" title="Puntos Esperados permitidos por la defensa en cada jugada. ¡MÁS NEGATIVO (-) ES MEJOR DEFENSA!">EPA/JUG DEF ℹ️</th>
+                    <th data-sort="def_sack_rate" title="Porcentaje de jugadas de pase rivales donde la defensa captura al Quarterback (Sacks totales).">PASS RUSH % ℹ️</th>
+                    <th data-sort="off_rz_td_pct" title="Porcentaje de visitas a la Zona Roja (últimas 20 yardas) que terminan en Touchdown.">ZONA ROJA % ℹ️</th>
+                    <th data-sort="off_3d_pct" title="Porcentaje de éxito convirtiendo el 3er Down para mantener la posesión.">3ER DOWN % ℹ️</th>
+                    <th data-sort="rank_st" title="Ranking #1 a #32 en Equipos Especiales (Pateadores, Despejes y Devoluciones).">RK ST ℹ️</th>
                     <th>FUENTES &amp; TIP X</th>
                   </tr>
                 </thead>
@@ -279,6 +391,20 @@
               </div>
             </div>
             <div class="sources-directory-grid" id="sourcesDirectoryGrid"></div>
+          </section>
+
+          <!-- VISTA 6: GLOSARIO Y GUÍA DETALLADA DE ESTADÍSTICAS NFL -->
+          <section class="stage-view" id="view-glossary">
+            <div class="view-toolbar">
+              <div>
+                <h2>📖 Guía Explicativa y Diccionario de Estadísticas Avanzadas NFL</h2>
+                <p class="view-subtitle">Explicación paso a paso, en español claro y con ejemplos prácticos, de cada métrica de RBSDM, Next Gen Stats, FTN DVOA, SumerSports, PFF, PlayerProfiler y Pro Football Reference.</p>
+              </div>
+              <div class="toolbar-filters">
+                <input type="text" id="searchGlossaryInput" placeholder="Buscar concepto (ej. EPA, CPOE, Zona Roja, Front-7, WOPR)..." class="input-search" style="min-width:290px;" />
+              </div>
+            </div>
+            <div class="glossary-cards-grid" id="glossaryCardsGrid"></div>
           </section>
 
         </main>
