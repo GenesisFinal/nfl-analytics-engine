@@ -2737,3 +2737,365 @@ body {
   color: #475569;
   border-color: #cbd5e1;
 }
+
+/* ==========================================================================
+   BLOQUE 0: PRONÓSTICO INTEGRAL (% DE VICTORIA & RESULTADO PROBABLE)
+   ========================================================================== */
+.prediction-master-card {
+  border: 2px solid #013369;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+}
+
+.prediction-hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.45fr 1fr;
+  gap: 14px;
+  align-items: stretch;
+  margin-bottom: 14px;
+}
+
+@media (max-width: 1120px) {
+  .prediction-hero-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pred-team-box {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.pred-team-box.away-side {
+  border-top: 4px solid #013369;
+}
+
+.pred-team-box.home-side {
+  border-top: 4px solid #d50a0a;
+}
+
+.pred-team-box.is-winner {
+  background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+  border-color: #16a34a;
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.12);
+}
+
+.pred-team-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pred-team-top.right {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.pred-team-logo {
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+}
+
+.pred-role-tag {
+  font-size: 10px;
+  font-weight: 900;
+  color: #475569;
+  letter-spacing: 0.4px;
+}
+
+.pred-team-name {
+  font-size: 15px;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.pred-metrics-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 10px;
+}
+
+.pred-prob-block,
+.pred-score-block {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px 10px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.pred-big-pct {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 24px;
+  font-weight: 900;
+  color: #013369;
+  line-height: 1.1;
+}
+
+.pred-team-box.home-side .pred-big-pct {
+  color: #b91c1c;
+}
+
+.pred-team-box.is-winner .pred-big-pct {
+  color: #15803d;
+}
+
+.pred-big-score {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 26px;
+  font-weight: 900;
+  color: #0f172a;
+  line-height: 1.1;
+}
+
+.pred-sub-lbl {
+  font-size: 9.5px;
+  font-weight: 800;
+  color: #64748b;
+  margin-top: 3px;
+  text-transform: uppercase;
+}
+
+/* MARCADOR CENTRAL Y BARRA DE PROBABILIDAD */
+.pred-center-scoreboard {
+  background: #0f172a;
+  color: #ffffff;
+  border-radius: 10px;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.18);
+}
+
+.pcs-header-badge {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 900;
+  color: #fde047;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+.pcs-score-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  padding: 8px 16px;
+}
+
+.pcs-team-score {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pcs-team-score img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}
+
+.pcs-abbr {
+  font-size: 15px;
+  font-weight: 900;
+  color: #cbd5e1;
+}
+
+.pcs-num {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 32px;
+  font-weight: 900;
+  color: #ffffff;
+}
+
+.pcs-team-score.is-winner .pcs-num {
+  color: #4ade80;
+}
+
+.pcs-sep {
+  font-size: 9px;
+  font-weight: 900;
+  color: #94a3b8;
+  text-align: center;
+  line-height: 1.2;
+  padding: 0 6px;
+}
+
+.pcs-winprob-bar-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pcs-winprob-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #e2e8f0;
+}
+
+.pcs-winprob-track {
+  height: 22px;
+  background: #1e293b;
+  border-radius: 999px;
+  overflow: hidden;
+  display: flex;
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+}
+
+.pcs-winprob-fill {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 900;
+  color: #ffffff;
+  transition: width 0.35s ease;
+}
+
+.pcs-winprob-fill.away {
+  background: linear-gradient(90deg, #1d4ed8 0%, #2563eb 100%);
+}
+
+.pcs-winprob-fill.home {
+  background: linear-gradient(90deg, #dc2626 0%, #b91c1c 100%);
+}
+
+.pcs-lines-comparison {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 11px;
+  color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  padding: 6px 10px;
+}
+
+.pcs-line-chip strong {
+  color: #ffffff;
+}
+
+/* DESGLOSE DE LOS 5 FACTORES DEL PRONÓSTICO */
+.pred-breakdown-box {
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 9px;
+  padding: 10px 12px;
+}
+
+.pbb-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 900;
+  color: #013369;
+  margin-bottom: 9px;
+}
+
+.pbb-formula-hint {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #475569;
+  background: #e2e8f0;
+  padding: 3px 8px;
+  border-radius: 99px;
+}
+
+.pbb-factors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 8px;
+}
+
+.pbb-factor-card {
+  background: #ffffff;
+  border: 1px solid #dbe4f0;
+  border-radius: 8px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.pbb-f-head {
+  font-size: 11.5px;
+  font-weight: 900;
+  color: #0f172a;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 4px;
+}
+
+.pbb-f-desc {
+  font-size: 10.5px;
+  color: #64748b;
+  line-height: 1.35;
+}
+
+.pbb-f-badges {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 10.5px;
+  color: #475569;
+}
+
+.pred-factor-pill {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.pred-factor-pill.pos {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.pred-factor-pill.neg {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.pred-factor-pill.neu {
+  background: #fef9c3;
+  color: #854d0e;
+}
+
+.pbb-f-scores {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  font-size: 11px;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  padding: 5px 6px;
+  border-radius: 4px;
+}
+
