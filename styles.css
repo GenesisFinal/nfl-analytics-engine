@@ -3372,3 +3372,416 @@ body {
   line-height: 1.38;
   resize: vertical;
 }
+
+/* ==========================================================================
+   PARTE MÉDICO OFICIAL (ESPN) & SIMULADOR INTERACTIVO DE TITULARES / BAJAS
+   ========================================================================== */
+.pbb-factor-card.inj-factor-card {
+  border-color: #fca5a5;
+  background: linear-gradient(180deg, #fffafa 0%, #ffffff 100%);
+}
+
+.injury-simulator-master-box {
+  margin-top: 12px;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-left: 5px solid #dc2626;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.05);
+}
+
+.ism-header {
+  background: linear-gradient(90deg, #0f172a 0%, #1e293b 100%);
+  color: #ffffff;
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.ism-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  max-width: 780px;
+}
+
+.ism-title {
+  font-size: 12px;
+  font-weight: 900;
+  color: #fde047;
+  letter-spacing: 0.4px;
+}
+
+.ism-subtitle {
+  font-size: 10.5px;
+  color: #cbd5e1;
+  line-height: 1.35;
+}
+
+.ism-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ism-sim-official-pill {
+  background: rgba(34, 197, 94, 0.18);
+  color: #86efac;
+  border: 1px solid rgba(134, 239, 172, 0.4);
+  font-size: 10.5px;
+  font-weight: 800;
+  padding: 4px 9px;
+  border-radius: 999px;
+}
+
+.ism-sim-active-pill {
+  background: rgba(250, 204, 21, 0.2);
+  color: #fde047;
+  border: 1px solid rgba(250, 204, 21, 0.55);
+  font-size: 10.5px;
+  font-weight: 800;
+  padding: 4px 9px;
+  border-radius: 999px;
+}
+
+.btn-reset-inj-sim {
+  background: #dc2626;
+  color: #ffffff;
+  border: 1px solid #ef4444;
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-reset-inj-sim:hover {
+  background: #b91c1c;
+}
+
+.btn-toggle-inj-sim {
+  background: #334155;
+  color: #f8fafc;
+  border: 1px solid #64748b;
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.btn-toggle-inj-sim:hover {
+  background: #475569;
+}
+
+.ism-body-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 12px;
+  background: #f8fafc;
+}
+
+@media (max-width: 1100px) {
+  .ism-body-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ism-team-col {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.ism-team-col-head {
+  background: #f1f5f9;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 8px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ism-team-id {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ism-team-id img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+
+.ism-side-lbl {
+  font-size: 9.5px;
+  font-weight: 900;
+  color: #64748b;
+}
+
+.ism-team-nm {
+  font-size: 13px;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.ism-team-summary-badges {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.ism-total-loss-badge {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 900;
+  padding: 2px 8px;
+  border-radius: 5px;
+}
+
+.ism-total-loss-badge.neg {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+.ism-total-loss-badge.ok {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #86efac;
+}
+
+.ism-sub-loss-badge {
+  font-size: 10px;
+  font-weight: 700;
+  color: #475569;
+}
+
+.ism-players-list {
+  display: flex;
+  flex-direction: column;
+  divide-y: 1px solid #f1f5f9;
+}
+
+.ism-player-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-bottom: 1px solid #f1f5f9;
+  transition: background 0.15s ease;
+}
+
+.ism-player-row:last-child {
+  border-bottom: none;
+}
+
+.ism-player-row.has-penalty {
+  background: #fffafa;
+}
+
+.ism-player-row.is-overridden {
+  background: #fefce8;
+  border-left: 3px solid #eab308;
+}
+
+.ism-p-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+}
+
+.ism-p-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #e2e8f0;
+  border: 1px solid #cbd5e1;
+  flex-shrink: 0;
+}
+
+.ism-p-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.ism-p-name-line {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.ism-p-role-badge {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9.5px;
+  font-weight: 900;
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.ism-p-role-badge.off {
+  background: #dbeafe;
+  color: #1e3a8a;
+}
+
+.ism-p-role-badge.def {
+  background: #fce7f3;
+  color: #831843;
+}
+
+.ism-p-name {
+  font-size: 12px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.ism-p-official-tag {
+  font-size: 9.5px;
+  font-weight: 800;
+  padding: 1px 6px;
+  border-radius: 999px;
+}
+
+.ism-p-official-tag.st-ok {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.ism-p-official-tag.st-q {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.ism-p-official-tag.st-d {
+  background: #ffedd5;
+  color: #9a3412;
+}
+
+.ism-p-official-tag.st-out {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.ism-p-sim-tag {
+  background: #fef08a;
+  color: #854d0e;
+  font-size: 9.5px;
+  font-weight: 900;
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.ism-p-meta-line {
+  font-size: 10px;
+  color: #64748b;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  line-height: 1.3;
+}
+
+.ism-p-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 680px) {
+  .ism-player-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .ism-p-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+.ism-p-current-impact {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 900;
+  min-width: 58px;
+  text-align: right;
+}
+
+.ism-p-current-impact.neg {
+  color: #dc2626;
+}
+
+.ism-p-current-impact.zero {
+  color: #64748b;
+}
+
+.ism-p-btn-group {
+  display: inline-flex;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #f8fafc;
+}
+
+.btn-inj-sim {
+  border: none;
+  border-right: 1px solid #cbd5e1;
+  background: transparent;
+  color: #475569;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 4px 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.12s ease;
+}
+
+.btn-inj-sim:last-child {
+  border-right: none;
+}
+
+.btn-inj-sim:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.btn-inj-sim.active.st-ok {
+  background: #16a34a;
+  color: #ffffff;
+}
+
+.btn-inj-sim.active.st-q {
+  background: #d97706;
+  color: #ffffff;
+}
+
+.btn-inj-sim.active.st-d {
+  background: #ea580c;
+  color: #ffffff;
+}
+
+.btn-inj-sim.active.st-out {
+  background: #dc2626;
+  color: #ffffff;
+}
+
