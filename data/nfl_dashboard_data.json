@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-10-28 08:09 ART",
-  "updated_iso": "2026-10-28T08:09:43.701497-03:00",
+  "updated_at": "2026-10-28 18:50 ART",
+  "updated_iso": "2026-10-28T18:50:02.271952-03:00",
   "season": 2026,
   "current_week": 8,
   "available_weeks": [
@@ -8523,7 +8523,7 @@
       "home_score": 0,
       "away_record": "2-5",
       "home_record": "3-4",
-      "spread": "DAL -6.5",
+      "spread": "DAL -7",
       "over_under": 54.5,
       "venue": "AT&T Stadium"
     },
@@ -8600,7 +8600,7 @@
       "away_record": "3-4",
       "home_record": "2-5",
       "spread": "TB -2.5",
-      "over_under": 45.5,
+      "over_under": 44.5,
       "venue": "Raymond James Stadium"
     },
     {
@@ -8618,7 +8618,7 @@
       "home_score": 0,
       "away_record": "2-5",
       "home_record": "4-2",
-      "spread": "JAX -9.5",
+      "spread": "JAX -10",
       "over_under": 46.5,
       "venue": "EverBank Stadium"
     },
@@ -8657,7 +8657,7 @@
       "away_record": "5-1",
       "home_record": "5-2",
       "spread": "KC -1.5",
-      "over_under": 41.5,
+      "over_under": 40.5,
       "venue": "Empower Field at Mile High"
     },
     {
@@ -8694,7 +8694,7 @@
       "home_score": 0,
       "away_record": "2-5",
       "home_record": "1-4-1",
-      "spread": "WSH -5.5",
+      "spread": "WSH -6",
       "over_under": 40.5,
       "venue": "Northwest Stadium"
     },
@@ -8732,7 +8732,7 @@
       "home_score": 0,
       "away_record": "4-2",
       "home_record": "4-3",
-      "spread": "BAL -2.5",
+      "spread": "BAL -3",
       "over_under": 48.5,
       "venue": "M&T Bank Stadium"
     },
@@ -8828,7 +8828,7 @@
       "away_record": "5-2",
       "home_record": "2-5",
       "spread": "NO -2.5",
-      "over_under": 43.5,
+      "over_under": 42.5,
       "venue": "Caesars Superdome"
     },
     {
@@ -11589,163 +11589,79 @@
   ],
   "news": [
     {
-      "id": "news-9",
-      "title": "Giants place RB Tyrone Tracy Jr. on IR with hamstring injury",
-      "summary": "The Giants are placing RB Tyrone Tracy Jr. on injured reserve with a hamstring injury, with Devin Singletary expected to play a bigger role on offense.",
-      "url": "https://www.espn.com/nfl/story/_/id/50300226/giants-place-rb-tyrone-tracy-ir-hamstring-injury",
+      "id": "news-5",
+      "title": "Pass rusher Jaelan Phillips among four Panthers ruled out for TNF vs. Packers",
+      "summary": "The Panthers ruled out four players, including starting OLB Jaelan Phillips (hamstring) and left guard Damien Lewis (knee) for \"Thursday Night Football.\"",
+      "url": "https://www.espn.com/nfl/story/_/id/50309816/pass-rusher-jaelan-phillips-4-panthers-ruled-tnf",
       "source": "ESPN NFL",
       "source_home": "https://www.espn.com/nfl/",
-      "published": "2026-10-28T10:36",
+      "published": "2026-10-28T20:00",
       "impact_score": 99,
       "category": "🚨 Lesión Clave / Parte Médico",
-      "team": "NYG"
-    },
-    {
-      "id": "news-11",
-      "title": "Chad Kelly becomes the first million-dollar player of CFL salary-cap era",
-      "summary": "Quarterback Chad Kelly said earlier this year that he'd still like to return to the NFL.",
-      "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/chad-kelly-becomes-the-first-million-dollar-player-of-cfl-salary-cap-era",
-      "source": "ProFootballTalk (PFT)",
-      "source_home": "https://www.nbcsports.com/nfl/profootballtalk",
-      "published": "Wed, 28 Oct 2026 06:25:19 -0400",
-      "impact_score": 84,
-      "category": "💰 Impacto Salarial (Cap / Contrato)",
-      "team": ""
-    },
-    {
-      "id": "news-8",
-      "title": "Colts trade DT DeForest Buckner to 49ers in another major move",
-      "summary": "The Colts have traded DeForest Buckner to the Colts for a 2027 fourth-round pick.",
-      "url": "https://www.espn.com/nfl/story/_/id/50301125/colts-trade-de-deforest-buckner-49ers",
-      "source": "ESPN NFL",
-      "source_home": "https://www.espn.com/nfl/",
-      "published": "2026-10-28T00:06",
-      "impact_score": 82,
-      "category": "🔄 Trade / Movimiento de Roster",
-      "team": "IND"
-    },
-    {
-      "id": "news-21",
-      "title": "[Schefter] Trade: Colts have agreed to send eight-time Pro-Bowl guard Quenton Nelson to the Seattle Seahawks, per me and @rapsheet. Nelson is on an expiring contract and the Colts are opting to get back draft capital now before they could lose him in free agency.",
-      "summary": "submitted by /u/oklolzzzzs [link] [comments]",
-      "url": "https://www.reddit.com/r/nfl/comments/1xgxgx4/schefter_trade_colts_have_agreed_to_send/",
-      "source": "Reddit (r/NFL)",
-      "source_home": "https://www.reddit.com/r/nfl/",
-      "published": "2026-10-27T16:36",
-      "impact_score": 78,
-      "category": "💰 Impacto Salarial (Cap / Contrato)",
-      "team": "IND"
-    },
-    {
-      "id": "news-23",
-      "title": "DeForest Buckner",
-      "summary": "Buckner exits the Colts the same day Quenton Nelson does. It’s a coup for a 49ers defense that has lacked some oomph in one-on-one situations on the defensive line. Buckner, who was with the 49ers early in his career before being traded to ",
-      "url": "https://www.nbcsports.com/fantasy/football/player-news",
-      "source": "NBC Sports Rotoworld",
-      "source_home": "https://www.nbcsports.com/fantasy/football/player-news",
-      "published": "Última hora",
-      "impact_score": 75,
-      "category": "🔄 Trade / Movimiento de Roster",
-      "team": "IND"
-    },
-    {
-      "id": "news-14",
-      "title": "Joey Porter Jr. on his critics: They'll be quiet soon",
-      "summary": "Upset about not getting a contract extension before the season, cornerback Joey Porter Jr. didn't play in four games with the Steelers.",
-      "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/joey-porter-jr-on-his-critics-theyll-be-quiet-soon",
-      "source": "ProFootballTalk (PFT)",
-      "source_home": "https://www.nbcsports.com/nfl/profootballtalk",
-      "published": "Tue, 27 Oct 2026 21:58:20 -0400",
-      "impact_score": 74,
-      "category": "💰 Impacto Salarial (Cap / Contrato)",
-      "team": "PIT"
-    },
-    {
-      "id": "news-12",
-      "title": "Texas left tackle and likely first-round pick Trevor Goosby out for season",
-      "summary": "Texas left tackle Trevor Goosby, a likely first-round draft pick and the protector of Arch Manning's blind side, will miss the rest of this season with a knee injury.",
-      "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/texas-left-tackle-and-likely-first-round-pick-trevor-goosby-out-for-season",
-      "source": "ProFootballTalk (PFT)",
-      "source_home": "https://www.nbcsports.com/nfl/profootballtalk",
-      "published": "Wed, 28 Oct 2026 06:04:23 -0400",
-      "impact_score": 60,
-      "category": "🚨 Lesión Clave / Parte Médico",
-      "team": ""
-    },
-    {
-      "id": "news-1",
-      "title": "NFL Week 8 latest intel, buzz questions, news, fantasy tips: What we're hearing",
-      "summary": "Are changes coming for the Jets? Could the Chiefs add at the trade deadline? Will the Colts keep unloading? And what's going on in the AFC North standings?",
-      "url": "https://www.espn.com/nfl/story/_/id/50297734/week-8-buzz-fantasy-predictions-graziano-fowler-2026",
-      "source": "ESPN NFL",
-      "source_home": "https://www.espn.com/nfl/",
-      "published": "2026-10-28T11:06",
-      "impact_score": 50,
-      "category": "🔄 Trade / Movimiento de Roster",
-      "team": "IND"
-    },
-    {
-      "id": "news-2",
-      "title": "2026 NFL trade deadline: Ranking the top 25 candidates to move, plus team fits",
-      "summary": "Could the Colts listen on Jonathan Taylor? Would Josh Sweat help a contender's defense? We stacked the top players who might move before the Nov. 10 deadline.",
-      "url": "https://www.espn.com/nfl/story/_/id/50278445/2026-nfl-trade-deadline-ranking-top-25-candidates-available",
-      "source": "ESPN NFL",
-      "source_home": "https://www.espn.com/nfl/",
-      "published": "2026-10-28T11:01",
-      "impact_score": 50,
-      "category": "🔄 Trade / Movimiento de Roster",
-      "team": "IND"
-    },
-    {
-      "id": "news-5",
-      "title": "NFL trade deadline grades: DeForest Buckner, Quenton Nelson dealt by Colts, more",
-      "summary": "Does Buckner make the 49ers Super Bowl hopefuls? Will Quenton Nelson upgrade the Seahawks' O-line? We're grading NFL trades ahead of November's deadline.",
-      "url": "https://www.espn.com/nfl/story/_/id/50043542/2026-trade-deadline-grades-latest-best-worst-deals",
-      "source": "ESPN NFL",
-      "source_home": "https://www.espn.com/nfl/",
-      "published": "2026-10-28T00:41",
-      "impact_score": 50,
-      "category": "🔄 Trade / Movimiento de Roster",
-      "team": "IND"
-    },
-    {
-      "id": "news-6",
-      "title": "Marcus Spears: DeForest Buckner trade a win-win for 49ers, Colts",
-      "summary": "Marcus Spears: DeForest Buckner trade a win-win for 49ers, Colts",
-      "url": "https://www.espn.com/video/clip/_/id/50301173/deforest-buckner-trade-win-win-49ers-colts",
-      "source": "ESPN NFL",
-      "source_home": "https://www.espn.com/nfl/",
-      "published": "2026-10-27T21:47",
-      "impact_score": 50,
-      "category": "🔄 Trade / Movimiento de Roster",
-      "team": "IND"
+      "team": "CAR"
     },
     {
       "id": "news-7",
-      "title": "2026 NFL trade deadline updates: DeForest Buckner, Quenton Nelson on the move",
-      "summary": "The NFL trade deadline is Nov. 10, but deals have already started. We're tracking all moves, including the Colts dealing Quenton Nelson and DeForest Buckner.",
-      "url": "https://www.espn.com/nfl/story/_/id/50043471/2026-trade-deadline-updates-latest-news-deals-terms",
+      "title": "Texans place WR Jaylin Noel on IR, claim RB Emari Demercado off waivers",
+      "summary": "The Texans placed wide receiver Jaylin Noel on injured reserve Wednesday, the team announced.",
+      "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/texans-place-wr-jaylin-noel-on-ir-claim-rb-emari-demercado-off-waivers",
+      "source": "ProFootballTalk (PFT)",
+      "source_home": "https://www.nbcsports.com/nfl/profootballtalk",
+      "published": "Wed, 28 Oct 2026 17:26:12 -0400",
+      "impact_score": 99,
+      "category": "🚨 Lesión Clave / Parte Médico",
+      "team": "HOU"
+    },
+    {
+      "id": "news-2",
+      "title": "Jets WR Garrett Wilson says he doesn't want to be traded but does want to win",
+      "summary": "Jets receiver Garrett Wilson says he doesn't want to be traded but he expressed that he's frustrated by his target share and, most of all, losing.",
+      "url": "https://www.espn.com/nfl/story/_/id/50308919/jets-wr-garrett-wilson-says-want-traded",
       "source": "ESPN NFL",
       "source_home": "https://www.espn.com/nfl/",
-      "published": "2026-10-27T22:53",
+      "published": "2026-10-28T21:24",
+      "impact_score": 50,
+      "category": "🔄 Trade / Movimiento de Roster",
+      "team": "NYJ"
+    },
+    {
+      "id": "news-3",
+      "title": "Brian Thomas Jr. trying to ignore trade talk, 'keep working hard' for Jaguars",
+      "summary": "Jaguars receiver Brian Thomas Jr. said Wednesday that he isn't concerned about being the subject of recent trade rumors.",
+      "url": "https://www.espn.com/nfl/story/_/id/50311100/jaguars-brian-thomas-jr-trying-ignore-trade-talk",
+      "source": "ESPN NFL",
+      "source_home": "https://www.espn.com/nfl/",
+      "published": "2026-10-28T21:42",
+      "impact_score": 50,
+      "category": "🔄 Trade / Movimiento de Roster",
+      "team": "JAX"
+    },
+    {
+      "id": "news-4",
+      "title": "Winless Chargers sticking with Mike McDaniel as offensive playcaller",
+      "summary": "Embattled offensive coordinator Mike McDaniel will continue as the Chargers' playcaller, coach Jim Harbaugh announced Wednesday.",
+      "url": "https://www.espn.com/nfl/story/_/id/50310259/chargers-sticking-mike-mcdaniel-offensive-playcaller",
+      "source": "ESPN NFL",
+      "source_home": "https://www.espn.com/nfl/",
+      "published": "2026-10-28T20:41",
+      "impact_score": 50,
+      "category": "🔄 Trade / Movimiento de Roster",
+      "team": "LAC"
+    },
+    {
+      "id": "news-9",
+      "title": "Colts WR Josh Downs on trade rumors: 'I'm open to whatever'",
+      "summary": "Downs has been a key contributor for Indianapolis since being selected in the third round of the 2023 NFL Draft.",
+      "url": "https://www.nytimes.com/athletic/7732720/2026/10/28/colts-josh-downs-trade-rumors/",
+      "source": "The Athletic NFL",
+      "source_home": "https://www.nytimes.com/athletic/nfl/",
+      "published": "Wed, 28 Oct 2026 19:03:14 GMT",
       "impact_score": 50,
       "category": "🔄 Trade / Movimiento de Roster",
       "team": "IND"
     },
     {
-      "id": "news-10",
-      "title": "Jerry Jones thinks it is \"unlikely\" Cowboys add help in a trade",
-      "summary": "The trade deadline is a couple of weeks away, but things started heating up on Tuesday with the Colts making a pair of trades that could spur other teams to start making moves as well.",
-      "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/jerry-jones-thinks-it-is-unlikely-cowboys-add-help-in-a-trade",
-      "source": "ProFootballTalk (PFT)",
-      "source_home": "https://www.nbcsports.com/nfl/profootballtalk",
-      "published": "Wed, 28 Oct 2026 07:00:53 -0400",
-      "impact_score": 50,
-      "category": "🔄 Trade / Movimiento de Roster",
-      "team": "DAL"
-    },
-    {
-      "id": "news-16",
+      "id": "news-11",
       "title": "The Indianapolis Colts' fire sale is officially underway. Who could be traded next?",
       "summary": "After firing its GM and falling to 2-5, Indy traded two of its most respected players. Here are some other veterans who could be dealt.",
       "url": "https://www.nytimes.com/athletic/7731170/2026/10/28/indianapolis-colts-rebuild-nfl-trade-deadline/",
@@ -11757,19 +11673,7 @@
       "team": "IND"
     },
     {
-      "id": "news-17",
-      "title": "NFL trade deadline targets: As Colts trigger fire sale, could Jonathan Taylor be next?",
-      "summary": "Indianapolis has officially opened for business. Here are 10 players on contenders’ radars ahead of the Nov. 10 deadline.",
-      "url": "https://www.nytimes.com/athletic/7730346/2026/10/28/nfl-trade-deadline-players-to-watch/",
-      "source": "The Athletic NFL",
-      "source_home": "https://www.nytimes.com/athletic/nfl/",
-      "published": "Wed, 28 Oct 2026 09:09:44 GMT",
-      "impact_score": 50,
-      "category": "🔄 Trade / Movimiento de Roster",
-      "team": "IND"
-    },
-    {
-      "id": "news-18",
+      "id": "news-13",
       "title": "DeForest Buckner trade grades: 49ers bolster pass rush; did Colts get enough?",
       "summary": "Buckner, a two-time All-Pro and four-time Pro Bowler, had four sacks in seven games this season for the Colts.",
       "url": "https://www.nytimes.com/athletic/7730577/2026/10/27/deforest-buckner-trade-grades-49ers-colts/",
@@ -11781,7 +11685,7 @@
       "team": "IND"
     },
     {
-      "id": "news-19",
+      "id": "news-14",
       "title": "Colts trade DT DeForest Buckner to 49ers for fourth-round pick",
       "summary": "Buckner leaves Indianapolis as one of the team's most respected players because of his leadership, toughness and production.",
       "url": "https://www.nytimes.com/athletic/7729370/2026/10/27/colts-deforest-buckner-trade-49ers/",
@@ -11793,31 +11697,31 @@
       "team": "IND"
     },
     {
-      "id": "news-20",
-      "title": "Shedeur Sanders asked the Eagles and Ravens not to draft him as he did not want to be a longterm backup. Since then, Sanders has only started 7 games for Cleveland. In the same window, Lamar Jackson has missed 7 games and Jalen Hurts will miss atleast 13 by the end of this season.",
-      "summary": "Snoop Huntley, who signed with the Cleveland Browns alongside Shedeur in 2025, has now started 6 games for the Ravens. However, Lamar Jackson is reportedly healthy and set to return on Sunday vs the Bills. Most notably, Jalen Hurts will mis",
-      "url": "https://www.reddit.com/r/nfl/comments/1xhcrbl/shedeur_sanders_asked_the_eagles_and_ravens_not/",
+      "id": "news-15",
+      "title": "[Schefter] Colts WR Josh Downs is requesting a trade from Indianapolis, per ESPN’s Jeremy Fowler.",
+      "summary": "submitted by /u/expellyamos [link] [comments]",
+      "url": "https://www.reddit.com/r/nfl/comments/1xhsmpg/schefter_colts_wr_josh_downs_is_requesting_a/",
       "source": "Reddit (r/NFL)",
       "source_home": "https://www.reddit.com/r/nfl/",
-      "published": "2026-10-28T02:52",
-      "impact_score": 50,
-      "category": "🔄 Trade / Movimiento de Roster",
-      "team": "BAL"
-    },
-    {
-      "id": "news-22",
-      "title": "Per Raanan, The Colts’ asking price for Jonathan Taylor is reportedly a second-round pick and possibly more. However, Schefter reports ownership does not want to trade him and would need to be overwhelmed by an offer.",
-      "summary": "Ranaan Source Link || Schefter Source Link submitted by /u/Saca312 [link] [comments]",
-      "url": "https://www.reddit.com/r/nfl/comments/1xh2ze8/per_raanan_the_colts_asking_price_for_jonathan/",
-      "source": "Reddit (r/NFL)",
-      "source_home": "https://www.reddit.com/r/nfl/",
-      "published": "2026-10-27T19:58",
+      "published": "2026-10-28T16:18",
       "impact_score": 50,
       "category": "🔄 Trade / Movimiento de Roster",
       "team": "IND"
     },
     {
-      "id": "news-25",
+      "id": "news-17",
+      "title": "[Schultz] Per sources, the 0-6 Los Angeles Chargers have been hesitant to trade players for now.",
+      "summary": "submitted by /u/PlayaSlayaX [link] [comments]",
+      "url": "https://www.reddit.com/r/nfl/comments/1xhvs2h/schultz_per_sources_the_06_los_angeles_chargers/",
+      "source": "Reddit (r/NFL)",
+      "source_home": "https://www.reddit.com/r/nfl/",
+      "published": "2026-10-28T18:11",
+      "impact_score": 50,
+      "category": "🔄 Trade / Movimiento de Roster",
+      "team": "LAC"
+    },
+    {
+      "id": "news-18",
       "title": "NFL trade grades: How did Nelson, Buckner buyers, Colts fare in swaps? Trade grades: Evaluating every deal made ahead of deadline",
       "summary": "Cobertura oficial y reportes de vestuario desde NFL.com News.",
       "url": "https://www.nfl.com/news/nfl-trade-grades-evaluating-every-deal-made-ahead-of-the-2026-deadline",
@@ -11829,10 +11733,10 @@
       "team": "IND"
     },
     {
-      "id": "news-26",
-      "title": "Colts make another deal, trade DL Buckner to 49ers for fourth-round pick NFLN: Colts to trade Buckner to 49ers for fourth-round pick",
+      "id": "news-19",
+      "title": "Report: Colts' Downs requests trade after Indy deals multiple veterans Report: Colts' Downs requests trade ahead of deadline",
       "summary": "Cobertura oficial y reportes de vestuario desde NFL.com News.",
-      "url": "https://www.nfl.com/news/colts-to-trade-deforest-buckner-to-49ers-for-fourth-round-pick",
+      "url": "https://www.nfl.com/news/colts-wr-josh-downs-requests-trade",
       "source": "NFL.com News",
       "source_home": "https://www.nfl.com/news/",
       "published": "Hoy",
@@ -11841,10 +11745,10 @@
       "team": "IND"
     },
     {
-      "id": "news-27",
-      "title": "Trade! Colts send eight-time Pro Bowl guard Nelson to Seahawks for picks Colts trade Pro Bowl OG Nelson to Seahawks for picks",
+      "id": "news-20",
+      "title": "NFL trade deadline targets: As Colts trigger fire sale, could Jonathan Taylor be next? NFL trade deadline targets: As Colts trigger fire sale, could Jonathan Taylor be next?",
       "summary": "Cobertura oficial y reportes de vestuario desde NFL.com News.",
-      "url": "https://www.nfl.com/news/nfl-network-colts-trading-eight-time-pro-bowl-guard-quenton-nelson-to-seahawks",
+      "url": "https://www.nfl.com/news/nfl-trade-deadline-targets-as-colts-trigger-fire-sale-could-jonathan-taylor-be-next",
       "source": "NFL.com News",
       "source_home": "https://www.nfl.com/news/",
       "published": "Hoy",
@@ -11853,28 +11757,100 @@
       "team": "IND"
     },
     {
-      "id": "news-29",
-      "title": "NFL trade grades: How did Nelson, Buckner buyers, Colts fare in swaps?",
+      "id": "news-22",
+      "title": "The NFC West arms race is on. Here's who the Rams can target before trade deadline The NFC West arms race is on. Here's who the Rams can target before trade deadline",
       "summary": "Cobertura oficial y reportes de vestuario desde NFL.com News.",
-      "url": "https://www.nfl.com/news/nfl-trade-grades-evaluating-every-deal-made-ahead-of-the-2026-deadline",
+      "url": "https://www.nfl.com/news/the-nfc-west-arms-race-is-on-here-s-who-the-rams-can-target-before-trade-deadline",
       "source": "NFL.com News",
       "source_home": "https://www.nfl.com/news/",
       "published": "Hoy",
       "impact_score": 50,
       "category": "🔄 Trade / Movimiento de Roster",
-      "team": "IND"
+      "team": "LA"
     },
     {
-      "id": "news-30",
-      "title": "Colts make another deal, trade DL Buckner to 49ers for fourth-round pick",
+      "id": "news-1",
+      "title": "Rams' DE Garrett, TE Ferguson won't practice this week",
+      "summary": "Rams pass rusher Myles Garrett (knee) and tight end Terrance Ferguson (ankle) will not return to practice this week, coach Sean McVay said Wednesday.",
+      "url": "https://www.espn.com/nfl/story/_/id/50311303/rams-de-garrett-te-ferguson-practice-week",
+      "source": "ESPN NFL",
+      "source_home": "https://www.espn.com/nfl/",
+      "published": "2026-10-28T21:48",
+      "impact_score": 48,
+      "category": "🚨 Lesión Clave / Parte Médico",
+      "team": "LA"
+    },
+    {
+      "id": "news-8",
+      "title": "Andy Reid on signing Justin Tucker to practice squad: \"He's done his suspension\"",
+      "summary": "Even before the Ravens cut Justin Tucker, which happened before Tucker accepted a 10-game suspension under the Personal Conduct Policy based on allegations of sexual misconduct at massage-therapy sessions, Tucker's skills were declining.",
+      "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/andy-reid-on-signing-justin-tucker-to-practice-squad-hes-done-his-suspension",
+      "source": "ProFootballTalk (PFT)",
+      "source_home": "https://www.nbcsports.com/nfl/profootballtalk",
+      "published": "Wed, 28 Oct 2026 16:56:03 -0400",
+      "impact_score": 46,
+      "category": "💰 Impacto Salarial (Cap / Contrato)",
+      "team": "BAL"
+    },
+    {
+      "id": "news-16",
+      "title": "The #Chiefs are signing former #Ravens kicker Justin Tucker to the practice squad",
+      "summary": "submitted by /u/markusfenix75 [link] [comments]",
+      "url": "https://www.reddit.com/r/nfl/comments/1xhn5ry/the_chiefs_are_signing_former_ravens_kicker/",
+      "source": "Reddit (r/NFL)",
+      "source_home": "https://www.reddit.com/r/nfl/",
+      "published": "2026-10-28T12:49",
+      "impact_score": 46,
+      "category": "💰 Impacto Salarial (Cap / Contrato)",
+      "team": "BAL"
+    },
+    {
+      "id": "news-21",
+      "title": "Ex-Raven Tucker joining Chiefs practice squad; struggling Butker likely to kick Sun. NFLN: Chiefs signing Tucker as Butker's struggles continue",
       "summary": "Cobertura oficial y reportes de vestuario desde NFL.com News.",
-      "url": "https://www.nfl.com/news/colts-to-trade-deforest-buckner-to-49ers-for-fourth-round-pick",
+      "url": "https://www.nfl.com/news/justin-tucker-chiefs-signing-kicker-practice-squad",
       "source": "NFL.com News",
       "source_home": "https://www.nfl.com/news/",
       "published": "Hoy",
-      "impact_score": 50,
+      "impact_score": 46,
+      "category": "💰 Impacto Salarial (Cap / Contrato)",
+      "team": "KC"
+    },
+    {
+      "id": "news-6",
+      "title": "Ian Rapoport shares latest on Josh Downs trade talks",
+      "summary": "Ian Rapoport shares latest on Josh Downs trade talks",
+      "url": "https://www.espn.com/video/clip/_/id/50309196/ian-rapoport-shares-latest-josh-downs-trade-talks",
+      "source": "ESPN NFL",
+      "source_home": "https://www.espn.com/nfl/",
+      "published": "2026-10-28T17:37",
+      "impact_score": 32,
       "category": "🔄 Trade / Movimiento de Roster",
-      "team": "IND"
+      "team": ""
+    },
+    {
+      "id": "news-10",
+      "title": "Jonathan Taylor's wife reacts to Quenton Nelson trade: 'Do I need to start packing our bags?'",
+      "summary": "Ayanna Taylor's TikTok videos have repeatedly addressed trade speculation surrounding her husband, Jonathan.",
+      "url": "https://www.nytimes.com/athletic/7725694/2026/10/28/jonathan-taylor-wife-social-media-trade-rumors/",
+      "source": "The Athletic NFL",
+      "source_home": "https://www.nytimes.com/athletic/nfl/",
+      "published": "Wed, 28 Oct 2026 16:35:23 GMT",
+      "impact_score": 32,
+      "category": "🔄 Trade / Movimiento de Roster",
+      "team": ""
+    },
+    {
+      "id": "news-12",
+      "title": "NFL trade deadline targets: Jonathan Taylor, Brian Thomas Jr. among players who could be dealt",
+      "summary": "Here are 11 players on contenders’ radars ahead of the Nov. 10 deadline.",
+      "url": "https://www.nytimes.com/athletic/7730346/2026/10/28/nfl-trade-deadline-players-to-watch/",
+      "source": "The Athletic NFL",
+      "source_home": "https://www.nytimes.com/athletic/nfl/",
+      "published": "Wed, 28 Oct 2026 06:20:44 GMT",
+      "impact_score": 32,
+      "category": "🔄 Trade / Movimiento de Roster",
+      "team": ""
     }
   ],
   "tips_x": [
@@ -12089,7 +12065,7 @@
       "headline": "Evaluación Médica en Eagles: Saquon Barkley (#26, PHI) bajo observación",
       "body": "🚨 [Parte Médico NFL · Rotoworld] Saquon Barkley (#26, Philadelphia Eagles) es evaluado en la banca por el cuerpo médico tras molestias en el isquiotibial/espalda luego del duelo divisional ante Dallas.",
       "page_link": "https://genesisfinal.github.io/nfl-analytics-engine/#news",
-      "source_link": "https://www.espn.com/nfl/story/_/id/50300226/giants-place-rb-tyrone-tracy-ir-hamstring-injury",
+      "source_link": "https://www.espn.com/nfl/story/_/id/50309816/pass-rusher-jaelan-phillips-4-panthers-ruled-tnf",
       "source_name": "NBC Sports Rotoworld",
       "illustration": "assets/clay/clay_news_barkley_phi26.jpg",
       "clay_prompt": "3D claymation (caricatura de plastilina) full-bleed widescreen 16:9 illustration extending to the edges with NO border or frame: Philadelphia Eagles star player in midnight green jersey with white numerals and black/silver trim with number 26 and metallic midnight green helmet with silver Eagles wings making an explosive play with ONE single brown leather football on the NFL stadium turf. Handcrafted plasticine clay texture, authentic NFL helmets and jersey numbers, natural two-arm anatomy, dramatic stadium floodlights, vibrant turf."
