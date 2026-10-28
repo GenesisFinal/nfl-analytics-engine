@@ -685,7 +685,7 @@ def fetch_espn_schedule_and_records(teams_dict: dict) -> tuple:
     except Exception as e:
         print(f"[WARN] ESPN Default Scoreboard: {e}")
 
-    weeks_to_fetch = sorted(list({max(1, espn_active_wk - 1), espn_active_wk, min(18, espn_active_wk + 1)}))
+    weeks_to_fetch = list(range(max(1, espn_active_wk - 1), 19))
 
     for wk in weeks_to_fetch:
         url = f"https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?week={wk}&seasontype=2"
