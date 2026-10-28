@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-10-27 20:57 ART",
-  "updated_iso": "2026-10-27T20:57:03.608976-03:00",
+  "updated_at": "2026-10-27 17:38 ART",
+  "updated_iso": "2026-10-27T17:38:30.121173-03:00",
   "season": 2026,
   "current_week": 7,
   "available_weeks": [
@@ -7770,33 +7770,6 @@
       }
     },
     {
-      "id": "00-0039031",
-      "name": "Adetomiwa Adebawore",
-      "pos": "DT",
-      "team": "IND",
-      "headshot": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ulffqxuqmcxvrqfir8u8",
-      "games": 5,
-      "primary_label": "Sacks / INTs",
-      "primary_val": "4.0 / 0",
-      "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
-      "percentile": 89,
-      "metrics": {
-        "Sacks": 4.0,
-        "QB Hits": 8,
-        "Tackles For Loss": 3,
-        "Tackles Solo": 7,
-        "Intercepciones": 0,
-        "Pases Defendidos": 1,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 39.6
-      },
-      "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
-        "pff": "https://www.pff.com/nfl/players"
-      }
-    },
-    {
       "id": "00-0038505",
       "name": "Tavius Robinson",
       "pos": "LB",
@@ -7817,6 +7790,33 @@
         "Pases Defendidos": 2,
         "PFR Pressures": 0,
         "PFR Rating Permitido": 118.7
+      },
+      "links": {
+        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pff": "https://www.pff.com/nfl/players"
+      }
+    },
+    {
+      "id": "00-0039031",
+      "name": "Adetomiwa Adebawore",
+      "pos": "DT",
+      "team": "IND",
+      "headshot": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ulffqxuqmcxvrqfir8u8",
+      "games": 5,
+      "primary_label": "Sacks / INTs",
+      "primary_val": "4.0 / 0",
+      "secondary_label": "PFR Pressures",
+      "secondary_val": "0",
+      "percentile": 89,
+      "metrics": {
+        "Sacks": 4.0,
+        "QB Hits": 8,
+        "Tackles For Loss": 3,
+        "Tackles Solo": 7,
+        "Intercepciones": 0,
+        "Pases Defendidos": 1,
+        "PFR Pressures": 0,
+        "PFR Rating Permitido": 39.6
       },
       "links": {
         "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
@@ -7851,33 +7851,6 @@
       }
     },
     {
-      "id": "00-0037615",
-      "name": "Nakobe Dean",
-      "pos": "LB",
-      "team": "LV",
-      "headshot": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/cyowdu41yhyzblsz2aam",
-      "games": 7,
-      "primary_label": "Sacks / INTs",
-      "primary_val": "1.5 / 1",
-      "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
-      "percentile": 88,
-      "metrics": {
-        "Sacks": 1.5,
-        "QB Hits": 3,
-        "Tackles For Loss": 4,
-        "Tackles Solo": 36,
-        "Intercepciones": 1,
-        "Pases Defendidos": 2,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 100.0
-      },
-      "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
-        "pff": "https://www.pff.com/nfl/players"
-      }
-    },
-    {
       "id": "00-0036624",
       "name": "Alim McNeill",
       "pos": "DT",
@@ -7898,6 +7871,33 @@
         "Pases Defendidos": 1,
         "PFR Pressures": 0,
         "PFR Rating Permitido": 0.0
+      },
+      "links": {
+        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pff": "https://www.pff.com/nfl/players"
+      }
+    },
+    {
+      "id": "00-0037615",
+      "name": "Nakobe Dean",
+      "pos": "LB",
+      "team": "LV",
+      "headshot": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/cyowdu41yhyzblsz2aam",
+      "games": 7,
+      "primary_label": "Sacks / INTs",
+      "primary_val": "1.5 / 1",
+      "secondary_label": "PFR Pressures",
+      "secondary_val": "0",
+      "percentile": 88,
+      "metrics": {
+        "Sacks": 1.5,
+        "QB Hits": 3,
+        "Tackles For Loss": 4,
+        "Tackles Solo": 36,
+        "Intercepciones": 1,
+        "Pases Defendidos": 2,
+        "PFR Pressures": 0,
+        "PFR Rating Permitido": 100.0
       },
       "links": {
         "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
@@ -8094,33 +8094,6 @@
       }
     },
     {
-      "id": "00-0031040",
-      "name": "Khalil Mack",
-      "pos": "OLB",
-      "team": "LAC",
-      "headshot": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/t9j95jylmjpevgbkvmqn",
-      "games": 6,
-      "primary_label": "Sacks / INTs",
-      "primary_val": "3.0 / 0",
-      "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
-      "percentile": 86,
-      "metrics": {
-        "Sacks": 3.0,
-        "QB Hits": 6,
-        "Tackles For Loss": 5,
-        "Tackles Solo": 11,
-        "Intercepciones": 0,
-        "Pases Defendidos": 0,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 0.0
-      },
-      "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
-        "pff": "https://www.pff.com/nfl/players"
-      }
-    },
-    {
       "id": "00-0039309",
       "name": "Byron Murphy II",
       "pos": "DT",
@@ -8141,6 +8114,33 @@
         "Pases Defendidos": 0,
         "PFR Pressures": 9,
         "PFR Rating Permitido": 82.5
+      },
+      "links": {
+        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pff": "https://www.pff.com/nfl/players"
+      }
+    },
+    {
+      "id": "00-0031040",
+      "name": "Khalil Mack",
+      "pos": "OLB",
+      "team": "LAC",
+      "headshot": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/t9j95jylmjpevgbkvmqn",
+      "games": 6,
+      "primary_label": "Sacks / INTs",
+      "primary_val": "3.0 / 0",
+      "secondary_label": "PFR Pressures",
+      "secondary_val": "0",
+      "percentile": 86,
+      "metrics": {
+        "Sacks": 3.0,
+        "QB Hits": 6,
+        "Tackles For Loss": 5,
+        "Tackles Solo": 11,
+        "Intercepciones": 0,
+        "Pases Defendidos": 0,
+        "PFR Pressures": 0,
+        "PFR Rating Permitido": 0.0
       },
       "links": {
         "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
@@ -8724,7 +8724,7 @@
       "away_record": "3-3",
       "home_record": "4-3",
       "spread": "GB -3.5",
-      "over_under": 47.5,
+      "over_under": 48.5,
       "venue": "Lambeau Field"
     },
     {
@@ -8743,7 +8743,7 @@
       "away_record": "4-3",
       "home_record": "5-1",
       "spread": "BUF -3.5",
-      "over_under": 54.5,
+      "over_under": 53.5,
       "venue": "Highmark Stadium"
     },
     {
@@ -8857,7 +8857,7 @@
       "away_record": "3-4",
       "home_record": "2-5",
       "spread": "TB -2.5",
-      "over_under": 45.5,
+      "over_under": 46.5,
       "venue": "Raymond James Stadium"
     },
     {
@@ -8895,7 +8895,7 @@
       "away_record": "0-6",
       "home_record": "3-4",
       "spread": "LAR -6.5",
-      "over_under": 45.5,
+      "over_under": 44.5,
       "venue": "SoFi Stadium"
     },
     {
@@ -8977,7 +8977,7 @@
   ],
   "news": [
     {
-      "id": "news-6",
+      "id": "news-1",
       "title": "Giants place RB Tyrone Tracy Jr. on IR with hamstring injury",
       "summary": "The Giants are placing RB Tyrone Tracy Jr. on injured reserve with a hamstring injury, with Devin Singletary expected to play a bigger role on offense.",
       "url": "https://www.espn.com/nfl/story/_/id/50300226/giants-place-rb-tyrone-tracy-ir-hamstring-injury",
@@ -8989,31 +8989,43 @@
       "team": "NYG"
     },
     {
-      "id": "news-12",
-      "title": "Cardinals place WR Jalen Brooks on season-ending IR",
-      "summary": "The Cardinals placed wide receiver Jalen Brooks on season-ending injured reserve, the team announced Tuesday.",
-      "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/cardinals-place-wr-jalen-brooks-on-season-ending-ir",
-      "source": "ProFootballTalk (PFT)",
-      "source_home": "https://www.nbcsports.com/nfl/profootballtalk",
-      "published": "Tue, 27 Oct 2026 17:03:23 -0400",
-      "impact_score": 99,
-      "category": "🚨 Lesión Clave / Parte Médico",
-      "team": "ARI"
-    },
-    {
-      "id": "news-5",
-      "title": "Colts trade DT DeForest Buckner to 49ers in another major move",
-      "summary": "The Colts have traded DeForest Buckner to the Colts for a 2027 fourth-round pick.",
-      "url": "https://www.espn.com/nfl/story/_/id/50301125/colts-trade-de-deforest-buckner-49ers",
+      "id": "news-3",
+      "title": "Bengals put TE Erick All Jr. on IR; believed to be torn ACL, per source",
+      "summary": "Bengals put TE Erick All Jr. on injured reserve Tuesday with an injury that's believed to be a torn ACL, a source told NFL Network's Ian Rapoport.",
+      "url": "https://www.espn.com/nfl/story/_/id/50299803/bengals-te-all-put-ir-likely-due-torn-acl-per-source",
       "source": "ESPN NFL",
       "source_home": "https://www.espn.com/nfl/",
-      "published": "2026-10-27T22:59",
-      "impact_score": 82,
+      "published": "2026-10-27T18:43",
+      "impact_score": 99,
+      "category": "🚨 Lesión Clave / Parte Médico",
+      "team": "CIN"
+    },
+    {
+      "id": "news-7",
+      "title": "Colts place CB Cam Taylor-Britt on IR, sign CB Kenneth Harris from practice squad",
+      "summary": "The Colts signed cornerback Kenneth Harris to the 53-player roster from the practice squad, the team announced.",
+      "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/colts-place-cb-cam-taylor-britt-on-ir-sign-cb-kenneth-harris-from-practice-squad",
+      "source": "ProFootballTalk (PFT)",
+      "source_home": "https://www.nbcsports.com/nfl/profootballtalk",
+      "published": "Tue, 27 Oct 2026 16:18:59 -0400",
+      "impact_score": 80,
       "category": "🔄 Trade / Movimiento de Roster",
       "team": "IND"
     },
     {
-      "id": "news-17",
+      "id": "news-9",
+      "title": "Giants to sign RB Gregory Desrosiers off Chargers practice squad",
+      "summary": "The Giants will be without Tyrone Tracy for at least the next four games because of a hamstring injury and they'll pluck a player from another team to fill the opening on their active roster.",
+      "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/giants-to-sign-rb-gregory-desrosiers-off-chargers-practice-squad",
+      "source": "ProFootballTalk (PFT)",
+      "source_home": "https://www.nbcsports.com/nfl/profootballtalk",
+      "published": "Tue, 27 Oct 2026 15:56:30 -0400",
+      "impact_score": 78,
+      "category": "🚨 Lesión Clave / Parte Médico",
+      "team": "LAC"
+    },
+    {
+      "id": "news-14",
       "title": "[Schefter] Trade: Colts have agreed to send eight-time Pro-Bowl guard Quenton Nelson to the Seattle Seahawks, per me and @rapsheet. Nelson is on an expiring contract and the Colts are opting to get back draft capital now before they could lose him in free agency.",
       "summary": "submitted by /u/oklolzzzzs [link] [comments]",
       "url": "https://www.reddit.com/r/nfl/comments/1xgxgx4/schefter_trade_colts_have_agreed_to_send/",
@@ -9025,115 +9037,55 @@
       "team": "IND"
     },
     {
-      "id": "news-19",
-      "title": "DeForest Buckner",
-      "summary": "Buckner exits the Colts the same day Quenton Nelson does. It’s a coup for a 49ers defense that has lacked some oomph in one-on-one situations on the defensive line. Buckner, who was with the 49ers early in his career before being traded to ",
-      "url": "https://www.nbcsports.com/fantasy/football/player-news",
-      "source": "NBC Sports Rotoworld",
-      "source_home": "https://www.nbcsports.com/fantasy/football/player-news",
-      "published": "Última hora",
-      "impact_score": 75,
-      "category": "🔄 Trade / Movimiento de Roster",
-      "team": "IND"
-    },
-    {
       "id": "news-2",
-      "title": "NFL trade deadline grades: DeForest Buckner, Quenton Nelson dealt by Colts, more",
-      "summary": "Does Buckner make 49ers Super Bowl hopefuls? Will Quenton Nelson upgrade the Seahawks' O-line? We're grading NFL trades ahead of November's deadline.",
-      "url": "https://www.espn.com/nfl/story/_/id/50043542/2026-trade-deadline-grades-latest-best-worst-deals",
+      "title": "Why did Seahawks trade for Quenton Nelson? Are the Colts just getting started?",
+      "summary": "The Seahawks acquired an All-Pro guard two weeks before the deadline. What does this mean for them and the Colts?",
+      "url": "https://www.espn.com/nfl/story/_/id/50299293/nfl-trade-seahawks-quenton-nelson-colts-deadline",
       "source": "ESPN NFL",
       "source_home": "https://www.espn.com/nfl/",
-      "published": "2026-10-27T23:05",
-      "impact_score": 50,
-      "category": "🔄 Trade / Movimiento de Roster",
-      "team": "IND"
-    },
-    {
-      "id": "news-3",
-      "title": "Marcus Spears: DeForest Buckner trade a win-win for 49ers, Colts",
-      "summary": "Marcus Spears: DeForest Buckner trade a win-win for 49ers, Colts",
-      "url": "https://www.espn.com/video/clip/_/id/50301173/deforest-buckner-trade-win-win-49ers-colts",
-      "source": "ESPN NFL",
-      "source_home": "https://www.espn.com/nfl/",
-      "published": "2026-10-27T21:47",
+      "published": "2026-10-27T20:31",
       "impact_score": 50,
       "category": "🔄 Trade / Movimiento de Roster",
       "team": "IND"
     },
     {
       "id": "news-4",
-      "title": "2026 NFL trade deadline updates: DeForest Buckner, Quenton Nelson on the move",
-      "summary": "The NFL trade deadline is Nov. 10, but deals have already started. We're tracking all moves, including the Colts dealing Quenton Nelson and DeForest Buckner.",
-      "url": "https://www.espn.com/nfl/story/_/id/50043471/2026-trade-deadline-updates-latest-news-deals-terms",
+      "title": "NFL trade deadline grades: Colts deal Quenton Nelson to Seahawks, more",
+      "summary": "Will Quenton Nelson upgrade the Seahawks' O-line? Can Marvin Harrison Jr. boost Houston's offense? We're grading NFL trades ahead of November's deadline.",
+      "url": "https://www.espn.com/nfl/story/_/id/50043542/2026-trade-deadline-grades-latest-best-worst-deals",
       "source": "ESPN NFL",
       "source_home": "https://www.espn.com/nfl/",
-      "published": "2026-10-27T22:53",
+      "published": "2026-10-27T18:46",
       "impact_score": 50,
       "category": "🔄 Trade / Movimiento de Roster",
       "team": "IND"
     },
     {
-      "id": "news-7",
-      "title": "Why did Seahawks trade for Quenton Nelson? Are the Colts just getting started?",
-      "summary": "The Seahawks acquired an All-Pro guard two weeks before the deadline. What does this mean for them and the Colts?",
-      "url": "https://www.espn.com/nfl/story/_/id/50299293/nfl-trade-seahawks-quenton-nelson-colts-deadline",
-      "source": "ESPN NFL",
-      "source_home": "https://www.espn.com/nfl/",
-      "published": "2026-10-27T21:29",
+      "id": "news-8",
+      "title": "Seahawks announce Quenton Nelson trade, waive G Christian Haynes",
+      "summary": "Guard Quenton Nelson will need to pass a physical to finalize his move to the Seahawks, but the team has already made room for him on their 53-man roster.",
+      "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/seahawks-announce-quenton-nelson-trade-waive-g-christian-haynes",
+      "source": "ProFootballTalk (PFT)",
+      "source_home": "https://www.nbcsports.com/nfl/profootballtalk",
+      "published": "Tue, 27 Oct 2026 16:08:17 -0400",
       "impact_score": 50,
       "category": "🔄 Trade / Movimiento de Roster",
-      "team": "IND"
+      "team": "SEA"
     },
     {
       "id": "news-10",
-      "title": "Cowboys waive RB Emari Demercado",
-      "summary": "The Cowboys waived running back Emari Demercado on Tuesday, the team announced.",
-      "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/cowboys-waive-rb-emari-demercado",
+      "title": "Colts agree to trade Quenton Nelson to Seahawks",
+      "summary": "The defending champs are making a move to bolster their offensive line.",
+      "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/colts-agree-to-trade-quenton-nelson-to-seahawks",
       "source": "ProFootballTalk (PFT)",
       "source_home": "https://www.nbcsports.com/nfl/profootballtalk",
-      "published": "Tue, 27 Oct 2026 18:05:49 -0400",
+      "published": "Tue, 27 Oct 2026 12:44:16 -0400",
       "impact_score": 50,
       "category": "🔄 Trade / Movimiento de Roster",
-      "team": "DAL"
+      "team": "IND"
     },
     {
       "id": "news-11",
-      "title": "49ers agree to acquire DeForest Buckner from Colts",
-      "summary": "Buckner is headed back to the team that drafted him at No. 7 overall in 2016.",
-      "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/49ers-agree-to-acquire-deforest-buckner-from-colts",
-      "source": "ProFootballTalk (PFT)",
-      "source_home": "https://www.nbcsports.com/nfl/profootballtalk",
-      "published": "Tue, 27 Oct 2026 16:52:51 -0400",
-      "impact_score": 50,
-      "category": "🔄 Trade / Movimiento de Roster",
-      "team": "IND"
-    },
-    {
-      "id": "news-13",
-      "title": "DeForest Buckner trade grades: 49ers bolster pass rush; did Colts get enough?",
-      "summary": "Buckner, a two-time All-Pro and four-time Pro Bowler, had four sacks in seven games this season for the Colts.",
-      "url": "https://www.nytimes.com/athletic/7730577/2026/10/27/deforest-buckner-trade-grades-49ers-colts/",
-      "source": "The Athletic NFL",
-      "source_home": "https://www.nytimes.com/athletic/nfl/",
-      "published": "Tue, 27 Oct 2026 22:04:50 GMT",
-      "impact_score": 50,
-      "category": "🔄 Trade / Movimiento de Roster",
-      "team": "IND"
-    },
-    {
-      "id": "news-14",
-      "title": "Colts trade DT DeForest Buckner to 49ers for fourth-round pick",
-      "summary": "Buckner leaves Indianapolis as one of the team's most respected players because of his leadership, toughness and production.",
-      "url": "https://www.nytimes.com/athletic/7729370/2026/10/27/colts-deforest-buckner-trade-49ers/",
-      "source": "The Athletic NFL",
-      "source_home": "https://www.nytimes.com/athletic/nfl/",
-      "published": "Tue, 27 Oct 2026 20:53:52 GMT",
-      "impact_score": 50,
-      "category": "🔄 Trade / Movimiento de Roster",
-      "team": "IND"
-    },
-    {
-      "id": "news-15",
       "title": "Quenton Nelson trade grades: Seahawks land major upgrade; Colts begin fire sale",
       "summary": "Nelson is a six-time All-Pro and has been selected to the Pro Bowl in each of his first eight seasons in the NFL.",
       "url": "https://www.nytimes.com/athletic/7729801/2026/10/27/quenton-nelson-trade-grades-colts-seahawks/",
@@ -9145,7 +9097,7 @@
       "team": "IND"
     },
     {
-      "id": "news-16",
+      "id": "news-12",
       "title": "Colts trade G Quenton Nelson to Seahawks for 2027, 2028 draft picks",
       "summary": "Nelson, the No. 6 pick in 2018, is an eight-time Pro Bowler and six-time All-Pro.",
       "url": "https://www.nytimes.com/athletic/7729422/2026/10/27/colts-quenton-nelson-trade-seahawks/",
@@ -9157,7 +9109,7 @@
       "team": "IND"
     },
     {
-      "id": "news-18",
+      "id": "news-15",
       "title": "Per Raanan, The Colts’ asking price for Jonathan Taylor is reportedly a second-round pick and possibly more. However, Schefter reports ownership does not want to trade him and would need to be overwhelmed by an offer.",
       "summary": "Ranaan Source Link || Schefter Source Link submitted by /u/Saca312 [link] [comments]",
       "url": "https://www.reddit.com/r/nfl/comments/1xh2ze8/per_raanan_the_colts_asking_price_for_jonathan/",
@@ -9169,7 +9121,31 @@
       "team": "IND"
     },
     {
-      "id": "news-21",
+      "id": "news-16",
+      "title": "[Yates] A sneaky winner of the Quenton Nelson trade to Seattle? The New York Jets. The Nelson trade could be the first of multiple trades the Colts make for their quality veteran players as they look towards the future. And as this progresses, the Jets own the Colts' 2027 first round pick.",
+      "summary": "submitted by /u/PlayaSlayaX [link] [comments]",
+      "url": "https://www.reddit.com/r/nfl/comments/1xgyuzt/yates_a_sneaky_winner_of_the_quenton_nelson_trade/",
+      "source": "Reddit (r/NFL)",
+      "source_home": "https://www.reddit.com/r/nfl/",
+      "published": "2026-10-27T17:26",
+      "impact_score": 50,
+      "category": "🔄 Trade / Movimiento de Roster",
+      "team": "IND"
+    },
+    {
+      "id": "news-19",
+      "title": "NFL trade grades: How do 'Hawks, Colts fare in Quenton Nelson deal?",
+      "summary": "Cobertura oficial y reportes de vestuario desde NFL.com News.",
+      "url": "https://www.nfl.com/news/nfl-trade-grades-evaluating-every-deal-made-ahead-of-the-2026-deadline",
+      "source": "NFL.com News",
+      "source_home": "https://www.nfl.com/news/",
+      "published": "Hoy",
+      "impact_score": 50,
+      "category": "🔄 Trade / Movimiento de Roster",
+      "team": "IND"
+    },
+    {
+      "id": "news-20",
       "title": "Trade! Colts send eight-time Pro Bowl guard Nelson to Seahawks for picks Colts trade Pro Bowl OG Nelson to Seahawks for picks",
       "summary": "Cobertura oficial y reportes de vestuario desde NFL.com News.",
       "url": "https://www.nfl.com/news/nfl-network-colts-trading-eight-time-pro-bowl-guard-quenton-nelson-to-seahawks",
@@ -9182,9 +9158,9 @@
     },
     {
       "id": "news-22",
-      "title": "Colts make another deal, trade DL Buckner to 49ers for fourth-round pick NFLN: Colts to trade Buckner to 49ers for fourth-round pick",
+      "title": "Trade! Colts send eight-time Pro Bowl guard Nelson to Seahawks for picks",
       "summary": "Cobertura oficial y reportes de vestuario desde NFL.com News.",
-      "url": "https://www.nfl.com/news/colts-to-trade-deforest-buckner-to-49ers-for-fourth-round-pick",
+      "url": "https://www.nfl.com/news/nfl-network-colts-trading-eight-time-pro-bowl-guard-quenton-nelson-to-seahawks",
       "source": "NFL.com News",
       "source_home": "https://www.nfl.com/news/",
       "published": "Hoy",
@@ -9193,55 +9169,55 @@
       "team": "IND"
     },
     {
-      "id": "news-23",
-      "title": "It's time for Patriots to be aggressive with NFL trade deadline looming It's time for Patriots to be aggressive with NFL trade deadline looming",
-      "summary": "Cobertura oficial y reportes de vestuario desde NFL.com News.",
-      "url": "https://www.nfl.com/news/it-s-time-for-patriots-to-be-aggressive-with-nfl-trade-deadline-looming",
-      "source": "NFL.com News",
-      "source_home": "https://www.nfl.com/news/",
-      "published": "Hoy",
-      "impact_score": 50,
-      "category": "🔄 Trade / Movimiento de Roster",
-      "team": "NE"
-    },
-    {
-      "id": "news-1",
-      "title": "Matt LaFleur isn't ruling out imminent practice return for Micah Parsons",
-      "summary": "Green Bay Packers edge rusher Micah Parsons might finally be back on the practice field next week, more than 10 months after he underwent surgery on his left knee.",
-      "url": "https://www.espn.com/nfl/story/_/id/50302347/matt-lafleur-hints-possible-practice-return-micah-parsons",
-      "source": "ESPN NFL",
-      "source_home": "https://www.espn.com/nfl/",
-      "published": "2026-10-27T23:36",
+      "id": "news-5",
+      "title": "Packers list Matthew Golden as out of practice Tuesday",
+      "summary": "The Packers turned in their second estimated injury report of the week on Tuesday and it showed no change in status for wide receiver Matthew Golden.",
+      "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/packers-list-matthew-golden-as-out-of-practice-tuesday",
+      "source": "ProFootballTalk (PFT)",
+      "source_home": "https://www.nbcsports.com/nfl/profootballtalk",
+      "published": "Tue, 27 Oct 2026 16:24:46 -0400",
       "impact_score": 48,
       "category": "🚨 Lesión Clave / Parte Médico",
       "team": "GB"
     },
     {
-      "id": "news-9",
-      "title": "Cardinals sign WR Zay Jones",
-      "summary": "Zay Jones was one of four wide receivers who tried out for the Cardinals on Tuesday.",
-      "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/cardinals-sign-wr-zay-jones",
+      "id": "news-6",
+      "title": "Raiders activate WR Dont'e Thornton off of IR",
+      "summary": "The Raiders have one of their offensive contributors back.",
+      "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/raiders-activate-wr-donte-thornton-off-of-ir",
       "source": "ProFootballTalk (PFT)",
       "source_home": "https://www.nbcsports.com/nfl/profootballtalk",
-      "published": "Tue, 27 Oct 2026 19:13:23 -0400",
+      "published": "Tue, 27 Oct 2026 16:23:42 -0400",
       "impact_score": 48,
       "category": "🚨 Lesión Clave / Parte Médico",
-      "team": "ARI"
+      "team": "LV"
     },
     {
-      "id": "news-8",
-      "title": "Chiefs-Seahawks attracts 26.3 million viewers on Sunday night",
-      "summary": "Even though the game itself was far from compelling, the matchup of a pair of former AFC West rivals delivered big numbers on Sunday night.",
-      "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/chiefs-seahawks-attracts-26-3-million-viewers-on-sunday-night",
-      "source": "ProFootballTalk (PFT)",
-      "source_home": "https://www.nbcsports.com/nfl/profootballtalk",
-      "published": "Tue, 27 Oct 2026 19:44:01 -0400",
-      "impact_score": 46,
-      "category": "💰 Impacto Salarial (Cap / Contrato)",
-      "team": "KC"
+      "id": "news-13",
+      "title": "A familiar mystery in Baltimore: The confusion around Lamar Jackson’s health",
+      "summary": "The Ravens characterized Lamar Jackson as day-to-day after injuring his ankle on Oct. 4. He hasn’t played in three weeks.",
+      "url": "https://www.nytimes.com/athletic/7728142/2026/10/27/lamar-jackson-injury-update-ravens/",
+      "source": "The Athletic NFL",
+      "source_home": "https://www.nytimes.com/athletic/nfl/",
+      "published": "Tue, 27 Oct 2026 10:00:16 GMT",
+      "impact_score": 48,
+      "category": "🚨 Lesión Clave / Parte Médico",
+      "team": "BAL"
     },
     {
-      "id": "news-20",
+      "id": "news-21",
+      "title": "Roundup: Ravens' 1st-rounder has MCL sprain; Packers WR DNP again News roundup: Latest signings, cuts, injury updates",
+      "summary": "Cobertura oficial y reportes de vestuario desde NFL.com News.",
+      "url": "https://www.nfl.com/news/nfl-news-roundup-latest-league-updates-from-tuesday-oct-27",
+      "source": "NFL.com News",
+      "source_home": "https://www.nfl.com/news/",
+      "published": "Hoy",
+      "impact_score": 48,
+      "category": "🚨 Lesión Clave / Parte Médico",
+      "team": "BAL"
+    },
+    {
+      "id": "news-17",
       "title": "Cam Taylor-Britt",
       "summary": "He’ll miss at least the next four games. Taylor-Britt has played just 91 snaps for the Colts this year after coming over as a Lou Anarumo reclamation project. He has one sack, 13 tackles, and two passes defensed so far this year. - Rivers M",
       "url": "https://www.nbcsports.com/fantasy/football/player-news",
@@ -9251,6 +9227,18 @@
       "impact_score": 43,
       "category": "📊 Impacto Táctico",
       "team": "IND"
+    },
+    {
+      "id": "news-18",
+      "title": "Gregory Desrosiers",
+      "summary": "The first-year UDFA rushed for 166 yards on 23 carries in the preseason for the Chargers, adding one touchdown and one eight-yard reception. We’d be surprised if he got real run in this backfield but at least he has the bye week to acclimat",
+      "url": "https://www.nbcsports.com/fantasy/football/player-news",
+      "source": "NBC Sports Rotoworld",
+      "source_home": "https://www.nbcsports.com/fantasy/football/player-news",
+      "published": "Última hora",
+      "impact_score": 43,
+      "category": "📊 Impacto Táctico",
+      "team": "LAC"
     }
   ],
   "tips_x": [
