@@ -404,69 +404,63 @@ def build_concordant_clay_prompt(tip: dict) -> str:
     )
 
 
-# Mapa de activos 3D Claymation generados con Google Gemini Nano Banana (16:9, plastilina artesanal) para las 32 franquicias NFL
-TEAM_NANOBANANA_CLAY_ASSETS = {
-    "ARI": ["assets/clay/clay_ari_jax.jpg"],
-    "ATL": ["assets/clay/clay_atl_sf_ground.jpg", "assets/clay/clay_sf_atl.jpg"],
-    "BAL": ["assets/clay/clay_bal_lamar8.jpg"],
-    "BUF": ["assets/clay/clay_kc_buf.jpg"],
-    "CAR": ["assets/clay/clay_car_young9.jpg", "assets/clay/clay_news_moton_car72.jpg"],
-    "CHI": ["assets/clay/clay_ne_chi_trenches.jpg", "assets/clay/clay_ne_chi.jpg"],
-    "CIN": ["assets/clay/clay_cin_cle.jpg"],
-    "CLE": ["assets/clay/clay_cin_cle.jpg"],
-    "DAL": ["assets/clay/clay_dal_phi.jpg", "assets/clay/clay_dal_phi_mnf2.jpg", "assets/clay/clay_news_javonte_dal33.jpg"],
-    "DEN": ["assets/clay/clay_den_lac.jpg"],
-    "DET": ["assets/clay/clay_det_goff.jpg"],
-    "GB":  ["assets/clay/clay_gb_hou.jpg"],
-    "HOU": ["assets/clay/clay_gb_hou.jpg"],
-    "IND": ["assets/clay/clay_ind_min.jpg"],
-    "JAX": ["assets/clay/clay_ari_jax.jpg"],
-    "KC":  ["assets/clay/clay_kc_buf.jpg", "assets/clay/clay_news_gwilson_nyj5.jpg"],
-    "LA":  ["assets/clay/clay_la_lv.jpg"],
-    "LAC": ["assets/clay/clay_den_lac.jpg"],
-    "LV":  ["assets/clay/clay_la_lv.jpg"],
-    "MIA": ["assets/clay/clay_mia_tb.jpg"],
-    "MIN": ["assets/clay/clay_ind_min.jpg"],
-    "NE":  ["assets/clay/clay_ne_chi.jpg", "assets/clay/clay_ne_chi_trenches.jpg"],
-    "NO":  ["assets/clay/clay_pit_no.jpg"],
-    "NYG": ["assets/clay/clay_nyg_ten.jpg"],
-    "NYJ": ["assets/clay/clay_news_gwilson_nyj5.jpg"],
-    "PHI": ["assets/clay/clay_news_barkley_phi26.jpg", "assets/clay/clay_dal_phi.jpg", "assets/clay/clay_dal_phi_mnf2.jpg"],
-    "PIT": ["assets/clay/clay_pit_no.jpg"],
-    "SEA": ["assets/clay/clay_sea_jsn.jpg"],
-    "SF":  ["assets/clay/clay_sf_atl.jpg", "assets/clay/clay_atl_sf_ground.jpg"],
-    "TB":  ["assets/clay/clay_mia_tb.jpg"],
-    "TEN": ["assets/clay/clay_nyg_ten.jpg"],
-    "WAS": ["assets/clay/clay_was_daniels5.jpg"],
-}
-
-ALL_NANOBANANA_CLAY_ASSETS = [
-    "assets/clay/clay_car_young9.jpg",
-    "assets/clay/clay_kc_buf.jpg",
-    "assets/clay/clay_bal_lamar8.jpg",
-    "assets/clay/clay_gb_hou.jpg",
-    "assets/clay/clay_cin_cle.jpg",
-    "assets/clay/clay_was_daniels5.jpg",
-    "assets/clay/clay_mia_tb.jpg",
-    "assets/clay/clay_den_lac.jpg",
-    "assets/clay/clay_ari_jax.jpg",
-    "assets/clay/clay_nyg_ten.jpg",
-    "assets/clay/clay_ne_chi.jpg",
-    "assets/clay/clay_ne_chi_trenches.jpg",
-    "assets/clay/clay_sf_atl.jpg",
-    "assets/clay/clay_atl_sf_ground.jpg",
-    "assets/clay/clay_ind_min.jpg",
-    "assets/clay/clay_pit_no.jpg",
-    "assets/clay/clay_la_lv.jpg",
-    "assets/clay/clay_dal_phi.jpg",
-    "assets/clay/clay_dal_phi_mnf2.jpg",
-    "assets/clay/clay_det_goff.jpg",
-    "assets/clay/clay_sea_jsn.jpg",
-    "assets/clay/clay_news_barkley_phi26.jpg",
-    "assets/clay/clay_news_javonte_dal33.jpg",
-    "assets/clay/clay_news_moton_car72.jpg",
-    "assets/clay/clay_news_gwilson_nyj5.jpg",
+# Catálogo completo de 48 ilustraciones 3D Claymation 16:9 generadas con Google Gemini Nano Banana, indexadas por sus equipos exactos
+NANOBANANA_CLAY_CATALOG = [
+    # Semana 8 — 14 duelos exactos
+    {"path": "assets/clay/clay_w8_ten_cin.jpg", "teams": ["TEN", "CIN"]},
+    {"path": "assets/clay/clay_w8_car_gb.jpg", "teams": ["CAR", "GB"]},
+    {"path": "assets/clay/clay_w8_bal_buf.jpg", "teams": ["BAL", "BUF"]},
+    {"path": "assets/clay/clay_w8_ari_dal.jpg", "teams": ["ARI", "DAL"]},
+    {"path": "assets/clay/clay_w8_min_det.jpg", "teams": ["MIN", "DET"]},
+    {"path": "assets/clay/clay_w8_lv_nyj.jpg", "teams": ["LV", "NYJ"]},
+    {"path": "assets/clay/clay_w8_cle_pit.jpg", "teams": ["CLE", "PIT"]},
+    {"path": "assets/clay/clay_w8_atl_tb.jpg", "teams": ["ATL", "TB"]},
+    {"path": "assets/clay/clay_w8_ind_jax.jpg", "teams": ["IND", "JAX"]},
+    {"path": "assets/clay/clay_w8_lac_la.jpg", "teams": ["LAC", "LA"]},
+    {"path": "assets/clay/clay_w8_kc_den.jpg", "teams": ["KC", "DEN"]},
+    {"path": "assets/clay/clay_w8_ne_mia.jpg", "teams": ["NE", "MIA"]},
+    {"path": "assets/clay/clay_w8_phi_was.jpg", "teams": ["PHI", "WAS"]},
+    {"path": "assets/clay/clay_w8_chi_sea.jpg", "teams": ["CHI", "SEA"]},
+    # Semana 7 — 14 duelos exactos
+    {"path": "assets/clay/clay_ne_chi.jpg", "teams": ["NE", "CHI"]},
+    {"path": "assets/clay/clay_ne_chi_trenches.jpg", "teams": ["NE", "CHI"]},
+    {"path": "assets/clay/clay_sf_atl.jpg", "teams": ["SF", "ATL"]},
+    {"path": "assets/clay/clay_atl_sf_ground.jpg", "teams": ["SF", "ATL"]},
+    {"path": "assets/clay/clay_ind_min.jpg", "teams": ["IND", "MIN"]},
+    {"path": "assets/clay/clay_pit_no.jpg", "teams": ["NO", "PIT"]},
+    {"path": "assets/clay/clay_la_lv.jpg", "teams": ["LV", "LA"]},
+    {"path": "assets/clay/clay_dal_phi.jpg", "teams": ["DAL", "PHI"]},
+    {"path": "assets/clay/clay_dal_phi_mnf2.jpg", "teams": ["DAL", "PHI"]},
+    {"path": "assets/clay/clay_news_javonte_dal33.jpg", "teams": ["DAL", "PHI"]},
+    {"path": "assets/clay/clay_w7_cle_ten.jpg", "teams": ["CLE", "TEN"]},
+    {"path": "assets/clay/clay_w7_mia_nyj.jpg", "teams": ["MIA", "NYJ"]},
+    {"path": "assets/clay/clay_w7_tb_car.jpg", "teams": ["TB", "CAR"]},
+    {"path": "assets/clay/clay_w7_cin_bal.jpg", "teams": ["CIN", "BAL"]},
+    {"path": "assets/clay/clay_w7_nyg_hou.jpg", "teams": ["NYG", "HOU"]},
+    {"path": "assets/clay/clay_w7_den_ari.jpg", "teams": ["DEN", "ARI"]},
+    {"path": "assets/clay/clay_w7_gb_det.jpg", "teams": ["GB", "DET"]},
+    {"path": "assets/clay/clay_w7_kc_sea.jpg", "teams": ["KC", "SEA"]},
+    # Otros duelos de 2 equipos (solo cuando se enfrentan ambos)
+    {"path": "assets/clay/clay_kc_buf.jpg", "teams": ["KC", "BUF"]},
+    {"path": "assets/clay/clay_gb_hou.jpg", "teams": ["GB", "HOU"]},
+    {"path": "assets/clay/clay_cin_cle.jpg", "teams": ["CIN", "CLE"]},
+    {"path": "assets/clay/clay_mia_tb.jpg", "teams": ["MIA", "TB"]},
+    {"path": "assets/clay/clay_den_lac.jpg", "teams": ["DEN", "LAC"]},
+    {"path": "assets/clay/clay_ari_jax.jpg", "teams": ["ARI", "JAX"]},
+    {"path": "assets/clay/clay_nyg_ten.jpg", "teams": ["NYG", "TEN"]},
+    # Escenas individuales de 1 solo equipo (sin rival externo)
+    {"path": "assets/clay/clay_car_young9.jpg", "teams": ["CAR"]},
+    {"path": "assets/clay/clay_car_young9_run.jpg", "teams": ["CAR"]},
+    {"path": "assets/clay/clay_news_moton_car72.jpg", "teams": ["CAR"]},
+    {"path": "assets/clay/clay_bal_lamar8.jpg", "teams": ["BAL"]},
+    {"path": "assets/clay/clay_was_daniels5.jpg", "teams": ["WAS"]},
+    {"path": "assets/clay/clay_det_goff.jpg", "teams": ["DET"]},
+    {"path": "assets/clay/clay_sea_jsn.jpg", "teams": ["SEA"]},
+    {"path": "assets/clay/clay_news_barkley_phi26.jpg", "teams": ["PHI"]},
+    {"path": "assets/clay/clay_news_gwilson_nyj5.jpg", "teams": ["NYJ"]},
 ]
+
+ALL_NANOBANANA_CLAY_ASSETS = [item["path"] for item in NANOBANANA_CLAY_CATALOG]
 
 
 def _get_gemini_api_key() -> str:
@@ -509,8 +503,8 @@ def _get_gemini_api_key() -> str:
 def select_concordant_nanobanana_asset(tip: dict, registry: dict) -> str:
     """
     Selecciona una ilustración 3D claymation 16:9 auténtica generada con Google Gemini Nano Banana
-    de nuestro catálogo local `assets/clay/`, garantizando concordancia con el equipo/jugadores
-    del tweet y priorizando imágenes no utilizadas en el lote actual.
+    de nuestro catálogo local `assets/clay/`, garantizando 100% concordancia y prohibiendo que
+    aparezca un equipo ajeno al duelo analizado.
     """
     matchup = str(tip.get("matchup", "")).strip().upper()
     headline = str(tip.get("headline", tip.get("title", ""))).lower()
@@ -524,28 +518,44 @@ def select_concordant_nanobanana_asset(tip: dict, registry: dict) -> str:
     }
 
     candidate_teams = []
-    m = re.match(r"^([A-Z]{2,3})\s*@\s*([A-Z]{2,3})$", matchup)
+    m = re.match(r"^([A-Z]{2,3})\s*(?:@|VS\.?|-)\s*([A-Z]{2,3})$", matchup)
     if m:
         candidate_teams.extend([m.group(1), m.group(2)])
-    elif matchup in TEAM_NANOBANANA_CLAY_ASSETS:
+    elif matchup in TEAM_VISUAL_SPECS:
         candidate_teams.append(matchup)
 
-    for abbr, spec in TEAM_VISUAL_SPECS.items():
-        if abbr not in candidate_teams:
-            if spec["name"].lower() in full_txt or f"({abbr.lower()})" in full_txt:
-                candidate_teams.append(abbr)
+    if len(candidate_teams) < 2:
+        for abbr, spec in TEAM_VISUAL_SPECS.items():
+            if abbr not in candidate_teams:
+                if spec["name"].lower() in full_txt or f"({abbr.lower()})" in full_txt:
+                    candidate_teams.append(abbr)
 
     team_assets = []
-    for tm in candidate_teams:
-        for p in TEAM_NANOBANANA_CLAY_ASSETS.get(tm, []):
-            if p not in team_assets:
-                team_assets.append(p)
-
-    # Si es Carolina Panthers y menciona #9 / Bryce Young / Clowney, priorizar clay_car_young9.jpg
-    if "CAR" in candidate_teams and ("#9" in full_txt or "young" in full_txt or "clowney" in full_txt):
-        if "assets/clay/clay_car_young9.jpg" in team_assets:
-            team_assets.remove("assets/clay/clay_car_young9.jpg")
-        team_assets.insert(0, "assets/clay/clay_car_young9.jpg")
+    if len(candidate_teams) >= 2:
+        t_a, t_b = candidate_teams[0], candidate_teams[1]
+        # 1) Coincidencia exacta de par (t_a vs t_b): ningún equipo ajeno
+        for item in NANOBANANA_CLAY_CATALOG:
+            tms = item["teams"]
+            if len(tms) == 2 and t_a in tms and t_b in tms:
+                team_assets.append(item["path"])
+        # 2) Si no hubiera par exacto, usar SOLO imágenes individuales (1 equipo) de t_a o t_b
+        if not team_assets:
+            for item in NANOBANANA_CLAY_CATALOG:
+                tms = item["teams"]
+                if len(tms) == 1 and tms[0] in (t_a, t_b):
+                    team_assets.append(item["path"])
+    elif len(candidate_teams) == 1:
+        t_only = candidate_teams[0]
+        # 1) Primero imágenes individuales (1 solo equipo)
+        for item in NANOBANANA_CLAY_CATALOG:
+            tms = item["teams"]
+            if len(tms) == 1 and tms[0] == t_only:
+                team_assets.append(item["path"])
+        # 2) Luego partidos de Semana 8 / Semana 7 donde participe t_only
+        for item in NANOBANANA_CLAY_CATALOG:
+            tms = item["teams"]
+            if t_only in tms and item["path"] not in team_assets:
+                team_assets.append(item["path"])
 
     for asset in team_assets:
         if asset not in used_paths:
