@@ -664,6 +664,389 @@ def build_player_stats() -> list:
     return players_out
 
 
+def clean_player_key_name(name: str) -> str:
+    """Normaliza el nombre de un jugador para cruzar entre ESPN API y nflverse."""
+    if not name:
+        return ""
+    s = name.lower().strip()
+    s = re.sub(r"\b(jr\.?|sr\.?|ii|iii|iv|v)\b", "", s)
+    s = re.sub(r"[^a-z0-9]+", "", s)
+    return s
+
+
+def build_team_rosters_and_injuries(teams_dict: dict) -> None:
+    """
+    Cruza las estadísticas individuales 2026 de los 1,691 jugadores (nflverse) con el
+    Parte Médico Oficial en vivo de ESPN (https://site.api.espn.com/apis/site/v2/sports/football/nfl/injuries)
+    para calcular el impacto real en puntos (Delta de Reemplazo + Factor de Novedad anti-doble conteo)
+    tanto de las bajas actuales (Out, IR, Doubtful, Questionable, Suspension) como de los titulares clave
+    (QB1, WR1, WR2, RB1, TE1, EDGE1, CB1) para simulación interactiva.
+    """
+    print("[2.5/5] Calculando impacto de Bajas / Parte Médico (ESPN Injuries API + Cuota EPA/WAR 2026 sin doble conteo)...")
+    try:
+        df_p = pd.read_csv("https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_reg_2026.csv")
+        df_p["recent_team"] = df_p["recent_team"].apply(norm_team)
+    except Exception as e:
+        print(f"[WARN] No se pudo cargar stats_player_reg_2026 para bajas: {e}")
+        df_p = pd.DataFrame()
+
+    # Mapa de lesiones en vivo desde ESPN NFL Injuries API
+    espn_inj_by_team = {t: [] for t in teams_dict.keys()}
+    try:
+        resp = requests.get("https://site.api.espn.com/apis/site/v2/sports/football/nfl/injuries", headers=HEADERS, timeout=12)
+        if resp.status_code == 200:
+            inj_data = resp.json()
+            for t_block in inj_data.get("injuries", []):
+                for item in t_block.get("injuries", []):
+                    st = str(item.get("status", "Active")).strip()
+                    tp_abbr = str(item.get("type", {}).get("abbreviation", "A")).strip()
+                    ath = item.get("athlete", {})
+                    pname = str(ath.get("displayName", "")).strip()
+                    if not pname:
+                        continue
+                    pos = str(ath.get("position", {}).get("abbreviation", "UNK")).strip().upper()
+                    t_abbr = norm_team(ath.get("team", {}).get("abbreviation", ""))
+                    if t_abbr not in espn_inj_by_team:
+                        continue
+                    det = item.get("details", {}) or {}
+                    inj_type = str(det.get("type", "") or "").strip()
+                    ret_date = str(det.get("returnDate", "") or "").strip()
+                    date_rep = str(item.get("date", "") or "")[:10]
+                    short_c = str(item.get("shortComment", "") or "").strip()
+                    headshot = str(ath.get("headshot", {}).get("href", "") or "").strip()
+                    espn_inj_by_team[t_abbr].append({
+                        "name": pname,
+                        "key": clean_player_key_name(pname),
+                        "pos": pos,
+                        "status": st,
+                        "status_code": tp_abbr,
+                        "injury_type": inj_type or ("Suspensión" if "Susp" in st else "Reporte Médico"),
+                        "return_date": ret_date,
+                        "report_date": date_rep,
+                        "comment": short_c,
+                        "headshot": headshot,
+                    })
+    except Exception as e:
+        print(f"[WARN] ESPN Injuries API: {e}")
+
+    STATUS_WEIGHTS = {
+        "Out": 1.00,
+        "O": 1.00,
+        "Injured Reserve": 1.00,
+        "IR": 1.00,
+        "Suspension": 1.00,
+        "SUSP": 1.00,
+        "Doubtful": 0.75,
+        "D": 0.75,
+        "Questionable": 0.35,
+        "Q": 0.35,
+        "Active": 0.00,
+        "A": 0.00,
+    }
+
+    now_dt = datetime.date.today()
+
+    for t_abbr, t_info in teams_dict.items():
+        team_games = max(1, int(t_info.get("games", 7)))
+        t_df = df_p[df_p["recent_team"] == t_abbr].copy() if not df_p.empty else pd.DataFrame()
+
+        # Totales del equipo para calcular cuotas de participación reales
+        total_db = max(1.0, float((t_df["attempts"].fillna(0) + t_df["sacks_suffered"].fillna(0)).sum())) if not t_df.empty else 220.0
+        total_carries = max(1.0, float(t_df["carries"].fillna(0).sum())) if not t_df.empty else 160.0
+        total_targets = max(1.0, float(t_df["targets"].fillna(0).sum())) if not t_df.empty else 210.0
+
+        if not t_df.empty:
+            t_df["def_impact_raw"] = (
+                t_df["def_sacks"].fillna(0) * 3.0
+                + t_df["def_qb_hits"].fillna(0) * 1.2
+                + t_df["def_tackles_for_loss"].fillna(0) * 1.5
+                + t_df["def_interceptions"].fillna(0) * 3.5
+                + t_df["def_pass_defended"].fillna(0) * 1.2
+                + t_df["def_tackles_solo"].fillna(0) * 0.25
+            )
+            total_def_impact = max(10.0, float(t_df["def_impact_raw"].sum()))
+        else:
+            total_def_impact = 100.0
+
+        # Indexar jugadores de nflverse del equipo por clave normalizada
+        player_stats_map = {}
+        if not t_df.empty:
+            for _, pr in t_df.iterrows():
+                p_disp = str(pr.get("player_display_name", pr.get("player_name", ""))).strip()
+                k = clean_player_key_name(p_disp)
+                if k:
+                    player_stats_map[k] = pr
+
+        # Identificar titulares clave del equipo en nflverse (QB1, RB1, WR1, WR2, TE1, DEF1, DEF2)
+        starter_roles = {}
+        if not t_df.empty:
+            qbs_t = t_df[t_df["position"] == "QB"].copy()
+            if not qbs_t.empty:
+                qbs_t["dbs"] = qbs_t["attempts"].fillna(0) + qbs_t["sacks_suffered"].fillna(0)
+                qbs_t = qbs_t.sort_values("dbs", ascending=False)
+                for idx, (_, qr) in enumerate(qbs_t.iterrows()):
+                    starter_roles[clean_player_key_name(str(qr.get("player_display_name", "")))] = f"QB{idx+1}"
+
+            rbs_t = t_df[t_df["position"] == "RB"].sort_values("carries", ascending=False)
+            for idx, (_, rr) in enumerate(rbs_t.head(2).iterrows()):
+                starter_roles[clean_player_key_name(str(rr.get("player_display_name", "")))] = f"RB{idx+1}"
+
+            wrs_t = t_df[t_df["position"] == "WR"].sort_values("targets", ascending=False)
+            for idx, (_, wr) in enumerate(wrs_t.head(3).iterrows()):
+                starter_roles[clean_player_key_name(str(wr.get("player_display_name", "")))] = f"WR{idx+1}"
+
+            tes_t = t_df[t_df["position"] == "TE"].sort_values("targets", ascending=False)
+            for idx, (_, tr) in enumerate(tes_t.head(1).iterrows()):
+                starter_roles[clean_player_key_name(str(tr.get("player_display_name", "")))] = f"TE{idx+1}"
+
+            defs_t = t_df[t_df["position_group"].isin(["DL", "LB", "DB"])].sort_values("def_impact_raw", ascending=False)
+            for idx, (_, dr) in enumerate(defs_t.head(3).iterrows()):
+                starter_roles[clean_player_key_name(str(dr.get("player_display_name", "")))] = f"DEF#{idx+1}"
+
+        def evaluate_player_impact(pname: str, pos: str, pr_row, status_str: str, report_date_str: str) -> dict:
+            k = clean_player_key_name(pname)
+            role = starter_roles.get(k, pos)
+            g_played = int(safe_float(pr_row.get("games"), 0)) if pr_row is not None else 0
+
+            # Factor de Novedad (evita contar doble una lesión ocurrida en Semana 1-2 que ya está en el promedio del equipo)
+            if g_played > 0:
+                novelty = min(1.0, max(0.20, round(g_played / float(team_games), 2)))
+            else:
+                # Linieros ofensivos (OT/G/C) o defensivos sin estadísticas de pelota en nflverse
+                days_old = 4
+                if report_date_str:
+                    try:
+                        rep_dt = datetime.date.fromisoformat(report_date_str[:10])
+                        days_old = max(0, (now_dt - rep_dt).days)
+                    except Exception:
+                        days_old = 4
+                if status_str in ("Injured Reserve", "IR") and days_old > 18:
+                    novelty = 0.25
+                else:
+                    novelty = 0.85
+
+            raw_pts = 0.0
+            side = "OFF"
+            share_label = f"{pos} · {g_played}/{team_games} PJ"
+            phases = {"air": 0.5, "ground": 0.25, "sit": 0.25, "st": 0.0}
+
+            if pos == "QB":
+                side = "OFF"
+                if pr_row is not None:
+                    dbs = float(safe_float(pr_row.get("attempts")) + safe_float(pr_row.get("sacks_suffered")))
+                    db_share = min(1.0, dbs / total_db)
+                    epa_tot = float(safe_float(pr_row.get("passing_epa")) + 0.5 * safe_float(pr_row.get("rushing_epa")))
+                    epa_db = epa_tot / max(1.0, dbs)
+                    if role == "QB1" or db_share >= 0.30:
+                        # Delta entre el QB1 titular y nivel de reemplazo de QB2 suplente (-0.11 EPA/db)
+                        raw_pts = min(6.2, max(2.4, 3.0 + (epa_db - (-0.11)) * 13.5)) * max(0.70, db_share)
+                        share_label = f"QB Titular ({int(round(db_share*100))}% snaps · {epa_db:+.2f} EPA/db)"
+                    else:
+                        # QB2/QB3 suplente: su ausencia tiene impacto marginal salvo que sea quien viene jugando
+                        raw_pts = max(0.15, db_share * 2.2)
+                        share_label = f"QB Suplente ({int(round(db_share*100))}% snaps)"
+                else:
+                    raw_pts = 0.20
+                    share_label = "QB Reserva"
+                phases = {"air": 0.68, "ground": 0.17, "sit": 0.15, "st": 0.0}
+
+            elif pos in ("WR", "TE"):
+                side = "OFF"
+                if pr_row is not None:
+                    tgts = float(safe_float(pr_row.get("targets")))
+                    t_share = max(float(safe_float(pr_row.get("target_share"))), tgts / total_targets)
+                    rec_epa = float(safe_float(pr_row.get("receiving_epa")))
+                    epa_tgt = rec_epa / max(1.0, tgts)
+                    raw_pts = min(2.6, max(0.20, t_share * 7.4 + max(0.0, epa_tgt) * 1.1))
+                    if role in ("WR1", "TE1") and t_share >= 0.18:
+                        raw_pts = max(1.15, raw_pts)
+                    share_label = f"{role} ({round(t_share*100, 1)}% Target Share · {int(safe_float(pr_row.get('receiving_yards')))} yds)"
+                else:
+                    raw_pts = 0.35
+                    share_label = f"{pos} Rotación"
+                phases = {"air": 0.75, "ground": 0.0, "sit": 0.25, "st": 0.0}
+
+            elif pos in ("RB", "FB"):
+                side = "OFF"
+                if pr_row is not None:
+                    cars = float(safe_float(pr_row.get("carries")))
+                    c_share = min(1.0, cars / total_carries)
+                    t_share = float(safe_float(pr_row.get("target_share")))
+                    r_epa = float(safe_float(pr_row.get("rushing_epa"))) / max(1.0, cars)
+                    raw_pts = min(1.85, max(0.20, c_share * 2.15 + t_share * 3.2 + max(0.0, r_epa) * 1.4))
+                    if role == "RB1" and c_share >= 0.40:
+                        raw_pts = max(0.95, raw_pts)
+                    share_label = f"{role} ({int(round(c_share*100))}% Acarreos · {int(safe_float(pr_row.get('rushing_yards')))} yds)"
+                else:
+                    raw_pts = 0.35
+                    share_label = f"{pos} Rotación"
+                phases = {"air": 0.15, "ground": 0.70, "sit": 0.15, "st": 0.0}
+
+            elif pos in ("OT", "T", "LT", "RT", "G", "OG", "C", "OL"):
+                side = "OFF"
+                if pos in ("OT", "T", "LT", "RT"):
+                    raw_pts = 1.15
+                    role = "Tackle OL"
+                    share_label = "Tackle Ofensivo (Protección de Bolsillo & Carrera)"
+                    phases = {"air": 0.30, "ground": 0.20, "sit": 0.50, "st": 0.0}
+                else:
+                    raw_pts = 0.75
+                    role = "Interior OL"
+                    share_label = f"Línea Ofensiva Interior ({pos})"
+                    phases = {"air": 0.20, "ground": 0.45, "sit": 0.35, "st": 0.0}
+
+            elif pos in ("DE", "EDGE", "DT", "NT", "DL", "LB", "ILB", "OLB", "MLB"):
+                side = "DEF"
+                if pr_row is not None:
+                    imp = float(pr_row.get("def_impact_raw", 0.0))
+                    imp_share = min(1.0, imp / total_def_impact)
+                    sacks = float(safe_float(pr_row.get("def_sacks")))
+                    tfl = int(safe_float(pr_row.get("def_tackles_for_loss")))
+                    raw_pts = min(2.15, max(0.30, imp_share * 8.8 + sacks * 0.12))
+                    if role == "DEF#1":
+                        raw_pts = max(1.15, raw_pts)
+                    share_label = f"{role} ({sacks:.1f} Sacks · {tfl} TFL · {int(round(imp_share*100))}% Impacto Def)"
+                else:
+                    raw_pts = 0.55
+                    role = f"Front-7 ({pos})"
+                    share_label = f"Rotación Front-7 ({pos})"
+                phases = {"air": 0.25, "ground": 0.35, "sit": 0.40, "st": 0.0}
+
+            elif pos in ("CB", "S", "DB", "FS", "SS"):
+                side = "DEF"
+                if pr_row is not None:
+                    imp = float(pr_row.get("def_impact_raw", 0.0))
+                    imp_share = min(1.0, imp / total_def_impact)
+                    pds = int(safe_float(pr_row.get("def_pass_defended")))
+                    ints = int(safe_float(pr_row.get("def_interceptions")))
+                    raw_pts = min(1.75, max(0.30, imp_share * 7.6 + ints * 0.20 + pds * 0.06))
+                    share_label = f"Secundaria ({ints} INT · {pds} PD · {int(round(imp_share*100))}% Impacto)"
+                else:
+                    raw_pts = 0.50
+                    role = f"Secundaria ({pos})"
+                    share_label = f"Cobertura Secundaria ({pos})"
+                phases = {"air": 0.70, "ground": 0.05, "sit": 0.25, "st": 0.0}
+
+            elif pos in ("K", "PK", "P"):
+                side = "ST"
+                raw_pts = 0.65 if pos in ("K", "PK") else 0.35
+                role = "Equipos Esp."
+                share_label = f"Especialista Titular ({pos})"
+                phases = {"air": 0.0, "ground": 0.0, "sit": 0.0, "st": 1.0}
+            else:
+                raw_pts = 0.30
+                phases = {"air": 0.34, "ground": 0.33, "sit": 0.33, "st": 0.0}
+
+            full_impact = round(raw_pts * novelty, 2)
+            return {
+                "role": role,
+                "side": side,
+                "games_played": g_played,
+                "team_games": team_games,
+                "novelty_factor": novelty,
+                "raw_impact_pts": round(raw_pts, 2),
+                "full_impact_pts": full_impact,
+                "share_label": share_label,
+                "phases": phases,
+            }
+
+        roster_items = []
+        seen_keys = set()
+
+        # 1. Procesar jugadores en el Parte Médico de ESPN (Out, IR, Doubtful, Questionable, Suspension)
+        for inj in espn_inj_by_team.get(t_abbr, []):
+            st = inj["status"]
+            if st == "Active":
+                continue
+            k = inj["key"]
+            if not k or k in seen_keys:
+                continue
+            pr_row = player_stats_map.get(k)
+            pos = str(pr_row.get("position", inj["pos"])) if pr_row is not None else inj["pos"]
+            eval_res = evaluate_player_impact(inj["name"], pos, pr_row, st, inj.get("report_date", ""))
+
+            # Ignorar reservas de muy bajo impacto (< 0.32 pts) en IR antigua para no saturar la tarjeta con ruido
+            if eval_res["full_impact_pts"] < 0.32 and st in ("Injured Reserve", "IR"):
+                continue
+
+            seen_keys.add(k)
+            def_w = STATUS_WEIGHTS.get(st, STATUS_WEIGHTS.get(inj["status_code"], 0.35))
+            roster_items.append({
+                "id": f"{t_abbr}-{k}",
+                "name": inj["name"],
+                "pos": pos,
+                "role": eval_res["role"],
+                "side": eval_res["side"],
+                "status": st,
+                "status_code": inj["status_code"],
+                "default_weight": def_w,
+                "injury_type": inj["injury_type"],
+                "report_date": inj["report_date"],
+                "comment": inj["comment"],
+                "headshot": inj["headshot"],
+                "games_played": eval_res["games_played"],
+                "team_games": eval_res["team_games"],
+                "novelty_factor": eval_res["novelty_factor"],
+                "raw_impact_pts": eval_res["raw_impact_pts"],
+                "full_impact_pts": eval_res["full_impact_pts"],
+                "expected_loss_pts": round(eval_res["full_impact_pts"] * def_w, 2),
+                "share_label": eval_res["share_label"],
+                "phases": eval_res["phases"],
+                "is_injured": True,
+            })
+
+        # 2. Agregar los Titulares Clave Sanos (QB1, WR1, RB1, TE1, DEF#1) con default_weight=0.0 para el simulador "What-If"
+        for k_star, r_label in starter_roles.items():
+            if k_star in seen_keys:
+                continue
+            if r_label not in ("QB1", "WR1", "RB1", "TE1", "DEF#1"):
+                continue
+            pr_row = player_stats_map.get(k_star)
+            if pr_row is None:
+                continue
+            pname = str(pr_row.get("player_display_name", pr_row.get("player_name", ""))).strip()
+            pos = str(pr_row.get("position", "QB")).strip()
+            eval_res = evaluate_player_impact(pname, pos, pr_row, "Active", "")
+            if eval_res["full_impact_pts"] < 0.55:
+                continue
+            seen_keys.add(k_star)
+            roster_items.append({
+                "id": f"{t_abbr}-{k_star}",
+                "name": pname,
+                "pos": pos,
+                "role": r_label,
+                "side": eval_res["side"],
+                "status": "Active",
+                "status_code": "A",
+                "default_weight": 0.0,
+                "injury_type": "Titular Activo",
+                "report_date": "",
+                "comment": "Titular disponible (podés simular su baja o duda con 1 clic).",
+                "headshot": str(pr_row.get("headshot_url", "")) if pd.notna(pr_row.get("headshot_url")) else "",
+                "games_played": eval_res["games_played"],
+                "team_games": eval_res["team_games"],
+                "novelty_factor": eval_res["novelty_factor"],
+                "raw_impact_pts": eval_res["raw_impact_pts"],
+                "full_impact_pts": eval_res["full_impact_pts"],
+                "expected_loss_pts": 0.0,
+                "share_label": eval_res["share_label"],
+                "phases": eval_res["phases"],
+                "is_injured": False,
+            })
+
+        # Ordenar: primero lesionados por mayor pérdida esperada, luego titulares activos por mayor impacto potencial
+        roster_items.sort(key=lambda x: (1 if x["is_injured"] else 0, x["expected_loss_pts"], x["full_impact_pts"]), reverse=True)
+        # Limitar a los 8 más relevantes por equipo (todos los lesionados de impacto + titulares estrella)
+        top_items = roster_items[:10]
+        total_exp_loss = round(sum(it["expected_loss_pts"] for it in top_items if it["is_injured"]), 1)
+
+        t_info["roster_impact"] = {
+            "total_expected_loss_pts": total_exp_loss,
+            "injured_count": sum(1 for it in top_items if it["is_injured"]),
+            "items": top_items,
+        }
+
+
 def fetch_espn_schedule_and_records(teams_dict: dict) -> tuple:
     """
     Descarga las semanas anterior, actual y siguiente desde la API de ESPN,
@@ -1041,6 +1424,7 @@ def main():
     teams = build_team_stats()
     players = build_player_stats()
     games, current_week, has_live_games, available_weeks = fetch_espn_schedule_and_records(teams)
+    build_team_rosters_and_injuries(teams)
     news = fetch_high_impact_news()
 
     art_tz = datetime.timezone(datetime.timedelta(hours=-3))
