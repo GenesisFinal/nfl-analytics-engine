@@ -1264,6 +1264,211 @@ function syncPredictionPostToTipsFeed(aw, hm, g, proj, postText, illustrationUrl
   renderXTipsFeed();
 }
 
+function getUnplayedWeeksList() {
+  const allGames = STATE.data?.games || [];
+  const weekMap = new Map();
+  for (const gm of allGames) {
+    if (gm.status_state === "pre") {
+      const wk = Number(gm.week);
+      if (!weekMap.has(wk)) weekMap.set(wk, []);
+      weekMap.get(wk).push(gm);
+    }
+  }
+  const list = Array.from(weekMap.entries())
+    .map(([week, games]) => ({ week, games }))
+    .sort((a, b) => a.week - b.week);
+  return list;
+}
+
+function getWeeklyExpectedGamesAndText(weekNum) {
+  const allGames = STATE.data?.games || [];
+  const teams = STATE.data?.teams || {};
+  let wkGames = allGames.filter((gm) => Number(gm.week) === Number(weekNum) && gm.status_state === "pre");
+  if (wkGames.length === 0) {
+    wkGames = allGames.filter((gm) => Number(gm.week) === Number(weekNum));
+  }
+  const items = [];
+  const lines = [];
+  for (const gm of wkGames) {
+    const aw = teams[gm.away_team];
+    const hm = teams[gm.home_team];
+    if (!aw || !hm) continue;
+    const proj = computeMatchupProjection(aw, hm);
+    if (!proj) continue;
+    const line = `${aw.abbr} ${proj.scoreAway} vs ${proj.scoreHome} ${hm.abbr}`;
+    lines.push(line);
+    items.push({ game: gm, aw, hm, proj, line });
+  }
+  return {
+    week: Number(weekNum),
+    items,
+    text: lines.join("\n"),
+  };
+}
+
+async function renderWeeklyClayBoardToDataUrl(weekNum) {
+  const { items } = getWeeklyExpectedGamesAndText(weekNum);
+  const baseBgPath = "assets/clay/clay_stadium_turf_bg.jpg";
+  const bgImg = await loadCanvasImageSafe(baseBgPath);
+  if (!bgImg || items.length === 0) return baseBgPath;
+
+  const uniqueAbbrs = Array.from(new Set(items.flatMap((it) => [it.aw.abbr, it.hm.abbr])));
+  const logoMap = {};
+  await Promise.all(
+    uniqueAbbrs.map(async (abbr) => {
+      const tm = STATE.data?.teams?.[abbr];
+      if (tm?.logo) {
+        logoMap[abbr] = await loadCanvasImageSafe(tm.logo);
+      }
+    })
+  );
+
+  const canvas = document.createElement("canvas");
+  canvas.width = 1280;
+  canvas.height = 720;
+  const ctx = canvas.getContext("2d");
+
+  // 1. Fondo 16:9 Estadio Plastilina 3D
+  ctx.drawImage(bgImg, 0, 0, 1280, 720);
+
+  // Velo oscuro translúcido para máxima legibilidad de todos los marcadores de la semana
+  const overlay = ctx.createLinearGradient(0, 0, 0, 720);
+  overlay.addColorStop(0, "rgba(9, 13, 22, 0.78)");
+  overlay.addColorStop(0.5, "rgba(15, 23, 42, 0.72)");
+  overlay.addColorStop(1, "rgba(9, 13, 22, 0.84)");
+  ctx.fillStyle = overlay;
+  ctx.fillRect(0, 0, 1280, 720);
+
+  // 2. Cabecera 3D Plastilina de la Semana
+  ctx.save();
+  ctx.shadowColor = "rgba(0, 0, 0, 0.6)";
+  ctx.shadowBlur = 18;
+  ctx.shadowOffsetY = 6;
+  drawRoundedRectPath(ctx, 180, 18, 920, 62, 31);
+  ctx.fillStyle = "#0f172a";
+  ctx.fill();
+  ctx.lineWidth = 3.5;
+  ctx.strokeStyle = "#fbbf24";
+  ctx.stroke();
+  ctx.shadowColor = "transparent";
+
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.font = '900 26px "Plus Jakarta Sans", sans-serif';
+  ctx.fillStyle = "#ffffff";
+  ctx.fillText(`🏈 RESULTADOS ESPERADOS NFL · SEMANA ${weekNum} (${items.length} PARTIDOS)`, 640, 49);
+  ctx.restore();
+
+  // 3. Grilla en 2 columnas con cápsulas 3D de plastilina + escudos oficiales para cada partido
+  const cols = 2;
+  const rows = Math.ceil(items.length / cols);
+  const startY = 96;
+  const availH = 604;
+  const rowGap = 8;
+  const rowH = Math.min(64, Math.floor((availH - (rows - 1) * rowGap) / Math.max(1, rows)));
+  const colW = 564;
+  const colX = [56, 660];
+
+  items.forEach((it, idx) => {
+    const col = idx < rows ? 0 : 1;
+    const row = idx < rows ? idx : idx - rows;
+    const x = colX[col];
+    const y = startY + row * (rowH + rowGap);
+
+    const [awPri, awAcc] = TEAM_BRAND_COLORS[it.aw.abbr] || ["#002244", "#69BE28"];
+    const [hmPri, hmAcc] = TEAM_BRAND_COLORS[it.hm.abbr] || ["#FB4F14", "#002244"];
+
+    ctx.save();
+    ctx.shadowColor = "rgba(0, 0, 0, 0.45)";
+    ctx.shadowBlur = 10;
+    ctx.shadowOffsetY = 4;
+
+    const pillGrad = ctx.createLinearGradient(x, y, x + colW, y);
+    pillGrad.addColorStop(0, awPri);
+    pillGrad.addColorStop(0.22, "#0f172a");
+    pillGrad.addColorStop(0.78, "#0f172a");
+    pillGrad.addColorStop(1, hmPri);
+
+    drawRoundedRectPath(ctx, x, y, colW, rowH, 14);
+    ctx.fillStyle = pillGrad;
+    ctx.fill();
+
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.22)";
+    ctx.stroke();
+    ctx.shadowColor = "transparent";
+
+    const cy = y + rowH / 2;
+    const logoSz = Math.min(rowH - 8, 46);
+    const awLogo = logoMap[it.aw.abbr];
+    const hmLogo = logoMap[it.hm.abbr];
+
+    if (awLogo) {
+      ctx.drawImage(awLogo, x + 14, cy - logoSz / 2, logoSz, logoSz);
+    }
+    if (hmLogo) {
+      ctx.drawImage(hmLogo, x + colW - 14 - logoSz, cy - logoSz / 2, logoSz, logoSz);
+    }
+
+    // Texto central: SEA 16 vs 10 DEN
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.font = `900 ${rowH >= 56 ? 25 : 22}px "JetBrains Mono", monospace`;
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText(`${it.aw.abbr} ${it.proj.scoreAway}  vs  ${it.proj.scoreHome} ${it.hm.abbr}`, x + colW / 2, cy);
+
+    ctx.restore();
+  });
+
+  try {
+    return canvas.toDataURL("image/jpeg", 0.92);
+  } catch (_) {
+    return baseBgPath;
+  }
+}
+
+function syncWeeklyPostToTipsFeed(weekNum, weeklyText, illustrationUrl) {
+  if (!STATE.data || !STATE.data.tips_x) return;
+  const tipId = `tip-weekly-scores-w${weekNum}`;
+  const prompt = `3D claymation (caricatura de plastilina) full-bleed widescreen 16:9 NFL Week ${weekNum} expected scores board with official team logos and projected scores.`;
+
+  let existing = STATE.data.tips_x.find((t) => t.id === tipId);
+  if (existing) {
+    existing.body = weeklyText;
+    existing.illustration = illustrationUrl;
+    existing.title = `Resultados Esperados NFL · Semana ${weekNum} (Todos los Partidos)`;
+    existing.clay_prompt = prompt;
+    existing.is_prediction_post = true;
+    if (STATE.cardState[tipId]) {
+      STATE.cardState[tipId].body = weeklyText;
+      STATE.cardState[tipId].illustration = illustrationUrl;
+      STATE.cardState[tipId].title = existing.title;
+      STATE.cardState[tipId].linkType = "none";
+    }
+  } else {
+    const newTip = {
+      id: tipId,
+      day_group: "SUNDAY",
+      category: "SUNDAY",
+      matchup: `SEMANA ${weekNum}`,
+      badge: `📅 MARCADORES SEMANA ${weekNum} · NFL`,
+      game_id: "ALL",
+      matchup_label: `Semana ${weekNum} (Resultados Esperados)`,
+      title: `Resultados Esperados NFL · Semana ${weekNum} (Todos los Partidos)`,
+      body: weeklyText,
+      page_link: `${STATE.dashboardPublicUrl}#matchups`,
+      source_link: "https://www.sharpfootballanalysis.com/stats-nfl/",
+      source_name: "Sharp Football / RBSDM",
+      illustration: illustrationUrl,
+      clay_prompt: prompt,
+      is_prediction_post: true,
+    };
+    STATE.data.tips_x.unshift(newTip);
+    initTipCardState(newTip);
+  }
+  renderXTipsFeed();
+}
+
 function renderMatchupBoard() {
   const m = getActiveMatchupTeams();
   if (!m || !m.away || !m.home) return;
@@ -1288,6 +1493,25 @@ function renderMatchupBoard() {
   );
   const initialFallbackImg = exactPairForInit.length > 0 ? exactPairForInit[0].path : "assets/clay/clay_stadium_turf_bg.jpg";
   const charLenClass = predXPostString.length <= 270 ? "ok" : predXPostString.length <= 280 ? "warn" : "over";
+
+  // Preparar datos del Post X de Todos los Marcadores Esperados de la Semana (Semanas sin jugar)
+  const unplayedWeeks = getUnplayedWeeksList();
+  const defaultUnplayedWk = unplayedWeeks.some((u) => u.week === Number(STATE.selectedWeek))
+    ? Number(STATE.selectedWeek)
+    : unplayedWeeks.some((u) => u.week === Number(STATE.selectedWeeklyPostWeek))
+    ? Number(STATE.selectedWeeklyPostWeek)
+    : unplayedWeeks.length > 0
+    ? unplayedWeeks[0].week
+    : 8;
+  STATE.selectedWeeklyPostWeek = defaultUnplayedWk;
+  const weeklyPack = getWeeklyExpectedGamesAndText(defaultUnplayedWk);
+  const weeklyCharClass = weeklyPack.text.length <= 270 ? "ok" : weeklyPack.text.length <= 280 ? "warn" : "over";
+  const unplayedOptionsHtml = unplayedWeeks
+    .map(
+      (u) =>
+        `<option value="${u.week}" ${u.week === defaultUnplayedWk ? "selected" : ""}>Semana ${u.week} (${u.games.length} partidos por jugar)</option>`
+    )
+    .join("");
 
   const hasScore = g.status_state === "in" || g.status_state === "post";
   const centerCircleHtml = hasScore
@@ -1323,13 +1547,13 @@ function renderMatchupBoard() {
       <div class="mb-odds-line">${statusLineText}</div>
       <div class="pred-x-action-bar compact">
         <button type="button" class="btn-gen-post-x js-toggle-pred-x-preview" title="Generar el posteo compacto (<280 chars) + imagen 16:9 de plastilina con los equipos y logos">
-          𝕏 Generar Post X + Imagen
+          𝕏 Post Partido + Imagen
         </button>
         <button type="button" class="btn-quick-copy-x js-copy-pred-x" title="Copiar texto del pronóstico al portapapeles">
-          📋 Copiar texto
+          📋 Copiar partido
         </button>
-        <button type="button" class="btn-quick-intent-x js-intent-pred-x" title="Abrir X.com con el posteo listo para publicar">
-          🚀 Postear en X
+        <button type="button" class="btn-gen-weekly-x js-open-weekly-x-preview" title="Generar posteo para X con todos los resultados esperados de la semana elegida (formato SEA 16 vs 10 DEN)">
+          📅 Post X Semana (${defaultUnplayedWk})
         </button>
       </div>
     </div>
@@ -1403,7 +1627,7 @@ function renderMatchupBoard() {
           </div>
         </div>
 
-        <!-- CENTRO: MARCADOR PROBABLE, BARRA DE PROBABILIDAD, VEGAS Y GENERADOR DE POST X -->
+        <!-- CENTRO: MARCADOR PROBABLE, BARRA DE PROBABILIDAD, VEGAS Y GENERADORES DE POST X (PARTIDO + SEMANA COMPLETA) -->
         <div class="pred-center-scoreboard">
           <div class="pcs-header-badge">🏆 RESULTADO PROBABLE DEL MODELO (4 FASES · AMBOS SENTIDOS)</div>
           <div class="pcs-score-display">
@@ -1442,11 +1666,13 @@ function renderMatchupBoard() {
             </div>
           </div>
 
-          <!-- BOTÓN "GENERAR POST X" CON IMAGEN ALUSIVA DE PLASTILINA + OPCIONES RÁPIDAS -->
+          <!-- 1) POSTEO DEL PARTIDO ACTUAL + 2) POSTEO DE TODOS LOS RESULTADOS ESPERADOS DE LA SEMANA -->
           <div class="pred-x-generator-panel">
+            <!-- FILA A: POSTEO DEL PARTIDO ACTUAL -->
             <div class="pred-x-action-bar">
+              <span class="px-bar-tag">🏈 Partido (${aw.abbr} vs ${hm.abbr}):</span>
               <button type="button" class="btn-gen-post-x js-toggle-pred-x-preview">
-                𝕏 Generar Post X + Imagen 16:9
+                𝕏 Generar Post Partido + Imagen
               </button>
               <div class="pred-x-quick-options">
                 <button type="button" class="btn-quick-copy-x js-copy-pred-x">
@@ -1457,16 +1683,35 @@ function renderMatchupBoard() {
                 </button>
               </div>
             </div>
+
+            <!-- FILA B (NUEVO): POSTEO DE TODOS LOS RESULTADOS ESPERADOS DE LA SEMANA ELEGIDA (SIN JUGAR) -->
+            <div class="pred-x-action-bar weekly-bar">
+              <span class="px-bar-tag">📅 Semana completa (sin jugar):</span>
+              <select id="selectWeeklyPostWeek" class="select-weekly-post-wk" title="Elegí cualquier semana que aún no se haya jugado para obtener todos los marcadores esperados">
+                ${unplayedOptionsHtml}
+              </select>
+              <button type="button" class="btn-gen-weekly-x js-open-weekly-x-preview">
+                𝕏 Generar Marcadores Semana
+              </button>
+              <button type="button" class="btn-quick-copy-x js-copy-weekly-x">
+                📋 Copiar Semana
+              </button>
+              <button type="button" class="btn-quick-intent-x js-intent-weekly-x">
+                🚀 Postear Semana en X
+              </button>
+            </div>
+
+            <!-- VISTA PREVIA 1: POST DEL PARTIDO INDIVIDUAL -->
             <div class="pred-x-preview-box hidden" id="predXPostPreviewBox">
               <div class="pxp-header">
-                <span>🎨 Post X + Caricatura 3D de Plastilina (${aw.abbr} vs ${hm.abbr}):</span>
+                <span>🎨 Post X del Partido + Caricatura 3D de Plastilina (${aw.abbr} vs ${hm.abbr}):</span>
                 <span class="pxp-len ${charLenClass}">${predXPostString.length} / 280 máx · ✅ Entra en X</span>
               </div>
               <div class="pxp-media-and-text-grid">
                 <div class="pxp-image-col">
                   <div class="pxp-img-frame">
                     <img id="predXPostImgPreview" src="${initialFallbackImg}" alt="Caricatura de plastilina ${aw.abbr} vs ${hm.abbr}" />
-                    <span class="pxp-img-badge"> Plastilina 3D · ${aw.abbr} vs ${hm.abbr}</span>
+                    <span class="pxp-img-badge">Plastilina 3D · ${aw.abbr} vs ${hm.abbr}</span>
                   </div>
                   <div class="pxp-img-actions">
                     <button type="button" class="btn-pxp-img-action" id="btnCopyPredXImg" title="Copiar imagen al portapapeles para pegarla directo en X (Ctrl+V)">
@@ -1482,6 +1727,33 @@ function renderMatchupBoard() {
                 </div>
                 <div class="pxp-text-col">
                   <textarea class="pxp-textarea" id="predXPostTextarea" rows="13" readonly>${predXPostString}</textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- VISTA PREVIA 2 (NUEVA): POST DE TODOS LOS RESULTADOS ESPERADOS DE LA SEMANA ELEGIDA -->
+            <div class="pred-x-preview-box hidden" id="weeklyXPostPreviewBox">
+              <div class="pxp-header">
+                <span id="weeklyXPostHeaderTitle">📅 Post X · Todos los Resultados Esperados — Semana ${defaultUnplayedWk} (${weeklyPack.items.length} partidos):</span>
+                <span class="pxp-len ${weeklyCharClass}" id="weeklyXPostCharBadge">${weeklyPack.text.length} / 280 máx · ✅ Entra en X</span>
+              </div>
+              <div class="pxp-media-and-text-grid">
+                <div class="pxp-image-col">
+                  <div class="pxp-img-frame">
+                    <img id="weeklyXPostImgPreview" src="assets/clay/clay_stadium_turf_bg.jpg" alt="Pizarra 3D Plastilina Semana ${defaultUnplayedWk}" />
+                    <span class="pxp-img-badge" id="weeklyXPostImgBadge">Pizarra Plastilina 3D · Semana ${defaultUnplayedWk}</span>
+                  </div>
+                  <div class="pxp-img-actions">
+                    <button type="button" class="btn-pxp-img-action" id="btnCopyWeeklyXImg" title="Copiar imagen de toda la semana al portapapeles (Ctrl+V en X)">
+                      🖼️ Copiar Imagen Semana
+                    </button>
+                    <button type="button" class="btn-pxp-img-action" id="btnDownloadWeeklyXImg" title="Descargar imagen 16:9 con todos los resultados esperados de la semana">
+                      💾 Descargar 16:9 Semana
+                    </button>
+                  </div>
+                </div>
+                <div class="pxp-text-col">
+                  <textarea class="pxp-textarea" id="weeklyXPostTextarea" rows="15" readonly>${weeklyPack.text}</textarea>
                 </div>
               </div>
             </div>
@@ -1583,7 +1855,7 @@ function renderMatchupBoard() {
     `;
   }
 
-  // Renderizar en segundo plano la composición 16:9 de plastilina + logos y marcador
+  // Renderizar en segundo plano la composición 16:9 de plastilina + logos y marcador del partido individual
   let activeClayStyleMode = "auto";
   let latestRenderedClayDataUrl = initialFallbackImg;
 
@@ -1600,7 +1872,143 @@ function renderMatchupBoard() {
 
   refreshPredClayComposite("auto", false);
 
-  // Eventos para los botones "Generar Post X", "Copiar texto" y "Postear en X"
+  // Renderizar y actualizar el Post X de Todos los Marcadores Esperados de la Semana elegida
+  let latestWeeklyClayDataUrl = "assets/clay/clay_stadium_turf_bg.jpg";
+  let latestWeeklyPostString = weeklyPack.text;
+
+  const refreshWeeklyExpectedPost = async (wkNum, syncToFeed = false) => {
+    STATE.selectedWeeklyPostWeek = Number(wkNum);
+    const pack = getWeeklyExpectedGamesAndText(wkNum);
+    latestWeeklyPostString = pack.text;
+
+    const titleEl = document.getElementById("weeklyXPostHeaderTitle");
+    const badgeEl = document.getElementById("weeklyXPostCharBadge");
+    const taEl = document.getElementById("weeklyXPostTextarea");
+    const imgBadgeEl = document.getElementById("weeklyXPostImgBadge");
+    if (titleEl) {
+      titleEl.textContent = `📅 Post X · Todos los Resultados Esperados — Semana ${wkNum} (${pack.items.length} partidos):`;
+    }
+    if (badgeEl) {
+      const cCls = pack.text.length <= 270 ? "ok" : pack.text.length <= 280 ? "warn" : "over";
+      badgeEl.className = `pxp-len ${cCls}`;
+      badgeEl.textContent = `${pack.text.length} / 280 máx · ${pack.text.length <= 280 ? "✅ Entra en X" : "⚠️ Excede 280"}`;
+    }
+    if (taEl) taEl.value = pack.text;
+    if (imgBadgeEl) imgBadgeEl.textContent = `Pizarra Plastilina 3D · Semana ${wkNum}`;
+
+    const dataUrl = await renderWeeklyClayBoardToDataUrl(wkNum);
+    latestWeeklyClayDataUrl = dataUrl;
+    const imgEl = document.getElementById("weeklyXPostImgPreview");
+    if (imgEl) imgEl.src = dataUrl;
+
+    if (syncToFeed) {
+      syncWeeklyPostToTipsFeed(wkNum, pack.text, dataUrl);
+    }
+    return { text: pack.text, dataUrl, count: pack.items.length };
+  };
+
+  refreshWeeklyExpectedPost(defaultUnplayedWk, false);
+
+  document.getElementById("selectWeeklyPostWeek")?.addEventListener("change", async (e) => {
+    const chosenWk = Number(e.target.value);
+    const box = document.getElementById("weeklyXPostPreviewBox");
+    box?.classList.remove("hidden");
+    const res = await refreshWeeklyExpectedPost(chosenWk, true);
+    showToast(`📅 Marcadores esperados de Semana ${chosenWk} (${res.count} partidos) listos`);
+  });
+
+  document.querySelectorAll(".js-open-weekly-x-preview").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const selEl = document.getElementById("selectWeeklyPostWeek");
+      const chosenWk = selEl ? Number(selEl.value) : defaultUnplayedWk;
+      const box = document.getElementById("weeklyXPostPreviewBox");
+      if (box) {
+        box.classList.remove("hidden");
+        box.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+      const res = await refreshWeeklyExpectedPost(chosenWk, true);
+      try {
+        await navigator.clipboard.writeText(res.text);
+        showToast(`✅ Semana ${chosenWk} (${res.count} partidos · ${res.text.length} chars) copiada al portapapeles + Pizarra 16:9 creada`);
+      } catch (_) {
+        showToast(`✨ Post X de Semana ${chosenWk} (${res.count} partidos) generado`);
+      }
+    });
+  });
+
+  document.querySelectorAll(".js-copy-weekly-x").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const selEl = document.getElementById("selectWeeklyPostWeek");
+      const chosenWk = selEl ? Number(selEl.value) : defaultUnplayedWk;
+      const pack = getWeeklyExpectedGamesAndText(chosenWk);
+      latestWeeklyPostString = pack.text;
+      try {
+        await navigator.clipboard.writeText(pack.text);
+      } catch (_) {
+        const ta = document.getElementById("weeklyXPostTextarea");
+        if (ta) {
+          document.getElementById("weeklyXPostPreviewBox")?.classList.remove("hidden");
+          ta.select();
+          document.execCommand("copy");
+        }
+      }
+      const prevHtml = btn.innerHTML;
+      btn.innerHTML = "✅ Semana Copiada";
+      btn.classList.add("copied-ok");
+      showToast(`✅ Marcadores de Semana ${chosenWk} copiados (${pack.text.length} / 280 caracteres)`);
+      setTimeout(() => {
+        btn.innerHTML = prevHtml;
+        btn.classList.remove("copied-ok");
+      }, 2200);
+    });
+  });
+
+  document.querySelectorAll(".js-intent-weekly-x").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const selEl = document.getElementById("selectWeeklyPostWeek");
+      const chosenWk = selEl ? Number(selEl.value) : defaultUnplayedWk;
+      const res = await refreshWeeklyExpectedPost(chosenWk, true);
+      const intentUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(res.text)}`;
+      window.open(intentUrl, "_blank", "noopener,noreferrer");
+    });
+  });
+
+  document.getElementById("btnCopyWeeklyXImg")?.addEventListener("click", async (e) => {
+    const btn = e.currentTarget;
+    try {
+      const imgBitmap = await loadCanvasImageSafe(latestWeeklyClayDataUrl);
+      if (imgBitmap && window.ClipboardItem) {
+        const tmpCanvas = document.createElement("canvas");
+        tmpCanvas.width = imgBitmap.naturalWidth || 1280;
+        tmpCanvas.height = imgBitmap.naturalHeight || 720;
+        tmpCanvas.getContext("2d").drawImage(imgBitmap, 0, 0);
+        const pngBlob = await new Promise((r) => tmpCanvas.toBlob(r, "image/png"));
+        await navigator.clipboard.write([new ClipboardItem({ "image/png": pngBlob })]);
+        const prev = btn.textContent;
+        btn.textContent = "✅ Imagen Copiada";
+        showToast("🖼️ Pizarra 16:9 de la Semana copiada al portapapeles (Ctrl+V en X)");
+        setTimeout(() => (btn.textContent = prev), 2200);
+        return;
+      }
+      throw new Error("ClipboardItem no disponible");
+    } catch (_) {
+      document.getElementById("btnDownloadWeeklyXImg")?.click();
+    }
+  });
+
+  document.getElementById("btnDownloadWeeklyXImg")?.addEventListener("click", () => {
+    const selEl = document.getElementById("selectWeeklyPostWeek");
+    const chosenWk = selEl ? Number(selEl.value) : defaultUnplayedWk;
+    const a = document.createElement("a");
+    a.href = latestWeeklyClayDataUrl;
+    a.download = `nfl_clay_semana_${chosenWk}_marcadores.jpg`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    showToast(`💾 Imagen descargada: nfl_clay_semana_${chosenWk}_marcadores.jpg`);
+  });
+
+  // Eventos para los botones del partido individual "Generar Post X", "Copiar texto" y "Postear en X"
   document.querySelectorAll(".js-toggle-pred-x-preview").forEach((btn) => {
     btn.addEventListener("click", async () => {
       const box = document.getElementById("predXPostPreviewBox");
@@ -1636,9 +2044,6 @@ function renderMatchupBoard() {
   document.getElementById("btnCopyPredXImg")?.addEventListener("click", async (e) => {
     const btn = e.currentTarget;
     try {
-      const resp = await fetch(latestRenderedClayDataUrl);
-      const blob = await resp.blob();
-      // Convertir a image/png si el navegador exige PNG para el portapapeles
       const imgBitmap = await loadCanvasImageSafe(latestRenderedClayDataUrl);
       if (imgBitmap && window.ClipboardItem) {
         const tmpCanvas = document.createElement("canvas");
