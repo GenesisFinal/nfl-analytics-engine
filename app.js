@@ -24,48 +24,48 @@ const STATE = {
 
 const CLAY_GALLERY = [
   // Semana 8 — Duelos Exactos (14 partidos)
-  { label: "Sem 8 · TEN @ CIN: Will Levis #8 (TEN) vs Trey Hendrickson #91 (CIN)", path: "assets/clay/clay_w8_ten_cin.jpg", teams: ["TEN", "CIN"] },
-  { label: "Sem 8 · CAR @ GB: Bryce Young #9 (CAR) vs Rashan Gary #52 (GB)", path: "assets/clay/clay_w8_car_gb.jpg", teams: ["CAR", "GB"] },
-  { label: "Sem 8 · BAL @ BUF: Lamar Jackson #8 (BAL) vs Greg Rousseau #50 (BUF)", path: "assets/clay/clay_w8_bal_buf.jpg", teams: ["BAL", "BUF"] },
-  { label: "Sem 8 · ARI @ DAL: Kyler Murray #1 (ARI) vs Micah Parsons #11 (DAL)", path: "assets/clay/clay_w8_ari_dal.jpg", teams: ["ARI", "DAL"] },
-  { label: "Sem 8 · MIN @ DET: Sam Darnold #14 (MIN) vs Aidan Hutchinson #97 (DET)", path: "assets/clay/clay_w8_min_det.jpg", teams: ["MIN", "DET"] },
-  { label: "Sem 8 · LV @ NYJ: Gardner Minshew #15 (LV) vs Quinnen Williams #95 (NYJ)", path: "assets/clay/clay_w8_lv_nyj.jpg", teams: ["LV", "NYJ"] },
-  { label: "Sem 8 · CLE @ PIT: Jameis Winston #5 (CLE) vs T.J. Watt #90 (PIT)", path: "assets/clay/clay_w8_cle_pit.jpg", teams: ["CLE", "PIT"] },
-  { label: "Sem 8 · ATL @ TB: Kirk Cousins #18 (ATL) vs Vita Vea #50 (TB)", path: "assets/clay/clay_w8_atl_tb.jpg", teams: ["ATL", "TB"] },
-  { label: "Sem 8 · IND @ JAX: Anthony Richardson #5 (IND) vs Josh Hines-Allen #41 (JAX)", path: "assets/clay/clay_w8_ind_jax.jpg", teams: ["IND", "JAX"] },
-  { label: "Sem 8 · LAC @ LA: Justin Herbert #10 (LAC) vs Jared Verse #8 (LA)", path: "assets/clay/clay_w8_lac_la.jpg", teams: ["LAC", "LA"] },
-  { label: "Sem 8 · KC @ DEN: Patrick Mahomes #15 (KC) vs Pat Surtain II #2 (DEN)", path: "assets/clay/clay_w8_kc_den.jpg", teams: ["KC", "DEN"] },
-  { label: "Sem 8 · NE @ MIA: Drake Maye #10 (NE) vs Calais Campbell #93 (MIA)", path: "assets/clay/clay_w8_ne_mia.jpg", teams: ["NE", "MIA"] },
-  { label: "Sem 8 · PHI @ WAS: Jalen Hurts #1 (PHI) vs Daron Payne #94 (WAS)", path: "assets/clay/clay_w8_phi_was.jpg", teams: ["PHI", "WAS"] },
-  { label: "Sem 8 · CHI @ SEA: Caleb Williams #18 (CHI) vs Leonard Williams #99 (SEA)", path: "assets/clay/clay_w8_chi_sea.jpg", teams: ["CHI", "SEA"] },
+  { label: "Sem 8 · TEN @ CIN: Will Levis #8 (TEN) vs Trey Hendrickson #91 (CIN)", path: "assets/clay/clay_w8_ten_cin.jpg", teams: ["TEN", "CIN"], favored: "BOTH" },
+  { label: "Sem 8 · CAR @ GB: Bryce Young #9 (CAR) vs Rashan Gary #52 (GB)", path: "assets/clay/clay_w8_car_gb.jpg", teams: ["CAR", "GB"], favored: "BOTH" },
+  { label: "Sem 8 · BAL @ BUF: Josh Allen #17 & Greg Rousseau #50 (BUF) dominan vs Lamar Jackson #8 (BAL)", path: "assets/clay/clay_w8_bal_buf.jpg", teams: ["BAL", "BUF"], favored: "BUF" },
+  { label: "Sem 8 · ARI @ DAL: Micah Parsons #11 (DAL) captura a Kyler Murray #1 (ARI)", path: "assets/clay/clay_w8_ari_dal.jpg", teams: ["ARI", "DAL"], favored: "DAL" },
+  { label: "Sem 8 · MIN @ DET: Sam Darnold #14 (MIN) domina vs Aidan Hutchinson #97 (DET)", path: "assets/clay/clay_w8_min_det.jpg", teams: ["MIN", "DET"], favored: "MIN" },
+  { label: "Sem 8 · LV @ NYJ: Gardner Minshew #15 (LV) vs Quinnen Williams #95 (NYJ)", path: "assets/clay/clay_w8_lv_nyj.jpg", teams: ["LV", "NYJ"], favored: "BOTH" },
+  { label: "Sem 8 · CLE @ PIT: T.J. Watt #90 (PIT) captura a Jameis Winston #5 (CLE)", path: "assets/clay/clay_w8_cle_pit.jpg", teams: ["CLE", "PIT"], favored: "PIT" },
+  { label: "Sem 8 · ATL @ TB: Vita Vea #50 (TB) frena a Kirk Cousins #18 (ATL)", path: "assets/clay/clay_w8_atl_tb.jpg", teams: ["ATL", "TB"], favored: "TB" },
+  { label: "Sem 8 · IND @ JAX: Josh Hines-Allen #41 (JAX) captura a Anthony Richardson #5 (IND)", path: "assets/clay/clay_w8_ind_jax.jpg", teams: ["IND", "JAX"], favored: "JAX" },
+  { label: "Sem 8 · LAC @ LA: Justin Herbert #10 (LAC) vs Jared Verse #8 (LA)", path: "assets/clay/clay_w8_lac_la.jpg", teams: ["LAC", "LA"], favored: "BOTH" },
+  { label: "Sem 8 · KC @ DEN: Patrick Mahomes #15 (KC) domina vs Pat Surtain II #2 (DEN)", path: "assets/clay/clay_w8_kc_den.jpg", teams: ["KC", "DEN"], favored: "KC" },
+  { label: "Sem 8 · NE @ MIA: Drake Maye #10 (NE) vs Calais Campbell #93 (MIA)", path: "assets/clay/clay_w8_ne_mia.jpg", teams: ["NE", "MIA"], favored: "BOTH" },
+  { label: "Sem 8 · PHI @ WAS: Jayden Daniels #5 & Daron Payne #94 (WAS) dominan vs Jalen Hurts #1 (PHI)", path: "assets/clay/clay_w8_phi_was.jpg", teams: ["PHI", "WAS"], favored: "WAS" },
+  { label: "Sem 8 · CHI @ SEA: Caleb Williams #18 (CHI) vs Leonard Williams #99 (SEA)", path: "assets/clay/clay_w8_chi_sea.jpg", teams: ["CHI", "SEA"], favored: "BOTH" },
   // Semana 7 — Duelos Exactos (14 partidos)
-  { label: "Sem 7 · NE @ CHI (Aéreo): Drake Maye #10 (NE) vs Jaylon Johnson #33 (CHI)", path: "assets/clay/clay_ne_chi.jpg", teams: ["NE", "CHI"] },
-  { label: "Sem 7 · NE @ CHI (Trincheras): Montez Sweat #98 (CHI) vs Ben Brown #77 (NE)", path: "assets/clay/clay_ne_chi_trenches.jpg", teams: ["NE", "CHI"] },
-  { label: "Sem 7 · SF @ ATL (Aéreo): Christian McCaffrey #23 (SF) vs Kaden Elliss #55 (ATL)", path: "assets/clay/clay_sf_atl.jpg", teams: ["SF", "ATL"] },
-  { label: "Sem 7 · SF @ ATL (Terrestre): Bijan Robinson #7 (ATL) vs Fred Warner #54 (SF)", path: "assets/clay/clay_atl_sf_ground.jpg", teams: ["SF", "ATL"] },
-  { label: "Sem 7 · IND @ MIN: Jonathan Greenard #58 (MIN) vs Quenton Nelson #56 (IND)", path: "assets/clay/clay_ind_min.jpg", teams: ["IND", "MIN"] },
-  { label: "Sem 7 · NO @ PIT: Chris Olave #12 (NO) vs T.J. Watt #90 (PIT)", path: "assets/clay/clay_pit_no.jpg", teams: ["NO", "PIT"] },
-  { label: "Sem 7 · LV @ LA: Daniel Carlson #17 (LV) vs Kobie Turner #44 (LA)", path: "assets/clay/clay_la_lv.jpg", teams: ["LV", "LA"] },
-  { label: "Sem 7 · DAL @ PHI (Trincheras): Zack Martin #70 (DAL) vs Jalen Carter #98 (PHI)", path: "assets/clay/clay_dal_phi.jpg", teams: ["DAL", "PHI"] },
-  { label: "Sem 7 · DAL @ PHI (3ra y Gol): CeeDee Lamb #88 (DAL) vs Quinyon Mitchell #27 (PHI)", path: "assets/clay/clay_dal_phi_mnf2.jpg", teams: ["DAL", "PHI"] },
-  { label: "Sem 7 · DAL @ PHI (MNF): Javonte Williams #33 (DAL) vs Eagles #53 (PHI)", path: "assets/clay/clay_news_javonte_dal33.jpg", teams: ["DAL", "PHI"] },
-  { label: "Sem 7 · CLE @ TEN: Jameis Winston #5 (CLE) vs Jeffery Simmons #98 (TEN)", path: "assets/clay/clay_w7_cle_ten.jpg", teams: ["CLE", "TEN"] },
-  { label: "Sem 7 · MIA @ NYJ: Tua Tagovailoa #1 (MIA) vs Quinnen Williams #95 (NYJ)", path: "assets/clay/clay_w7_mia_nyj.jpg", teams: ["MIA", "NYJ"] },
-  { label: "Sem 7 · TB @ CAR: Baker Mayfield #6 (TB) vs Jadeveon Clowney #7 (CAR)", path: "assets/clay/clay_w7_tb_car.jpg", teams: ["TB", "CAR"] },
-  { label: "Sem 7 · CIN @ BAL: Joe Burrow #9 (CIN) vs Nnamdi Madubuike #92 (BAL)", path: "assets/clay/clay_w7_cin_bal.jpg", teams: ["CIN", "BAL"] },
-  { label: "Sem 7 · NYG @ HOU: Daniel Jones #8 (NYG) vs Will Anderson Jr. #51 (HOU)", path: "assets/clay/clay_w7_nyg_hou.jpg", teams: ["NYG", "HOU"] },
-  { label: "Sem 7 · DEN @ ARI: Bo Nix #10 (DEN) vs Zaven Collins #25 (ARI)", path: "assets/clay/clay_w7_den_ari.jpg", teams: ["DEN", "ARI"] },
-  { label: "Sem 7 · GB @ DET: Jordan Love #10 (GB) vs Aidan Hutchinson #97 (DET)", path: "assets/clay/clay_w7_gb_det.jpg", teams: ["GB", "DET"] },
-  { label: "Sem 7 · KC @ SEA: Patrick Mahomes #15 (KC) vs Leonard Williams #99 (SEA)", path: "assets/clay/clay_w7_kc_sea.jpg", teams: ["KC", "SEA"] },
+  { label: "Sem 7 · NE @ CHI (Aéreo): Caleb Williams #18 & Jaylon Johnson #33 (CHI) dominan vs Drake Maye #10 (NE)", path: "assets/clay/clay_ne_chi.jpg", teams: ["NE", "CHI"], favored: "CHI" },
+  { label: "Sem 7 · NE @ CHI (Trincheras): Montez Sweat #98 (CHI) domina vs Ben Brown #77 (NE)", path: "assets/clay/clay_ne_chi_trenches.jpg", teams: ["NE", "CHI"], favored: "CHI" },
+  { label: "Sem 7 · SF @ ATL (Aéreo): Christian McCaffrey #23 (SF) domina vs Kaden Elliss #55 (ATL)", path: "assets/clay/clay_sf_atl.jpg", teams: ["SF", "ATL"], favored: "SF" },
+  { label: "Sem 7 · SF @ ATL (Terrestre): Bijan Robinson #7 (ATL) vs Fred Warner #54 (SF)", path: "assets/clay/clay_atl_sf_ground.jpg", teams: ["SF", "ATL"], favored: "ATL" },
+  { label: "Sem 7 · IND @ MIN: Jonathan Greenard #58 (MIN) domina vs Quenton Nelson #56 (IND)", path: "assets/clay/clay_ind_min.jpg", teams: ["IND", "MIN"], favored: "MIN" },
+  { label: "Sem 7 · NO @ PIT: T.J. Watt #90 & Russell Wilson #3 (PIT) festejan vs Chris Olave #12 (NO)", path: "assets/clay/clay_pit_no.jpg", teams: ["NO", "PIT"], favored: "PIT" },
+  { label: "Sem 7 · LV @ LA: Kyren Williams #23 (LA) domina vs Maxx Crosby #98 (LV)", path: "assets/clay/clay_la_lv.jpg", teams: ["LV", "LA"], favored: "LA" },
+  { label: "Sem 7 · DAL @ PHI (Aéreo): CeeDee Lamb #88 (DAL) domina vs Quinyon Mitchell #27 (PHI)", path: "assets/clay/clay_dal_phi.jpg", teams: ["DAL", "PHI"], favored: "DAL" },
+  { label: "Sem 7 · DAL @ PHI (3ra y Gol): CeeDee Lamb #88 (DAL) atrapa TD vs Quinyon Mitchell #27 (PHI)", path: "assets/clay/clay_dal_phi_mnf2.jpg", teams: ["DAL", "PHI"], favored: "DAL" },
+  { label: "Sem 7 · DAL @ PHI (MNF): Javonte Williams #33 (DAL) domina vs Eagles #53 (PHI)", path: "assets/clay/clay_news_javonte_dal33.jpg", teams: ["DAL", "PHI"], favored: "DAL" },
+  { label: "Sem 7 · CLE @ TEN: Jameis Winston #5 (CLE) vs Jeffery Simmons #98 (TEN)", path: "assets/clay/clay_w7_cle_ten.jpg", teams: ["CLE", "TEN"], favored: "BOTH" },
+  { label: "Sem 7 · MIA @ NYJ: Tua Tagovailoa #1 (MIA) vs Quinnen Williams #95 (NYJ)", path: "assets/clay/clay_w7_mia_nyj.jpg", teams: ["MIA", "NYJ"], favored: "BOTH" },
+  { label: "Sem 7 · TB @ CAR: Baker Mayfield #6 (TB) vs Jadeveon Clowney #7 (CAR)", path: "assets/clay/clay_w7_tb_car.jpg", teams: ["TB", "CAR"], favored: "BOTH" },
+  { label: "Sem 7 · CIN @ BAL: Joe Burrow #9 (CIN) vs Nnamdi Madubuike #92 (BAL)", path: "assets/clay/clay_w7_cin_bal.jpg", teams: ["CIN", "BAL"], favored: "CIN" },
+  { label: "Sem 7 · NYG @ HOU: Daniel Jones #8 (NYG) vs Will Anderson Jr. #51 (HOU)", path: "assets/clay/clay_w7_nyg_hou.jpg", teams: ["NYG", "HOU"], favored: "HOU" },
+  { label: "Sem 7 · DEN @ ARI: Bo Nix #10 (DEN) vs Zaven Collins #25 (ARI)", path: "assets/clay/clay_w7_den_ari.jpg", teams: ["DEN", "ARI"], favored: "BOTH" },
+  { label: "Sem 7 · GB @ DET: Jordan Love #10 (GB) vs Aidan Hutchinson #97 (DET)", path: "assets/clay/clay_w7_gb_det.jpg", teams: ["GB", "DET"], favored: "BOTH" },
+  { label: "Sem 7 · KC @ SEA: Leonard Williams #99 (SEA) vs Patrick Mahomes #15 (KC)", path: "assets/clay/clay_w7_kc_sea.jpg", teams: ["KC", "SEA"], favored: "BOTH" },
   // Otros Duelos Especiales entre 2 Equipos (solo se usan cuando se enfrentan exactamente esos 2 equipos)
-  { label: "Duelo KC vs BUF: Patrick Mahomes #15 (KC) vs Josh Allen #17 (BUF)", path: "assets/clay/clay_kc_buf.jpg", teams: ["KC", "BUF"] },
-  { label: "Duelo GB vs HOU: Jordan Love #10 (GB) vs C.J. Stroud #7 (HOU)", path: "assets/clay/clay_gb_hou.jpg", teams: ["GB", "HOU"] },
-  { label: "Duelo CIN vs CLE: Joe Burrow #9 (CIN) vs Myles Garrett #95 (CLE)", path: "assets/clay/clay_cin_cle.jpg", teams: ["CIN", "CLE"] },
-  { label: "Duelo MIA vs TB: Tyreek Hill #10 (MIA) vs Baker Mayfield #6 (TB)", path: "assets/clay/clay_mia_tb.jpg", teams: ["MIA", "TB"] },
-  { label: "Duelo LAC vs DEN: Justin Herbert #10 (LAC) vs Pat Surtain II #2 (DEN)", path: "assets/clay/clay_den_lac.jpg", teams: ["LAC", "DEN"] },
-  { label: "Duelo SEA vs DEN: Geno Smith #7 (SEA) vs Pat Surtain II #2 (DEN)", path: "assets/clay/clay_sim_sea_den.jpg", teams: ["SEA", "DEN"] },
-  { label: "Duelo ARI vs JAX: Kyler Murray #1 (ARI) vs Trevor Lawrence #16 (JAX)", path: "assets/clay/clay_ari_jax.jpg", teams: ["ARI", "JAX"] },
-  { label: "Duelo NYG vs TEN: Malik Nabers #1 (NYG) vs Tony Pollard #20 (TEN)", path: "assets/clay/clay_nyg_ten.jpg", teams: ["NYG", "TEN"] },
+  { label: "Duelo KC vs BUF: Patrick Mahomes #15 (KC) vs Josh Allen #17 (BUF)", path: "assets/clay/clay_kc_buf.jpg", teams: ["KC", "BUF"], favored: "BOTH" },
+  { label: "Duelo GB vs HOU: Jordan Love #10 (GB) vs C.J. Stroud #7 (HOU)", path: "assets/clay/clay_gb_hou.jpg", teams: ["GB", "HOU"], favored: "BOTH" },
+  { label: "Duelo CIN vs CLE: Joe Burrow #9 (CIN) vs Myles Garrett #95 (CLE)", path: "assets/clay/clay_cin_cle.jpg", teams: ["CIN", "CLE"], favored: "BOTH" },
+  { label: "Duelo MIA vs TB: Baker Mayfield #6 & Vita Vea #50 (TB) dominan vs Tyreek Hill #10 (MIA)", path: "assets/clay/clay_mia_tb.jpg", teams: ["MIA", "TB"], favored: "TB" },
+  { label: "Duelo LAC vs DEN: Justin Herbert #10 (LAC) vs Pat Surtain II #2 (DEN)", path: "assets/clay/clay_den_lac.jpg", teams: ["LAC", "DEN"], favored: "BOTH" },
+  { label: "Duelo SEA vs DEN: Geno Smith #7 (SEA) domina vs Pat Surtain II #2 (DEN)", path: "assets/clay/clay_sim_sea_den.jpg", teams: ["SEA", "DEN"], favored: "SEA" },
+  { label: "Duelo ARI vs JAX: Kyler Murray #1 (ARI) vs Trevor Lawrence #16 (JAX)", path: "assets/clay/clay_ari_jax.jpg", teams: ["ARI", "JAX"], favored: "BOTH" },
+  { label: "Duelo NYG vs TEN: Malik Nabers #1 (NYG) domina vs Tony Pollard #20 (TEN)", path: "assets/clay/clay_nyg_ten.jpg", teams: ["NYG", "TEN"], favored: "NYG" },
   // Escena 3D Plastilina Universal (Estadio + Cascos Chocando para componer con Logos de cualquier cruce)
   { label: "Estadio 3D Plastilina: Cascos Chocando + Escudos Oficiales", path: "assets/clay/clay_stadium_turf_bg.jpg", teams: [] },
   // Escenas Individuales de 1 Solo Equipo (Scouting / Equipo / News sin rival externo)
@@ -115,18 +115,33 @@ const TEAM_VISUAL_SPECS_JS = {
   WAS: { name: "Washington Commanders", helmet: "matte burgundy helmet with gold W logo", jersey: "burgundy jersey with gold numerals", qb: ["Jayden Daniels", "#5"], rb: ["Brian Robinson Jr.", "#8"], wr: ["Terry McLaurin", "#17"], ol: ["Sam Cosmi", "#76"], pr: ["Daron Payne", "#94"], db: ["Bobby Wagner", "#54"] },
 };
 
-function getConcordantGalleryItemsForTeams(candidateTeams) {
+function getConcordantGalleryItemsForTeams(candidateTeams, favoredTeam = "") {
   // Regla Estricta: NUNCA devolver una imagen de 2 equipos si alguno de los 2 equipos en la imagen NO pertenece al análisis actual
   if (candidateTeams.length >= 2) {
     const tA = candidateTeams[0];
     const tB = candidateTeams[1];
-    // 1) Coincidencia exacta de par (A vs B o B vs A)
-    const exactPair = CLAY_GALLERY.filter(
+    let fav = String(favoredTeam || "").toUpperCase().trim();
+    if (!fav && STATE.data?.teams?.[tA] && STATE.data?.teams?.[tB]) {
+      const p = computeMatchupProjection(STATE.data.teams[tA], STATE.data.teams[tB]);
+      if (p?.favTeam?.abbr) fav = p.favTeam.abbr;
+    }
+
+    // 1) Coincidencia exacta de par (A vs B o B vs A), filtrando estrictamente para que no festeje el perdedor proyectado
+    const exactPairAll = CLAY_GALLERY.filter(
       (item) => item.teams && item.teams.length === 2 && item.teams.includes(tA) && item.teams.includes(tB)
     );
-    if (exactPair.length > 0) return exactPair;
+    if (exactPairAll.length > 0) {
+      if (fav) {
+        const winMatches = exactPairAll.filter((it) => it.favored === fav);
+        const clashMatches = exactPairAll.filter((it) => !it.favored || it.favored === "BOTH");
+        const concordant = [...winMatches, ...clashMatches];
+        if (concordant.length > 0) return concordant;
+      } else {
+        return exactPairAll;
+      }
+    }
 
-    // 2) Si es un cruce del simulador sin foto de par específica, usar la base 3D Plastilina Universal (Cascos + Escudos Oficiales)
+    // 2) Si es un cruce del simulador sin foto de par específica (o invertido), usar la base 3D Plastilina Universal (Cascos + Escudos Oficiales)
     const universalStadium = CLAY_GALLERY.filter((item) => item.path === "assets/clay/clay_stadium_turf_bg.jpg");
     const soloMatches = CLAY_GALLERY.filter(
       (item) => item.teams && item.teams.length === 1 && (item.teams[0] === tA || item.teams[0] === tB)
@@ -136,10 +151,14 @@ function getConcordantGalleryItemsForTeams(candidateTeams) {
     const tOnly = candidateTeams[0];
     // 1) Primero imágenes individuales (1 solo equipo, sin rivales externos)
     const soloOnly = CLAY_GALLERY.filter((item) => item.teams && item.teams.length === 1 && item.teams[0] === tOnly);
-    // 2) Luego imágenes de la Semana activa donde participe tOnly
+    // 2) Luego imágenes de la Semana activa donde participe tOnly y tOnly no sea el perdedor explícito
     const wkPrefix = STATE.selectedWeek === 8 ? "clay_w8_" : "clay_w7_";
-    const wkPair = CLAY_GALLERY.filter((item) => item.path.includes(wkPrefix) && item.teams?.includes(tOnly));
-    const anyPair = CLAY_GALLERY.filter((item) => item.teams?.includes(tOnly) && !soloOnly.includes(item) && !wkPair.includes(item));
+    const wkPair = CLAY_GALLERY.filter(
+      (item) => item.path.includes(wkPrefix) && item.teams?.includes(tOnly) && (!item.favored || item.favored === "BOTH" || item.favored === tOnly)
+    );
+    const anyPair = CLAY_GALLERY.filter(
+      (item) => item.teams?.includes(tOnly) && (!item.favored || item.favored === "BOTH" || item.favored === tOnly) && !soloOnly.includes(item) && !wkPair.includes(item)
+    );
     return [...soloOnly, ...wkPair, ...anyPair];
   }
   return [];
@@ -955,6 +974,8 @@ function buildPredictionXPostText(aw, hm, g, proj) {
   ].join("\n");
 }
 
+const CLAY_ASSET_CACHE_VER = "20261027v18";
+
 function loadCanvasImageSafe(src) {
   return new Promise((resolve) => {
     if (!src) return resolve(null);
@@ -962,9 +983,13 @@ function loadCanvasImageSafe(src) {
     if (/^https?:\/\//i.test(src)) {
       img.crossOrigin = "anonymous";
     }
+    let finalSrc = src;
+    if (finalSrc.startsWith("assets/clay/") && !finalSrc.includes("?")) {
+      finalSrc = `${finalSrc}?v=${CLAY_ASSET_CACHE_VER}`;
+    }
     img.onload = () => resolve(img);
     img.onerror = () => resolve(null);
-    img.src = src;
+    img.src = finalSrc;
   });
 }
 
@@ -1073,9 +1098,16 @@ function drawClayLogoMedallion(ctx, cx, cy, radius, primaryHex, accentHex, logoI
 
 async function renderMatchupClayCardToDataUrl(aw, hm, g, proj, requestedMode = "auto") {
   if (!aw || !hm || !proj) return "assets/clay/clay_stadium_turf_bg.jpg";
-  const exactPair = CLAY_GALLERY.filter(
+  const favAbbr = proj?.favTeam?.abbr || "";
+  const exactPairAll = CLAY_GALLERY.filter(
     (item) => item.teams && item.teams.length === 2 && item.teams.includes(aw.abbr) && item.teams.includes(hm.abbr)
   );
+  // Prioridad 1: Imágenes donde domina/festeja exactamente el ganador proyectado por el modelo
+  const exactPairWinner = exactPairAll.filter((item) => item.favored === favAbbr);
+  // Prioridad 2: Imágenes de choque parejo ("BOTH") sin festejo del perdedor proyectado
+  const exactPairClash = exactPairAll.filter((item) => !item.favored || item.favored === "BOTH");
+  const exactPair = [...exactPairWinner, ...exactPairClash];
+
   const hasExactPlayers = exactPair.length > 0;
   let mode = requestedMode;
   if (mode === "auto") {
