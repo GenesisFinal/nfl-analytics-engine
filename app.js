@@ -857,6 +857,62 @@ function computeMatchupProjection(aw, hm) {
   };
 }
 
+function buildPredictionXPostText(aw, hm, g, proj) {
+  if (!aw || !hm || !proj) return "";
+  const eq1 = aw.abbr;
+  const eq2 = hm.abbr;
+  const score1 = proj.scoreAway;
+  const score2 = proj.scoreHome;
+  const winE1 = `${Number(proj.winProbAway).toFixed(1)}%`;
+  const winE2 = `${Number(proj.winProbHome).toFixed(1)}%`;
+  const eqGanador = proj.favTeam?.short || proj.favTeam?.abbr || eq1;
+  const margen = `-${Math.abs(Number(proj.favMargin)).toFixed(1)}`;
+  const ptsLV = String(g?.over_under ?? proj.projectedTotal)
+    .replace(/^O\/U\s*/i, "")
+    .trim();
+
+  const ptsBaseE1 = `${Number(proj.baseAway).toFixed(1)} pts`;
+  const ptsBaseE2 = `${Number(proj.baseHome).toFixed(1)} pts`;
+
+  const fmtSigned = (val) => {
+    const rounded = Number(Number(val || 0).toFixed(1));
+    const sign = rounded >= 0 ? "+" : "-";
+    return `${sign}${Math.abs(rounded).toFixed(1)} pts`;
+  };
+
+  const ptsPSE1 = fmtSigned(proj.airPtsAway);
+  const ptsPSE2 = fmtSigned(proj.airPtsHome);
+  const ptsCFE1 = fmtSigned(proj.groundPtsAway);
+  const ptsCFE2 = fmtSigned(proj.groundPtsHome);
+  const ptsRZ3SRE1 = fmtSigned(proj.sitPtsAway);
+  const ptsRZ3SRE2 = fmtSigned(proj.sitPtsHome);
+  const ptsELE1 = fmtSigned(Number(proj.stPtsAway) + Number(proj.hfaAway));
+  const ptsELE2 = fmtSigned(Number(proj.stPtsHome) + Number(proj.hfaHome));
+
+  return [
+    `${eq1} ${score1} vs ${score2} ${eq2}`,
+    `${eq1} gana: ${winE1} ------ ${eq2} gana: ${winE2}`,
+    `Favorito del Modelo ${eqGanador} por ${margen} pts.`,
+    `Las Vegas: O/U ${ptsLV}`,
+    ``,
+    `Base:`,
+    `${eq1}: ${ptsBaseE1}`,
+    `${eq2}: ${ptsBaseE2}`,
+    `Pase vs Secundaria:`,
+    `${eq1}: ${ptsPSE1}`,
+    `${eq2}: ${ptsPSE2}`,
+    `Correr vs Front:`,
+    `${eq1}: ${ptsCFE1}`,
+    `${eq2}: ${ptsCFE2}`,
+    `Red Zone + 3rd Down + Sacks + Robos:`,
+    `${eq1}: ${ptsRZ3SRE1}`,
+    `${eq2}: ${ptsRZ3SRE2}`,
+    `Especiales + Localía:`,
+    `${eq1}: ${ptsELE1}`,
+    `${eq2}: ${ptsELE2}`,
+  ].join("\n");
+}
+
 function renderMatchupBoard() {
   const m = getActiveMatchupTeams();
   if (!m || !m.away || !m.home) return;
@@ -875,6 +931,7 @@ function renderMatchupBoard() {
   });
 
   const proj = computeMatchupProjection(aw, hm);
+  const predXPostString = buildPredictionXPostText(aw, hm, g, proj);
   const hasScore = g.status_state === "in" || g.status_state === "post";
   const centerCircleHtml = hasScore
     ? `<div class="mb-vs-circle" style="width:auto; padding:0 12px; border-radius:16px; background:${g.status_state === "in" ? "#dc2626" : "#013369"}; color:#fff; font-size:14px;">${aw.abbr} ${g.away_score ?? 0} - ${g.home_score ?? 0} ${hm.abbr}</div>`
@@ -907,6 +964,17 @@ function renderMatchupBoard() {
       <div class="mb-week-label">SEMANA ${g.week}: ${aw.short.toUpperCase()} vs ${hm.short.toUpperCase()}</div>
       ${centerCircleHtml}
       <div class="mb-odds-line">${statusLineText}</div>
+      <div class="pred-x-action-bar compact">
+        <button type="button" class="btn-gen-post-x js-toggle-pred-x-preview" title="Ver o generar el posteo formateado con la predicción del modelo">
+          𝕏 Generar Post X
+        </button>
+        <button type="button" class="btn-quick-copy-x js-copy-pred-x" title="Copiar texto del pronóstico al portapapeles">
+          📋 Copiar texto
+        </button>
+        <button type="button" class="btn-quick-intent-x js-intent-pred-x" title="Abrir X.com con el posteo listo para publicar">
+          🚀 Postear en X
+        </button>
+      </div>
     </div>
 
     <div class="mb-team-side right">
@@ -932,7 +1000,11 @@ function renderMatchupBoard() {
   if (predLeftEl) predLeftEl.textContent = `✈️ ${aw.abbr}: ${proj.winProbAway}% DE GANAR (${proj.scoreAway} PTS PROY.)`;
   if (predRightEl) predRightEl.textContent = `🏠 ${hm.abbr}: ${proj.winProbHome}% DE GANAR (${proj.scoreHome} PTS PROY.)`;
 
-  const fmtSignedPts = (v) => `${v >= 0 ? "+" : ""}${v.toFixed(1)} pts`;
+  const fmtSignedPts = (v) => {
+    const rounded = Number(Number(v || 0).toFixed(1));
+    const sign = rounded >= 0 ? "+" : "-";
+    return `${sign}${Math.abs(rounded).toFixed(1)} pts`;
+  };
   const fmtEdgeTag = (diffVal, offAbbr, defAbbr) => {
     const r = Math.round(diffVal);
     if (r >= 7) return `<span class="pred-factor-pill pos">🟢 Ventaja Ataque ${offAbbr} (+${r}%)</span>`;
@@ -964,17 +1036,17 @@ function renderMatchupBoard() {
           </div>
           <div class="pred-metrics-pair">
             <div class="pred-prob-block">
-              <span class="pred-big-pct">${proj.winProbAway}%</span>
+              <span class="pred-big-pct">${proj.winProbAway.toFixed(1)}%</span>
               <span class="pred-sub-lbl">PROBABILIDAD DE GANAR</span>
             </div>
             <div class="pred-score-block">
               <span class="pred-big-score">${proj.scoreAway}</span>
-              <span class="pred-sub-lbl">PUNTOS PROBABLES (${proj.exactAwayPts} exacto)</span>
+              <span class="pred-sub-lbl">PUNTOS PROBABLES (${proj.exactAwayPts.toFixed(1)} exacto)</span>
             </div>
           </div>
         </div>
 
-        <!-- CENTRO: MARCADOR PROBABLE, BARRA DE PROBABILIDAD Y COMPARATIVA CON VEGAS -->
+        <!-- CENTRO: MARCADOR PROBABLE, BARRA DE PROBABILIDAD, VEGAS Y GENERADOR DE POST X -->
         <div class="pred-center-scoreboard">
           <div class="pcs-header-badge">🏆 RESULTADO PROBABLE DEL MODELO (4 FASES · AMBOS SENTIDOS)</div>
           <div class="pcs-score-display">
@@ -994,22 +1066,46 @@ function renderMatchupBoard() {
           <!-- BARRA DE PROBABILIDAD DE VICTORIA ENFRENTADA -->
           <div class="pcs-winprob-bar-wrap">
             <div class="pcs-winprob-labels">
-              <span>👈 ${aw.short} gana: <strong>${proj.winProbAway}%</strong></span>
+              <span>👈 ${aw.short} gana: <strong>${proj.winProbAway.toFixed(1)}%</strong></span>
               <span>CURVA DE VICTORIA NFL</span>
-              <span><strong>${proj.winProbHome}%</strong> :gana ${hm.short} 👉</span>
+              <span><strong>${proj.winProbHome.toFixed(1)}%</strong> :gana ${hm.short} 👉</span>
             </div>
             <div class="pcs-winprob-track">
-              <div class="pcs-winprob-fill away" style="width: ${proj.winProbAway}%">${proj.winProbAway >= 18 ? `${aw.abbr} ${proj.winProbAway}%` : ""}</div>
-              <div class="pcs-winprob-fill home" style="width: ${proj.winProbHome}%">${proj.winProbHome >= 18 ? `${hm.abbr} ${proj.winProbHome}%` : ""}</div>
+              <div class="pcs-winprob-fill away" style="width: ${proj.winProbAway}%">${proj.winProbAway >= 18 ? `${aw.abbr} ${proj.winProbAway.toFixed(1)}%` : ""}</div>
+              <div class="pcs-winprob-fill home" style="width: ${proj.winProbHome}%">${proj.winProbHome >= 18 ? `${hm.abbr} ${proj.winProbHome.toFixed(1)}%` : ""}</div>
             </div>
           </div>
 
           <div class="pcs-lines-comparison">
             <div class="pcs-line-chip">
-              <strong>📌 Favorito del Modelo:</strong> ${proj.favTeam.short} por <strong>-${proj.favMargin} pts</strong> (Exacto: ${aw.abbr} ${proj.exactAwayPts} - ${proj.exactHomePts} ${hm.abbr})
+              <strong>📌 Favorito del Modelo:</strong> ${proj.favTeam.short} por <strong>-${Number(proj.favMargin).toFixed(1)} pts</strong> (Exacto: ${aw.abbr} ${proj.exactAwayPts.toFixed(1)} - ${proj.exactHomePts.toFixed(1)} ${hm.abbr})
             </div>
             <div class="pcs-line-chip">
-              <strong>📊 Total Proyectado:</strong> <strong>${proj.projectedTotal} pts</strong> &nbsp;|&nbsp; <strong>Línea Vegas Oficial:</strong> ${g.spread} · O/U ${g.over_under}
+              <strong>📊 Total Proyectado:</strong> <strong>${proj.projectedTotal.toFixed(1)} pts</strong> &nbsp;|&nbsp; <strong>Línea Vegas Oficial:</strong> ${g.spread} · O/U ${g.over_under}
+            </div>
+          </div>
+
+          <!-- BOTÓN "GENERAR POST X" CON DOS OPCIONES RÁPIDAS ("COPIAR TEXTO" Y "POSTEAR EN X") -->
+          <div class="pred-x-generator-panel">
+            <div class="pred-x-action-bar">
+              <button type="button" class="btn-gen-post-x js-toggle-pred-x-preview">
+                𝕏 Generar Post X
+              </button>
+              <div class="pred-x-quick-options">
+                <button type="button" class="btn-quick-copy-x js-copy-pred-x">
+                  📋 Copiar texto
+                </button>
+                <button type="button" class="btn-quick-intent-x js-intent-pred-x">
+                  🚀 Postear en X
+                </button>
+              </div>
+            </div>
+            <div class="pred-x-preview-box hidden" id="predXPostPreviewBox">
+              <div class="pxp-header">
+                <span>Vista previa del Post X (formato estricto del modelo):</span>
+                <span class="pxp-len">${predXPostString.length} caracteres</span>
+              </div>
+              <textarea class="pxp-textarea" id="predXPostTextarea" rows="11" readonly>${predXPostString}</textarea>
             </div>
           </div>
         </div>
@@ -1026,10 +1122,10 @@ function renderMatchupBoard() {
           <div class="pred-metrics-pair">
             <div class="pred-score-block">
               <span class="pred-big-score">${proj.scoreHome}</span>
-              <span class="pred-sub-lbl">PUNTOS PROBABLES (${proj.exactHomePts} exacto)</span>
+              <span class="pred-sub-lbl">PUNTOS PROBABLES (${proj.exactHomePts.toFixed(1)} exacto)</span>
             </div>
             <div class="pred-prob-block">
-              <span class="pred-big-pct">${proj.winProbHome}%</span>
+              <span class="pred-big-pct">${proj.winProbHome.toFixed(1)}%</span>
               <span class="pred-sub-lbl">PROBABILIDAD DE GANAR</span>
             </div>
           </div>
@@ -1108,6 +1204,52 @@ function renderMatchupBoard() {
       </div>
     `;
   }
+
+  // Eventos para los botones "Generar Post X", "Copiar texto" y "Postear en X"
+  document.querySelectorAll(".js-toggle-pred-x-preview").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const box = document.getElementById("predXPostPreviewBox");
+      if (box) {
+        const isHidden = box.classList.toggle("hidden");
+        if (!isHidden) {
+          box.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+      }
+    });
+  });
+
+  document.querySelectorAll(".js-copy-pred-x").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      if (!predXPostString) return;
+      try {
+        await navigator.clipboard.writeText(predXPostString);
+      } catch (_) {
+        const ta = document.getElementById("predXPostTextarea");
+        if (ta) {
+          const box = document.getElementById("predXPostPreviewBox");
+          box?.classList.remove("hidden");
+          ta.select();
+          document.execCommand("copy");
+        }
+      }
+      const prevHtml = btn.innerHTML;
+      btn.innerHTML = "✅ Copiado";
+      btn.classList.add("copied-ok");
+      showToast("✅ Copiado al portapapeles");
+      setTimeout(() => {
+        btn.innerHTML = prevHtml;
+        btn.classList.remove("copied-ok");
+      }, 2200);
+    });
+  });
+
+  document.querySelectorAll(".js-intent-pred-x").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      if (!predXPostString) return;
+      const intentUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(predXPostString)}`;
+      window.open(intentUrl, "_blank", "noopener,noreferrer");
+    });
+  });
 
   // =========================================================================
   // 2. BLOQUE 1: ATAQUE AÉREO vs. SECUNDARIA (EN AMBOS SENTIDOS)
