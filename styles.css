@@ -3196,7 +3196,7 @@ body {
   color: #f8fafc;
   border: 1px solid #334155;
   border-radius: 8px;
-  padding: 8px 10px;
+  padding: 9px 11px;
   text-align: left;
 }
 
@@ -3204,22 +3204,120 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 700;
-  color: #94a3b8;
-  margin-bottom: 5px;
+  color: #cbd5e1;
+  margin-bottom: 7px;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .pxp-len {
   background: #1e293b;
   color: #38bdf8;
-  padding: 1px 6px;
+  padding: 2px 7px;
   border-radius: 4px;
   font-family: "JetBrains Mono", monospace;
 }
 
+.pxp-len.ok {
+  background: #064e3b;
+  color: #6ee7b7;
+}
+
+.pxp-len.warn {
+  background: #78350f;
+  color: #fde68a;
+}
+
+.pxp-len.over {
+  background: #7f1d1d;
+  color: #fca5a5;
+}
+
+.pxp-media-and-text-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 10px;
+  align-items: stretch;
+}
+
+@media (max-width: 900px) {
+  .pxp-media-and-text-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pxp-image-col {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pxp-img-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 7px;
+  overflow: hidden;
+  border: 1.5px solid #475569;
+  background: #020617;
+}
+
+.pxp-img-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.pxp-img-badge {
+  position: absolute;
+  top: 7px;
+  left: 7px;
+  background: rgba(15, 23, 42, 0.85);
+  color: #fde047;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 999px;
+  border: 1px solid rgba(253, 224, 71, 0.4);
+}
+
+.pxp-img-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.btn-pxp-img-action {
+  flex: 1;
+  background: #1e293b;
+  color: #f8fafc;
+  border: 1px solid #475569;
+  border-radius: 5px;
+  padding: 5px 7px;
+  font-size: 10.5px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.btn-pxp-img-action:hover {
+  background: #334155;
+  border-color: #94a3b8;
+}
+
+.pxp-text-col {
+  display: flex;
+  flex-direction: column;
+}
+
 .pxp-textarea {
   width: 100%;
+  height: 100%;
+  min-height: 210px;
   background: #020617;
   color: #e2e8f0;
   border: 1px solid #1e293b;
@@ -3227,8 +3325,6 @@ body {
   padding: 7px 9px;
   font-family: "JetBrains Mono", monospace;
   font-size: 11px;
-  line-height: 1.4;
+  line-height: 1.38;
   resize: vertical;
 }
-
-
