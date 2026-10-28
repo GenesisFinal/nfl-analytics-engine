@@ -448,6 +448,8 @@ NANOBANANA_CLAY_CATALOG = [
     {"path": "assets/clay/clay_den_lac.jpg", "teams": ["DEN", "LAC"]},
     {"path": "assets/clay/clay_ari_jax.jpg", "teams": ["ARI", "JAX"]},
     {"path": "assets/clay/clay_nyg_ten.jpg", "teams": ["NYG", "TEN"]},
+    {"path": "assets/clay/clay_sim_sea_den.jpg", "teams": ["SEA", "DEN"]},
+    {"path": "assets/clay/clay_stadium_turf_bg.jpg", "teams": []},
     # Escenas individuales de 1 solo equipo (sin rival externo)
     {"path": "assets/clay/clay_car_young9.jpg", "teams": ["CAR"]},
     {"path": "assets/clay/clay_car_young9_run.jpg", "teams": ["CAR"]},
