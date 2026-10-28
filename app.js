@@ -20,6 +20,8 @@ const STATE = {
   usedIllustrations: new Set(),
   dashboardPublicUrl: "https://genesisfinal.github.io/nfl-analytics-engine/",
   autoRefreshTimer: null,
+  injuryOverrides: {}, // { [playerId]: 0 | 0.35 | 0.75 | 1.0 }
+  showInjurySimPanel: true,
 };
 
 const CLAY_GALLERY = [
@@ -755,6 +757,70 @@ function calcRowsStrengthSummary(rowsConfig) {
   };
 }
 
+function getEffectivePlayerInjuryWeight(item) {
+  if (!item) return 0;
+  if (Object.prototype.hasOwnProperty.call(STATE.injuryOverrides, item.id)) {
+    return Number(STATE.injuryOverrides[item.id]);
+  }
+  return Number(item.default_weight ?? 0);
+}
+
+function computeTeamInjuryAdjustment(teamObj) {
+  const items = teamObj?.roster_impact?.items || [];
+  let totalLoss = 0;
+  let offLoss = 0;
+  let defLoss = 0;
+  let airLoss = 0;
+  let groundLoss = 0;
+  let sitLoss = 0;
+  let stLoss = 0;
+  const activeImpacts = [];
+  let overridesCount = 0;
+
+  for (const it of items) {
+    const w = getEffectivePlayerInjuryWeight(it);
+    if (
+      Object.prototype.hasOwnProperty.call(STATE.injuryOverrides, it.id) &&
+      Math.abs(w - Number(it.default_weight ?? 0)) > 0.01
+    ) {
+      overridesCount += 1;
+    }
+    const fullPts = Number(it.full_impact_pts ?? it.raw_impact_pts ?? 0);
+    const loss = +(fullPts * w).toFixed(2);
+    if (w > 0 && loss > 0.02) {
+      totalLoss += loss;
+      if (it.side === "DEF") defLoss += loss;
+      else offLoss += loss;
+      const ph = it.phases || { air: 0.4, ground: 0.3, sit: 0.3, st: 0 };
+      airLoss += loss * Number(ph.air || 0);
+      groundLoss += loss * Number(ph.ground || 0);
+      sitLoss += loss * Number(ph.sit || 0);
+      stLoss += loss * Number(ph.st || 0);
+      activeImpacts.push({
+        ...it,
+        effectiveWeight: w,
+        effectiveLossPts: +loss.toFixed(2),
+      });
+    }
+  }
+
+  const cappedLoss = Math.min(9.5, +totalLoss.toFixed(1));
+  const injPts = cappedLoss > 0 ? -cappedLoss : 0.0;
+  return {
+    injPts,
+    totalLoss: cappedLoss,
+    offLoss: +offLoss.toFixed(1),
+    defLoss: +defLoss.toFixed(1),
+    airLoss: +airLoss.toFixed(1),
+    groundLoss: +groundLoss.toFixed(1),
+    sitLoss: +sitLoss.toFixed(1),
+    stLoss: +stLoss.toFixed(1),
+    activeImpacts,
+    allItems: items,
+    overridesCount,
+  };
+}
+
 function computeMatchupProjection(aw, hm) {
   if (!aw || !hm) return null;
 
@@ -825,8 +891,20 @@ function computeMatchupProjection(aw, hm) {
   const hfaAway = -0.7;
   const hfaHome = +0.7;
 
-  const exactAwayPts = Math.max(10.0, Math.min(44.0, +(baseAway + airPtsAway + groundPtsAway + sitPtsAway + stPtsAway + hfaAway).toFixed(1)));
-  const exactHomePts = Math.max(10.0, Math.min(44.0, +(baseHome + airPtsHome + groundPtsHome + sitPtsHome + stPtsHome + hfaHome).toFixed(1)));
+  // 5. Ajuste por Bajas / Parte Médico & Reemplazo de Titulares (con Factor de Novedad sin doble conteo)
+  const injAwayDetail = computeTeamInjuryAdjustment(aw);
+  const injHomeDetail = computeTeamInjuryAdjustment(hm);
+  const injPtsAway = injAwayDetail.injPts;
+  const injPtsHome = injHomeDetail.injPts;
+
+  const exactAwayPts = Math.max(
+    10.0,
+    Math.min(44.0, +(baseAway + airPtsAway + groundPtsAway + sitPtsAway + stPtsAway + hfaAway + injPtsAway).toFixed(1))
+  );
+  const exactHomePts = Math.max(
+    10.0,
+    Math.min(44.0, +(baseHome + airPtsHome + groundPtsHome + sitPtsHome + stPtsHome + hfaHome + injPtsHome).toFixed(1))
+  );
 
   let scoreAway = Math.round(exactAwayPts);
   let scoreHome = Math.round(exactHomePts);
@@ -869,6 +947,10 @@ function computeMatchupProjection(aw, hm) {
     stPtsHome,
     hfaAway,
     hfaHome,
+    injPtsAway,
+    injPtsHome,
+    injAwayDetail,
+    injHomeDetail,
     exactAwayPts,
     exactHomePts,
     scoreAway,
@@ -934,7 +1016,7 @@ function buildPredictionXPostText(aw, hm, g, proj) {
 
   const fmtSigned = (val) => {
     const rounded = Number(Number(val || 0).toFixed(1));
-    const sign = rounded >= 0 ? "+" : "-";
+    const sign = rounded > 0 ? "+" : rounded < 0 ? "-" : "-";
     return `${sign}${Math.abs(rounded).toFixed(1)} pts`;
   };
 
@@ -946,32 +1028,33 @@ function buildPredictionXPostText(aw, hm, g, proj) {
   const ptsRZ3SRE2 = fmtSigned(proj.sitPtsHome);
   const ptsELE1 = fmtSigned(Number(proj.stPtsAway) + Number(proj.hfaAway));
   const ptsELE2 = fmtSigned(Number(proj.stPtsHome) + Number(proj.hfaHome));
+  const ptsBajasE1 = fmtSigned(proj.injPtsAway ?? 0);
+  const ptsBajasE2 = fmtSigned(proj.injPtsHome ?? 0);
 
-  return [
-    `${eq1} ${score1} vs ${score2} ${eq2}`,
-    `${eq1} gana: ${winE1} ↔️ ${eq2} gana: ${winE2}`,
-    `Vegas: O/U ${ptsLV}`,
-    ``,
-    `Base:`,
-    `${eq1}: ${ptsBaseE1}`,
-    `${eq2}: ${ptsBaseE2}`,
-    ``,
-    `Pase Off:`,
-    `${eq1}: ${ptsPSE1}`,
-    `${eq2}: ${ptsPSE2}`,
-    ``,
-    `Run Off:`,
-    `${eq1}: ${ptsCFE1}`,
-    `${eq2}: ${ptsCFE2}`,
-    ``,
-    `RZ + 3°D + Sack + Steal:`,
-    `${eq1}: ${ptsRZ3SRE1}`,
-    `${eq2}: ${ptsRZ3SRE2}`,
-    ``,
-    `ST + Local:`,
-    `${eq1}: ${ptsELE1}`,
-    `${eq2}: ${ptsELE2}`,
-  ].join("\n");
+  const blocks = [
+    [`${eq1} ${score1} vs ${score2} ${eq2}`, `${eq1} gana: ${winE1} ↔️ ${eq2} gana: ${winE2}`, `Vegas: O/U ${ptsLV}`],
+    [`Base:`, `${eq1}: ${ptsBaseE1}`, `${eq2}: ${ptsBaseE2}`],
+    [`Pase Off:`, `${eq1}: ${ptsPSE1}`, `${eq2}: ${ptsPSE2}`],
+    [`Run Off:`, `${eq1}: ${ptsCFE1}`, `${eq2}: ${ptsCFE2}`],
+    [`RZ + 3°D + Sack + Steal:`, `${eq1}: ${ptsRZ3SRE1}`, `${eq2}: ${ptsRZ3SRE2}`],
+    [`ST + Local:`, `${eq1}: ${ptsELE1}`, `${eq2}: ${ptsELE2}`],
+    [`Bajas:`, `${eq1}: ${ptsBajasE1}`, `${eq2}: ${ptsBajasE2}`],
+  ];
+
+  // Compactar saltos en blanco de abajo hacia arriba solo los necesarios para garantizar siempre <= 278 caracteres
+  const seps = ["\n\n", "\n\n", "\n\n", "\n\n", "\n\n", "\n\n"];
+  const assemble = () => {
+    let out = blocks[0].join("\n");
+    for (let i = 1; i < blocks.length; i++) {
+      out += seps[i - 1] + blocks[i].join("\n");
+    }
+    return out;
+  };
+  for (let i = seps.length - 1; i >= 1; i--) {
+    if (assemble().length <= 278) break;
+    seps[i] = "\n";
+  }
+  return assemble();
 }
 
 const CLAY_ASSET_CACHE_VER = "20261027v18";
@@ -1661,7 +1744,7 @@ function renderMatchupBoard() {
 
         <!-- CENTRO: MARCADOR PROBABLE, BARRA DE PROBABILIDAD, VEGAS Y GENERADORES DE POST X (PARTIDO + SEMANA COMPLETA) -->
         <div class="pred-center-scoreboard">
-          <div class="pcs-header-badge">🏆 RESULTADO PROBABLE DEL MODELO (4 FASES · AMBOS SENTIDOS)</div>
+          <div class="pcs-header-badge">🏆 RESULTADO PROBABLE DEL MODELO (4 FASES · AMBOS SENTIDOS + PARTE MÉDICO)</div>
           <div class="pcs-score-display">
             <div class="pcs-team-score ${awWinnerHighlight}">
               <img src="${aw.logo}" alt="${aw.abbr}" />
@@ -1694,7 +1777,7 @@ function renderMatchupBoard() {
               <strong>📌 Favorito del Modelo:</strong> ${proj.favTeam.short} por <strong>-${Number(proj.favMargin).toFixed(1)} pts</strong> (Exacto: ${aw.abbr} ${proj.exactAwayPts.toFixed(1)} - ${proj.exactHomePts.toFixed(1)} ${hm.abbr})
             </div>
             <div class="pcs-line-chip">
-              <strong>📊 Total Proyectado:</strong> <strong>${proj.projectedTotal.toFixed(1)} pts</strong> &nbsp;|&nbsp; <strong>Línea Vegas Oficial:</strong> ${g.spread} · O/U ${g.over_under}
+              <strong>📊 Total Proyectado:</strong> <strong>${proj.projectedTotal.toFixed(1)} pts</strong> &nbsp;|&nbsp; <strong>Línea Vegas Oficial:</strong> ${g.spread} · O/U ${g.over_under} &nbsp;|&nbsp; <strong>🚑 Bajas:</strong> ${aw.abbr} ${fmtSignedPts(proj.injPtsAway)} / ${hm.abbr} ${fmtSignedPts(proj.injPtsHome)}
             </div>
           </div>
 
@@ -1814,11 +1897,11 @@ function renderMatchupBoard() {
         </div>
       </div>
 
-      <!-- TABLA DE DESGLOSE MATEMÁTICO DE LOS 5 FACTORES QUE CONSTRUYEN EL RESULTADO PROBABLE -->
+      <!-- TABLA DE DESGLOSE MATEMÁTICO DE LOS 6 FACTORES QUE CONSTRUYEN EL RESULTADO PROBABLE -->
       <div class="pred-breakdown-box">
         <div class="pbb-title">
-          <span>🧮 DESGLOSE PASO A PASO: ¿CÓMO APORTA CADA FASE (EN AMBOS SENTIDOS) AL RESULTADO PROBABLE?</span>
-          <span class="pbb-formula-hint">Suma exacta: Base PPG + Ajuste Pase + Ajuste Carrera + Ajuste Situacional/Entregas + Eq. Especiales/Localía = Marcador Proyectado</span>
+          <span>🧮 DESGLOSE PASO A PASO: ¿CÓMO APORTA CADA FASE (EN AMBOS SENTIDOS) Y EL PARTE MÉDICO AL RESULTADO PROBABLE?</span>
+          <span class="pbb-formula-hint">Suma exacta: Base PPG + Pase + Carrera + Situacional/Entregas + Eq. Especiales/Localía + Bajas/Titulares = Marcador Proyectado</span>
         </div>
         <div class="pbb-factors-grid">
           <!-- Factor 1: Base PPG -->
@@ -1882,10 +1965,171 @@ function renderMatchupBoard() {
               <span class="home-val">ST + Localía ${hm.abbr}: <strong>${fmtSignedPts(proj.stPtsHome + proj.hfaHome)}</strong></span>
             </div>
           </div>
+
+          <!-- Factor 6 (NUEVO): Impacto de Bajas & Titulares (Parte Médico ESPN + Cuota EPA/WAR) -->
+          <div class="pbb-factor-card inj-factor-card">
+            <div class="pbb-f-head">6️⃣ Bajas &amp; Titulares (Parte Médico)</div>
+            <div class="pbb-f-badges">
+              <div><small>✈️ ${aw.abbr}: ${proj.injAwayDetail.activeImpacts.length} bajas/dudas activas (${proj.injAwayDetail.overridesCount > 0 ? "⚡ Simulado" : "Oficial ESPN"})</small></div>
+              <div><small>🏠 ${hm.abbr}: ${proj.injHomeDetail.activeImpacts.length} bajas/dudas activas (${proj.injHomeDetail.overridesCount > 0 ? "⚡ Simulado" : "Oficial ESPN"})</small></div>
+            </div>
+            <div class="pbb-f-scores">
+              <span class="away-val">Bajas ${aw.abbr}: <strong class="${proj.injPtsAway < 0 ? "txt-sig-neg" : "txt-sig-pos"}">${fmtSignedPts(proj.injPtsAway)}</strong></span>
+              <span class="home-val">Bajas ${hm.abbr}: <strong class="${proj.injPtsHome < 0 ? "txt-sig-neg" : "txt-sig-pos"}">${fmtSignedPts(proj.injPtsHome)}</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL INTERACTIVO: PARTE MÉDICO OFICIAL (ESPN) & SIMULADOR DE TITULARES / BAJAS EN VIVO -->
+      <div class="injury-simulator-master-box">
+        <div class="ism-header">
+          <div class="ism-title-wrap">
+            <span class="ism-title">🚑 PARTE MÉDICO OFICIAL (ESPN) &amp; SIMULADOR DE TITULARES / BAJAS (QUÉ PASA SI...)</span>
+            <span class="ism-subtitle">Calcula el delta de puntos real según la cuota de producción 2026 (Target Share, Dropbacks, EPA) y el Factor de Novedad (sin doble conteo de lesiones antiguas). Tocá cualquier botón para simular qué pasa si un titular es baja o si un lesionado se recupera.</span>
+          </div>
+          <div class="ism-header-actions">
+            ${
+              Object.keys(STATE.injuryOverrides).length > 0
+                ? `<span class="ism-sim-active-pill">⚡ Simulación Manual Activa (${Object.keys(STATE.injuryOverrides).length} cambios)</span>
+                   <button type="button" class="btn-reset-inj-sim" id="btnResetInjuryOverrides">🔄 Restaurar Parte Oficial ESPN</button>`
+                : `<span class="ism-sim-official-pill">✅ Parte Médico Oficial ESPN Activo</span>`
+            }
+            <button type="button" class="btn-toggle-inj-sim" id="btnToggleInjurySimBody">
+              ${STATE.showInjurySimPanel ? "🔽 Ocultar Jugadores" : "▶️ Ver / Simular Jugadores"}
+            </button>
+          </div>
+        </div>
+
+        <div class="ism-body-grid ${STATE.showInjurySimPanel ? "" : "hidden"}" id="injurySimBodyGrid">
+          ${[
+            { team: aw, detail: proj.injAwayDetail, sideIcon: "✈️ VISITANTE" },
+            { team: hm, detail: proj.injHomeDetail, sideIcon: "🏠 LOCAL" },
+          ]
+            .map(({ team, detail, sideIcon }) => {
+              const items = detail.allItems || [];
+              const rowsHtml =
+                items.length === 0
+                  ? `<div class="ism-empty">Sin bajas relevantes reportadas en ${team.name}.</div>`
+                  : items
+                      .map((it) => {
+                        const w = getEffectivePlayerInjuryWeight(it);
+                        const fullPts = Number(it.full_impact_pts ?? it.raw_impact_pts ?? 0);
+                        const curLoss = +(fullPts * w).toFixed(1);
+                        const isOverridden =
+                          Object.prototype.hasOwnProperty.call(STATE.injuryOverrides, it.id) &&
+                          Math.abs(w - Number(it.default_weight ?? 0)) > 0.01;
+                        const officialBadgeCls =
+                          it.status_code === "O" || it.status_code === "IR" || it.status_code === "SUSP"
+                            ? "st-out"
+                            : it.status_code === "D"
+                            ? "st-d"
+                            : it.status_code === "Q"
+                            ? "st-q"
+                            : "st-ok";
+                        const officialBadgeTxt =
+                          it.status_code === "A"
+                            ? "🟢 Titular Activo"
+                            : `${it.status_code === "Q" ? "🟡" : "🔴"} ${it.status} (${it.injury_type || "Lesión"})`;
+                        const noveltyPct = Math.round(Number(it.novelty_factor ?? 1) * 100);
+                        return `
+                          <div class="ism-player-row ${w > 0 ? "has-penalty" : "is-healthy"} ${isOverridden ? "is-overridden" : ""}">
+                            <div class="ism-p-left">
+                              <img src="${it.headshot || team.logo}" alt="${it.name}" class="ism-p-avatar" onerror="this.onerror=null;this.src='${team.logo}';" />
+                              <div class="ism-p-info">
+                                <div class="ism-p-name-line">
+                                  <span class="ism-p-role-badge ${it.side === "DEF" ? "def" : "off"}">${it.role || it.pos}</span>
+                                  <strong class="ism-p-name">${it.name}</strong>
+                                  <span class="ism-p-official-tag ${officialBadgeCls}">${officialBadgeTxt}</span>
+                                  ${isOverridden ? `<span class="ism-p-sim-tag">⚡ Simulado</span>` : ""}
+                                </div>
+                                <div class="ism-p-meta-line">
+                                  <span>📊 ${it.share_label}</span>
+                                  <span>· PJ 2026: ${it.games_played}/${it.team_games} (Novedad ${noveltyPct}%)</span>
+                                  <span>· Impacto máx si es Baja: <strong>-${fullPts.toFixed(1)} pts</strong></span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="ism-p-right">
+                              <div class="ism-p-current-impact ${curLoss > 0 ? "neg" : "zero"}">
+                                ${curLoss > 0 ? `-${curLoss.toFixed(1)} pts` : `0.0 pts`}
+                              </div>
+                              <div class="ism-p-btn-group" role="group" aria-label="Estado de ${it.name}">
+                                <button type="button" class="btn-inj-sim ${Math.abs(w - 0) < 0.05 ? "active st-ok" : ""}" data-player-id="${it.id}" data-weight="0" title="Juega al 100% (0% penalización)">✅ Juega</button>
+                                <button type="button" class="btn-inj-sim ${Math.abs(w - 0.35) < 0.05 ? "active st-q" : ""}" data-player-id="${it.id}" data-weight="0.35" title="En Duda / Questionable (35% del impacto)">🟡 Duda</button>
+                                <button type="button" class="btn-inj-sim ${Math.abs(w - 0.75) < 0.05 ? "active st-d" : ""}" data-player-id="${it.id}" data-weight="0.75" title="Difícil / Doubtful (75% del impacto)">🟠 Difícil</button>
+                                <button type="button" class="btn-inj-sim ${Math.abs(w - 1.0) < 0.05 ? "active st-out" : ""}" data-player-id="${it.id}" data-weight="1" title="Baja Confirmada / Out (100% del impacto: -${fullPts.toFixed(1)} pts)">❌ Baja</button>
+                              </div>
+                            </div>
+                          </div>
+                        `;
+                      })
+                      .join("");
+
+              return `
+                <div class="ism-team-col">
+                  <div class="ism-team-col-head">
+                    <div class="ism-team-id">
+                      <img src="${team.logo}" alt="${team.abbr}" />
+                      <div>
+                        <div class="ism-side-lbl">${sideIcon} · ${team.abbr}</div>
+                        <div class="ism-team-nm">${team.name}</div>
+                      </div>
+                    </div>
+                    <div class="ism-team-summary-badges">
+                      <span class="ism-total-loss-badge ${detail.injPts < 0 ? "neg" : "ok"}">
+                        Impacto Neto Bajas: ${fmtSignedPts(detail.injPts)}
+                      </span>
+                      <span class="ism-sub-loss-badge">
+                        Ataque: -${detail.offLoss.toFixed(1)} pts · Defensa: -${detail.defLoss.toFixed(1)} pts
+                      </span>
+                    </div>
+                  </div>
+                  <div class="ism-players-list">
+                    ${rowsHtml}
+                  </div>
+                </div>
+              `;
+            })
+            .join("")}
         </div>
       </div>
     `;
   }
+
+  // Eventos interactivos del Simulador de Bajas y Parte Médico
+  document.getElementById("btnToggleInjurySimBody")?.addEventListener("click", () => {
+    STATE.showInjurySimPanel = !STATE.showInjurySimPanel;
+    renderMatchupBoard();
+  });
+
+  document.getElementById("btnResetInjuryOverrides")?.addEventListener("click", () => {
+    STATE.injuryOverrides = {};
+    renderMatchupBoard();
+    const freshProj = computeMatchupProjection(aw, hm);
+    showToast(`🔄 Parte Médico Oficial ESPN restaurado (${aw.abbr} ${freshProj.scoreAway} vs ${freshProj.scoreHome} ${hm.abbr})`);
+  });
+
+  document.querySelectorAll(".btn-inj-sim").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const pid = btn.getAttribute("data-player-id");
+      const newW = Number(btn.getAttribute("data-weight"));
+      if (!pid || Number.isNaN(newW)) return;
+      const allTeamItems = [...(proj.injAwayDetail.allItems || []), ...(proj.injHomeDetail.allItems || [])];
+      const targetItem = allTeamItems.find((x) => x.id === pid);
+      if (targetItem && Math.abs(newW - Number(targetItem.default_weight ?? 0)) < 0.01) {
+        delete STATE.injuryOverrides[pid];
+      } else {
+        STATE.injuryOverrides[pid] = newW;
+      }
+      renderMatchupBoard();
+      const updatedProj = computeMatchupProjection(aw, hm);
+      const stLabel = newW === 0 ? "✅ Juega" : newW === 0.35 ? "🟡 En Duda" : newW === 0.75 ? "🟠 Difícil" : "❌ Baja Confirmada";
+      showToast(
+        `🚑 ${targetItem ? targetItem.name : pid} → ${stLabel} · Nuevo Proyectado: ${aw.abbr} ${updatedProj.scoreAway} (${updatedProj.winProbAway.toFixed(1)}%) vs ${updatedProj.scoreHome} ${hm.abbr} (${updatedProj.winProbHome.toFixed(1)}%)`
+      );
+    });
+  });
 
   // Renderizar en segundo plano la composición 16:9 de plastilina + logos y marcador del partido individual
   let activeClayStyleMode = "auto";
