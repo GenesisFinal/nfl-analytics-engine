@@ -63,8 +63,11 @@ const CLAY_GALLERY = [
   { label: "Duelo CIN vs CLE: Joe Burrow #9 (CIN) vs Myles Garrett #95 (CLE)", path: "assets/clay/clay_cin_cle.jpg", teams: ["CIN", "CLE"] },
   { label: "Duelo MIA vs TB: Tyreek Hill #10 (MIA) vs Baker Mayfield #6 (TB)", path: "assets/clay/clay_mia_tb.jpg", teams: ["MIA", "TB"] },
   { label: "Duelo LAC vs DEN: Justin Herbert #10 (LAC) vs Pat Surtain II #2 (DEN)", path: "assets/clay/clay_den_lac.jpg", teams: ["LAC", "DEN"] },
+  { label: "Duelo SEA vs DEN: Geno Smith #7 (SEA) vs Pat Surtain II #2 (DEN)", path: "assets/clay/clay_sim_sea_den.jpg", teams: ["SEA", "DEN"] },
   { label: "Duelo ARI vs JAX: Kyler Murray #1 (ARI) vs Trevor Lawrence #16 (JAX)", path: "assets/clay/clay_ari_jax.jpg", teams: ["ARI", "JAX"] },
   { label: "Duelo NYG vs TEN: Malik Nabers #1 (NYG) vs Tony Pollard #20 (TEN)", path: "assets/clay/clay_nyg_ten.jpg", teams: ["NYG", "TEN"] },
+  // Escena 3D Plastilina Universal (Estadio + Cascos Chocando para componer con Logos de cualquier cruce)
+  { label: "Estadio 3D Plastilina: Cascos Chocando + Escudos Oficiales", path: "assets/clay/clay_stadium_turf_bg.jpg", teams: [] },
   // Escenas Individuales de 1 Solo Equipo (Scouting / Equipo / News sin rival externo)
   { label: "CAR Individual: Bryce Young #9 & Jadeveon Clowney #7 (Panthers)", path: "assets/clay/clay_car_young9.jpg", teams: ["CAR"] },
   { label: "CAR Scramble: Bryce Young #9 en Acción (Panthers)", path: "assets/clay/clay_car_young9_run.jpg", teams: ["CAR"] },
@@ -123,15 +126,12 @@ function getConcordantGalleryItemsForTeams(candidateTeams) {
     );
     if (exactPair.length > 0) return exactPair;
 
-    // 2) Si es un cruce personalizado del simulador sin imagen de par exacta, usar SOLO imágenes individuales (1 equipo) de tA o tB
+    // 2) Si es un cruce del simulador sin foto de par específica, usar la base 3D Plastilina Universal (Cascos + Escudos Oficiales)
+    const universalStadium = CLAY_GALLERY.filter((item) => item.path === "assets/clay/clay_stadium_turf_bg.jpg");
     const soloMatches = CLAY_GALLERY.filter(
       (item) => item.teams && item.teams.length === 1 && (item.teams[0] === tA || item.teams[0] === tB)
     );
-    if (soloMatches.length > 0) return soloMatches;
-
-    // 3) Como último recurso de equipo, buscar el partido de Semana 8 del equipo visitante tA
-    const w8Fallback = CLAY_GALLERY.filter((item) => item.path.includes("clay_w8_") && item.teams?.includes(tA));
-    if (w8Fallback.length > 0) return w8Fallback;
+    return [...universalStadium, ...soloMatches];
   } else if (candidateTeams.length === 1) {
     const tOnly = candidateTeams[0];
     // 1) Primero imágenes individuales (1 solo equipo, sin rivales externos)
@@ -413,7 +413,7 @@ function initTipCardState(tip) {
   }
   if (!STATE.cardState[tip.id]) {
     STATE.cardState[tip.id] = {
-      linkType: "source", // 'source' o 'page' (Selector Dual pedido en punto 1)
+      linkType: tip.is_prediction_post ? "none" : "source", // 'none' | 'source' | 'page'
       pubMode: "now",     // 'now' | 'offset' | 'datetime' (Pedido en punto 2)
       offsetVal: 30,
       offsetUnit: "minutes",
@@ -430,12 +430,18 @@ function initTipCardState(tip) {
 
 function buildFinalPostText(tip) {
   const st = initTipCardState(tip);
+  if (st.linkType === "none") {
+    return st.body.trim();
+  }
   const chosenLink = st.linkType === "page" ? tip.page_link : tip.source_link;
   return `${st.body.trim()}\n👉 ${chosenLink}`;
 }
 
 function estimateXCharLength(tip) {
   const st = initTipCardState(tip);
+  if (st.linkType === "none") {
+    return st.body.trim().length;
+  }
   // En X/Twitter todo link ocupa 23 caracteres (t.co) + "\n👉 " (4 chars) = 27 chars
   return st.body.trim().length + 27;
 }
@@ -857,6 +863,41 @@ function computeMatchupProjection(aw, hm) {
   };
 }
 
+const TEAM_BRAND_COLORS = {
+  ARI: ["#97233F", "#FFB612"],
+  ATL: ["#A71930", "#000000"],
+  BAL: ["#241773", "#9E7C0C"],
+  BUF: ["#00338D", "#C60C30"],
+  CAR: ["#0085CA", "#101820"],
+  CHI: ["#0B162A", "#C83803"],
+  CIN: ["#FB4F14", "#000000"],
+  CLE: ["#311D00", "#FF3C00"],
+  DAL: ["#003594", "#869397"],
+  DEN: ["#FB4F14", "#002244"],
+  DET: ["#0076B6", "#B0B7BC"],
+  GB: ["#203731", "#FFB612"],
+  HOU: ["#03202F", "#A71930"],
+  IND: ["#002C5F", "#A2AAAD"],
+  JAX: ["#006778", "#D7A22A"],
+  KC: ["#E31837", "#FFB81C"],
+  LA: ["#003594", "#FFA300"],
+  LAC: ["#0080C6", "#FFC20E"],
+  LV: ["#000000", "#A5ACAF"],
+  MIA: ["#008E97", "#FC4C02"],
+  MIN: ["#4F2683", "#FFC62F"],
+  NE: ["#002244", "#C60C30"],
+  NO: ["#D3BC8D", "#101820"],
+  NYG: ["#0B2265", "#A71930"],
+  NYJ: ["#125740", "#FFFFFF"],
+  PHI: ["#004C54", "#A5ACAF"],
+  PIT: ["#101820", "#FFB612"],
+  SEA: ["#002244", "#69BE28"],
+  SF: ["#AA0000", "#B3995D"],
+  TB: ["#D50A0A", "#34302B"],
+  TEN: ["#0C2340", "#4B92DB"],
+  WAS: ["#5A1414", "#FFB612"],
+};
+
 function buildPredictionXPostText(aw, hm, g, proj) {
   if (!aw || !hm || !proj) return "";
   const eq1 = aw.abbr;
@@ -865,8 +906,6 @@ function buildPredictionXPostText(aw, hm, g, proj) {
   const score2 = proj.scoreHome;
   const winE1 = `${Number(proj.winProbAway).toFixed(1)}%`;
   const winE2 = `${Number(proj.winProbHome).toFixed(1)}%`;
-  const eqGanador = proj.favTeam?.short || proj.favTeam?.abbr || eq1;
-  const margen = `-${Math.abs(Number(proj.favMargin)).toFixed(1)}`;
   const ptsLV = String(g?.over_under ?? proj.projectedTotal)
     .replace(/^O\/U\s*/i, "")
     .trim();
@@ -891,26 +930,338 @@ function buildPredictionXPostText(aw, hm, g, proj) {
 
   return [
     `${eq1} ${score1} vs ${score2} ${eq2}`,
-    `${eq1} gana: ${winE1} ------ ${eq2} gana: ${winE2}`,
-    `Favorito del Modelo ${eqGanador} por ${margen} pts.`,
-    `Las Vegas: O/U ${ptsLV}`,
+    `${eq1} gana: ${winE1} ↔️ ${eq2} gana: ${winE2}`,
+    `Vegas: O/U ${ptsLV}`,
     ``,
     `Base:`,
     `${eq1}: ${ptsBaseE1}`,
     `${eq2}: ${ptsBaseE2}`,
-    `Pase vs Secundaria:`,
+    ``,
+    `Pase Off:`,
     `${eq1}: ${ptsPSE1}`,
     `${eq2}: ${ptsPSE2}`,
-    `Correr vs Front:`,
+    ``,
+    `Run Off:`,
     `${eq1}: ${ptsCFE1}`,
     `${eq2}: ${ptsCFE2}`,
-    `Red Zone + 3rd Down + Sacks + Robos:`,
+    ``,
+    `RZ + 3°D + Sack + Steal:`,
     `${eq1}: ${ptsRZ3SRE1}`,
     `${eq2}: ${ptsRZ3SRE2}`,
-    `Especiales + Localía:`,
+    ``,
+    `ST + Local:`,
     `${eq1}: ${ptsELE1}`,
     `${eq2}: ${ptsELE2}`,
   ].join("\n");
+}
+
+function loadCanvasImageSafe(src) {
+  return new Promise((resolve) => {
+    if (!src) return resolve(null);
+    const img = new Image();
+    if (/^https?:\/\//i.test(src)) {
+      img.crossOrigin = "anonymous";
+    }
+    img.onload = () => resolve(img);
+    img.onerror = () => resolve(null);
+    img.src = src;
+  });
+}
+
+function drawRoundedRectPath(ctx, x, y, w, h, r) {
+  const rad = Math.min(r, w / 2, h / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + rad, y);
+  ctx.arcTo(x + w, y, x + w, y + h, rad);
+  ctx.arcTo(x + w, y + h, x, y + h, rad);
+  ctx.arcTo(x, y + h, x, y, rad);
+  ctx.arcTo(x, y, x + w, y, rad);
+  ctx.closePath();
+}
+
+function drawClayLogoMedallion(ctx, cx, cy, radius, primaryHex, accentHex, logoImg, abbr) {
+  ctx.save();
+  // Sombra exterior tipo plastilina 3D
+  ctx.shadowColor = "rgba(0, 0, 0, 0.55)";
+  ctx.shadowBlur = 20;
+  ctx.shadowOffsetX = 0;
+  ctx.shadowOffsetY = 9;
+
+  // Aro exterior esculpido en plastilina (color acento)
+  const outerGrad = ctx.createRadialGradient(
+    cx - radius * 0.35,
+    cy - radius * 0.35,
+    radius * 0.15,
+    cx,
+    cy,
+    radius + 10
+  );
+  outerGrad.addColorStop(0, "#ffffff");
+  outerGrad.addColorStop(0.22, accentHex || "#fbbf24");
+  outerGrad.addColorStop(0.85, primaryHex || "#0f172a");
+  outerGrad.addColorStop(1, "#090d16");
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius + 9, 0, Math.PI * 2);
+  ctx.fillStyle = outerGrad;
+  ctx.fill();
+
+  // Quitar sombra pesada para capas internas
+  ctx.shadowColor = "transparent";
+
+  // Disco principal del equipo (color primario con volumen)
+  const midGrad = ctx.createRadialGradient(
+    cx - radius * 0.3,
+    cy - radius * 0.3,
+    radius * 0.1,
+    cx,
+    cy,
+    radius
+  );
+  midGrad.addColorStop(0, primaryHex || "#1e293b");
+  midGrad.addColorStop(1, "#0f172a");
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+  ctx.fillStyle = midGrad;
+  ctx.fill();
+
+  // Base crema/blanca interior tipo medallón de plastilina para que el logo oficial contraste al 100%
+  const innerR = radius * 0.82;
+  const innerGrad = ctx.createRadialGradient(
+    cx - innerR * 0.25,
+    cy - innerR * 0.25,
+    innerR * 0.08,
+    cx,
+    cy,
+    innerR
+  );
+  innerGrad.addColorStop(0, "#ffffff");
+  innerGrad.addColorStop(0.78, "#f1f5f9");
+  innerGrad.addColorStop(1, "#cbd5e1");
+  ctx.beginPath();
+  ctx.arc(cx, cy, innerR, 0, Math.PI * 2);
+  ctx.fillStyle = innerGrad;
+  ctx.fill();
+
+  // Logo oficial del equipo (o abreviatura si no hay conexión)
+  if (logoImg) {
+    const logoSize = innerR * 1.52;
+    ctx.save();
+    ctx.shadowColor = "rgba(15, 23, 42, 0.28)";
+    ctx.shadowBlur = 8;
+    ctx.shadowOffsetY = 3;
+    ctx.drawImage(logoImg, cx - logoSize / 2, cy - logoSize / 2, logoSize, logoSize);
+    ctx.restore();
+  } else {
+    ctx.fillStyle = primaryHex || "#0f172a";
+    ctx.font = `900 ${Math.round(radius * 0.6)}px "Plus Jakarta Sans", sans-serif`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(abbr, cx, cy);
+  }
+
+  // Brillo especular superior de plastilina 3D
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius + 4, Math.PI * 1.12, Math.PI * 1.82);
+  ctx.strokeStyle = "rgba(255, 255, 255, 0.38)";
+  ctx.lineWidth = Math.max(3, radius * 0.07);
+  ctx.lineCap = "round";
+  ctx.stroke();
+
+  ctx.restore();
+}
+
+async function renderMatchupClayCardToDataUrl(aw, hm, g, proj, requestedMode = "auto") {
+  if (!aw || !hm || !proj) return "assets/clay/clay_stadium_turf_bg.jpg";
+  const exactPair = CLAY_GALLERY.filter(
+    (item) => item.teams && item.teams.length === 2 && item.teams.includes(aw.abbr) && item.teams.includes(hm.abbr)
+  );
+  const hasExactPlayers = exactPair.length > 0;
+  let mode = requestedMode;
+  if (mode === "auto") {
+    mode = hasExactPlayers ? "players_logos" : "helmets_logos";
+  }
+
+  const baseBgPath =
+    mode === "helmets_logos" || !hasExactPlayers
+      ? "assets/clay/clay_stadium_turf_bg.jpg"
+      : exactPair[0].path;
+
+  const [bgImg, awLogoImg, hmLogoImg] = await Promise.all([
+    loadCanvasImageSafe(baseBgPath),
+    loadCanvasImageSafe(aw.logo),
+    loadCanvasImageSafe(hm.logo),
+  ]);
+
+  if (!bgImg) return baseBgPath;
+
+  const canvas = document.createElement("canvas");
+  canvas.width = 1280;
+  canvas.height = 720;
+  const ctx = canvas.getContext("2d");
+
+  // 1. Fondo 16:9 de Plastilina 3D (Jugadores contendientes o Estadio con Cascos 3D)
+  ctx.drawImage(bgImg, 0, 0, 1280, 720);
+
+  const [awPri, awAcc] = TEAM_BRAND_COLORS[aw.abbr] || ["#002244", "#69BE28"];
+  const [hmPri, hmAcc] = TEAM_BRAND_COLORS[hm.abbr] || ["#FB4F14", "#002244"];
+  const ptsLV = String(g?.over_under ?? proj.projectedTotal)
+    .replace(/^O\/U\s*/i, "")
+    .trim();
+
+  if (mode === "helmets_logos" || !hasExactPlayers) {
+    // Sombreado radial suave para destacar los dos medallones 3D de plastilina y el marcador
+    const vignette = ctx.createLinearGradient(0, 0, 0, 720);
+    vignette.addColorStop(0, "rgba(9, 13, 22, 0.35)");
+    vignette.addColorStop(0.5, "rgba(9, 13, 22, 0.12)");
+    vignette.addColorStop(1, "rgba(9, 13, 22, 0.65)");
+    ctx.fillStyle = vignette;
+    ctx.fillRect(0, 0, 1280, 720);
+
+    // Dos medallones gigantes 3D de plastilina con los logos oficiales de los equipos contendientes
+    drawClayLogoMedallion(ctx, 295, 275, 110, awPri, awAcc, awLogoImg, aw.abbr);
+    drawClayLogoMedallion(ctx, 985, 275, 110, hmPri, hmAcc, hmLogoImg, hm.abbr);
+
+    // Placas 3D con el nombre de cada equipo debajo de cada medallón
+    const drawTeamPill = (cx, cy, text, pri, acc) => {
+      ctx.save();
+      const w = 310;
+      const h = 44;
+      ctx.shadowColor = "rgba(0,0,0,0.5)";
+      ctx.shadowBlur = 12;
+      ctx.shadowOffsetY = 5;
+      drawRoundedRectPath(ctx, cx - w / 2, cy - h / 2, w, h, 22);
+      ctx.fillStyle = pri;
+      ctx.fill();
+      ctx.lineWidth = 3.5;
+      ctx.strokeStyle = acc;
+      ctx.stroke();
+      ctx.shadowColor = "transparent";
+      ctx.fillStyle = "#ffffff";
+      ctx.font = '800 18px "Plus Jakarta Sans", sans-serif';
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(text.toUpperCase(), cx, cy + 1);
+      ctx.restore();
+    };
+    drawTeamPill(295, 422, `${aw.name}`, awPri, awAcc);
+    drawTeamPill(985, 422, `${hm.name}`, hmPri, hmAcc);
+  } else {
+    // Modo "players_logos" o "clean_clay": Escudos 3D de plastilina en las esquinas superiores
+    drawClayLogoMedallion(ctx, 88, 84, 54, awPri, awAcc, awLogoImg, aw.abbr);
+    drawClayLogoMedallion(ctx, 1192, 84, 54, hmPri, hmAcc, hmLogoImg, hm.abbr);
+  }
+
+  // Si no es "clean_clay", dibujamos la barra inferior de Marcador Probable 3D Plastilina
+  if (mode !== "clean_clay") {
+    ctx.save();
+    const barX = 110;
+    const barY = 562;
+    const barW = 1060;
+    const barH = 132;
+
+    ctx.shadowColor = "rgba(0, 0, 0, 0.65)";
+    ctx.shadowBlur = 24;
+    ctx.shadowOffsetY = 10;
+
+    const barGrad = ctx.createLinearGradient(barX, barY, barX + barW, barY + barH);
+    barGrad.addColorStop(0, "rgba(15, 23, 42, 0.94)");
+    barGrad.addColorStop(0.5, "rgba(30, 41, 59, 0.95)");
+    barGrad.addColorStop(1, "rgba(15, 23, 42, 0.94)");
+
+    drawRoundedRectPath(ctx, barX, barY, barW, barH, 28);
+    ctx.fillStyle = barGrad;
+    ctx.fill();
+
+    // Borde biselado tipo plastilina
+    const borderGrad = ctx.createLinearGradient(barX, barY, barX + barW, barY);
+    borderGrad.addColorStop(0, awAcc || "#38bdf8");
+    borderGrad.addColorStop(0.5, "#fbbf24");
+    borderGrad.addColorStop(1, hmAcc || "#f87171");
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = borderGrad;
+    ctx.stroke();
+
+    ctx.shadowColor = "transparent";
+
+    // Logos dentro de la barra de marcador
+    if (awLogoImg) {
+      ctx.drawImage(awLogoImg, barX + 26, barY + 22, 86, 86);
+    }
+    if (hmLogoImg) {
+      ctx.drawImage(hmLogoImg, barX + barW - 112, barY + 22, 86, 86);
+    }
+
+    // Marcador central: SEA 16 vs 10 DEN
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.font = '900 44px "Plus Jakarta Sans", sans-serif';
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText(`${aw.abbr} ${proj.scoreAway}  vs  ${proj.scoreHome} ${hm.abbr}`, 640, barY + 46);
+
+    // Línea de probabilidades y Vegas O/U
+    ctx.font = '800 22px "JetBrains Mono", monospace';
+    ctx.fillStyle = "#fde047";
+    ctx.fillText(
+      `${aw.abbr} gana: ${Number(proj.winProbAway).toFixed(1)}%  ↔️  ${hm.abbr} gana: ${Number(proj.winProbHome).toFixed(1)}%   ·   Vegas: O/U ${ptsLV}`,
+      640,
+      barY + 96
+    );
+    ctx.restore();
+  }
+
+  try {
+    return canvas.toDataURL("image/jpeg", 0.92);
+  } catch (_) {
+    return baseBgPath;
+  }
+}
+
+function syncPredictionPostToTipsFeed(aw, hm, g, proj, postText, illustrationUrl) {
+  if (!STATE.data || !STATE.data.tips_x) return;
+  const tipId = `tip-pred-${aw.abbr}-${hm.abbr}`;
+  const dayGroup = g.day_slot === "TNF" || g.day_slot === "MNF" ? g.day_slot : "SUNDAY";
+  const awSpec = TEAM_VISUAL_SPECS_JS[aw.abbr] || TEAM_VISUAL_SPECS_JS.SEA;
+  const hmSpec = TEAM_VISUAL_SPECS_JS[hm.abbr] || TEAM_VISUAL_SPECS_JS.DEN;
+  const [awQb, awQbNum] = awSpec.qb;
+  const [hmPr, hmPrNum] = hmSpec.pr;
+  const prompt = `3D claymation (caricatura de plastilina) full-bleed widescreen 16:9 illustration of contending NFL teams ${awSpec.name} (${aw.abbr}, ${awQb} ${awQbNum}) vs ${hmSpec.name} (${hm.abbr}, ${hmPr} ${hmPrNum}) with official team logos and projected score ${aw.abbr} ${proj.scoreAway} vs ${proj.scoreHome} ${hm.abbr}.`;
+
+  let existing = STATE.data.tips_x.find((t) => t.id === tipId);
+  if (existing) {
+    existing.body = postText;
+    existing.illustration = illustrationUrl;
+    existing.title = `Pronóstico Modelo: ${aw.abbr} ${proj.scoreAway} vs ${proj.scoreHome} ${hm.abbr}`;
+    existing.clay_prompt = prompt;
+    existing.is_prediction_post = true;
+    if (STATE.cardState[tipId]) {
+      STATE.cardState[tipId].body = postText;
+      STATE.cardState[tipId].illustration = illustrationUrl;
+      STATE.cardState[tipId].title = existing.title;
+      STATE.cardState[tipId].linkType = "none";
+    }
+  } else {
+    const newTip = {
+      id: tipId,
+      day_group: dayGroup,
+      category: dayGroup,
+      matchup: `${aw.abbr} @ ${hm.abbr}`,
+      badge: `🔮 PRONÓSTICO X · ${aw.abbr} vs ${hm.abbr}`,
+      game_id: g.id,
+      matchup_label: `${aw.abbr} ${proj.scoreAway} vs ${proj.scoreHome} ${hm.abbr}`,
+      title: `Pronóstico Modelo: ${aw.abbr} ${proj.scoreAway} vs ${proj.scoreHome} ${hm.abbr}`,
+      body: postText,
+      page_link: `${STATE.dashboardPublicUrl}#matchup-${g.id}`,
+      source_link: "https://www.sharpfootballanalysis.com/stats-nfl/",
+      source_name: "Sharp Football / RBSDM",
+      illustration: illustrationUrl,
+      clay_prompt: prompt,
+      is_prediction_post: true,
+    };
+    STATE.data.tips_x.unshift(newTip);
+    initTipCardState(newTip);
+  }
+  renderXTipsFeed();
 }
 
 function renderMatchupBoard() {
@@ -932,6 +1283,12 @@ function renderMatchupBoard() {
 
   const proj = computeMatchupProjection(aw, hm);
   const predXPostString = buildPredictionXPostText(aw, hm, g, proj);
+  const exactPairForInit = CLAY_GALLERY.filter(
+    (item) => item.teams && item.teams.length === 2 && item.teams.includes(aw.abbr) && item.teams.includes(hm.abbr)
+  );
+  const initialFallbackImg = exactPairForInit.length > 0 ? exactPairForInit[0].path : "assets/clay/clay_stadium_turf_bg.jpg";
+  const charLenClass = predXPostString.length <= 270 ? "ok" : predXPostString.length <= 280 ? "warn" : "over";
+
   const hasScore = g.status_state === "in" || g.status_state === "post";
   const centerCircleHtml = hasScore
     ? `<div class="mb-vs-circle" style="width:auto; padding:0 12px; border-radius:16px; background:${g.status_state === "in" ? "#dc2626" : "#013369"}; color:#fff; font-size:14px;">${aw.abbr} ${g.away_score ?? 0} - ${g.home_score ?? 0} ${hm.abbr}</div>`
@@ -965,8 +1322,8 @@ function renderMatchupBoard() {
       ${centerCircleHtml}
       <div class="mb-odds-line">${statusLineText}</div>
       <div class="pred-x-action-bar compact">
-        <button type="button" class="btn-gen-post-x js-toggle-pred-x-preview" title="Ver o generar el posteo formateado con la predicción del modelo">
-          𝕏 Generar Post X
+        <button type="button" class="btn-gen-post-x js-toggle-pred-x-preview" title="Generar el posteo compacto (<280 chars) + imagen 16:9 de plastilina con los equipos y logos">
+          𝕏 Generar Post X + Imagen
         </button>
         <button type="button" class="btn-quick-copy-x js-copy-pred-x" title="Copiar texto del pronóstico al portapapeles">
           📋 Copiar texto
@@ -1085,11 +1442,11 @@ function renderMatchupBoard() {
             </div>
           </div>
 
-          <!-- BOTÓN "GENERAR POST X" CON DOS OPCIONES RÁPIDAS ("COPIAR TEXTO" Y "POSTEAR EN X") -->
+          <!-- BOTÓN "GENERAR POST X" CON IMAGEN ALUSIVA DE PLASTILINA + OPCIONES RÁPIDAS -->
           <div class="pred-x-generator-panel">
             <div class="pred-x-action-bar">
               <button type="button" class="btn-gen-post-x js-toggle-pred-x-preview">
-                𝕏 Generar Post X
+                𝕏 Generar Post X + Imagen 16:9
               </button>
               <div class="pred-x-quick-options">
                 <button type="button" class="btn-quick-copy-x js-copy-pred-x">
@@ -1102,10 +1459,31 @@ function renderMatchupBoard() {
             </div>
             <div class="pred-x-preview-box hidden" id="predXPostPreviewBox">
               <div class="pxp-header">
-                <span>Vista previa del Post X (formato estricto del modelo):</span>
-                <span class="pxp-len">${predXPostString.length} caracteres</span>
+                <span>🎨 Post X + Caricatura 3D de Plastilina (${aw.abbr} vs ${hm.abbr}):</span>
+                <span class="pxp-len ${charLenClass}">${predXPostString.length} / 280 máx · ✅ Entra en X</span>
               </div>
-              <textarea class="pxp-textarea" id="predXPostTextarea" rows="11" readonly>${predXPostString}</textarea>
+              <div class="pxp-media-and-text-grid">
+                <div class="pxp-image-col">
+                  <div class="pxp-img-frame">
+                    <img id="predXPostImgPreview" src="${initialFallbackImg}" alt="Caricatura de plastilina ${aw.abbr} vs ${hm.abbr}" />
+                    <span class="pxp-img-badge"> Plastilina 3D · ${aw.abbr} vs ${hm.abbr}</span>
+                  </div>
+                  <div class="pxp-img-actions">
+                    <button type="button" class="btn-pxp-img-action" id="btnCopyPredXImg" title="Copiar imagen al portapapeles para pegarla directo en X (Ctrl+V)">
+                      🖼️ Copiar Imagen
+                    </button>
+                    <button type="button" class="btn-pxp-img-action" id="btnDownloadPredXImg" title="Descargar imagen 16:9 en alta resolución">
+                      💾 Descargar 16:9
+                    </button>
+                    <button type="button" class="btn-pxp-img-action" id="btnCyclePredXStyle" title="Alternar entre Caricatura de Jugadores + Logos y Escudos 3D de Plastilina">
+                      🎨 Alternar Diseño (${exactPairForInit.length > 0 ? "Jugadores + Logos" : "Cascos & Logos 3D"})
+                    </button>
+                  </div>
+                </div>
+                <div class="pxp-text-col">
+                  <textarea class="pxp-textarea" id="predXPostTextarea" rows="13" readonly>${predXPostString}</textarea>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1205,17 +1583,90 @@ function renderMatchupBoard() {
     `;
   }
 
+  // Renderizar en segundo plano la composición 16:9 de plastilina + logos y marcador
+  let activeClayStyleMode = "auto";
+  let latestRenderedClayDataUrl = initialFallbackImg;
+
+  const refreshPredClayComposite = async (styleMode = "auto", syncToFeed = false) => {
+    const dataUrl = await renderMatchupClayCardToDataUrl(aw, hm, g, proj, styleMode);
+    latestRenderedClayDataUrl = dataUrl;
+    const imgEl = document.getElementById("predXPostImgPreview");
+    if (imgEl) imgEl.src = dataUrl;
+    if (syncToFeed) {
+      syncPredictionPostToTipsFeed(aw, hm, g, proj, predXPostString, dataUrl);
+    }
+    return dataUrl;
+  };
+
+  refreshPredClayComposite("auto", false);
+
   // Eventos para los botones "Generar Post X", "Copiar texto" y "Postear en X"
   document.querySelectorAll(".js-toggle-pred-x-preview").forEach((btn) => {
-    btn.addEventListener("click", () => {
+    btn.addEventListener("click", async () => {
       const box = document.getElementById("predXPostPreviewBox");
       if (box) {
-        const isHidden = box.classList.toggle("hidden");
-        if (!isHidden) {
-          box.scrollIntoView({ behavior: "smooth", block: "nearest" });
-        }
+        box.classList.remove("hidden");
+        box.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+      const dataUrl = await refreshPredClayComposite(activeClayStyleMode, true);
+      try {
+        await navigator.clipboard.writeText(predXPostString);
+        showToast(`✅ Post X (${predXPostString.length} chars) copiado + Imagen 16:9 de plastilina (${aw.abbr} vs ${hm.abbr}) creada`);
+      } catch (_) {
+        showToast(`✨ Post X + Imagen 16:9 de plastilina (${aw.abbr} vs ${hm.abbr}) generados`);
       }
     });
+  });
+
+  document.getElementById("btnCyclePredXStyle")?.addEventListener("click", async (e) => {
+    const btn = e.currentTarget;
+    const modes = exactPairForInit.length > 0 ? ["players_logos", "helmets_logos", "clean_clay"] : ["helmets_logos", "clean_clay"];
+    const curIdx = modes.indexOf(activeClayStyleMode === "auto" ? modes[0] : activeClayStyleMode);
+    activeClayStyleMode = modes[(curIdx + 1) % modes.length];
+    const modeLabels = {
+      players_logos: "Jugadores 3D + Logos",
+      helmets_logos: "Cascos & Escudos 3D",
+      clean_clay: "Plastilina Limpia",
+    };
+    btn.textContent = `🎨 Diseño: ${modeLabels[activeClayStyleMode]}`;
+    await refreshPredClayComposite(activeClayStyleMode, true);
+    showToast(`🎨 Diseño cambiado a: ${modeLabels[activeClayStyleMode]}`);
+  });
+
+  document.getElementById("btnCopyPredXImg")?.addEventListener("click", async (e) => {
+    const btn = e.currentTarget;
+    try {
+      const resp = await fetch(latestRenderedClayDataUrl);
+      const blob = await resp.blob();
+      // Convertir a image/png si el navegador exige PNG para el portapapeles
+      const imgBitmap = await loadCanvasImageSafe(latestRenderedClayDataUrl);
+      if (imgBitmap && window.ClipboardItem) {
+        const tmpCanvas = document.createElement("canvas");
+        tmpCanvas.width = imgBitmap.naturalWidth || 1280;
+        tmpCanvas.height = imgBitmap.naturalHeight || 720;
+        tmpCanvas.getContext("2d").drawImage(imgBitmap, 0, 0);
+        const pngBlob = await new Promise((r) => tmpCanvas.toBlob(r, "image/png"));
+        await navigator.clipboard.write([new ClipboardItem({ "image/png": pngBlob })]);
+        const prev = btn.textContent;
+        btn.textContent = "✅ Imagen Copiada";
+        showToast("🖼️ Imagen 16:9 copiada al portapapeles (pegala en X con Ctrl+V)");
+        setTimeout(() => (btn.textContent = prev), 2200);
+        return;
+      }
+      throw new Error("ClipboardItem no disponible");
+    } catch (_) {
+      document.getElementById("btnDownloadPredXImg")?.click();
+    }
+  });
+
+  document.getElementById("btnDownloadPredXImg")?.addEventListener("click", () => {
+    const a = document.createElement("a");
+    a.href = latestRenderedClayDataUrl;
+    a.download = `nfl_clay_${aw.abbr}_vs_${hm.abbr}.jpg`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    showToast(`💾 Imagen descargada: nfl_clay_${aw.abbr}_vs_${hm.abbr}.jpg`);
   });
 
   document.querySelectorAll(".js-copy-pred-x").forEach((btn) => {
@@ -1235,7 +1686,7 @@ function renderMatchupBoard() {
       const prevHtml = btn.innerHTML;
       btn.innerHTML = "✅ Copiado";
       btn.classList.add("copied-ok");
-      showToast("✅ Copiado al portapapeles");
+      showToast(`✅ Copiado al portapapeles (${predXPostString.length} / 280 caracteres)`);
       setTimeout(() => {
         btn.innerHTML = prevHtml;
         btn.classList.remove("copied-ok");
@@ -1244,8 +1695,9 @@ function renderMatchupBoard() {
   });
 
   document.querySelectorAll(".js-intent-pred-x").forEach((btn) => {
-    btn.addEventListener("click", () => {
+    btn.addEventListener("click", async () => {
       if (!predXPostString) return;
+      await refreshPredClayComposite(activeClayStyleMode, true);
       const intentUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(predXPostString)}`;
       window.open(intentUrl, "_blank", "noopener,noreferrer");
     });
@@ -2640,12 +3092,13 @@ function renderXTipsFeed() {
       const st = initTipCardState(tip);
       const isChecked = STATE.selectedTipIds.has(tip.id);
       const charCount = estimateXCharLength(tip);
-      const charClass = charCount <= 260 ? "" : charCount <= 280 ? "warn" : "over";
+      const charClass = charCount <= 270 ? "" : charCount <= 280 ? "warn" : "over";
       const activeUrl = st.linkType === "page" ? tip.page_link : tip.source_link;
+      const bodyRows = (st.body.match(/\n/g) || []).length >= 6 ? 10 : 4;
 
       const isGalleryPath = CLAY_GALLERY.some((c) => c.path === st.illustration);
       const customOptionHtml = !isGalleryPath
-        ? `<option value="${st.illustration}" selected>✨ Imagen 16:9 Única Concordante (${(tip.matchup_label || st.title).slice(0, 32)})</option>`
+        ? `<option value="${st.illustration}" selected>✨ Imagen 16:9 Alusiva (${(tip.matchup_label || st.title).slice(0, 32)})</option>`
         : "";
       const cardTeams = extractCandidateTeams(`${st.title || ""} ${st.body || ""}`, tip.matchup || "");
       const concordantList = getConcordantGalleryItemsForTeams(cardTeams);
@@ -2658,7 +3111,7 @@ function renderXTipsFeed() {
             .join("")}</optgroup>`
         : "";
       const otherGroupHtml = otherList.length
-        ? `<optgroup label="📂 OTROS DUELOS DEL CATÁLOGO (48 escenas)">${otherList
+        ? `<optgroup label="📂 OTROS DUELOS DEL CATÁLOGO (${otherList.length} escenas)">${otherList
             .map((c) => `<option value="${c.path}" ${st.illustration === c.path ? "selected" : ""}>🎨 ${c.label}</option>`)
             .join("")}</optgroup>`
         : "";
@@ -2671,7 +3124,7 @@ function renderXTipsFeed() {
               <input type="checkbox" class="chk-select-tip" data-tipid="${tip.id}" ${isChecked ? "checked" : ""} />
               <span>${tip.badge}</span>
             </label>
-            <span class="xtc-char-badge ${charClass}" id="charBadge-${tip.id}">${charCount} / 260 máx</span>
+            <span class="xtc-char-badge ${charClass}" id="charBadge-${tip.id}">${charCount} / 280 máx</span>
           </div>
 
           <!-- ILUSTRACIÓN DE PLASTILINA (16:9) -->
@@ -2693,15 +3146,18 @@ function renderXTipsFeed() {
           <input type="text" class="xtc-title-input" data-tipid="${tip.id}" value="${st.title.replace(/"/g, "&quot;")}" title="Título del ángulo técnico" />
 
           <!-- CONTENIDO TÉCNICO BASADO EN DATOS -->
-          <textarea rows="4" class="xtc-body-textarea" data-tipid="${tip.id}">${st.body}</textarea>
+          <textarea rows="${bodyRows}" class="xtc-body-textarea" data-tipid="${tip.id}">${st.body}</textarea>
 
-          <!-- 1) SELECTOR PARA OPTAR POR AMBAS OPCIONES DE LINK -->
+          <!-- 1) SELECTOR PARA OPTAR POR LINK O SIN LINK -->
           <div class="xtc-link-selector-box">
             <div class="xtc-link-selector-header">
               <span>🔗 LINK INCLUIDO EN EL POST:</span>
               <span>Fuente: ${tip.source_name}</span>
             </div>
             <div class="xtc-link-toggle-btns">
+              <button class="btn-link-choice ${st.linkType === "none" ? "active" : ""}" data-tipid="${tip.id}" data-ltype="none" title="Publicar solo el texto limpio sin agregar link al final">
+                🚫 Sin Link
+              </button>
               <button class="btn-link-choice ${st.linkType === "page" ? "active" : ""}" data-tipid="${tip.id}" data-ltype="page">
                 🏠 Nuestra Página
               </button>
@@ -2709,9 +3165,11 @@ function renderXTipsFeed() {
                 📊 Sitio Fuente (${tip.source_name.split("/")[0].trim()})
               </button>
             </div>
-            <a href="${activeUrl}" target="_blank" class="xtc-active-link-preview" id="activeLinkPrev-${tip.id}">
-              👉 ${activeUrl}
-            </a>
+            ${
+              st.linkType === "none"
+                ? `<div class="xtc-active-link-preview" style="color:#64748b;">✅ Sin link adicional (entra directo en 280 caracteres de X)</div>`
+                : `<a href="${activeUrl}" target="_blank" class="xtc-active-link-preview" id="activeLinkPrev-${tip.id}">👉 ${activeUrl}</a>`
+            }
           </div>
 
           <!-- 2) OPCIONES DE PUBLICACIÓN MANUAL (INMEDIATO O PROGRAMADO) -->
@@ -2851,8 +3309,8 @@ function bindXTipCardEvents() {
       const count = estimateXCharLength(tip);
       const badge = document.getElementById(`charBadge-${id}`);
       if (badge) {
-        badge.textContent = `${count} / 260 máx`;
-        badge.className = `xtc-char-badge ${count <= 260 ? "" : count <= 280 ? "warn" : "over"}`;
+        badge.textContent = `${count} / 280 máx`;
+        badge.className = `xtc-char-badge ${count <= 270 ? "" : count <= 280 ? "warn" : "over"}`;
       }
     });
   });
@@ -3344,38 +3802,26 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("gameRibbonTrack")?.scrollBy({ left: 320, behavior: "smooth" });
   });
 
-  // Botón de crear tip del partido activo en la Pizarra Táctica (con números de jugadores, pronóstico de victoria y nueva imagen única 16:9)
-  document.getElementById("btnCreateMatchupTip")?.addEventListener("click", () => {
+  // Botón de crear tip del partido activo en la Pizarra Táctica (con formato compacto <280 chars + caricatura de plastilina 16:9 con equipos y logos)
+  document.getElementById("btnCreateMatchupTip")?.addEventListener("click", async () => {
     const m = getActiveMatchupTeams();
     if (!m) return;
     const { away: aw, home: hm, game: g } = m;
     const proj = computeMatchupProjection(aw, hm);
-    const awSpec = TEAM_VISUAL_SPECS_JS[aw.abbr] || TEAM_VISUAL_SPECS_JS.DAL;
-    const hmSpec = TEAM_VISUAL_SPECS_JS[hm.abbr] || TEAM_VISUAL_SPECS_JS.PHI;
-    const [awQb, awQbNum] = awSpec.qb;
-    const [hmPr, hmPrNum] = hmSpec.pr;
-    const prompt = `3D claymation (caricatura de plastilina) full-bleed widescreen 16:9 illustration extending to the edges with NO border or frame: ${awSpec.name} quarterback ${awQb} in ${awSpec.jersey} with number ${awQbNum} and ${awSpec.helmet} facing pass pressure from ${hmSpec.name} defender ${hmPr} in ${hmSpec.jersey} with number ${hmPrNum} and ${hmSpec.helmet} at the line of scrimmage with ONE single football. Handcrafted plasticine clay texture, natural anatomy.`;
-    const uniqueImg = buildUniqueDynamicClayUrl(prompt, `${aw.abbr} @ ${hm.abbr}`);
-    const predSnippet = proj
-      ? ` Pronóstico Modelo: ${proj.favTeam.abbr} ${Math.max(proj.winProbAway, proj.winProbHome)}% (${aw.abbr} ${proj.scoreAway}-${proj.scoreHome} ${hm.abbr}).`
-      : "";
-
-    prependNewTipCard({
-      id: `tip-matchup-${g.id}-${Date.now()}`,
-      day_group: g.day_slot === "TNF" || g.day_slot === "MNF" ? g.day_slot : "SUNDAY",
-      category: g.day_slot === "TNF" || g.day_slot === "MNF" ? g.day_slot : "SUNDAY",
-      matchup: `${aw.abbr} @ ${hm.abbr}`,
-      badge: `🏈 DUELO TÁCTICO · ${aw.abbr} @ ${hm.abbr}`,
-      game_id: g.id,
-      matchup_label: `${aw.abbr} (${awQb} ${awQbNum}) @ ${hm.abbr} (${hmPr} ${hmPrNum})`,
-      title: `Duelo y Pronóstico: ${awQb} (${awQbNum}, ${aw.abbr}) vs. ${hmPr} (${hmPrNum}, ${hm.abbr})`,
-      body: `🏈 En ${aw.abbr} @ ${hm.abbr}: ${awQb} (${awQbNum}) registra ${aw.off_epa_play >= 0 ? "+" : ""}${aw.off_epa_play.toFixed(2)} EPA/jug vs ${hmPr} (${hmPrNum}, ${hm.def_sack_rate.toFixed(1)}% sacks).${predSnippet}`,
-      page_link: `${STATE.dashboardPublicUrl}#matchup-${g.id}`,
-      source_link: "https://www.sharpfootballanalysis.com/stats-nfl/",
-      source_name: "Sharp Football / FTN DVOA",
-      illustration: uniqueImg,
-      clay_prompt: prompt,
-    });
+    if (!proj) return;
+    const postText = buildPredictionXPostText(aw, hm, g, proj);
+    const dataUrl = await renderMatchupClayCardToDataUrl(aw, hm, g, proj, "auto");
+    syncPredictionPostToTipsFeed(aw, hm, g, proj, postText, dataUrl);
+    const box = document.getElementById("predXPostPreviewBox");
+    if (box) {
+      box.classList.remove("hidden");
+      const imgEl = document.getElementById("predXPostImgPreview");
+      if (imgEl) imgEl.src = dataUrl;
+    }
+    try {
+      await navigator.clipboard.writeText(postText);
+    } catch (_) {}
+    showToast(`✨ Post X (${postText.length} chars) + Imagen 16:9 de plastilina (${aw.abbr} vs ${hm.abbr}) creados`);
   });
 
   // Simulador Libre de 2 equipos (desde vista Equipos o desde la barra rápida en Panel de Control)
