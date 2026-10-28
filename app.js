@@ -23,68 +23,59 @@ const STATE = {
 };
 
 const CLAY_GALLERY = [
-  { label: "CAR Analytics: Bryce Young #9 & Jadeveon Clowney #7 (Panthers)", path: "assets/clay/clay_car_young9.jpg" },
-  { label: "CAR Scramble: Bryce Young #9 en Acción (Panthers)", path: "assets/clay/clay_car_young9_run.jpg" },
-  { label: "KC vs BUF: Patrick Mahomes #15 (KC) vs Josh Allen #17 (BUF)", path: "assets/clay/clay_kc_buf.jpg" },
-  { label: "BAL Terrestre: Lamar Jackson #8 & Derrick Henry #22 (Ravens)", path: "assets/clay/clay_bal_lamar8.jpg" },
-  { label: "GB vs HOU: Jordan Love #10 (GB) vs C.J. Stroud #7 (HOU)", path: "assets/clay/clay_gb_hou.jpg" },
-  { label: "CIN vs CLE: Joe Burrow #9 (CIN) vs Myles Garrett #95 (CLE)", path: "assets/clay/clay_cin_cle.jpg" },
-  { label: "WAS Analytics: Jayden Daniels #5 & Terry McLaurin #17 (Commanders)", path: "assets/clay/clay_was_daniels5.jpg" },
-  { label: "MIA vs TB: Tyreek Hill #10 (MIA) vs Baker Mayfield #6 (TB)", path: "assets/clay/clay_mia_tb.jpg" },
-  { label: "LAC vs DEN: Justin Herbert #10 (LAC) vs Pat Surtain II #2 (DEN)", path: "assets/clay/clay_den_lac.jpg" },
-  { label: "ARI vs JAX: Kyler Murray #1 (ARI) vs Trevor Lawrence #16 (JAX)", path: "assets/clay/clay_ari_jax.jpg" },
-  { label: "NYG vs TEN: Malik Nabers #1 (NYG) vs Tony Pollard #20 (TEN)", path: "assets/clay/clay_nyg_ten.jpg" },
-  { label: "TNF Aéreo: Drake Maye #10 (NE) vs Jaylon Johnson #33 (CHI)", path: "assets/clay/clay_ne_chi.jpg" },
-  { label: "TNF Trincheras: Montez Sweat #98 (CHI) vs Ben Brown #77 (NE)", path: "assets/clay/clay_ne_chi_trenches.jpg" },
-  { label: "DOM Aéreo: Christian McCaffrey #23 (SF) vs Kaden Elliss #55 (ATL)", path: "assets/clay/clay_sf_atl.jpg" },
-  { label: "DOM Terrestre: Bijan Robinson #7 (ATL) vs Fred Warner #54 (SF)", path: "assets/clay/clay_atl_sf_ground.jpg" },
-  { label: "DOM Pass Rush: Jonathan Greenard #58 (MIN) vs Quenton Nelson #56 (IND)", path: "assets/clay/clay_ind_min.jpg" },
-  { label: "DOM Zona Roja: Chris Olave #12 (NO) vs T.J. Watt #90 (PIT)", path: "assets/clay/clay_pit_no.jpg" },
-  { label: "DOM Equipos Especiales: Daniel Carlson #17 (LV) vs Kobie Turner #44 (LA)", path: "assets/clay/clay_la_lv.jpg" },
-  { label: "MNF Trincheras: Zack Martin #70 (DAL) vs Jalen Carter #98 (PHI)", path: "assets/clay/clay_dal_phi.jpg" },
-  { label: "MNF 3ra y Gol: CeeDee Lamb #88 (DAL) vs Quinyon Mitchell #27 (PHI)", path: "assets/clay/clay_dal_phi_mnf2.jpg" },
-  { label: "QB Analytics: Jared Goff #16 (Detroit Lions)", path: "assets/clay/clay_det_goff.jpg" },
-  { label: "WR Analytics: Jaxon Smith-Njigba #11 (Seattle Seahawks)", path: "assets/clay/clay_sea_jsn.jpg" },
-  { label: "News Parte Médico: Saquon Barkley #26 (Philadelphia Eagles)", path: "assets/clay/clay_news_barkley_phi26.jpg" },
-  { label: "News Explosión MNF: Javonte Williams #33 (DAL) vs Eagles #53", path: "assets/clay/clay_news_javonte_dal33.jpg" },
-  { label: "News Cirugía Tobillo: Taylor Moton #72 (Carolina Panthers)", path: "assets/clay/clay_news_moton_car72.jpg" },
-  { label: "News Trade Radar: Garrett Wilson #5 (NYJ · KC / SF)", path: "assets/clay/clay_news_gwilson_nyj5.jpg" },
+  // Semana 8 — Duelos Exactos (14 partidos)
+  { label: "Sem 8 · TEN @ CIN: Will Levis #8 (TEN) vs Trey Hendrickson #91 (CIN)", path: "assets/clay/clay_w8_ten_cin.jpg", teams: ["TEN", "CIN"] },
+  { label: "Sem 8 · CAR @ GB: Bryce Young #9 (CAR) vs Rashan Gary #52 (GB)", path: "assets/clay/clay_w8_car_gb.jpg", teams: ["CAR", "GB"] },
+  { label: "Sem 8 · BAL @ BUF: Lamar Jackson #8 (BAL) vs Greg Rousseau #50 (BUF)", path: "assets/clay/clay_w8_bal_buf.jpg", teams: ["BAL", "BUF"] },
+  { label: "Sem 8 · ARI @ DAL: Kyler Murray #1 (ARI) vs Micah Parsons #11 (DAL)", path: "assets/clay/clay_w8_ari_dal.jpg", teams: ["ARI", "DAL"] },
+  { label: "Sem 8 · MIN @ DET: Sam Darnold #14 (MIN) vs Aidan Hutchinson #97 (DET)", path: "assets/clay/clay_w8_min_det.jpg", teams: ["MIN", "DET"] },
+  { label: "Sem 8 · LV @ NYJ: Gardner Minshew #15 (LV) vs Quinnen Williams #95 (NYJ)", path: "assets/clay/clay_w8_lv_nyj.jpg", teams: ["LV", "NYJ"] },
+  { label: "Sem 8 · CLE @ PIT: Jameis Winston #5 (CLE) vs T.J. Watt #90 (PIT)", path: "assets/clay/clay_w8_cle_pit.jpg", teams: ["CLE", "PIT"] },
+  { label: "Sem 8 · ATL @ TB: Kirk Cousins #18 (ATL) vs Vita Vea #50 (TB)", path: "assets/clay/clay_w8_atl_tb.jpg", teams: ["ATL", "TB"] },
+  { label: "Sem 8 · IND @ JAX: Anthony Richardson #5 (IND) vs Josh Hines-Allen #41 (JAX)", path: "assets/clay/clay_w8_ind_jax.jpg", teams: ["IND", "JAX"] },
+  { label: "Sem 8 · LAC @ LA: Justin Herbert #10 (LAC) vs Jared Verse #8 (LA)", path: "assets/clay/clay_w8_lac_la.jpg", teams: ["LAC", "LA"] },
+  { label: "Sem 8 · KC @ DEN: Patrick Mahomes #15 (KC) vs Pat Surtain II #2 (DEN)", path: "assets/clay/clay_w8_kc_den.jpg", teams: ["KC", "DEN"] },
+  { label: "Sem 8 · NE @ MIA: Drake Maye #10 (NE) vs Calais Campbell #93 (MIA)", path: "assets/clay/clay_w8_ne_mia.jpg", teams: ["NE", "MIA"] },
+  { label: "Sem 8 · PHI @ WAS: Jalen Hurts #1 (PHI) vs Daron Payne #94 (WAS)", path: "assets/clay/clay_w8_phi_was.jpg", teams: ["PHI", "WAS"] },
+  { label: "Sem 8 · CHI @ SEA: Caleb Williams #18 (CHI) vs Leonard Williams #99 (SEA)", path: "assets/clay/clay_w8_chi_sea.jpg", teams: ["CHI", "SEA"] },
+  // Semana 7 — Duelos Exactos (14 partidos)
+  { label: "Sem 7 · NE @ CHI (Aéreo): Drake Maye #10 (NE) vs Jaylon Johnson #33 (CHI)", path: "assets/clay/clay_ne_chi.jpg", teams: ["NE", "CHI"] },
+  { label: "Sem 7 · NE @ CHI (Trincheras): Montez Sweat #98 (CHI) vs Ben Brown #77 (NE)", path: "assets/clay/clay_ne_chi_trenches.jpg", teams: ["NE", "CHI"] },
+  { label: "Sem 7 · SF @ ATL (Aéreo): Christian McCaffrey #23 (SF) vs Kaden Elliss #55 (ATL)", path: "assets/clay/clay_sf_atl.jpg", teams: ["SF", "ATL"] },
+  { label: "Sem 7 · SF @ ATL (Terrestre): Bijan Robinson #7 (ATL) vs Fred Warner #54 (SF)", path: "assets/clay/clay_atl_sf_ground.jpg", teams: ["SF", "ATL"] },
+  { label: "Sem 7 · IND @ MIN: Jonathan Greenard #58 (MIN) vs Quenton Nelson #56 (IND)", path: "assets/clay/clay_ind_min.jpg", teams: ["IND", "MIN"] },
+  { label: "Sem 7 · NO @ PIT: Chris Olave #12 (NO) vs T.J. Watt #90 (PIT)", path: "assets/clay/clay_pit_no.jpg", teams: ["NO", "PIT"] },
+  { label: "Sem 7 · LV @ LA: Daniel Carlson #17 (LV) vs Kobie Turner #44 (LA)", path: "assets/clay/clay_la_lv.jpg", teams: ["LV", "LA"] },
+  { label: "Sem 7 · DAL @ PHI (Trincheras): Zack Martin #70 (DAL) vs Jalen Carter #98 (PHI)", path: "assets/clay/clay_dal_phi.jpg", teams: ["DAL", "PHI"] },
+  { label: "Sem 7 · DAL @ PHI (3ra y Gol): CeeDee Lamb #88 (DAL) vs Quinyon Mitchell #27 (PHI)", path: "assets/clay/clay_dal_phi_mnf2.jpg", teams: ["DAL", "PHI"] },
+  { label: "Sem 7 · DAL @ PHI (MNF): Javonte Williams #33 (DAL) vs Eagles #53 (PHI)", path: "assets/clay/clay_news_javonte_dal33.jpg", teams: ["DAL", "PHI"] },
+  { label: "Sem 7 · CLE @ TEN: Jameis Winston #5 (CLE) vs Jeffery Simmons #98 (TEN)", path: "assets/clay/clay_w7_cle_ten.jpg", teams: ["CLE", "TEN"] },
+  { label: "Sem 7 · MIA @ NYJ: Tua Tagovailoa #1 (MIA) vs Quinnen Williams #95 (NYJ)", path: "assets/clay/clay_w7_mia_nyj.jpg", teams: ["MIA", "NYJ"] },
+  { label: "Sem 7 · TB @ CAR: Baker Mayfield #6 (TB) vs Jadeveon Clowney #7 (CAR)", path: "assets/clay/clay_w7_tb_car.jpg", teams: ["TB", "CAR"] },
+  { label: "Sem 7 · CIN @ BAL: Joe Burrow #9 (CIN) vs Nnamdi Madubuike #92 (BAL)", path: "assets/clay/clay_w7_cin_bal.jpg", teams: ["CIN", "BAL"] },
+  { label: "Sem 7 · NYG @ HOU: Daniel Jones #8 (NYG) vs Will Anderson Jr. #51 (HOU)", path: "assets/clay/clay_w7_nyg_hou.jpg", teams: ["NYG", "HOU"] },
+  { label: "Sem 7 · DEN @ ARI: Bo Nix #10 (DEN) vs Zaven Collins #25 (ARI)", path: "assets/clay/clay_w7_den_ari.jpg", teams: ["DEN", "ARI"] },
+  { label: "Sem 7 · GB @ DET: Jordan Love #10 (GB) vs Aidan Hutchinson #97 (DET)", path: "assets/clay/clay_w7_gb_det.jpg", teams: ["GB", "DET"] },
+  { label: "Sem 7 · KC @ SEA: Patrick Mahomes #15 (KC) vs Leonard Williams #99 (SEA)", path: "assets/clay/clay_w7_kc_sea.jpg", teams: ["KC", "SEA"] },
+  // Otros Duelos Especiales entre 2 Equipos (solo se usan cuando se enfrentan exactamente esos 2 equipos)
+  { label: "Duelo KC vs BUF: Patrick Mahomes #15 (KC) vs Josh Allen #17 (BUF)", path: "assets/clay/clay_kc_buf.jpg", teams: ["KC", "BUF"] },
+  { label: "Duelo GB vs HOU: Jordan Love #10 (GB) vs C.J. Stroud #7 (HOU)", path: "assets/clay/clay_gb_hou.jpg", teams: ["GB", "HOU"] },
+  { label: "Duelo CIN vs CLE: Joe Burrow #9 (CIN) vs Myles Garrett #95 (CLE)", path: "assets/clay/clay_cin_cle.jpg", teams: ["CIN", "CLE"] },
+  { label: "Duelo MIA vs TB: Tyreek Hill #10 (MIA) vs Baker Mayfield #6 (TB)", path: "assets/clay/clay_mia_tb.jpg", teams: ["MIA", "TB"] },
+  { label: "Duelo LAC vs DEN: Justin Herbert #10 (LAC) vs Pat Surtain II #2 (DEN)", path: "assets/clay/clay_den_lac.jpg", teams: ["LAC", "DEN"] },
+  { label: "Duelo ARI vs JAX: Kyler Murray #1 (ARI) vs Trevor Lawrence #16 (JAX)", path: "assets/clay/clay_ari_jax.jpg", teams: ["ARI", "JAX"] },
+  { label: "Duelo NYG vs TEN: Malik Nabers #1 (NYG) vs Tony Pollard #20 (TEN)", path: "assets/clay/clay_nyg_ten.jpg", teams: ["NYG", "TEN"] },
+  // Escenas Individuales de 1 Solo Equipo (Scouting / Equipo / News sin rival externo)
+  { label: "CAR Individual: Bryce Young #9 & Jadeveon Clowney #7 (Panthers)", path: "assets/clay/clay_car_young9.jpg", teams: ["CAR"] },
+  { label: "CAR Scramble: Bryce Young #9 en Acción (Panthers)", path: "assets/clay/clay_car_young9_run.jpg", teams: ["CAR"] },
+  { label: "CAR Parte Médico: Taylor Moton #72 (Carolina Panthers)", path: "assets/clay/clay_news_moton_car72.jpg", teams: ["CAR"] },
+  { label: "BAL Individual: Lamar Jackson #8 & Derrick Henry #22 (Ravens)", path: "assets/clay/clay_bal_lamar8.jpg", teams: ["BAL"] },
+  { label: "WAS Individual: Jayden Daniels #5 & Terry McLaurin #17 (Commanders)", path: "assets/clay/clay_was_daniels5.jpg", teams: ["WAS"] },
+  { label: "DET Individual: Jared Goff #16 (Detroit Lions)", path: "assets/clay/clay_det_goff.jpg", teams: ["DET"] },
+  { label: "SEA Individual: Jaxon Smith-Njigba #11 (Seattle Seahawks)", path: "assets/clay/clay_sea_jsn.jpg", teams: ["SEA"] },
+  { label: "PHI Parte Médico: Saquon Barkley #26 (Philadelphia Eagles)", path: "assets/clay/clay_news_barkley_phi26.jpg", teams: ["PHI"] },
+  { label: "NYJ Trade Radar: Garrett Wilson #5 (New York Jets)", path: "assets/clay/clay_news_gwilson_nyj5.jpg", teams: ["NYJ"] },
 ];
-
-const TEAM_NANOBANANA_CLAY_MAP = {
-  ARI: ["assets/clay/clay_ari_jax.jpg"],
-  ATL: ["assets/clay/clay_atl_sf_ground.jpg", "assets/clay/clay_sf_atl.jpg"],
-  BAL: ["assets/clay/clay_bal_lamar8.jpg"],
-  BUF: ["assets/clay/clay_kc_buf.jpg"],
-  CAR: ["assets/clay/clay_car_young9.jpg", "assets/clay/clay_car_young9_run.jpg", "assets/clay/clay_news_moton_car72.jpg"],
-  CHI: ["assets/clay/clay_ne_chi_trenches.jpg", "assets/clay/clay_ne_chi.jpg"],
-  CIN: ["assets/clay/clay_cin_cle.jpg"],
-  CLE: ["assets/clay/clay_cin_cle.jpg"],
-  DAL: ["assets/clay/clay_dal_phi.jpg", "assets/clay/clay_dal_phi_mnf2.jpg", "assets/clay/clay_news_javonte_dal33.jpg"],
-  DEN: ["assets/clay/clay_den_lac.jpg"],
-  DET: ["assets/clay/clay_det_goff.jpg"],
-  GB: ["assets/clay/clay_gb_hou.jpg"],
-  HOU: ["assets/clay/clay_gb_hou.jpg"],
-  IND: ["assets/clay/clay_ind_min.jpg"],
-  JAX: ["assets/clay/clay_ari_jax.jpg"],
-  KC: ["assets/clay/clay_kc_buf.jpg", "assets/clay/clay_news_gwilson_nyj5.jpg"],
-  LA: ["assets/clay/clay_la_lv.jpg"],
-  LAC: ["assets/clay/clay_den_lac.jpg"],
-  LV: ["assets/clay/clay_la_lv.jpg"],
-  MIA: ["assets/clay/clay_mia_tb.jpg"],
-  MIN: ["assets/clay/clay_ind_min.jpg"],
-  NE: ["assets/clay/clay_ne_chi.jpg", "assets/clay/clay_ne_chi_trenches.jpg"],
-  NO: ["assets/clay/clay_pit_no.jpg"],
-  NYG: ["assets/clay/clay_nyg_ten.jpg"],
-  NYJ: ["assets/clay/clay_news_gwilson_nyj5.jpg"],
-  PHI: ["assets/clay/clay_news_barkley_phi26.jpg", "assets/clay/clay_dal_phi.jpg", "assets/clay/clay_dal_phi_mnf2.jpg"],
-  PIT: ["assets/clay/clay_pit_no.jpg"],
-  SEA: ["assets/clay/clay_sea_jsn.jpg"],
-  SF: ["assets/clay/clay_sf_atl.jpg", "assets/clay/clay_atl_sf_ground.jpg"],
-  TB: ["assets/clay/clay_mia_tb.jpg"],
-  TEN: ["assets/clay/clay_nyg_ten.jpg"],
-  WAS: ["assets/clay/clay_was_daniels5.jpg"],
-};
 
 const TEAM_VISUAL_SPECS_JS = {
   ARI: { name: "Arizona Cardinals", helmet: "white helmet with red Cardinal logo", jersey: "cardinal red jersey with white numerals", qb: ["Kyler Murray", "#1"], rb: ["James Conner", "#6"], wr: ["Marvin Harrison Jr.", "#18"], ol: ["Paris Johnson Jr.", "#70"], pr: ["Zaven Collins", "#25"], db: ["Budda Baker", "#3"] },
@@ -121,19 +112,48 @@ const TEAM_VISUAL_SPECS_JS = {
   WAS: { name: "Washington Commanders", helmet: "matte burgundy helmet with gold W logo", jersey: "burgundy jersey with gold numerals", qb: ["Jayden Daniels", "#5"], rb: ["Brian Robinson Jr.", "#8"], wr: ["Terry McLaurin", "#17"], ol: ["Sam Cosmi", "#76"], pr: ["Daron Payne", "#94"], db: ["Bobby Wagner", "#54"] },
 };
 
-function buildUniqueDynamicClayUrl(promptText, teamHint = "", currentIllustration = "") {
-  // Selecciona una ilustración 3D claymation 16:9 auténtica generada con Google Gemini Nano Banana (0% Pollinations)
-  const activeUsed = new Set(
-    (STATE.data?.tips_x || []).map((t) => STATE.cardState[t.id]?.illustration || t.illustration).filter(Boolean)
-  );
-  STATE.usedIllustrations.forEach((u) => activeUsed.add(u));
+function getConcordantGalleryItemsForTeams(candidateTeams) {
+  // Regla Estricta: NUNCA devolver una imagen de 2 equipos si alguno de los 2 equipos en la imagen NO pertenece al análisis actual
+  if (candidateTeams.length >= 2) {
+    const tA = candidateTeams[0];
+    const tB = candidateTeams[1];
+    // 1) Coincidencia exacta de par (A vs B o B vs A)
+    const exactPair = CLAY_GALLERY.filter(
+      (item) => item.teams && item.teams.length === 2 && item.teams.includes(tA) && item.teams.includes(tB)
+    );
+    if (exactPair.length > 0) return exactPair;
 
+    // 2) Si es un cruce personalizado del simulador sin imagen de par exacta, usar SOLO imágenes individuales (1 equipo) de tA o tB
+    const soloMatches = CLAY_GALLERY.filter(
+      (item) => item.teams && item.teams.length === 1 && (item.teams[0] === tA || item.teams[0] === tB)
+    );
+    if (soloMatches.length > 0) return soloMatches;
+
+    // 3) Como último recurso de equipo, buscar el partido de Semana 8 del equipo visitante tA
+    const w8Fallback = CLAY_GALLERY.filter((item) => item.path.includes("clay_w8_") && item.teams?.includes(tA));
+    if (w8Fallback.length > 0) return w8Fallback;
+  } else if (candidateTeams.length === 1) {
+    const tOnly = candidateTeams[0];
+    // 1) Primero imágenes individuales (1 solo equipo, sin rivales externos)
+    const soloOnly = CLAY_GALLERY.filter((item) => item.teams && item.teams.length === 1 && item.teams[0] === tOnly);
+    // 2) Luego imágenes de la Semana activa donde participe tOnly
+    const wkPrefix = STATE.selectedWeek === 8 ? "clay_w8_" : "clay_w7_";
+    const wkPair = CLAY_GALLERY.filter((item) => item.path.includes(wkPrefix) && item.teams?.includes(tOnly));
+    const anyPair = CLAY_GALLERY.filter((item) => item.teams?.includes(tOnly) && !soloOnly.includes(item) && !wkPair.includes(item));
+    return [...soloOnly, ...wkPair, ...anyPair];
+  }
+  return [];
+}
+
+function extractCandidateTeams(promptText, teamHint = "") {
   const candidateTeams = [];
   const cleanHint = String(teamHint || "").toUpperCase().trim();
-  const m = cleanHint.match(/^([A-Z]{2,3})\s*@\s*([A-Z]{2,3})$/);
+  const m = cleanHint.match(/^([A-Z]{2,3})\s*(?:@|VS\.?|-)\s*([A-Z]{2,3})$/);
   if (m) {
     candidateTeams.push(m[1], m[2]);
-  } else if (TEAM_NANOBANANA_CLAY_MAP[cleanHint]) {
+    return candidateTeams;
+  }
+  if (TEAM_VISUAL_SPECS_JS[cleanHint]) {
     candidateTeams.push(cleanHint);
   }
 
@@ -145,21 +165,20 @@ function buildUniqueDynamicClayUrl(promptText, teamHint = "", currentIllustratio
       }
     }
   }
+  return candidateTeams;
+}
 
-  const teamAssets = [];
-  for (const tm of candidateTeams) {
-    for (const p of TEAM_NANOBANANA_CLAY_MAP[tm] || []) {
-      if (!teamAssets.includes(p)) teamAssets.push(p);
-    }
-  }
+function buildUniqueDynamicClayUrl(promptText, teamHint = "", currentIllustration = "") {
+  // Selecciona una ilustración 3D claymation 16:9 auténtica generada con Google Gemini Nano Banana (0% Pollinations)
+  // prohibiendo estrictamente que aparezca un tercer equipo ajeno al duelo analizado.
+  const activeUsed = new Set(
+    (STATE.data?.tips_x || []).map((t) => STATE.cardState[t.id]?.illustration || t.illustration).filter(Boolean)
+  );
+  STATE.usedIllustrations.forEach((u) => activeUsed.add(u));
 
-  if (candidateTeams.includes("CAR") && (lowPrompt.includes("#9") || lowPrompt.includes("young") || lowPrompt.includes("clowney"))) {
-    const idx = teamAssets.indexOf("assets/clay/clay_car_young9.jpg");
-    if (idx > 0) {
-      teamAssets.splice(idx, 1);
-      teamAssets.unshift("assets/clay/clay_car_young9.jpg");
-    }
-  }
+  const candidateTeams = extractCandidateTeams(promptText, teamHint);
+  const concordantItems = getConcordantGalleryItemsForTeams(candidateTeams);
+  const teamAssets = concordantItems.map((it) => it.path);
 
   for (const asset of teamAssets) {
     if (asset !== currentIllustration && !activeUsed.has(asset)) {
@@ -184,6 +203,23 @@ function buildUniqueDynamicClayUrl(promptText, teamHint = "", currentIllustratio
     }
   }
   return CLAY_GALLERY[0].path;
+}
+
+function isIllustrationConcordantWithTip(illusPath, tip) {
+  if (!illusPath || !tip) return false;
+  if (illusPath.startsWith("data:image/")) return true;
+  const candidateTeams = extractCandidateTeams(`${tip.title || ""} ${tip.body || ""}`, tip.matchup || "");
+  if (candidateTeams.length === 0) return true;
+  const entry = CLAY_GALLERY.find((c) => c.path === illusPath);
+  if (!entry || !entry.teams) return true;
+  if (candidateTeams.length >= 2) {
+    const tA = candidateTeams[0];
+    const tB = candidateTeams[1];
+    // Prohibido mostrar un equipo ajeno al duelo (tA vs tB)
+    return entry.teams.every((tm) => tm === tA || tm === tB);
+  }
+  const tOnly = candidateTeams[0];
+  return entry.teams.includes(tOnly);
 }
 
 async function generateAndAssignUniqueTipImage(tip) {
@@ -222,6 +258,7 @@ async function generateAndAssignUniqueTipImage(tip) {
   }
 
   // 2. Si el servidor local server_nfl.py está corriendo, genera/selecciona con el motor Gemini Nano Banana
+  // pero valida estrictamente que ningún equipo ajeno aparezca en la ilustración
   if (window.location.protocol !== "file:") {
     try {
       const resp = await fetch("/api/generate-tip-image", {
@@ -231,7 +268,7 @@ async function generateAndAssignUniqueTipImage(tip) {
       });
       if (resp.ok) {
         const data = await resp.json();
-        if (data.ok && data.illustration) {
+        if (data.ok && data.illustration && isIllustrationConcordantWithTip(data.illustration, tip)) {
           tip.illustration = data.illustration;
           tip.clay_prompt = data.clay_prompt || tip.clay_prompt;
           if (STATE.cardState[tip.id]) {
@@ -368,6 +405,12 @@ function getDefaultFutureDatetimeART(addMinutes = 60) {
 }
 
 function initTipCardState(tip) {
+  if (!isIllustrationConcordantWithTip(tip.illustration, tip)) {
+    tip.illustration = buildUniqueDynamicClayUrl(
+      tip.clay_prompt || `${tip.title || ""} ${tip.body || ""}`,
+      tip.matchup || ""
+    );
+  }
   if (!STATE.cardState[tip.id]) {
     STATE.cardState[tip.id] = {
       linkType: "source", // 'source' o 'page' (Selector Dual pedido en punto 1)
@@ -379,6 +422,8 @@ function initTipCardState(tip) {
       body: tip.body || "",
       illustration: tip.illustration || "assets/clay/clay_dal_phi.jpg",
     };
+  } else if (!isIllustrationConcordantWithTip(STATE.cardState[tip.id].illustration, tip)) {
+    STATE.cardState[tip.id].illustration = tip.illustration;
   }
   return STATE.cardState[tip.id];
 }
@@ -2460,11 +2505,22 @@ function renderXTipsFeed() {
       const customOptionHtml = !isGalleryPath
         ? `<option value="${st.illustration}" selected>✨ Imagen 16:9 Única Concordante (${(tip.matchup_label || st.title).slice(0, 32)})</option>`
         : "";
-      const clayOptionsHtml =
-        customOptionHtml +
-        CLAY_GALLERY.map(
-          (c) => `<option value="${c.path}" ${st.illustration === c.path ? "selected" : ""}>🎨 ${c.label}</option>`
-        ).join("");
+      const cardTeams = extractCandidateTeams(`${st.title || ""} ${st.body || ""}`, tip.matchup || "");
+      const concordantList = getConcordantGalleryItemsForTeams(cardTeams);
+      const concordantPaths = new Set(concordantList.map((c) => c.path));
+      const otherList = CLAY_GALLERY.filter((c) => !concordantPaths.has(c.path));
+
+      const concordantGroupHtml = concordantList.length
+        ? `<optgroup label="✅ 100% CONCORDANTES CON ESTE POST (${cardTeams.join(" vs ")})">${concordantList
+            .map((c) => `<option value="${c.path}" ${st.illustration === c.path ? "selected" : ""}>🎯 ${c.label}</option>`)
+            .join("")}</optgroup>`
+        : "";
+      const otherGroupHtml = otherList.length
+        ? `<optgroup label="📂 OTROS DUELOS DEL CATÁLOGO (48 escenas)">${otherList
+            .map((c) => `<option value="${c.path}" ${st.illustration === c.path ? "selected" : ""}>🎨 ${c.label}</option>`)
+            .join("")}</optgroup>`
+        : "";
+      const clayOptionsHtml = customOptionHtml + concordantGroupHtml + otherGroupHtml;
 
       return `
         <div class="x-tip-card ${isChecked ? "selected-for-batch" : ""}" data-tipid="${tip.id}">
