@@ -972,10 +972,12 @@ function computeMatchupProjection(aw, hm, g = null) {
     else scoreHome += 1;
   }
 
-  // Diferencial de puntos esperados y conversión a % de Victoria mediante curva logística NFL (escala 5.8 pts)
+  // Diferencial de puntos esperados y conversión a % de Victoria mediante curva logística NFL calibrada (escala 9.5 pts, σ ≈ 16.0 pts)
   const expectedMarginAway = +(exactAwayPts - exactHomePts).toFixed(1);
-  const rawWinProbAway = 100 / (1 + Math.exp(-expectedMarginAway / 5.8));
-  const winProbAway = Math.max(5.0, Math.min(95.0, +rawWinProbAway.toFixed(1)));
+  const roundedMarginAway = scoreAway - scoreHome;
+  const probMarginAway = (expectedMarginAway + roundedMarginAway) / 2;
+  const rawWinProbAway = 100 / (1 + Math.exp(-probMarginAway / 9.5));
+  const winProbAway = Math.max(8.0, Math.min(92.0, +rawWinProbAway.toFixed(1)));
   const winProbHome = +(100 - winProbAway).toFixed(1);
 
   const favTeam = exactAwayPts > exactHomePts ? aw : hm;
