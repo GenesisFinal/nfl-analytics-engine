@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-10-28 21:52 ART",
-  "updated_iso": "2026-10-28T21:52:26.701265-03:00",
+  "updated_at": "2026-10-28 22:43 ART",
+  "updated_iso": "2026-10-28T22:43:17.143859-03:00",
   "season": 2026,
   "current_week": 8,
   "available_weeks": [
@@ -460,7 +460,7 @@
             "default_weight": 0.35,
             "injury_type": "Knee",
             "report_date": "2026-10-29",
-            "comment": "questionable",
+            "comment": "Wilson (knee) did not participate at practice Wednesday, Darren Urban of the Cardinals' official site reports.",
             "headshot": "https://a.espncdn.com/i/headshots/nfl/players/full/4040983.png",
             "games_played": 7,
             "team_games": 7,
@@ -1033,8 +1033,8 @@
             "status_code": "Q",
             "default_weight": 0.35,
             "injury_type": "Knee",
-            "report_date": "2026-10-28",
-            "comment": "Smith recorded eight tackles (five solo) during Sunday's 35-13 loss versus the Bengals.",
+            "report_date": "2026-10-29",
+            "comment": "Smith (knee) did not practice Wednesday.",
             "headshot": "https://a.espncdn.com/i/headshots/nfl/players/full/3915189.png",
             "games_played": 7,
             "team_games": 7,
@@ -1117,8 +1117,8 @@
             "status_code": "Q",
             "default_weight": 0.35,
             "injury_type": "Knee",
-            "report_date": "2026-10-28",
-            "comment": "Hamilton recorded four tackles (three solo) during Sunday's 35-13 loss versus the Bengals.",
+            "report_date": "2026-10-29",
+            "comment": "Hamilton (knee) did not practice Wednesday.",
             "headshot": "https://a.espncdn.com/i/headshots/nfl/players/full/4575517.png",
             "games_played": 7,
             "team_games": 7,
@@ -1803,8 +1803,8 @@
             "status_code": "O",
             "default_weight": 1.0,
             "injury_type": "Ankle",
-            "report_date": "2026-10-28",
-            "comment": "out",
+            "report_date": "2026-10-29",
+            "comment": "Simpkins (ankle) has been ruled out for Thursday's game against the Packers.",
             "headshot": "https://a.espncdn.com/i/headshots/nfl/players/full/4696902.png",
             "games_played": 0,
             "team_games": 6,
@@ -1831,8 +1831,8 @@
             "status_code": "O",
             "default_weight": 1.0,
             "injury_type": "Knee",
-            "report_date": "2026-10-28",
-            "comment": "out",
+            "report_date": "2026-10-29",
+            "comment": "Lewis (knee) has been ruled out for Thursday's game against the Packers.",
             "headshot": "https://a.espncdn.com/i/headshots/nfl/players/full/4362647.png",
             "games_played": 0,
             "team_games": 6,
@@ -2889,7 +2889,7 @@
         "teamrankings": "https://www.teamrankings.com/nfl/stats/"
       },
       "roster_impact": {
-        "total_expected_loss_pts": 1.7,
+        "total_expected_loss_pts": 1.9,
         "injured_count": 10,
         "items": [
           {
@@ -3000,6 +3000,34 @@
               "air": 0.25,
               "ground": 0.35,
               "sit": 0.4,
+              "st": 0.0
+            },
+            "is_injured": true
+          },
+          {
+            "id": "CLE-tytushoward",
+            "name": "Tytus Howard",
+            "pos": "OT",
+            "role": "Tackle OL",
+            "side": "OFF",
+            "status": "Questionable",
+            "status_code": "Q",
+            "default_weight": 0.35,
+            "injury_type": "Concussion",
+            "report_date": "2026-10-29",
+            "comment": "Howard (concussion) didn't participate in Cleveland's practice Wednesday.",
+            "headshot": "https://a.espncdn.com/i/headshots/nfl/players/full/3131498.png",
+            "games_played": 3,
+            "team_games": 7,
+            "novelty_factor": 0.43,
+            "raw_impact_pts": 1.15,
+            "full_impact_pts": 0.49,
+            "expected_loss_pts": 0.17,
+            "share_label": "Tackle Ofensivo (Protección de Bolsillo & Carrera)",
+            "phases": {
+              "air": 0.3,
+              "ground": 0.2,
+              "sit": 0.5,
               "st": 0.0
             },
             "is_injured": true
@@ -3140,34 +3168,6 @@
               "air": 0.15,
               "ground": 0.7,
               "sit": 0.15,
-              "st": 0.0
-            },
-            "is_injured": true
-          },
-          {
-            "id": "CLE-mikehall",
-            "name": "Mike Hall Jr.",
-            "pos": "DT",
-            "role": "DT",
-            "side": "DEF",
-            "status": "Questionable",
-            "status_code": "Q",
-            "default_weight": 0.35,
-            "injury_type": "Ankle",
-            "report_date": "2026-10-29",
-            "comment": "Hall (ankle) was a limited participant at practice Wednesday.",
-            "headshot": "https://a.espncdn.com/i/headshots/nfl/players/full/4600415.png",
-            "games_played": 2,
-            "team_games": 7,
-            "novelty_factor": 0.29,
-            "raw_impact_pts": 0.31,
-            "full_impact_pts": 0.09,
-            "expected_loss_pts": 0.03,
-            "share_label": "DT (1.0 Sacks · 1 TFL · 2% Impacto Def)",
-            "phases": {
-              "air": 0.25,
-              "ground": 0.35,
-              "sit": 0.4,
               "st": 0.0
             },
             "is_injured": true
@@ -3315,8 +3315,8 @@
             "status_code": "Q",
             "default_weight": 0.35,
             "injury_type": "Hamstring",
-            "report_date": "2026-10-28",
-            "comment": "questionable",
+            "report_date": "2026-10-29",
+            "comment": "Williams (hamstring) was a limited participant in Wednesday's practice, Jon Machota of The Athletic reports.",
             "headshot": "https://a.espncdn.com/i/headshots/nfl/players/full/4040982.png",
             "games_played": 7,
             "team_games": 7,
@@ -3399,8 +3399,8 @@
             "status_code": "Q",
             "default_weight": 0.35,
             "injury_type": "Calf",
-            "report_date": "2026-10-27",
-            "comment": "questionable",
+            "report_date": "2026-10-29",
+            "comment": "Winters (calf) did not participate in Wednesday's practice, Jon Machota of The Athletic reports.",
             "headshot": "https://a.espncdn.com/i/headshots/nfl/players/full/4428914.png",
             "games_played": 6,
             "team_games": 7,
@@ -3427,8 +3427,8 @@
             "status_code": "Q",
             "default_weight": 0.35,
             "injury_type": "Ribs",
-            "report_date": "2026-10-27",
-            "comment": "questionable",
+            "report_date": "2026-10-29",
+            "comment": "Turpin (ribs) did not participate in Wednesday's practice, Jon Machota of The Athletic reports.",
             "headshot": "https://a.espncdn.com/i/headshots/nfl/players/full/3676833.png",
             "games_played": 6,
             "team_games": 7,
@@ -3455,8 +3455,8 @@
             "status_code": "Q",
             "default_weight": 0.35,
             "injury_type": "Ankle",
-            "report_date": "2026-10-28",
-            "comment": "Downs recorded five tackles (three solo) during the Cowboys' 38-21 win over the Eagles on Monday.",
+            "report_date": "2026-10-29",
+            "comment": "Downs (ankle) was a limited participant in Wednesday's practice, Jon Machota of The Athletic reports.",
             "headshot": "https://a.espncdn.com/i/headshots/nfl/players/full/4870706.png",
             "games_played": 7,
             "team_games": 7,
@@ -3784,8 +3784,8 @@
             "status_code": "Q",
             "default_weight": 0.35,
             "injury_type": "Ankle",
-            "report_date": "2026-10-28",
-            "comment": "questionable",
+            "report_date": "2026-10-29",
+            "comment": "Mims (ankle) was a limited participant in Denver's practice Wednesday, Aric DiLalla of the team's official site reports.",
             "headshot": "https://a.espncdn.com/i/headshots/nfl/players/full/4686472.png",
             "games_played": 5,
             "team_games": 7,
@@ -6339,8 +6339,8 @@
             "status_code": "Q",
             "default_weight": 0.35,
             "injury_type": "Groin",
-            "report_date": "2026-10-27",
-            "comment": "questionable",
+            "report_date": "2026-10-29",
+            "comment": "McDuffie (groin) was a limited participant in Wednesday's practice, Stu Jackson of the Rams' official site reports.",
             "headshot": "https://a.espncdn.com/i/headshots/nfl/players/full/4426405.png",
             "games_played": 5,
             "team_games": 7,
@@ -6395,8 +6395,8 @@
             "status_code": "Q",
             "default_weight": 0.35,
             "injury_type": "Concussion",
-            "report_date": "2026-10-27",
-            "comment": "questionable",
+            "report_date": "2026-10-29",
+            "comment": "Landman (concussion) was a full participant in Wednesday's practice, Stu Jackson of the Rams' official site reports.",
             "headshot": "https://a.espncdn.com/i/headshots/nfl/players/full/4243181.png",
             "games_played": 6,
             "team_games": 7,
@@ -6780,8 +6780,8 @@
             "status_code": "Q",
             "default_weight": 0.35,
             "injury_type": "Concussion",
-            "report_date": "2026-10-28",
-            "comment": "questionable",
+            "report_date": "2026-10-29",
+            "comment": "Leonard (concussion) did not participate in Wednesday's practice, Alex Insdorf of BoltBeat.com reports.",
             "headshot": "https://a.espncdn.com/i/headshots/nfl/players/full/4690171.png",
             "games_played": 3,
             "team_games": 6,
@@ -7081,8 +7081,8 @@
             "status_code": "Q",
             "default_weight": 0.35,
             "injury_type": "Shoulder",
-            "report_date": "2026-10-28",
-            "comment": "questionable",
+            "report_date": "2026-10-29",
+            "comment": "Thomas (shoulder) was a limited participant in Wednesday's practice, Anthony Galaviz of The Fresno Bee reports.",
             "headshot": "https://a.espncdn.com/i/headshots/nfl/players/full/4045305.png",
             "games_played": 4,
             "team_games": 7,
@@ -7522,8 +7522,8 @@
             "status_code": "Q",
             "default_weight": 0.35,
             "injury_type": "Concussion",
-            "report_date": "2026-10-28",
-            "comment": "questionable",
+            "report_date": "2026-10-29",
+            "comment": "Proctor sustained a concussion during Sunday's game against the Jets, Alain Poupart of SI.com reports.",
             "headshot": "https://a.espncdn.com/i/headshots/nfl/players/full/4870976.png",
             "games_played": 2,
             "team_games": 6,
@@ -9391,8 +9391,8 @@
             "status_code": "D",
             "default_weight": 0.75,
             "injury_type": "Ankle",
-            "report_date": "2026-10-28",
-            "comment": "doubtful",
+            "report_date": "2026-10-29",
+            "comment": "Ossai (ankle) didn't participate in the Jets' practice Wednesday, Rich Cimini of ESPN.com reports.",
             "headshot": "https://a.espncdn.com/i/headshots/nfl/players/full/4362094.png",
             "games_played": 2,
             "team_games": 7,
@@ -9636,8 +9636,8 @@
             "status_code": "Q",
             "default_weight": 0.35,
             "injury_type": "Concussion",
-            "report_date": "2026-10-27",
-            "comment": "questionable",
+            "report_date": "2026-10-29",
+            "comment": "Smith (concussion) was a limited participant in Wednesday's practice.",
             "headshot": "https://a.espncdn.com/i/headshots/nfl/players/full/4426331.png",
             "games_played": 6,
             "team_games": 7,
@@ -9692,8 +9692,8 @@
             "status_code": "Q",
             "default_weight": 0.35,
             "injury_type": "Hamstring",
-            "report_date": "2026-10-28",
-            "comment": "questionable",
+            "report_date": "2026-10-29",
+            "comment": "Campbell (hamstring/quadriceps) didn't participate in Wednesday's walkthrough.",
             "headshot": "https://a.espncdn.com/i/headshots/nfl/players/full/4685287.png",
             "games_played": 7,
             "team_games": 7,
@@ -9832,8 +9832,8 @@
             "status_code": "Q",
             "default_weight": 0.35,
             "injury_type": "Abdomen",
-            "report_date": "2026-10-27",
-            "comment": "questionable",
+            "report_date": "2026-10-29",
+            "comment": "Carter (abdomen) was a limited participant in Wednesday's practice.",
             "headshot": "https://a.espncdn.com/i/headshots/nfl/players/full/4240456.png",
             "games_played": 4,
             "team_games": 7,
@@ -10049,8 +10049,8 @@
             "status_code": "Q",
             "default_weight": 0.35,
             "injury_type": "Calf",
-            "report_date": "2026-10-27",
-            "comment": "questionable",
+            "report_date": "2026-10-29",
+            "comment": "Skowronek (calf) was a limited participant at practice Wednesday.",
             "headshot": "https://a.espncdn.com/i/headshots/nfl/players/full/4035656.png",
             "games_played": 3,
             "team_games": 7,
@@ -11849,8 +11849,8 @@
         "teamrankings": "https://www.teamrankings.com/nfl/stats/"
       },
       "roster_impact": {
-        "total_expected_loss_pts": 3.6,
-        "injured_count": 8,
+        "total_expected_loss_pts": 4.5,
+        "injured_count": 9,
         "items": [
           {
             "id": "WAS-terrymclaurin",
@@ -11876,6 +11876,34 @@
               "air": 0.75,
               "ground": 0.0,
               "sit": 0.25,
+              "st": 0.0
+            },
+            "is_injured": true
+          },
+          {
+            "id": "WAS-laremytunsil",
+            "name": "Laremy Tunsil",
+            "pos": "OT",
+            "role": "Tackle OL",
+            "side": "OFF",
+            "status": "Injured Reserve",
+            "status_code": "IR",
+            "default_weight": 1.0,
+            "injury_type": "Triceps",
+            "report_date": "2026-10-29",
+            "comment": "Tunsil (triceps) could potentially return late in the season, Nicki Jhabvala of The Athletic reports.",
+            "headshot": "https://a.espncdn.com/i/headshots/nfl/players/full/3051890.png",
+            "games_played": 0,
+            "team_games": 6,
+            "novelty_factor": 0.85,
+            "raw_impact_pts": 1.15,
+            "full_impact_pts": 0.98,
+            "expected_loss_pts": 0.98,
+            "share_label": "Tackle Ofensivo (Protección de Bolsillo & Carrera)",
+            "phases": {
+              "air": 0.3,
+              "ground": 0.2,
+              "sit": 0.5,
               "st": 0.0
             },
             "is_injured": true
@@ -12103,34 +12131,6 @@
               "st": 0.0
             },
             "is_injured": false
-          },
-          {
-            "id": "WAS-odafeoweh",
-            "name": "Odafe Oweh",
-            "pos": "LB",
-            "role": "DEF#1",
-            "side": "DEF",
-            "status": "Active",
-            "status_code": "A",
-            "default_weight": 0.0,
-            "injury_type": "Titular Activo",
-            "report_date": "",
-            "comment": "Titular disponible (podés simular su baja o duda con 1 clic).",
-            "headshot": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/lxeaoe3u7srngnwlyyon",
-            "games_played": 6,
-            "team_games": 6,
-            "novelty_factor": 1.0,
-            "raw_impact_pts": 1.35,
-            "full_impact_pts": 1.35,
-            "expected_loss_pts": 0.0,
-            "share_label": "DEF#1 (3.0 Sacks · 4 TFL · 11% Impacto Def)",
-            "phases": {
-              "air": 0.25,
-              "ground": 0.35,
-              "sit": 0.4,
-              "st": 0.0
-            },
-            "is_injured": false
           }
         ]
       }
@@ -12155,12 +12155,12 @@
         "EPA/Dropback": 0.317,
         "CPOE": "+1.0%",
         "NGS Time to Throw": "2.84s",
-        "PFR On-Target %": "75.0%",
-        "PFR Pressure %": "21.0%",
+        "PFR On-Target %": "76.2%",
+        "PFR Pressure %": "17.5%",
         "Yds Tierra": 15
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/passing.htm",
+        "pfr": "https://www.pro-football-reference.com/players/G/GoffJa00.htm",
         "playerprofiler": "https://www.playerprofiler.com/nfl/jared-goff/",
         "rbsdm": "https://rbsdm.com/stats/stats/",
         "ngs": "https://nextgenstats.nfl.com/stats/passing"
@@ -12183,13 +12183,13 @@
         "TD / INT": "15 / 4",
         "EPA/Dropback": 0.29,
         "CPOE": "+4.3%",
-        "NGS Time to Throw": "3.0s",
-        "PFR On-Target %": "75.0%",
-        "PFR Pressure %": "21.0%",
+        "NGS Time to Throw": "3.00s",
+        "PFR On-Target %": "76.3%",
+        "PFR Pressure %": "16.7%",
         "Yds Tierra": 161
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/passing.htm",
+        "pfr": "https://www.pro-football-reference.com/players/P/PurdBr00.htm",
         "playerprofiler": "https://www.playerprofiler.com/nfl/brock-purdy/",
         "rbsdm": "https://rbsdm.com/stats/stats/",
         "ngs": "https://nextgenstats.nfl.com/stats/passing"
@@ -12213,12 +12213,12 @@
         "EPA/Dropback": 0.275,
         "CPOE": "+3.4%",
         "NGS Time to Throw": "2.72s",
-        "PFR On-Target %": "75.0%",
-        "PFR Pressure %": "21.0%",
+        "PFR On-Target %": "77.4%",
+        "PFR Pressure %": "20.4%",
         "Yds Tierra": 70
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/passing.htm",
+        "pfr": "https://www.pro-football-reference.com/players/L/LawrTr00.htm",
         "playerprofiler": "https://www.playerprofiler.com/nfl/trevor-lawrence/",
         "rbsdm": "https://rbsdm.com/stats/stats/",
         "ngs": "https://nextgenstats.nfl.com/stats/passing"
@@ -12242,12 +12242,12 @@
         "EPA/Dropback": 0.29,
         "CPOE": "+5.1%",
         "NGS Time to Throw": "2.97s",
-        "PFR On-Target %": "75.0%",
-        "PFR Pressure %": "21.0%",
+        "PFR On-Target %": "77.2%",
+        "PFR Pressure %": "19.0%",
         "Yds Tierra": 240
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/passing.htm",
+        "pfr": "https://www.pro-football-reference.com/players/A/AlleJo02.htm",
         "playerprofiler": "https://www.playerprofiler.com/nfl/josh-allen/",
         "rbsdm": "https://rbsdm.com/stats/stats/",
         "ngs": "https://nextgenstats.nfl.com/stats/passing"
@@ -12271,12 +12271,12 @@
         "EPA/Dropback": 0.223,
         "CPOE": "+7.3%",
         "NGS Time to Throw": "2.64s",
-        "PFR On-Target %": "75.0%",
-        "PFR Pressure %": "21.0%",
+        "PFR On-Target %": "79.0%",
+        "PFR Pressure %": "21.6%",
         "Yds Tierra": 60
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/passing.htm",
+        "pfr": "https://www.pro-football-reference.com/players/B/BurrJo01.htm",
         "playerprofiler": "https://www.playerprofiler.com/nfl/joe-burrow/",
         "rbsdm": "https://rbsdm.com/stats/stats/",
         "ngs": "https://nextgenstats.nfl.com/stats/passing"
@@ -12300,12 +12300,12 @@
         "EPA/Dropback": 0.175,
         "CPOE": "+0.8%",
         "NGS Time to Throw": "2.78s",
-        "PFR On-Target %": "75.0%",
-        "PFR Pressure %": "21.0%",
+        "PFR On-Target %": "76.8%",
+        "PFR Pressure %": "21.7%",
         "Yds Tierra": 81
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/passing.htm",
+        "pfr": "https://www.pro-football-reference.com/players/P/PresDa01.htm",
         "playerprofiler": "https://www.playerprofiler.com/nfl/dak-prescott/",
         "rbsdm": "https://rbsdm.com/stats/stats/",
         "ngs": "https://nextgenstats.nfl.com/stats/passing"
@@ -12329,12 +12329,12 @@
         "EPA/Dropback": 0.192,
         "CPOE": "+6.7%",
         "NGS Time to Throw": "3.11s",
-        "PFR On-Target %": "75.0%",
-        "PFR Pressure %": "21.0%",
+        "PFR On-Target %": "78.8%",
+        "PFR Pressure %": "23.6%",
         "Yds Tierra": 211
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/passing.htm",
+        "pfr": "https://www.pro-football-reference.com/players/M/MayeDr00.htm",
         "playerprofiler": "https://www.playerprofiler.com/nfl/drake-maye/",
         "rbsdm": "https://rbsdm.com/stats/stats/",
         "ngs": "https://nextgenstats.nfl.com/stats/passing"
@@ -12358,12 +12358,12 @@
         "EPA/Dropback": 0.307,
         "CPOE": "+9.0%",
         "NGS Time to Throw": "3.22s",
-        "PFR On-Target %": "75.0%",
-        "PFR Pressure %": "21.0%",
+        "PFR On-Target %": "82.7%",
+        "PFR Pressure %": "25.8%",
         "Yds Tierra": 128
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/passing.htm",
+        "pfr": "https://www.pro-football-reference.com/players/W/WillCa03.htm",
         "playerprofiler": "https://www.playerprofiler.com/nfl/caleb-williams/",
         "rbsdm": "https://rbsdm.com/stats/stats/",
         "ngs": "https://nextgenstats.nfl.com/stats/passing"
@@ -12387,12 +12387,12 @@
         "EPA/Dropback": 0.144,
         "CPOE": "-2.0%",
         "NGS Time to Throw": "2.89s",
-        "PFR On-Target %": "75.0%",
-        "PFR Pressure %": "21.0%",
+        "PFR On-Target %": "73.8%",
+        "PFR Pressure %": "23.5%",
         "Yds Tierra": 4
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/passing.htm",
+        "pfr": "https://www.pro-football-reference.com/players/C/CousKi00.htm",
         "playerprofiler": "https://www.playerprofiler.com/nfl/kirk-cousins/",
         "rbsdm": "https://rbsdm.com/stats/stats/",
         "ngs": "https://nextgenstats.nfl.com/stats/passing"
@@ -12416,12 +12416,12 @@
         "EPA/Dropback": 0.363,
         "CPOE": "+8.1%",
         "NGS Time to Throw": "3.11s",
-        "PFR On-Target %": "75.0%",
-        "PFR Pressure %": "21.0%",
+        "PFR On-Target %": "78.9%",
+        "PFR Pressure %": "21.1%",
         "Yds Tierra": 144
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/passing.htm",
+        "pfr": "https://www.pro-football-reference.com/players/J/JackLa00.htm",
         "playerprofiler": "https://www.playerprofiler.com/nfl/lamar-jackson/",
         "rbsdm": "https://rbsdm.com/stats/stats/",
         "ngs": "https://nextgenstats.nfl.com/stats/passing"
@@ -12445,12 +12445,12 @@
         "EPA/Dropback": 0.12,
         "CPOE": "+1.5%",
         "NGS Time to Throw": "2.73s",
-        "PFR On-Target %": "75.0%",
-        "PFR Pressure %": "21.0%",
+        "PFR On-Target %": "77.8%",
+        "PFR Pressure %": "16.3%",
         "Yds Tierra": 18
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/passing.htm",
+        "pfr": "https://www.pro-football-reference.com/players/S/StafMa00.htm",
         "playerprofiler": "https://www.playerprofiler.com/nfl/matthew-stafford/",
         "rbsdm": "https://rbsdm.com/stats/stats/",
         "ngs": "https://nextgenstats.nfl.com/stats/passing"
@@ -12473,13 +12473,13 @@
         "TD / INT": "13 / 5",
         "EPA/Dropback": 0.121,
         "CPOE": "-3.0%",
-        "NGS Time to Throw": "2.6s",
-        "PFR On-Target %": "75.0%",
-        "PFR Pressure %": "21.0%",
+        "NGS Time to Throw": "2.60s",
+        "PFR On-Target %": "72.7%",
+        "PFR Pressure %": "24.2%",
         "Yds Tierra": 10
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/passing.htm",
+        "pfr": "https://www.pro-football-reference.com/players/L/LoveJo03.htm",
         "playerprofiler": "https://www.playerprofiler.com/nfl/jordan-love/",
         "rbsdm": "https://rbsdm.com/stats/stats/",
         "ngs": "https://nextgenstats.nfl.com/stats/passing"
@@ -12503,12 +12503,12 @@
         "EPA/Dropback": 0.119,
         "CPOE": "+2.3%",
         "NGS Time to Throw": "2.88s",
-        "PFR On-Target %": "75.0%",
-        "PFR Pressure %": "21.0%",
+        "PFR On-Target %": "76.0%",
+        "PFR Pressure %": "18.8%",
         "Yds Tierra": 80
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/passing.htm",
+        "pfr": "https://www.pro-football-reference.com/players/S/StroCJ00.htm",
         "playerprofiler": "https://www.playerprofiler.com/nfl/c-j-stroud/",
         "rbsdm": "https://rbsdm.com/stats/stats/",
         "ngs": "https://nextgenstats.nfl.com/stats/passing"
@@ -12532,12 +12532,12 @@
         "EPA/Dropback": 0.178,
         "CPOE": "+0.1%",
         "NGS Time to Throw": "2.53s",
-        "PFR On-Target %": "75.0%",
-        "PFR Pressure %": "21.0%",
+        "PFR On-Target %": "79.6%",
+        "PFR Pressure %": "13.4%",
         "Yds Tierra": 4
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/passing.htm",
+        "pfr": "https://www.pro-football-reference.com/players/P/PeniMi00.htm",
         "playerprofiler": "https://www.playerprofiler.com/nfl/michael-penix-jr/",
         "rbsdm": "https://rbsdm.com/stats/stats/",
         "ngs": "https://nextgenstats.nfl.com/stats/passing"
@@ -12561,12 +12561,12 @@
         "EPA/Dropback": 0.118,
         "CPOE": "+5.2%",
         "NGS Time to Throw": "2.92s",
-        "PFR On-Target %": "75.0%",
-        "PFR Pressure %": "21.0%",
+        "PFR On-Target %": "79.8%",
+        "PFR Pressure %": "24.4%",
         "Yds Tierra": 42
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/passing.htm",
+        "pfr": "https://www.pro-football-reference.com/players/S/SmitGe00.htm",
         "playerprofiler": "https://www.playerprofiler.com/nfl/geno-smith/",
         "rbsdm": "https://rbsdm.com/stats/stats/",
         "ngs": "https://nextgenstats.nfl.com/stats/passing"
@@ -12590,12 +12590,12 @@
         "EPA/Dropback": 0.102,
         "CPOE": "+0.7%",
         "NGS Time to Throw": "2.88s",
-        "PFR On-Target %": "75.0%",
-        "PFR Pressure %": "21.0%",
+        "PFR On-Target %": "71.5%",
+        "PFR Pressure %": "30.3%",
         "Yds Tierra": 34
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/passing.htm",
+        "pfr": "https://www.pro-football-reference.com/players/Y/YounBr01.htm",
         "playerprofiler": "https://www.playerprofiler.com/nfl/bryce-young/",
         "rbsdm": "https://rbsdm.com/stats/stats/",
         "ngs": "https://nextgenstats.nfl.com/stats/passing"
@@ -12619,12 +12619,12 @@
         "EPA/Dropback": 0.114,
         "CPOE": "+0.3%",
         "NGS Time to Throw": "2.79s",
-        "PFR On-Target %": "75.0%",
-        "PFR Pressure %": "21.0%",
+        "PFR On-Target %": "76.4%",
+        "PFR Pressure %": "20.5%",
         "Yds Tierra": 71
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/passing.htm",
+        "pfr": "https://www.pro-football-reference.com/players/M/MahoPa00.htm",
         "playerprofiler": "https://www.playerprofiler.com/nfl/patrick-mahomes/",
         "rbsdm": "https://rbsdm.com/stats/stats/",
         "ngs": "https://nextgenstats.nfl.com/stats/passing"
@@ -12648,12 +12648,12 @@
         "EPA/Dropback": 0.101,
         "CPOE": "+1.6%",
         "NGS Time to Throw": "2.82s",
-        "PFR On-Target %": "75.0%",
-        "PFR Pressure %": "21.0%",
+        "PFR On-Target %": "77.4%",
+        "PFR Pressure %": "19.6%",
         "Yds Tierra": 76
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/passing.htm",
+        "pfr": "https://www.pro-football-reference.com/players/H/HuntTy01.htm",
         "playerprofiler": "https://www.playerprofiler.com/nfl/tyler-huntley/",
         "rbsdm": "https://rbsdm.com/stats/stats/",
         "ngs": "https://nextgenstats.nfl.com/stats/passing"
@@ -12676,13 +12676,13 @@
         "TD / INT": "13 / 6",
         "EPA/Dropback": 0.018,
         "CPOE": "-0.1%",
-        "NGS Time to Throw": "2.7s",
-        "PFR On-Target %": "75.0%",
-        "PFR Pressure %": "21.0%",
+        "NGS Time to Throw": "2.70s",
+        "PFR On-Target %": "75.8%",
+        "PFR Pressure %": "20.6%",
         "Yds Tierra": 111
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/passing.htm",
+        "pfr": "https://www.pro-football-reference.com/players/S/ShouTy00.htm",
         "playerprofiler": "https://www.playerprofiler.com/nfl/tyler-shough/",
         "rbsdm": "https://rbsdm.com/stats/stats/",
         "ngs": "https://nextgenstats.nfl.com/stats/passing"
@@ -12706,12 +12706,12 @@
         "EPA/Dropback": 0.034,
         "CPOE": "+7.4%",
         "NGS Time to Throw": "2.94s",
-        "PFR On-Target %": "75.0%",
-        "PFR Pressure %": "21.0%",
+        "PFR On-Target %": "76.8%",
+        "PFR Pressure %": "22.8%",
         "Yds Tierra": 213
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/passing.htm",
+        "pfr": "https://www.pro-football-reference.com/players/D/DaniJa02.htm",
         "playerprofiler": "https://www.playerprofiler.com/nfl/jayden-daniels/",
         "rbsdm": "https://rbsdm.com/stats/stats/",
         "ngs": "https://nextgenstats.nfl.com/stats/passing"
@@ -12735,12 +12735,12 @@
         "EPA/Dropback": 0.008,
         "CPOE": "-0.6%",
         "NGS Time to Throw": "2.85s",
-        "PFR On-Target %": "75.0%",
-        "PFR Pressure %": "21.0%",
+        "PFR On-Target %": "72.8%",
+        "PFR Pressure %": "25.6%",
         "Yds Tierra": 215
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/passing.htm",
+        "pfr": "https://www.pro-football-reference.com/players/W/WatsDe00.htm",
         "playerprofiler": "https://www.playerprofiler.com/nfl/deshaun-watson/",
         "rbsdm": "https://rbsdm.com/stats/stats/",
         "ngs": "https://nextgenstats.nfl.com/stats/passing"
@@ -12764,12 +12764,12 @@
         "EPA/Dropback": -0.077,
         "CPOE": "+1.3%",
         "NGS Time to Throw": "2.88s",
-        "PFR On-Target %": "75.0%",
-        "PFR Pressure %": "21.0%",
+        "PFR On-Target %": "74.0%",
+        "PFR Pressure %": "14.1%",
         "Yds Tierra": 18
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/passing.htm",
+        "pfr": "https://www.pro-football-reference.com/players/B/BageTy00.htm",
         "playerprofiler": "https://www.playerprofiler.com/nfl/tyson-bagent/",
         "rbsdm": "https://rbsdm.com/stats/stats/",
         "ngs": "https://nextgenstats.nfl.com/stats/passing"
@@ -12793,12 +12793,12 @@
         "EPA/Dropback": -0.061,
         "CPOE": "+2.9%",
         "NGS Time to Throw": "2.91s",
-        "PFR On-Target %": "75.0%",
-        "PFR Pressure %": "21.0%",
+        "PFR On-Target %": "77.9%",
+        "PFR Pressure %": "20.9%",
         "Yds Tierra": 132
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/passing.htm",
+        "pfr": "https://www.pro-football-reference.com/players/M/MurrKy00.htm",
         "playerprofiler": "https://www.playerprofiler.com/nfl/kyler-murray/",
         "rbsdm": "https://rbsdm.com/stats/stats/",
         "ngs": "https://nextgenstats.nfl.com/stats/passing"
@@ -12822,12 +12822,12 @@
         "EPA/Dropback": -0.058,
         "CPOE": "-2.2%",
         "NGS Time to Throw": "3.04s",
-        "PFR On-Target %": "75.0%",
-        "PFR Pressure %": "21.0%",
+        "PFR On-Target %": "69.1%",
+        "PFR Pressure %": "27.0%",
         "Yds Tierra": 107
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/passing.htm",
+        "pfr": "https://www.pro-football-reference.com/players/H/HurtJa00.htm",
         "playerprofiler": "https://www.playerprofiler.com/nfl/jalen-hurts/",
         "rbsdm": "https://rbsdm.com/stats/stats/",
         "ngs": "https://nextgenstats.nfl.com/stats/passing"
@@ -12850,13 +12850,13 @@
         "TD / INT": "8 / 8",
         "EPA/Dropback": -0.051,
         "CPOE": "+0.5%",
-        "NGS Time to Throw": "3.0s",
-        "PFR On-Target %": "75.0%",
-        "PFR Pressure %": "21.0%",
+        "NGS Time to Throw": "3.00s",
+        "PFR On-Target %": "75.8%",
+        "PFR Pressure %": "30.3%",
         "Yds Tierra": 52
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/passing.htm",
+        "pfr": "https://www.pro-football-reference.com/players/D/DarnSa00.htm",
         "playerprofiler": "https://www.playerprofiler.com/nfl/sam-darnold/",
         "rbsdm": "https://rbsdm.com/stats/stats/",
         "ngs": "https://nextgenstats.nfl.com/stats/passing"
@@ -12880,12 +12880,12 @@
         "EPA/Dropback": -0.034,
         "CPOE": "+0.7%",
         "NGS Time to Throw": "2.63s",
-        "PFR On-Target %": "75.0%",
-        "PFR Pressure %": "21.0%",
+        "PFR On-Target %": "75.6%",
+        "PFR Pressure %": "22.2%",
         "Yds Tierra": 80
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/passing.htm",
+        "pfr": "https://www.pro-football-reference.com/players/B/BrisJa00.htm",
         "playerprofiler": "https://www.playerprofiler.com/nfl/jacoby-brissett/",
         "rbsdm": "https://rbsdm.com/stats/stats/",
         "ngs": "https://nextgenstats.nfl.com/stats/passing"
@@ -12909,12 +12909,12 @@
         "EPA/Dropback": -0.046,
         "CPOE": "-2.5%",
         "NGS Time to Throw": "2.96s",
-        "PFR On-Target %": "75.0%",
-        "PFR Pressure %": "21.0%",
+        "PFR On-Target %": "71.1%",
+        "PFR Pressure %": "21.9%",
         "Yds Tierra": 110
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/passing.htm",
+        "pfr": "https://www.pro-football-reference.com/players/N/NixxBo00.htm",
         "playerprofiler": "https://www.playerprofiler.com/nfl/bo-nix/",
         "rbsdm": "https://rbsdm.com/stats/stats/",
         "ngs": "https://nextgenstats.nfl.com/stats/passing"
@@ -12938,12 +12938,12 @@
         "EPA/Dropback": -0.141,
         "CPOE": "-4.6%",
         "NGS Time to Throw": "2.58s",
-        "PFR On-Target %": "75.0%",
-        "PFR Pressure %": "21.0%",
+        "PFR On-Target %": "76.0%",
+        "PFR Pressure %": "14.0%",
         "Yds Tierra": 1
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/passing.htm",
+        "pfr": "https://www.pro-football-reference.com/players/M/McKeTa01.htm",
         "playerprofiler": "https://www.playerprofiler.com/nfl/tanner-mckee/",
         "rbsdm": "https://rbsdm.com/stats/stats/",
         "ngs": "https://nextgenstats.nfl.com/stats/passing"
@@ -12967,12 +12967,12 @@
         "EPA/Dropback": -0.105,
         "CPOE": "-6.9%",
         "NGS Time to Throw": "3.13s",
-        "PFR On-Target %": "75.0%",
-        "PFR Pressure %": "21.0%",
+        "PFR On-Target %": "70.4%",
+        "PFR Pressure %": "26.3%",
         "Yds Tierra": 223
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/passing.htm",
+        "pfr": "https://www.pro-football-reference.com/players/W/WillMa12.htm",
         "playerprofiler": "https://www.playerprofiler.com/nfl/malik-willis/",
         "rbsdm": "https://rbsdm.com/stats/stats/",
         "ngs": "https://nextgenstats.nfl.com/stats/passing"
@@ -12996,12 +12996,12 @@
         "EPA/Dropback": -0.117,
         "CPOE": "-7.5%",
         "NGS Time to Throw": "2.64s",
-        "PFR On-Target %": "75.0%",
-        "PFR Pressure %": "21.0%",
+        "PFR On-Target %": "66.7%",
+        "PFR Pressure %": "21.8%",
         "Yds Tierra": 50
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/passing.htm",
+        "pfr": "https://www.pro-football-reference.com/players/W/WinsJa00.htm",
         "playerprofiler": "https://www.playerprofiler.com/nfl/jameis-winston/",
         "rbsdm": "https://rbsdm.com/stats/stats/",
         "ngs": "https://nextgenstats.nfl.com/stats/passing"
@@ -13025,12 +13025,12 @@
         "EPA/Dropback": -0.193,
         "CPOE": "-6.6%",
         "NGS Time to Throw": "2.84s",
-        "PFR On-Target %": "75.0%",
-        "PFR Pressure %": "21.0%",
+        "PFR On-Target %": "70.0%",
+        "PFR Pressure %": "22.7%",
         "Yds Tierra": 123
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/passing.htm",
+        "pfr": "https://www.pro-football-reference.com/players/D/DaniJa03.htm",
         "playerprofiler": "https://www.playerprofiler.com/nfl/jalon-daniels/",
         "rbsdm": "https://rbsdm.com/stats/stats/",
         "ngs": "https://nextgenstats.nfl.com/stats/passing"
@@ -13054,12 +13054,12 @@
         "EPA/Dropback": -0.205,
         "CPOE": "+0.5%",
         "NGS Time to Throw": "2.96s",
-        "PFR On-Target %": "75.0%",
-        "PFR Pressure %": "21.0%",
+        "PFR On-Target %": "73.4%",
+        "PFR Pressure %": "24.0%",
         "Yds Tierra": 66
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/passing.htm",
+        "pfr": "https://www.pro-football-reference.com/players/M/MayfBa00.htm",
         "playerprofiler": "https://www.playerprofiler.com/nfl/baker-mayfield/",
         "rbsdm": "https://rbsdm.com/stats/stats/",
         "ngs": "https://nextgenstats.nfl.com/stats/passing"
@@ -13083,12 +13083,12 @@
         "EPA/Dropback": -0.089,
         "CPOE": "-1.1%",
         "NGS Time to Throw": "2.74s",
-        "PFR On-Target %": "75.0%",
-        "PFR Pressure %": "21.0%",
+        "PFR On-Target %": "73.2%",
+        "PFR Pressure %": "20.4%",
         "Yds Tierra": 23
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/passing.htm",
+        "pfr": "https://www.pro-football-reference.com/players/R/RodgAa00.htm",
         "playerprofiler": "https://www.playerprofiler.com/nfl/aaron-rodgers/",
         "rbsdm": "https://rbsdm.com/stats/stats/",
         "ngs": "https://nextgenstats.nfl.com/stats/passing"
@@ -13112,12 +13112,12 @@
         "EPA/Dropback": -0.129,
         "CPOE": "-0.9%",
         "NGS Time to Throw": "2.86s",
-        "PFR On-Target %": "75.0%",
-        "PFR Pressure %": "21.0%",
+        "PFR On-Target %": "76.2%",
+        "PFR Pressure %": "24.2%",
         "Yds Tierra": 71
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/passing.htm",
+        "pfr": "https://www.pro-football-reference.com/players/W/WardCa00.htm",
         "playerprofiler": "https://www.playerprofiler.com/nfl/cam-ward/",
         "rbsdm": "https://rbsdm.com/stats/stats/",
         "ngs": "https://nextgenstats.nfl.com/stats/passing"
@@ -13141,12 +13141,12 @@
         "EPA/Dropback": -0.139,
         "CPOE": "-4.0%",
         "NGS Time to Throw": "2.82s",
-        "PFR On-Target %": "75.0%",
-        "PFR Pressure %": "21.0%",
+        "PFR On-Target %": "71.4%",
+        "PFR Pressure %": "22.8%",
         "Yds Tierra": 68
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/passing.htm",
+        "pfr": "https://www.pro-football-reference.com/players/J/JoneDa05.htm",
         "playerprofiler": "https://www.playerprofiler.com/nfl/daniel-jones/",
         "rbsdm": "https://rbsdm.com/stats/stats/",
         "ngs": "https://nextgenstats.nfl.com/stats/passing"
@@ -13170,12 +13170,12 @@
         "EPA/Dropback": -0.223,
         "CPOE": "-5.7%",
         "NGS Time to Throw": "2.81s",
-        "PFR On-Target %": "75.0%",
-        "PFR Pressure %": "21.0%",
+        "PFR On-Target %": "73.6%",
+        "PFR Pressure %": "26.4%",
         "Yds Tierra": 168
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/passing.htm",
+        "pfr": "https://www.pro-football-reference.com/players/H/HerbJu00.htm",
         "playerprofiler": "https://www.playerprofiler.com/nfl/justin-herbert/",
         "rbsdm": "https://rbsdm.com/stats/stats/",
         "ngs": "https://nextgenstats.nfl.com/stats/passing"
@@ -14667,7 +14667,7 @@
         "Air Yards Share": "28.7%",
         "WOPR (Opportunity)": 0.58,
         "EPA/Target": 0.429,
-        "NGS Separation": "2.8 yds"
+        "NGS Separation": "2.80 yds"
       },
       "links": {
         "pfr": "https://www.pro-football-reference.com/years/2026/receiving.htm",
@@ -14725,7 +14725,7 @@
         "Air Yards Share": "24.9%",
         "WOPR (Opportunity)": 0.52,
         "EPA/Target": 0.189,
-        "NGS Separation": "2.9 yds"
+        "NGS Separation": "2.90 yds"
       },
       "links": {
         "pfr": "https://www.pro-football-reference.com/years/2026/receiving.htm",
@@ -15392,7 +15392,7 @@
         "Air Yards Share": "22.4%",
         "WOPR (Opportunity)": 0.43,
         "EPA/Target": 0.219,
-        "NGS Separation": "2.8 yds"
+        "NGS Separation": "2.80 yds"
       },
       "links": {
         "pfr": "https://www.pro-football-reference.com/years/2026/receiving.htm",
@@ -15711,7 +15711,7 @@
         "Air Yards Share": "12.9%",
         "WOPR (Opportunity)": 0.39,
         "EPA/Target": 0.313,
-        "NGS Separation": "3.8 yds"
+        "NGS Separation": "3.80 yds"
       },
       "links": {
         "pfr": "https://www.pro-football-reference.com/years/2026/receiving.htm",
@@ -15798,7 +15798,7 @@
         "Air Yards Share": "24.7%",
         "WOPR (Opportunity)": 0.39,
         "EPA/Target": 0.502,
-        "NGS Separation": "3.0 yds"
+        "NGS Separation": "3.00 yds"
       },
       "links": {
         "pfr": "https://www.pro-football-reference.com/years/2026/receiving.htm",
@@ -16001,7 +16001,7 @@
         "Air Yards Share": "17.0%",
         "WOPR (Opportunity)": 0.41,
         "EPA/Target": 0.184,
-        "NGS Separation": "2.6 yds"
+        "NGS Separation": "2.60 yds"
       },
       "links": {
         "pfr": "https://www.pro-football-reference.com/years/2026/receiving.htm",
@@ -16262,10 +16262,10 @@
         "Intercepciones": 0,
         "Pases Defendidos": 5,
         "PFR Pressures": 25,
-        "PFR Rating Permitido": 82.5
+        "PFR Rating Permitido": 79.2
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/R/RousGr00.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -16289,10 +16289,10 @@
         "Intercepciones": 0,
         "Pases Defendidos": 1,
         "PFR Pressures": 22,
-        "PFR Rating Permitido": 82.5
+        "PFR Rating Permitido": 56.2
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/A/AndeWi01.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -16306,7 +16306,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "6.0 / 0",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "25",
       "percentile": 99,
       "metrics": {
         "Sacks": 6.0,
@@ -16315,11 +16315,11 @@
         "Tackles Solo": 11,
         "Intercepciones": 0,
         "Pases Defendidos": 0,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 79.2
+        "PFR Pressures": 25,
+        "PFR Rating Permitido": 83.3
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/T/TurnDa01.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -16333,7 +16333,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "4.5 / 0",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "14",
       "percentile": 99,
       "metrics": {
         "Sacks": 4.5,
@@ -16342,11 +16342,11 @@
         "Tackles Solo": 28,
         "Intercepciones": 0,
         "Pases Defendidos": 5,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 58.0
+        "PFR Pressures": 14,
+        "PFR Rating Permitido": 85.4
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/C/CashBl00.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -16370,10 +16370,10 @@
         "Intercepciones": 1,
         "Pases Defendidos": 2,
         "PFR Pressures": 14,
-        "PFR Rating Permitido": 82.5
+        "PFR Rating Permitido": 0.0
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/W/WattT.00.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -16387,7 +16387,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "7.0 / 0",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "18",
       "percentile": 99,
       "metrics": {
         "Sacks": 7.0,
@@ -16396,11 +16396,11 @@
         "Tackles Solo": 7,
         "Intercepciones": 0,
         "Pases Defendidos": 3,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 0.0
+        "PFR Pressures": 18,
+        "PFR Rating Permitido": 108.3
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/Y/YounCh04.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -16414,7 +16414,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "4.5 / 0",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "22",
       "percentile": 98,
       "metrics": {
         "Sacks": 4.5,
@@ -16423,11 +16423,11 @@
         "Tackles Solo": 10,
         "Intercepciones": 0,
         "Pases Defendidos": 2,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 0.0
+        "PFR Pressures": 22,
+        "PFR Rating Permitido": 39.6
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/A/AlleZa01.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -16441,7 +16441,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "5.5 / 0",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "14",
       "percentile": 98,
       "metrics": {
         "Sacks": 5.5,
@@ -16450,11 +16450,11 @@
         "Tackles Solo": 21,
         "Intercepciones": 0,
         "Pases Defendidos": 1,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 96.5
+        "PFR Pressures": 14,
+        "PFR Rating Permitido": 53.1
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/B/BailDa02.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -16468,7 +16468,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "5.0 / 0",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "22",
       "percentile": 98,
       "metrics": {
         "Sacks": 5.0,
@@ -16477,11 +16477,11 @@
         "Tackles Solo": 9,
         "Intercepciones": 0,
         "Pases Defendidos": 1,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 91.7
+        "PFR Pressures": 22,
+        "PFR Rating Permitido": 42.4
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/H/HutcAi00.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -16495,7 +16495,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "5.5 / 0",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "16",
       "percentile": 98,
       "metrics": {
         "Sacks": 5.5,
@@ -16504,11 +16504,11 @@
         "Tackles Solo": 13,
         "Intercepciones": 0,
         "Pases Defendidos": 0,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 104.2
+        "PFR Pressures": 16,
+        "PFR Rating Permitido": 158.3
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/P/PondEl02.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -16522,7 +16522,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "4.0 / 0",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "13",
       "percentile": 97,
       "metrics": {
         "Sacks": 4.0,
@@ -16531,11 +16531,11 @@
         "Tackles Solo": 20,
         "Intercepciones": 0,
         "Pases Defendidos": 3,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 0.0
+        "PFR Pressures": 13,
+        "PFR Rating Permitido": 79.2
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/S/SimmJe01.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -16549,7 +16549,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "1.0 / 1",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "18",
       "percentile": 97,
       "metrics": {
         "Sacks": 1.0,
@@ -16558,11 +16558,11 @@
         "Tackles Solo": 9,
         "Intercepciones": 1,
         "Pases Defendidos": 5,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 47.2
+        "PFR Pressures": 18,
+        "PFR Rating Permitido": 39.2
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/K/KarlGe00.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -16576,7 +16576,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "4.0 / 1",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "13",
       "percentile": 97,
       "metrics": {
         "Sacks": 4.0,
@@ -16585,11 +16585,11 @@
         "Tackles Solo": 9,
         "Intercepciones": 1,
         "Pases Defendidos": 1,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 6.8
+        "PFR Pressures": 13,
+        "PFR Rating Permitido": 14.6
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/V/VanGAn00.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -16603,7 +16603,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "3.5 / 1",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "8",
       "percentile": 96,
       "metrics": {
         "Sacks": 3.5,
@@ -16612,11 +16612,11 @@
         "Tackles Solo": 25,
         "Intercepciones": 1,
         "Pases Defendidos": 4,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 139.2
+        "PFR Pressures": 8,
+        "PFR Rating Permitido": 103.5
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/B/BakeBu00.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -16630,7 +16630,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "4.5 / 0",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "18",
       "percentile": 96,
       "metrics": {
         "Sacks": 4.5,
@@ -16639,11 +16639,11 @@
         "Tackles Solo": 12,
         "Intercepciones": 0,
         "Pases Defendidos": 0,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 87.5
+        "PFR Pressures": 18,
+        "PFR Rating Permitido": 118.8
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/Y/YounBy01.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -16657,7 +16657,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "5.5 / 0",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "12",
       "percentile": 96,
       "metrics": {
         "Sacks": 5.5,
@@ -16666,11 +16666,11 @@
         "Tackles Solo": 9,
         "Intercepciones": 0,
         "Pases Defendidos": 0,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 56.2
+        "PFR Pressures": 12,
+        "PFR Rating Permitido": 42.4
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/G/GranCa01.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -16684,7 +16684,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "3.0 / 0",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "13",
       "percentile": 96,
       "metrics": {
         "Sacks": 3.0,
@@ -16693,11 +16693,11 @@
         "Tackles Solo": 12,
         "Intercepciones": 0,
         "Pases Defendidos": 1,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 0.0
+        "PFR Pressures": 13,
+        "PFR Rating Permitido": 72.7
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/W/WillLe02.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -16711,7 +16711,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "4.0 / 0",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "11",
       "percentile": 95,
       "metrics": {
         "Sacks": 4.0,
@@ -16720,11 +16720,11 @@
         "Tackles Solo": 9,
         "Intercepciones": 0,
         "Pases Defendidos": 1,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 0.0
+        "PFR Pressures": 11,
+        "PFR Rating Permitido": 39.6
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/L/LawrDe03.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -16738,7 +16738,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "3.0 / 0",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "9",
       "percentile": 95,
       "metrics": {
         "Sacks": 3.0,
@@ -16747,11 +16747,11 @@
         "Tackles Solo": 13,
         "Intercepciones": 0,
         "Pases Defendidos": 1,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 0.0
+        "PFR Pressures": 9,
+        "PFR Rating Permitido": 39.6
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/W/WillQu00.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -16765,7 +16765,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "3.5 / 0",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "14",
       "percentile": 95,
       "metrics": {
         "Sacks": 3.5,
@@ -16774,11 +16774,11 @@
         "Tackles Solo": 15,
         "Intercepciones": 0,
         "Pases Defendidos": 0,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 79.2
+        "PFR Pressures": 14,
+        "PFR Rating Permitido": 87.5
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/V/VanNLu00.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -16792,7 +16792,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "2.0 / 2",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "7",
       "percentile": 95,
       "metrics": {
         "Sacks": 2.0,
@@ -16801,11 +16801,11 @@
         "Tackles Solo": 23,
         "Intercepciones": 2,
         "Pases Defendidos": 3,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 76.3
+        "PFR Pressures": 7,
+        "PFR Rating Permitido": 58.5
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/L/LloyDe00.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -16819,7 +16819,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "2.5 / 0",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "14",
       "percentile": 94,
       "metrics": {
         "Sacks": 2.5,
@@ -16828,11 +16828,11 @@
         "Tackles Solo": 12,
         "Intercepciones": 0,
         "Pases Defendidos": 4,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 83.3
+        "PFR Pressures": 14,
+        "PFR Rating Permitido": 86.8
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/R/RoacMa01.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -16846,7 +16846,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "3.0 / 1",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "9",
       "percentile": 94,
       "metrics": {
         "Sacks": 3.0,
@@ -16855,11 +16855,11 @@
         "Tackles Solo": 11,
         "Intercepciones": 1,
         "Pases Defendidos": 2,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 56.2
+        "PFR Pressures": 9,
+        "PFR Rating Permitido": 40.5
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/D/DiabYa00.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -16873,7 +16873,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "4.0 / 0",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "12",
       "percentile": 94,
       "metrics": {
         "Sacks": 4.0,
@@ -16882,11 +16882,11 @@
         "Tackles Solo": 11,
         "Intercepciones": 0,
         "Pases Defendidos": 3,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 0.0
+        "PFR Pressures": 12,
+        "PFR Rating Permitido": 63.5
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/B/BuckDe00.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -16900,7 +16900,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "4.0 / 0",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "17",
       "percentile": 94,
       "metrics": {
         "Sacks": 4.0,
@@ -16909,11 +16909,11 @@
         "Tackles Solo": 8,
         "Intercepciones": 0,
         "Pases Defendidos": 4,
-        "PFR Pressures": 0,
+        "PFR Pressures": 17,
         "PFR Rating Permitido": 56.2
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/H/HuntDa01.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -16927,7 +16927,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "1.0 / 2",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "7",
       "percentile": 93,
       "metrics": {
         "Sacks": 1.0,
@@ -16936,11 +16936,11 @@
         "Tackles Solo": 36,
         "Intercepciones": 2,
         "Pases Defendidos": 6,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 102.1
+        "PFR Pressures": 7,
+        "PFR Rating Permitido": 38.5
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/W/WillEv00.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -16954,7 +16954,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "4.5 / 0",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "10",
       "percentile": 93,
       "metrics": {
         "Sacks": 4.5,
@@ -16963,11 +16963,11 @@
         "Tackles Solo": 8,
         "Intercepciones": 0,
         "Pases Defendidos": 1,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 39.6
+        "PFR Pressures": 10,
+        "PFR Rating Permitido": 107.3
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/M/MafeBo00.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -16981,7 +16981,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "2.0 / 0",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "25",
       "percentile": 93,
       "metrics": {
         "Sacks": 2.0,
@@ -16990,11 +16990,11 @@
         "Tackles Solo": 7,
         "Intercepciones": 0,
         "Pases Defendidos": 1,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 0.0
+        "PFR Pressures": 25,
+        "PFR Rating Permitido": 95.8
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/C/CrosMa00.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -17018,10 +17018,10 @@
         "Intercepciones": 0,
         "Pases Defendidos": 1,
         "PFR Pressures": 12,
-        "PFR Rating Permitido": 82.5
+        "PFR Rating Permitido": 79.2
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/W/WonnDJ00.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -17035,7 +17035,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "4.0 / 0",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "10",
       "percentile": 92,
       "metrics": {
         "Sacks": 4.0,
@@ -17044,11 +17044,11 @@
         "Tackles Solo": 15,
         "Intercepciones": 0,
         "Pases Defendidos": 0,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 0.0
+        "PFR Pressures": 10,
+        "PFR Rating Permitido": 94.4
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/W/WalkDa03.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -17062,7 +17062,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "1.5 / 1",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "5",
       "percentile": 92,
       "metrics": {
         "Sacks": 1.5,
@@ -17071,11 +17071,11 @@
         "Tackles Solo": 38,
         "Intercepciones": 1,
         "Pases Defendidos": 4,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 125.5
+        "PFR Pressures": 5,
+        "PFR Rating Permitido": 80.4
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/R/ReesAr00.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -17089,7 +17089,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "3.0 / 1",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "5",
       "percentile": 92,
       "metrics": {
         "Sacks": 3.0,
@@ -17098,11 +17098,11 @@
         "Tackles Solo": 36,
         "Intercepciones": 1,
         "Pases Defendidos": 3,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 77.3
+        "PFR Pressures": 5,
+        "PFR Rating Permitido": 67.7
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/J/JoneEr01.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -17116,7 +17116,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "4.5 / 0",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "9",
+      "secondary_val": "10",
       "percentile": 91,
       "metrics": {
         "Sacks": 4.5,
@@ -17125,11 +17125,11 @@
         "Tackles Solo": 5,
         "Intercepciones": 0,
         "Pases Defendidos": 1,
-        "PFR Pressures": 9,
-        "PFR Rating Permitido": 82.5
+        "PFR Pressures": 10,
+        "PFR Rating Permitido": 39.6
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/S/SmitZa00.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -17143,7 +17143,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "4.0 / 0",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "10",
       "percentile": 91,
       "metrics": {
         "Sacks": 4.0,
@@ -17152,11 +17152,11 @@
         "Tackles Solo": 16,
         "Intercepciones": 0,
         "Pases Defendidos": 0,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 0.0
+        "PFR Pressures": 10,
+        "PFR Rating Permitido": 74.9
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/B/BookAu00.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -17170,7 +17170,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "3.5 / 0",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "13",
       "percentile": 91,
       "metrics": {
         "Sacks": 3.5,
@@ -17179,11 +17179,11 @@
         "Tackles Solo": 5,
         "Intercepciones": 0,
         "Pases Defendidos": 2,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 0.0
+        "PFR Pressures": 13,
+        "PFR Rating Permitido": 56.2
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/M/MartJa02.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -17197,7 +17197,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "3.5 / 0",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "12",
       "percentile": 91,
       "metrics": {
         "Sacks": 3.5,
@@ -17206,11 +17206,11 @@
         "Tackles Solo": 5,
         "Intercepciones": 0,
         "Pases Defendidos": 0,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 0.0
+        "PFR Pressures": 12,
+        "PFR Rating Permitido": 75.3
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/C/CollMa00.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -17224,7 +17224,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "3.0 / 1",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "6",
       "percentile": 90,
       "metrics": {
         "Sacks": 3.0,
@@ -17233,11 +17233,11 @@
         "Tackles Solo": 15,
         "Intercepciones": 1,
         "Pases Defendidos": 1,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 99.2
+        "PFR Pressures": 6,
+        "PFR Rating Permitido": 67.6
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/C/CoopEd00.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -17251,7 +17251,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "3.5 / 0",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "12",
       "percentile": 90,
       "metrics": {
         "Sacks": 3.5,
@@ -17260,11 +17260,11 @@
         "Tackles Solo": 10,
         "Intercepciones": 0,
         "Pases Defendidos": 0,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 56.2
+        "PFR Pressures": 12,
+        "PFR Rating Permitido": 81.2
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/B/BoniNi00.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -17278,7 +17278,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "3.0 / 1",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "6",
       "percentile": 90,
       "metrics": {
         "Sacks": 3.0,
@@ -17287,11 +17287,11 @@
         "Tackles Solo": 21,
         "Intercepciones": 1,
         "Pases Defendidos": 2,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 52.1
+        "PFR Pressures": 6,
+        "PFR Rating Permitido": 75.4
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/B/BarnDe02.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -17305,7 +17305,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "1.0 / 1",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "4",
       "percentile": 89,
       "metrics": {
         "Sacks": 1.0,
@@ -17314,11 +17314,11 @@
         "Tackles Solo": 32,
         "Intercepciones": 1,
         "Pases Defendidos": 3,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 84.0
+        "PFR Pressures": 4,
+        "PFR Rating Permitido": 66.8
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/W/WilsPa00.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -17332,7 +17332,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "3.5 / 0",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "12",
       "percentile": 89,
       "metrics": {
         "Sacks": 3.5,
@@ -17341,11 +17341,11 @@
         "Tackles Solo": 9,
         "Intercepciones": 0,
         "Pases Defendidos": 2,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 118.7
+        "PFR Pressures": 12,
+        "PFR Rating Permitido": 104.9
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/R/RobiTa00.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -17359,7 +17359,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "4.0 / 0",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "12",
       "percentile": 89,
       "metrics": {
         "Sacks": 4.0,
@@ -17368,11 +17368,11 @@
         "Tackles Solo": 7,
         "Intercepciones": 0,
         "Pases Defendidos": 1,
-        "PFR Pressures": 0,
+        "PFR Pressures": 12,
         "PFR Rating Permitido": 39.6
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/A/AdebAd00.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -17386,7 +17386,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "4.0 / 0",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "9",
       "percentile": 89,
       "metrics": {
         "Sacks": 4.0,
@@ -17395,11 +17395,11 @@
         "Tackles Solo": 7,
         "Intercepciones": 0,
         "Pases Defendidos": 0,
-        "PFR Pressures": 0,
+        "PFR Pressures": 9,
         "PFR Rating Permitido": 79.2
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/G/GrahMa00.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -17413,7 +17413,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "3.5 / 0",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "12",
       "percentile": 88,
       "metrics": {
         "Sacks": 3.5,
@@ -17422,11 +17422,11 @@
         "Tackles Solo": 6,
         "Intercepciones": 0,
         "Pases Defendidos": 1,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 0.0
+        "PFR Pressures": 12,
+        "PFR Rating Permitido": 71.8
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/M/McNeAl00.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -17440,7 +17440,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "1.5 / 1",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "4",
       "percentile": 88,
       "metrics": {
         "Sacks": 1.5,
@@ -17449,11 +17449,11 @@
         "Tackles Solo": 36,
         "Intercepciones": 1,
         "Pases Defendidos": 2,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 100.0
+        "PFR Pressures": 4,
+        "PFR Rating Permitido": 98.9
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/D/DeanNa00.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -17467,7 +17467,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "0.5 / 1",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "2",
       "percentile": 88,
       "metrics": {
         "Sacks": 0.5,
@@ -17476,11 +17476,11 @@
         "Tackles Solo": 30,
         "Intercepciones": 1,
         "Pases Defendidos": 6,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 65.5
+        "PFR Pressures": 2,
+        "PFR Rating Permitido": 72.0
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/N/NixoKe00.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -17494,7 +17494,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "1.0 / 1",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "5",
       "percentile": 88,
       "metrics": {
         "Sacks": 1.0,
@@ -17503,11 +17503,11 @@
         "Tackles Solo": 27,
         "Intercepciones": 1,
         "Pases Defendidos": 5,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 53.6
+        "PFR Pressures": 5,
+        "PFR Rating Permitido": 70.7
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/O/OkerBo00.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -17521,7 +17521,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "0.0 / 1",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "1",
       "percentile": 87,
       "metrics": {
         "Sacks": 0.0,
@@ -17530,11 +17530,11 @@
         "Tackles Solo": 33,
         "Intercepciones": 1,
         "Pases Defendidos": 4,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 70.4
+        "PFR Pressures": 1,
+        "PFR Rating Permitido": 86.6
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/H/HamiKy00.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -17548,7 +17548,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "3.0 / 0",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "10",
       "percentile": 87,
       "metrics": {
         "Sacks": 3.0,
@@ -17557,11 +17557,11 @@
         "Tackles Solo": 9,
         "Intercepciones": 0,
         "Pases Defendidos": 0,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 79.2
+        "PFR Pressures": 10,
+        "PFR Rating Permitido": 135.4
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/G/GreeMi02.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -17575,7 +17575,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "3.0 / 0",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "12",
       "percentile": 87,
       "metrics": {
         "Sacks": 3.0,
@@ -17584,11 +17584,11 @@
         "Tackles Solo": 6,
         "Intercepciones": 0,
         "Pases Defendidos": 1,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 0.0
+        "PFR Pressures": 12,
+        "PFR Rating Permitido": 118.8
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/A/AlleJo01.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -17602,7 +17602,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "2.0 / 1",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "9",
       "percentile": 87,
       "metrics": {
         "Sacks": 2.0,
@@ -17611,11 +17611,11 @@
         "Tackles Solo": 12,
         "Intercepciones": 1,
         "Pases Defendidos": 3,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 66.7
+        "PFR Pressures": 9,
+        "PFR Rating Permitido": 47.9
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/T/TuipTu00.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -17629,7 +17629,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "1.0 / 0",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "6",
       "percentile": 86,
       "metrics": {
         "Sacks": 1.0,
@@ -17638,11 +17638,11 @@
         "Tackles Solo": 42,
         "Intercepciones": 0,
         "Pases Defendidos": 1,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 86.6
+        "PFR Pressures": 6,
+        "PFR Rating Permitido": 84.8
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/S/SingAl00.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -17666,10 +17666,10 @@
         "Intercepciones": 0,
         "Pases Defendidos": 0,
         "PFR Pressures": 9,
-        "PFR Rating Permitido": 82.5
+        "PFR Rating Permitido": 85.4
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/M/MurpBy01.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -17683,7 +17683,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "3.0 / 0",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "11",
       "percentile": 86,
       "metrics": {
         "Sacks": 3.0,
@@ -17692,11 +17692,11 @@
         "Tackles Solo": 11,
         "Intercepciones": 0,
         "Pases Defendidos": 0,
-        "PFR Pressures": 0,
-        "PFR Rating Permitido": 0.0
+        "PFR Pressures": 11,
+        "PFR Rating Permitido": 93.8
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/M/MackKh00.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     },
@@ -17710,7 +17710,7 @@
       "primary_label": "Sacks / INTs",
       "primary_val": "3.0 / 0",
       "secondary_label": "PFR Pressures",
-      "secondary_val": "0",
+      "secondary_val": "12",
       "percentile": 85,
       "metrics": {
         "Sacks": 3.0,
@@ -17719,11 +17719,11 @@
         "Tackles Solo": 8,
         "Intercepciones": 0,
         "Pases Defendidos": 0,
-        "PFR Pressures": 0,
+        "PFR Pressures": 12,
         "PFR Rating Permitido": 39.6
       },
       "links": {
-        "pfr": "https://www.pro-football-reference.com/years/2026/defense.htm",
+        "pfr": "https://www.pro-football-reference.com/players/H/HallDe04.htm",
         "pff": "https://www.pff.com/nfl/players"
       }
     }
@@ -22744,7 +22744,7 @@
   ],
   "news": [
     {
-      "id": "news-2",
+      "id": "news-3",
       "title": "Texans put WR Jaylin Noel on IR with expected season-ending turf toe injury",
       "summary": "The Texans placed wide receiver Jaylin Noel on injured reserve; he is expected to miss the rest of the season with turf toe, a source confirmed.",
       "url": "https://www.espn.com/nfl/story/_/id/50311414/texans-put-wr-jaylin-noel-ir-turf-toe-injury",
@@ -22792,7 +22792,7 @@
       "team": "DEN"
     },
     {
-      "id": "news-18",
+      "id": "news-15",
       "title": "Who's out? Who's questionable? Injury report for Panthers-Packers",
       "summary": "Cobertura oficial y reportes de vestuario desde NFL.com News.",
       "url": "https://www.nfl.com/news/nfl-week-8-injury-report-2026-season",
@@ -22804,7 +22804,19 @@
       "team": "CAR"
     },
     {
-      "id": "news-4",
+      "id": "news-1",
+      "title": "Cardinals' Budda Baker hopes to stay with Arizona at trade deadline",
+      "summary": "Budda Baker hopes that when the trade deadline passes, he'll still be in Arizona.",
+      "url": "https://www.espn.com/nfl/story/_/id/50312624/cardinals-budda-baker-stay-arizona-trade-deadline",
+      "source": "ESPN NFL",
+      "source_home": "https://www.espn.com/nfl/",
+      "published": "2026-10-29T01:30",
+      "impact_score": 50,
+      "category": "🔄 Trade / Movimiento de Roster",
+      "team": "ARI"
+    },
+    {
+      "id": "news-5",
       "title": "Jets WR Garrett Wilson says he doesn't want to be traded but does want to win",
       "summary": "Jets receiver Garrett Wilson says he doesn't want to be traded but he expressed that he's frustrated by his target share and, most of all, losing.",
       "url": "https://www.espn.com/nfl/story/_/id/50308919/jets-wr-garrett-wilson-says-want-traded",
@@ -22814,18 +22826,6 @@
       "impact_score": 50,
       "category": "🔄 Trade / Movimiento de Roster",
       "team": "NYJ"
-    },
-    {
-      "id": "news-5",
-      "title": "Brian Thomas Jr. trying to ignore trade talk, 'keep working hard' for Jaguars",
-      "summary": "Jaguars receiver Brian Thomas Jr. said Wednesday that he isn't concerned about being the subject of recent trade rumors.",
-      "url": "https://www.espn.com/nfl/story/_/id/50311100/jaguars-brian-thomas-jr-trying-ignore-trade-talk",
-      "source": "ESPN NFL",
-      "source_home": "https://www.espn.com/nfl/",
-      "published": "2026-10-28T21:42",
-      "impact_score": 50,
-      "category": "🔄 Trade / Movimiento de Roster",
-      "team": "JAX"
     },
     {
       "id": "news-11",
@@ -22840,19 +22840,7 @@
       "team": "IND"
     },
     {
-      "id": "news-13",
-      "title": "[Schultz] Per sources, the 0-6 Los Angeles Chargers have been hesitant to trade players for now.",
-      "summary": "submitted by /u/PlayaSlayaX [link] [comments]",
-      "url": "https://www.reddit.com/r/nfl/comments/1xhvs2h/schultz_per_sources_the_06_los_angeles_chargers/",
-      "source": "Reddit (r/NFL)",
-      "source_home": "https://www.reddit.com/r/nfl/",
-      "published": "2026-10-28T18:11",
-      "impact_score": 50,
-      "category": "🔄 Trade / Movimiento de Roster",
-      "team": "LAC"
-    },
-    {
-      "id": "news-14",
+      "id": "news-12",
       "title": "NFL trade grades: How did Nelson, Buckner buyers, Colts fare in swaps? Trade grades: Evaluating every deal made ahead of deadline",
       "summary": "Cobertura oficial y reportes de vestuario desde NFL.com News.",
       "url": "https://www.nfl.com/news/nfl-trade-grades-evaluating-every-deal-made-ahead-of-the-2026-deadline",
@@ -22864,7 +22852,7 @@
       "team": "IND"
     },
     {
-      "id": "news-15",
+      "id": "news-13",
       "title": "Report: Colts' Downs requests trade after Indy deals multiple veterans Report: Colts' Downs requests trade ahead of deadline",
       "summary": "Cobertura oficial y reportes de vestuario desde NFL.com News.",
       "url": "https://www.nfl.com/news/colts-wr-josh-downs-requests-trade",
@@ -22876,7 +22864,7 @@
       "team": "IND"
     },
     {
-      "id": "news-3",
+      "id": "news-4",
       "title": "Rams' DE Garrett, TE Ferguson won't practice this week",
       "summary": "Rams pass rusher Myles Garrett (knee) and tight end Terrance Ferguson (ankle) will not return to practice this week, coach Sean McVay said Wednesday.",
       "url": "https://www.espn.com/nfl/story/_/id/50311303/rams-de-garrett-te-ferguson-practice-week",
@@ -22900,7 +22888,7 @@
       "team": "MIN"
     },
     {
-      "id": "news-17",
+      "id": "news-14",
       "title": "Roundup: Cards QB returns to practice; Lions RB, WR not practicing News roundup: Latest signings, cuts, injury updates",
       "summary": "Cobertura oficial y reportes de vestuario desde NFL.com News.",
       "url": "https://www.nfl.com/news/nfl-news-roundup-latest-league-updates-from-wednesday-oct-28",
@@ -22924,31 +22912,7 @@
       "team": "DAL"
     },
     {
-      "id": "news-12",
-      "title": "The #Chiefs are signing former #Ravens kicker Justin Tucker to the practice squad",
-      "summary": "submitted by /u/markusfenix75 [link] [comments]",
-      "url": "https://www.reddit.com/r/nfl/comments/1xhn5ry/the_chiefs_are_signing_former_ravens_kicker/",
-      "source": "Reddit (r/NFL)",
-      "source_home": "https://www.reddit.com/r/nfl/",
-      "published": "2026-10-28T12:49",
-      "impact_score": 46,
-      "category": "💰 Impacto Salarial (Cap / Contrato)",
-      "team": "BAL"
-    },
-    {
-      "id": "news-16",
-      "title": "Ex-Raven Tucker joining Chiefs practice squad; struggling Butker likely to kick Sun. NFLN: Chiefs signing Tucker as Butker's struggles continue",
-      "summary": "Cobertura oficial y reportes de vestuario desde NFL.com News.",
-      "url": "https://www.nfl.com/news/justin-tucker-chiefs-signing-kicker-practice-squad",
-      "source": "NFL.com News",
-      "source_home": "https://www.nfl.com/news/",
-      "published": "Hoy",
-      "impact_score": 46,
-      "category": "💰 Impacto Salarial (Cap / Contrato)",
-      "team": "KC"
-    },
-    {
-      "id": "news-1",
+      "id": "news-2",
       "title": "Why fantasy managers should acquire Josaiah Stewart in Week 8",
       "summary": "Why fantasy managers should acquire Josaiah Stewart in Week 8",
       "url": "https://www.espn.com/video/clip/_/id/50312138/why-fantasy-managers-acquire-josaiah-stewart-week-8",
