@@ -193,6 +193,7 @@ def build_team_stats() -> dict:
         rushing_epa=("rushing_epa", "sum"),
         rushing_10=("rushing_10", "sum"),
         rushing_20=("rushing_20", "sum"),
+        fumbles_total=("fumbles_total", "sum"),
         fumbles_lost=("fumbles_lost_total", "sum"),
         penalties=("penalties", "sum"),
         penalty_yards=("penalty_yards", "sum"),
@@ -226,16 +227,21 @@ def build_team_stats() -> dict:
         opp_completions=("completions", "sum"),
         opp_passing_yards=("passing_yards", "sum"),
         opp_passing_tds=("passing_tds", "sum"),
+        opp_passing_first_downs=("passing_first_downs", "sum"),
         opp_passing_epa=("passing_epa", "sum"),
         opp_passing_cpoe=("passing_cpoe", "mean"),
         opp_passing_20=("passing_20", "sum"),
         opp_carries=("carries", "sum"),
         opp_rushing_yards=("rushing_yards", "sum"),
         opp_rushing_tds=("rushing_tds", "sum"),
+        opp_rushing_first_downs=("rushing_first_downs", "sum"),
         opp_rushing_epa=("rushing_epa", "sum"),
         opp_rushing_10=("rushing_10", "sum"),
         opp_sacks_taken=("sacks_suffered", "sum"),
+        opp_fumbles_total=("fumbles_total", "sum"),
         opp_fumbles_lost=("fumbles_lost_total", "sum"),
+        opp_penalties=("penalties", "sum"),
+        opp_penalty_yards=("penalty_yards", "sum"),
         opp_pts_scored=("pts_scored", "sum"),
     ).rename(columns={"opponent_team": "team"})
 
@@ -256,6 +262,9 @@ def build_team_stats() -> dict:
     df["off_pass_ypg"] = (df["passing_yards"] / df["games"].replace(0, 1)).round(1)
     df["off_rush_ypg"] = (df["rushing_yards"] / df["games"].replace(0, 1)).round(1)
     df["off_turnovers"] = df["passing_int"] + df["fumbles_lost"]
+    df["off_1d_rate"] = (((df["passing_first_downs"] + df["rushing_first_downs"]) / df["off_plays"]) * 100).round(1)
+    df["penalties_pg"] = (df["penalties"] / df["games"].replace(0, 1)).round(1)
+    df["penalty_yards_pg"] = (df["penalty_yards"] / df["games"].replace(0, 1)).round(1)
 
     # Métricas Defensivas permitidas por jugada
     df["def_dropbacks"] = (df["opp_attempts"] + df["opp_sacks_taken"]).replace(0, 1)
@@ -271,8 +280,78 @@ def build_team_stats() -> dict:
     df["def_ppg_allowed"] = (df["opp_pts_scored"] / df["games"].replace(0, 1)).round(1)
     df["def_pass_ypg_allowed"] = (df["opp_passing_yards"] / df["games"].replace(0, 1)).round(1)
     df["def_rush_ypg_allowed"] = (df["opp_rushing_yards"] / df["games"].replace(0, 1)).round(1)
+    df["def_tfl_pg"] = (df["def_tfl"] / df["games"].replace(0, 1)).round(2)
+    df["def_1d_rate_allowed"] = (((df["opp_passing_first_downs"] + df["opp_rushing_first_downs"]) / df["def_plays"]) * 100).round(1)
+    df["opp_penalty_yards_pg"] = (df["opp_penalty_yards"] / df["games"].replace(0, 1)).round(1)
+    df["net_penalty_yards_pg"] = (df["opp_penalty_yards_pg"] - df["penalty_yards_pg"]).round(1)
+
+    # Entregas reales vs. Margen de Entregas Esperado (xTurnovers: Fumble recovery regresado al 50% + INTs estabilizadas con PD)
     df["def_takeaways"] = df["def_int"] + df["opp_fumbles_lost"]
     df["turnover_margin"] = df["def_takeaways"] - df["off_turnovers"]
+    df["turnover_margin_pg"] = (df["turnover_margin"] / df["games"].replace(0, 1)).round(2)
+
+    x_off_to = (0.65 * df["passing_int"] + 0.35 * (df["attempts"] * 0.023)) + (0.45 * df["fumbles_lost"] + 0.55 * (0.50 * df["fumbles_total"]))
+    x_def_tk = (0.65 * df["def_int"] + 0.35 * (df["def_pd"] * 0.20)) + (0.45 * df["opp_fumbles_lost"] + 0.55 * (0.50 * df["opp_fumbles_total"]))
+    df["x_turnover_margin"] = (x_def_tk - x_off_to).round(1)
+    df["x_turnover_margin_pg"] = (df["x_turnover_margin"] / df["games"].replace(0, 1)).round(2)
+    df["turnover_luck"] = (df["turnover_margin"] - df["x_turnover_margin"]).round(1)
+
+    # Forma Reciente (Últimos 3 Partidos L3 vs. Temporada) y Ajuste por Fuerza de Calendario (SOS / DVOA-style)
+    lg_ppg = float(df["off_ppg"].mean())
+    lg_epa = float(df["off_epa_play"].mean())
+    raw_off_ppg_map = dict(zip(df["team"], df["off_ppg"]))
+    raw_def_ppg_map = dict(zip(df["team"], df["def_ppg_allowed"]))
+    raw_off_epa_map = dict(zip(df["team"], df["off_epa_play"]))
+    raw_def_epa_map = dict(zip(df["team"], df["def_epa_allowed"]))
+
+    # Mapear puntos recibidos por partido en df_wk para calcular L3 Def PPG
+    game_opp_pts = df_wk.set_index(["game_id", "team"])["pts_scored"].to_dict()
+    df_wk["pts_allowed"] = df_wk.apply(lambda row: game_opp_pts.get((row["game_id"], row["opponent_team"]), 22.0), axis=1)
+
+    l3_off_ppg_map, l3_def_ppg_map, l3_off_epa_map, l3_def_epa_map = {}, {}, {}, {}
+    sos_off_diff_map, sos_def_diff_map, sos_net_pts_map = {}, {}, {}
+
+    for t_abbr, grp_t in df_wk.groupby("team"):
+        grp_sorted = grp_t.sort_values("week")
+        l3 = grp_sorted.tail(3)
+        l3_plays = (l3["attempts"] + l3["sacks_suffered"] + l3["carries"]).replace(0, 1).sum()
+        l3_off_ppg_map[t_abbr] = round(float(l3["pts_scored"].mean()), 1)
+        l3_def_ppg_map[t_abbr] = round(float(l3["pts_allowed"].mean()), 1)
+        l3_off_epa_map[t_abbr] = round(float((l3["passing_epa"].sum() + l3["rushing_epa"].sum()) / max(1, l3_plays)), 3)
+
+        # SOS: Calidad promedio de las defensas y ataques enfrentados hasta hoy
+        opps = grp_sorted["opponent_team"].tolist()
+        opp_def_ppgs = [raw_def_ppg_map.get(o, lg_ppg) for o in opps]
+        opp_off_ppgs = [raw_off_ppg_map.get(o, lg_ppg) for o in opps]
+        # Si enfrentaste defensas que permiten 19.0 PPG (vs 22.2 media NFL), tu ataque tuvo un calendario +3.2 PPG más duro
+        avg_opp_def_ppg = sum(opp_def_ppgs) / max(1, len(opp_def_ppgs))
+        avg_opp_off_ppg = sum(opp_off_ppgs) / max(1, len(opp_off_ppgs))
+        off_sched_hard = round(lg_ppg - avg_opp_def_ppg, 2)  # positivo = enfrentó defensas más duras que el promedio
+        def_sched_hard = round(avg_opp_off_ppg - lg_ppg, 2)  # positivo = enfrentó ataques más potentes que el promedio
+        sos_off_diff_map[t_abbr] = off_sched_hard
+        sos_def_diff_map[t_abbr] = def_sched_hard
+        sos_net_pts_map[t_abbr] = round((off_sched_hard + def_sched_hard) / 2.0, 2)
+
+    df["l3_off_ppg"] = df["team"].map(l3_off_ppg_map).fillna(df["off_ppg"]).round(1)
+    df["l3_def_ppg"] = df["team"].map(l3_def_ppg_map).fillna(df["def_ppg_allowed"]).round(1)
+    df["l3_off_epa_play"] = df["team"].map(l3_off_epa_map).fillna(df["off_epa_play"]).round(3)
+    df["trend_off_ppg"] = (df["l3_off_ppg"] - df["off_ppg"]).round(1)
+    df["trend_def_ppg"] = (df["l3_def_ppg"] - df["def_ppg_allowed"]).round(1)
+
+    df["sos_off_diff"] = df["team"].map(sos_off_diff_map).fillna(0.0).round(2)
+    df["sos_def_diff"] = df["team"].map(sos_def_diff_map).fillna(0.0).round(2)
+    df["sos_net_pts"] = df["team"].map(sos_net_pts_map).fillna(0.0).round(2)
+    df["sos_rank"] = df["sos_net_pts"].rank(ascending=False, method="min").astype(int)
+
+    # PPG Ajustado (Temporada + 30% Forma L3 + 55% Ajuste de Calendario SOS + 15% Regresión a la Media NFL)
+    df["adj_off_ppg"] = (
+        0.85 * (0.70 * df["off_ppg"] + 0.30 * df["l3_off_ppg"] + 0.55 * df["sos_off_diff"])
+        + 0.15 * lg_ppg
+    ).round(1)
+    df["adj_def_ppg"] = (
+        0.85 * (0.70 * df["def_ppg_allowed"] + 0.30 * df["l3_def_ppg"] - 0.55 * df["sos_def_diff"])
+        + 0.15 * lg_ppg
+    ).round(1)
 
     # Equipos Especiales (Kicking, Punting, Returns)
     df["fg_pct_calc"] = ((df["fg_made"] / df["fg_att"].replace(0, 1)) * 100).round(1)
@@ -297,7 +376,7 @@ def build_team_stats() -> dict:
     df["def_3d_pct"] = df["team"].map(td3_def).fillna(40.0).round(1)
     df["plays_per_game"] = df["team"].map(plays_pg).fillna((df["off_plays"] / df["games"]).round(1))
 
-    # Índice compuesto de eficiencia total (Net EPA + Situacional + Equipos Especiales, escala % estilo DVOA)
+    # Índice compuesto de eficiencia total (Net EPA + SOS + Equipos Especiales, escala % estilo DVOA)
     df["net_epa_play"] = (df["off_epa_play"] - df["def_epa_allowed"]).round(3)
     df["st_index"] = (
         ((df["fg_pct_calc"] - 84.0) * 0.25)
@@ -308,6 +387,7 @@ def build_team_stats() -> dict:
     df["total_dvoa_proxy"] = (
         (df["off_epa_play"] * 120.0)
         - (df["def_epa_allowed"] * 120.0)
+        + (df["sos_net_pts"] * 2.2)
         + (df["st_index"] * 0.5)
     ).round(1)
 
@@ -346,6 +426,18 @@ def build_team_stats() -> dict:
             "rank_st": int(r["rank_st"]),
             "total_dvoa_proxy": float(r["total_dvoa_proxy"]),
             "net_epa_play": float(r["net_epa_play"]),
+            # SOS (Strength of Schedule) y Forma Reciente (L3)
+            "sos_rank": int(r["sos_rank"]),
+            "sos_net_pts": float(r["sos_net_pts"]),
+            "sos_off_diff": float(r["sos_off_diff"]),
+            "sos_def_diff": float(r["sos_def_diff"]),
+            "l3_off_ppg": float(r["l3_off_ppg"]),
+            "l3_def_ppg": float(r["l3_def_ppg"]),
+            "l3_off_epa_play": float(r["l3_off_epa_play"]),
+            "trend_off_ppg": float(r["trend_off_ppg"]),
+            "trend_def_ppg": float(r["trend_def_ppg"]),
+            "adj_off_ppg": float(r["adj_off_ppg"]),
+            "adj_def_ppg": float(r["adj_def_ppg"]),
             # Ataque
             "off_epa_play": float(r["off_epa_play"]),
             "off_pass_epa_play": float(r["off_pass_epa_play"]),
@@ -360,7 +452,11 @@ def build_team_stats() -> dict:
             "off_sack_rate_allowed": float(r["off_sack_rate_allowed"]),
             "off_rz_td_pct": float(r["off_rz_td_pct"]),
             "off_3d_pct": float(r["off_3d_pct"]),
+            "off_1d_rate": float(r["off_1d_rate"]),
             "plays_per_game": float(r["plays_per_game"]),
+            "penalties_pg": float(r["penalties_pg"]),
+            "penalty_yards_pg": float(r["penalty_yards_pg"]),
+            "net_penalty_yards_pg": float(r["net_penalty_yards_pg"]),
             # Defensa
             "def_epa_allowed": float(r["def_epa_allowed"]),
             "def_pass_epa_allowed": float(r["def_pass_epa_allowed"]),
@@ -376,11 +472,17 @@ def build_team_stats() -> dict:
             "def_pressure_proxy_rate": float(r["def_pressure_proxy_rate"]),
             "def_qb_hits": int(r["def_qb_hits"]),
             "def_tfl": int(r["def_tfl"]),
+            "def_tfl_pg": float(r["def_tfl_pg"]),
             "def_int": int(r["def_int"]),
             "def_takeaways": int(r["def_takeaways"]),
             "turnover_margin": int(r["turnover_margin"]),
+            "turnover_margin_pg": float(r["turnover_margin_pg"]),
+            "x_turnover_margin": float(r["x_turnover_margin"]),
+            "x_turnover_margin_pg": float(r["x_turnover_margin_pg"]),
+            "turnover_luck": float(r["turnover_luck"]),
             "def_rz_td_pct": float(r["def_rz_td_pct"]),
             "def_3d_pct": float(r["def_3d_pct"]),
+            "def_1d_rate_allowed": float(r["def_1d_rate_allowed"]),
             # Equipos Especiales
             "fg_made": int(r["fg_made"]),
             "fg_att": int(r["fg_att"]),
@@ -1070,6 +1172,48 @@ def fetch_espn_schedule_and_records(teams_dict: dict) -> tuple:
 
     weeks_to_fetch = list(range(max(1, espn_active_wk - 1), 19))
 
+    # Cruzar con nflverse schedules/games.csv para Días de Descanso (Bye/MNF/TNF), Duelos Divisionales, Domo/Clima y Líneas Vegas históricas
+    nflverse_sched_map = {}
+    try:
+        df_sched = pd.read_csv("https://github.com/nflverse/nflverse-data/releases/download/schedules/games.csv")
+        df_sched = df_sched[df_sched["season"] == 2026].copy()
+        for _, sr in df_sched.iterrows():
+            s_wk = int(safe_float(sr.get("week"), 0))
+            s_aw = norm_team(sr.get("away_team", ""))
+            s_hm = norm_team(sr.get("home_team", ""))
+            sp_line = safe_float(sr.get("spread_line"), None)
+            tot_line = safe_float(sr.get("total_line"), None)
+            sp_str = "Even"
+            if sp_line is not None and not pd.isna(sr.get("spread_line")):
+                if sp_line > 0:
+                    sp_str = f"{s_hm} -{abs(sp_line):g}"
+                elif sp_line < 0:
+                    sp_str = f"{s_aw} -{abs(sp_line):g}"
+            aw_rest = int(safe_float(sr.get("away_rest"), 7)) or 7
+            hm_rest = int(safe_float(sr.get("home_rest"), 7)) or 7
+            roof_val = str(sr.get("roof", "outdoors")).strip().lower() if pd.notna(sr.get("roof")) else "outdoors"
+            surf_val = str(sr.get("surface", "grass")).strip().lower() if pd.notna(sr.get("surface")) else "grass"
+            loc_val = str(sr.get("location", "Home")).strip() if pd.notna(sr.get("location")) else "Home"
+            wind_val = safe_float(sr.get("wind"), None) if pd.notna(sr.get("wind")) else None
+            temp_val = safe_float(sr.get("temp"), None) if pd.notna(sr.get("temp")) else None
+            div_flag = bool(int(safe_float(sr.get("div_game"), 0)) == 1)
+
+            nflverse_sched_map[(s_wk, s_aw, s_hm)] = {
+                "away_rest": aw_rest,
+                "home_rest": hm_rest,
+                "rest_diff": hm_rest - aw_rest,
+                "div_game": div_flag,
+                "roof": roof_val,
+                "surface": surf_val,
+                "location": loc_val,
+                "wind": wind_val,
+                "temp": temp_val,
+                "spread_str": sp_str,
+                "total_line": float(tot_line) if (tot_line is not None and not pd.isna(sr.get("total_line"))) else 44.5,
+            }
+    except Exception as e:
+        print(f"[WARN] nflverse schedules/games.csv: {e}")
+
     for wk in weeks_to_fetch:
         url = f"https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?week={wk}&seasontype=2"
         try:
@@ -1112,13 +1256,23 @@ def fetch_espn_schedule_and_records(teams_dict: dict) -> tuple:
                 except Exception:
                     pass
 
+                sched_ctx = nflverse_sched_map.get((wk, a_abbr, h_abbr), {})
                 odds_list = comp.get("odds", [])
-                spread_txt = odds_list[0].get("details", "PK") if odds_list else "Even"
-                ou_val = odds_list[0].get("overUnder", 44.5) if odds_list else 44.5
+                spread_txt = odds_list[0].get("details", "") if odds_list else ""
+                if not spread_txt or spread_txt in ("Even", "PK"):
+                    spread_txt = sched_ctx.get("spread_str", "Even")
+                ou_val = odds_list[0].get("overUnder", None) if odds_list else None
+                if ou_val is None:
+                    ou_val = sched_ctx.get("total_line", 44.5)
 
                 status_obj = ev.get("status", {}).get("type", {})
                 state = status_obj.get("state", "pre")
                 status_detail = status_obj.get("shortDetail", display_time)
+
+                div_default = (
+                    NFL_TEAMS_META.get(a_abbr, {}).get("div") == NFL_TEAMS_META.get(h_abbr, {}).get("div")
+                    and bool(NFL_TEAMS_META.get(a_abbr, {}).get("div"))
+                )
 
                 games_out.append({
                     "id": f"W{wk}-{a_abbr}-{h_abbr}",
@@ -1138,6 +1292,15 @@ def fetch_espn_schedule_and_records(teams_dict: dict) -> tuple:
                     "spread": spread_txt,
                     "over_under": float(safe_float(ou_val, 44.5)),
                     "venue": comp.get("venue", {}).get("fullName", "NFL Stadium"),
+                    "away_rest": int(sched_ctx.get("away_rest", 7)),
+                    "home_rest": int(sched_ctx.get("home_rest", 7)),
+                    "rest_diff": int(sched_ctx.get("rest_diff", 0)),
+                    "div_game": bool(sched_ctx.get("div_game", div_default)),
+                    "roof": str(sched_ctx.get("roof", "outdoors")),
+                    "surface": str(sched_ctx.get("surface", "grass")),
+                    "location": str(sched_ctx.get("location", "Home")),
+                    "wind": sched_ctx.get("wind", None),
+                    "temp": sched_ctx.get("temp", None),
                 })
         except Exception as e:
             print(f"[WARN] ESPN Week {wk}: {e}")
