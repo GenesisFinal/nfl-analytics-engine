@@ -471,38 +471,22 @@ function estimateXCharLength(tip) {
    CARGA INICIAL DE DATOS & SINCRONIZACIÓN EN VIVO
    ========================================================================== */
 async function loadDashboardData(preserveWeek = false) {
-  try {
-    let data = null;
-    if (window.location.protocol !== "file:") {
-      try {
-        const resp = await fetch(`data/nfl_dashboard_data.json?t=${Date.now()}`);
-        if (resp.ok) {
-          data = await resp.json();
-        }
-      } catch (_) {}
-    }
-    if (!data && window.NFL_DASHBOARD_EMBEDDED_DATA) {
-      data = JSON.parse(JSON.stringify(window.NFL_DASHBOARD_EMBEDDED_DATA));
-    }
-    if (!data) {
-      throw new Error("No se encontró data/nfl_dashboard_data.json ni NFL_DASHBOARD_EMBEDDED_DATA");
-    }
-
+  const applyDataToUI = (data) => {
     STATE.data = data;
     if (!preserveWeek) {
-      STATE.selectedWeek = Number(data.current_week || 7);
+      STATE.selectedWeek = Number(data.current_week || 8);
     }
 
     populateWeekSelector(data);
     updateTimestampUI(data.updated_at || formatNowART(), Boolean(data.has_live_games));
-    document.getElementById("newsCountBadge").textContent = String((data.news || []).length);
+    const badgeEl = document.getElementById("newsCountBadge");
+    if (badgeEl) badgeEl.textContent = String((data.news || []).length);
 
     (data.tips_x || []).forEach((t) => {
       initTipCardState(t);
       STATE.cardState[t.id].illustration = t.illustration;
     });
 
-    // Seleccionar partido de la semana actual (priorizando MNF si es lunes/martes madrugada o partido en vivo)
     const wkGames = (data.games || []).filter((g) => Number(g.week) === Number(STATE.selectedWeek));
     if (wkGames.length > 0 && !STATE.selectedGameId) {
       const liveOrMnf = wkGames.find((g) => g.status_state === "in") || wkGames.find((g) => g.day_slot === "MNF") || wkGames[0];
@@ -511,10 +495,38 @@ async function loadDashboardData(preserveWeek = false) {
 
     populateSimulatorSelects();
     renderAll();
+  };
+
+  try {
+    let embeddedData = null;
+    if (window.NFL_DASHBOARD_EMBEDDED_DATA) {
+      embeddedData = JSON.parse(JSON.stringify(window.NFL_DASHBOARD_EMBEDDED_DATA));
+      applyDataToUI(embeddedData);
+    }
+
+    let fetchedData = null;
+    if (window.location.protocol !== "file:") {
+      try {
+        const resp = await fetch(`data/nfl_dashboard_data.json?t=${Date.now()}`);
+        if (resp.ok) {
+          fetchedData = await resp.json();
+        }
+      } catch (_) {}
+    }
+
+    if (fetchedData && fetchedData.teams && (fetchedData.games || []).length > 0) {
+      if ((!fetchedData.tips_x || fetchedData.tips_x.length === 0) && embeddedData?.tips_x?.length > 0) {
+        fetchedData.tips_x = embeddedData.tips_x;
+      }
+      applyDataToUI(fetchedData);
+    } else if (!embeddedData) {
+      throw new Error("No se encontró data/nfl_dashboard_data.json ni NFL_DASHBOARD_EMBEDDED_DATA");
+    }
+
     if (window.location.protocol !== "file:") {
       loadServerConfig();
     }
-    scheduleAutoRefresh(Boolean(data.has_live_games));
+    scheduleAutoRefresh(Boolean(STATE.data?.has_live_games));
   } catch (err) {
     console.error("Error cargando datos del tablero:", err);
     showToast("⚠️ Error al cargar datos del tablero");
