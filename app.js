@@ -3373,9 +3373,10 @@ function renderPlayersGrid() {
     .join("");
 
   grid.querySelectorAll(".btn-player-tip").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const pl = (STATE.data.players || []).find((x) => x.id === btn.dataset.pid);
-      if (pl) createCustomPlayerTip(pl);
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const pl = (STATE.data?.players || []).find((x) => String(x.id) === String(btn.dataset.pid));
+      if (pl) createCustomPlayerTip(pl, btn);
     });
   });
 }
@@ -4214,13 +4215,35 @@ async function executePublishRequest(tipsList, mode, offsetMinutes, scheduledDat
    CREADORES DINÁMICOS DE TIPS PARA X (100% CONCORDANTES + IMAGEN 16:9 ÚNICA)
    ========================================================================== */
 function prependNewTipCard(newTip) {
+  if (!STATE.data) return;
+  if (!Array.isArray(STATE.data.tips_x)) {
+    STATE.data.tips_x = [];
+  }
   STATE.data.tips_x.unshift(newTip);
   initTipCardState(newTip);
   STATE.tipGroupFilter = "ALL";
   document.querySelectorAll(".x-tab").forEach((b) => b.classList.toggle("active", b.dataset.tipgroup === "ALL"));
   renderXTipsFeed();
-  generateAndAssignUniqueTipImage(newTip);
-  showToast("✨ Nuevo Tip creado con caricatura de plastilina 16:9 (Nano Banana) concordante");
+
+  const feedEl = document.getElementById("xTipsFeed");
+  if (feedEl) {
+    feedEl.scrollTop = 0;
+    const firstCard = feedEl.querySelector(".x-tip-card");
+    if (firstCard) {
+      firstCard.style.transition = "box-shadow 0.35s ease, border-color 0.35s ease";
+      firstCard.style.borderColor = "#16a34a";
+      firstCard.style.boxShadow = "0 0 0 3px rgba(22, 163, 74, 0.28)";
+      setTimeout(() => {
+        firstCard.style.borderColor = "";
+        firstCard.style.boxShadow = "";
+      }, 2800);
+    }
+  }
+
+  if (!String(newTip.illustration || "").startsWith("data:image/")) {
+    generateAndAssignUniqueTipImage(newTip);
+  }
+  showToast("✨ Nuevo Post X creado y agregado al tope de Ángulos Técnicos");
 }
 
 function createCustomTeamTip(tm) {
@@ -4230,6 +4253,7 @@ function createCustomTeamTip(tm) {
   const [prName, prNum] = spec.pr;
   const prompt = `3D claymation (caricatura de plastilina) full-bleed widescreen 16:9 illustration extending to the edges with NO border or frame: ${spec.name} quarterback ${qbName} in ${spec.jersey} with number ${qbNum} and ${spec.helmet} throwing ONE single brown leather football alongside defensive star ${prName} (${prNum}) on the stadium turf. Handcrafted plasticine clay texture, natural anatomy.`;
   const uniqueImgUrl = buildUniqueDynamicClayUrl(prompt, tm.abbr);
+  const bodyTxt = `📊 Radiografía 2026 de ${tm.name} (#${tm.rank_total} NFL): ${qbName} (${qbNum}) comanda un ataque de ${tm.off_epa_play >= 0 ? "+" : ""}${tm.off_epa_play.toFixed(2)} EPA/jugada (${tm.off_ppg} PPG), mientras ${prName} (${prNum}) lidera la defensa con ${tm.def_sacks} sacks (${tm.def_sack_rate}% pass rush).`;
 
   prependNewTipCard({
     id,
@@ -4240,16 +4264,232 @@ function createCustomTeamTip(tm) {
     game_id: "ALL",
     matchup_label: `${tm.name} (${qbName} ${qbNum})`,
     title: `Radiografía Técnica de ${tm.name}: ${qbName} (${qbNum}) y ${prName} (${prNum})`,
-    body: `📊 Radiografía 2026 de ${tm.name} (#${tm.rank_total} NFL): ${qbName} (${qbNum}) comanda un ataque de ${tm.off_epa_play >= 0 ? "+" : ""}${tm.off_epa_play.toFixed(2)} EPA/jugada (${tm.off_ppg} PPG), mientras ${prName} (${prNum}) lidera la defensa con ${tm.def_sacks} sacks (${tm.def_sack_rate}% pass rush).`,
+    body: bodyTxt,
     page_link: `${STATE.dashboardPublicUrl}#teams`,
     source_link: tm.links.pfr,
     source_name: "Pro Football Reference / RBSDM",
     illustration: uniqueImgUrl,
     clay_prompt: prompt,
   });
+  try {
+    navigator.clipboard.writeText(bodyTxt);
+  } catch (_) {}
+  document.querySelector(".right-x-panel")?.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 
-function createCustomPlayerTip(pl) {
+function buildPlayerScoutingXPostText(pl, num) {
+  const topPct = Math.max(1, 100 - Number(pl.percentile || 50));
+  const entries = Object.entries(pl.metrics || {});
+  const pairs = [];
+  for (let i = 0; i < entries.length; i += 2) {
+    const [k1, v1] = entries[i];
+    if (entries[i + 1]) {
+      const [k2, v2] = entries[i + 1];
+      pairs.push(`${k1}: ${v1} | ${k2}: ${v2}`);
+    } else {
+      pairs.push(`${k1}: ${v1}`);
+    }
+  }
+  const lines = [
+    `🏈 Scouting NFL 2026: ${pl.name} (${num} · ${pl.pos} · ${pl.team})`,
+    `🏅 Pctl ${pl.percentile} NFL (Top ${topPct}% ${pl.pos}) · ${pl.games} PJ`,
+    "",
+    ...pairs,
+  ];
+  let txt = lines.join("\n");
+  if (txt.length > 276) {
+    txt = [
+      `🏈 ${pl.name} (${num} · ${pl.pos} · ${pl.team}) | Pctl ${pl.percentile} NFL`,
+      ...pairs,
+    ].join("\n");
+  }
+  return txt.slice(0, 278);
+}
+
+async function renderPlayerScoutingClayCardToDataUrl(pl, num, baseIllusPath) {
+  const W = 1280;
+  const H = 720;
+  const canvas = document.createElement("canvas");
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext("2d");
+
+  const [c1, c2] = TEAM_BRAND_COLORS[pl.team] || ["#013369", "#d50a0a"];
+  const tmObj = STATE.data?.teams?.[pl.team] || {};
+  const logoUrl = tmObj.logo || `https://a.espncdn.com/i/teamlogos/nfl/500/${String(pl.team || "nfl").toLowerCase()}.png`;
+
+  const [bgImg, logoImg, headImg] = await Promise.all([
+    loadCanvasImageSafe(baseIllusPath || "assets/clay/clay_stadium_turf_bg.jpg"),
+    loadCanvasImageSafe(logoUrl),
+    loadCanvasImageSafe(pl.headshot || ""),
+  ]);
+
+  if (bgImg) {
+    const scale = Math.max(W / bgImg.width, H / bgImg.height);
+    const dw = bgImg.width * scale;
+    const dh = bgImg.height * scale;
+    ctx.drawImage(bgImg, (W - dw) / 2, (H - dh) / 2, dw, dh);
+  } else {
+    const g = ctx.createLinearGradient(0, 0, W, H);
+    g.addColorStop(0, c1);
+    g.addColorStop(1, "#0f172a");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  // Oscurecer con gradiente dramático del color del equipo
+  const overlay = ctx.createLinearGradient(0, 0, W, H);
+  overlay.addColorStop(0, "rgba(2, 6, 23, 0.88)");
+  overlay.addColorStop(0.55, "rgba(15, 23, 42, 0.80)");
+  overlay.addColorStop(1, "rgba(2, 6, 23, 0.92)");
+  ctx.fillStyle = overlay;
+  ctx.fillRect(0, 0, W, H);
+
+  // Franja superior con colores de la franquicia
+  const topBar = ctx.createLinearGradient(0, 0, W, 0);
+  topBar.addColorStop(0, c1);
+  topBar.addColorStop(0.5, c2);
+  topBar.addColorStop(1, c1);
+  ctx.fillStyle = topBar;
+  ctx.fillRect(0, 0, W, 12);
+
+  // Encabezado del estudio
+  drawRoundedRectPath(ctx, 48, 36, W - 96, 178, 20);
+  ctx.fillStyle = "rgba(15, 23, 42, 0.86)";
+  ctx.fill();
+  ctx.lineWidth = 2.5;
+  ctx.strokeStyle = c1;
+  ctx.stroke();
+
+  // Avatar circular del jugador o logo
+  const avX = 136;
+  const avY = 125;
+  const avR = 64;
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(avX, avY, avR, 0, Math.PI * 2);
+  ctx.fillStyle = "#1e293b";
+  ctx.fill();
+  ctx.lineWidth = 4;
+  ctx.strokeStyle = "#fde047";
+  ctx.stroke();
+  ctx.clip();
+  if (headImg) {
+    ctx.drawImage(headImg, avX - avR, avY - avR, avR * 2, avR * 2);
+  } else if (logoImg) {
+    ctx.drawImage(logoImg, avX - avR + 12, avY - avR + 12, (avR - 12) * 2, (avR - 12) * 2);
+  }
+  ctx.restore();
+
+  if (logoImg) {
+    ctx.drawImage(logoImg, 218, 60, 56, 56);
+  }
+
+  ctx.fillStyle = "#fde047";
+  ctx.font = "800 18px 'Inter', sans-serif";
+  ctx.fillText(`SCOUTING HUB NFL 2026 · ${(tmObj.name || pl.team).toUpperCase()}`, 286, 84);
+
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "900 44px 'Inter', sans-serif";
+  ctx.fillText(`${pl.name} (${num})`, 286, 136);
+
+  ctx.fillStyle = "#cbd5e1";
+  ctx.font = "700 22px 'Inter', sans-serif";
+  ctx.fillText(`Posición: ${pl.pos} · Equipo: ${pl.team} · ${pl.games} Partidos Jugados (Temporada 2026)`, 286, 174);
+
+  // Insignia de Percentil a la derecha
+  const pctl = Number(pl.percentile || 50);
+  const badgeColor = pctl >= 80 ? "#15803d" : pctl >= 55 ? "#65a30d" : pctl >= 35 ? "#ca8a04" : "#dc2626";
+  drawRoundedRectPath(ctx, W - 310, 62, 230, 124, 16);
+  ctx.fillStyle = badgeColor;
+  ctx.fill();
+  ctx.lineWidth = 2.5;
+  ctx.strokeStyle = "#ffffff";
+  ctx.stroke();
+
+  ctx.textAlign = "center";
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "900 42px 'JetBrains Mono', monospace";
+  ctx.fillText(`PCTL ${pctl}`, W - 195, 122);
+  ctx.font = "800 19px 'Inter', sans-serif";
+  ctx.fillStyle = "#fef08a";
+  ctx.fillText(`TOP ${Math.max(1, 100 - pctl)}% ${pl.pos} EN NFL`, W - 195, 158);
+  ctx.textAlign = "left";
+
+  // Grilla 2x4 con las 8 métricas reales 2026 del jugador
+  const entries = Object.entries(pl.metrics || {}).slice(0, 8);
+  const cols = 4;
+  const cardW = (W - 96 - 36) / cols;
+  const cardH = 188;
+  entries.forEach(([k, v], idx) => {
+    const col = idx % cols;
+    const row = Math.floor(idx / cols);
+    const x = 48 + col * (cardW + 12);
+    const y = 242 + row * (cardH + 18);
+
+    drawRoundedRectPath(ctx, x, y, cardW, cardH, 16);
+    ctx.fillStyle = "rgba(15, 23, 42, 0.88)";
+    ctx.fill();
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = idx < 2 ? "#fde047" : "rgba(148, 163, 184, 0.45)";
+    ctx.stroke();
+
+    // Barra superior de cada tarjeta
+    drawRoundedRectPath(ctx, x + 14, y + 16, cardW - 28, 6, 3);
+    ctx.fillStyle = idx < 2 ? "#fde047" : c1;
+    ctx.fill();
+
+    ctx.fillStyle = "#cbd5e1";
+    ctx.font = "800 19px 'Inter', sans-serif";
+    ctx.fillText(String(k).slice(0, 22), x + 18, y + 58);
+
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "900 40px 'JetBrains Mono', monospace";
+    ctx.fillText(String(v), x + 18, y + 118);
+
+    const exp = PLAYER_METRIC_EXPLAINERS[k]?.sub || "Métrica Oficial 2026";
+    ctx.fillStyle = "#94a3b8";
+    ctx.font = "600 15px 'Inter', sans-serif";
+    ctx.fillText(String(exp).slice(0, 32), x + 18, y + 158);
+  });
+
+  // Pie de tarjeta
+  ctx.fillStyle = "#94a3b8";
+  ctx.font = "700 16px 'Inter', sans-serif";
+  ctx.fillText("NFL Analytics & X Tips Studio · Fuentes: nflverse 2026 + Next Gen Stats + Pro Football Reference AdvStats", 48, H - 22);
+
+  return canvas.toDataURL("image/png");
+}
+
+function updatePlayerXPreviewBoxUI(pl, num, postText, dataUrl) {
+  const box = document.getElementById("playerXPostPreviewBox");
+  if (!box) return;
+  box.classList.remove("hidden");
+
+  const titleEl = document.getElementById("playerXPostHeaderTitle");
+  if (titleEl) {
+    titleEl.textContent = `🏈 Post Scouting X.com — ${pl.name} (${num} · ${pl.pos} · ${pl.team})`;
+  }
+  const ta = document.getElementById("playerXPostTextarea");
+  if (ta) ta.value = postText;
+
+  const imgEl = document.getElementById("playerXPostImgPreview");
+  if (imgEl && dataUrl) {
+    imgEl.src = dataUrl;
+    imgEl.dataset.playerSlug = `${pl.team}_${pl.name.replace(/[^a-z0-9]+/gi, "_")}`;
+  }
+
+  const lenEl = document.getElementById("playerXPostCharCount");
+  if (lenEl) {
+    const len = postText.length;
+    lenEl.textContent = `${len} / 280 chars`;
+    lenEl.className = `pxp-len ${len <= 265 ? "ok" : len <= 280 ? "warn" : "over"}`;
+  }
+
+  box.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+async function createCustomPlayerTip(pl, btnEl = null) {
   const id = `tip-custom-player-${pl.id}-${Date.now()}`;
   const spec = TEAM_VISUAL_SPECS_JS[pl.team] || TEAM_VISUAL_SPECS_JS.DET;
   let num = "#1";
@@ -4262,9 +4502,19 @@ function createCustomPlayerTip(pl) {
   if (num === "#1" && spec[pl.pos.toLowerCase()]) {
     num = spec[pl.pos.toLowerCase()][1];
   }
-  const mEntries = Object.entries(pl.metrics || {}).slice(0, 2).map(([k, v]) => `${k}: ${v}`).join(" · ");
+
+  if (btnEl) {
+    btnEl.disabled = true;
+    btnEl.textContent = "⏳ Creando Post X...";
+  }
+
+  const postText = buildPlayerScoutingXPostText(pl, num);
   const prompt = `3D claymation (caricatura de plastilina) full-bleed widescreen 16:9 illustration extending to the edges with NO border or frame: ${spec.name} (${pl.team}) ${pl.pos} ${pl.name} in ${spec.jersey} with number ${num} and ${spec.helmet} in explosive NFL action with ONE single brown leather football. Handcrafted plasticine clay texture, natural two-arm anatomy.`;
-  const uniqueImgUrl = buildUniqueDynamicClayUrl(prompt, pl.team);
+  const soloItem = CLAY_GALLERY.find((c) => c.teams && c.teams.length === 1 && c.teams[0] === pl.team);
+  const baseIllus = soloItem ? soloItem.path : "assets/clay/clay_stadium_turf_bg.jpg";
+  const cardDataUrl = await renderPlayerScoutingClayCardToDataUrl(pl, num, baseIllus);
+
+  updatePlayerXPreviewBoxUI(pl, num, postText, cardDataUrl);
 
   prependNewTipCard({
     id,
@@ -4274,14 +4524,31 @@ function createCustomPlayerTip(pl) {
     badge: `🏃 SCOUTING · ${pl.pos} (${pl.team} ${num})`,
     game_id: "ALL",
     matchup_label: `${pl.name} (${num}, ${pl.team})`,
-    title: `Impacto Estadístico: ${pl.name} (${num}, ${pl.pos} · ${pl.team})`,
-    body: `⭐ Scouting NFL 2026: ${pl.name} (${num}, ${pl.team}) se ubica en el percentil ${pl.percentile} de su posición con ${pl.primary_label}: ${pl.primary_val} (${pl.secondary_label}: ${pl.secondary_val} · ${mEntries}).`,
+    title: `Scouting 2026: ${pl.name} (${num}, ${pl.pos} · ${pl.team})`,
+    body: postText,
     page_link: `${STATE.dashboardPublicUrl}#players`,
     source_link: Object.values(pl.links || {})[0] || "https://www.pro-football-reference.com/",
-    source_name: "Next Gen Stats / PlayerProfiler",
-    illustration: uniqueImgUrl,
+    source_name: "Next Gen Stats / Pro Football Reference",
+    illustration: cardDataUrl,
     clay_prompt: prompt,
+    is_prediction_post: true,
   });
+
+  try {
+    await navigator.clipboard.writeText(postText);
+  } catch (_) {}
+
+  if (btnEl) {
+    btnEl.disabled = false;
+    btnEl.textContent = "✅ ¡Post X Creado y Copiado!";
+    btnEl.style.background = "#15803d";
+    setTimeout(() => {
+      btnEl.textContent = "✨ Crear Tip X";
+      btnEl.style.background = "";
+    }, 2800);
+  }
+
+  showToast(`✨ Post X (${postText.length} chars) + Tarjeta 16:9 de ${pl.name} listos y copiados`);
 }
 
 function createCustomNewsTip(nw) {
@@ -4290,6 +4557,7 @@ function createCustomNewsTip(nw) {
   const [starName, starNum] = spec.qb;
   const prompt = `3D claymation (caricatura de plastilina) full-bleed widescreen 16:9 illustration extending to the edges with NO border or frame: ${spec.name} player in ${spec.jersey} with number ${starNum} and ${spec.helmet} on the NFL stadium sideline representing breaking news: ${nw.title}. Handcrafted plasticine clay texture, natural anatomy.`;
   const uniqueImgUrl = buildUniqueDynamicClayUrl(prompt, nw.team || "PHI");
+  const bodyTxt = `🚨 [${nw.source}] ${nw.title}. ${nw.summary.slice(0, 105)}`;
 
   prependNewTipCard({
     id,
@@ -4300,13 +4568,17 @@ function createCustomNewsTip(nw) {
     game_id: "NEWS",
     matchup_label: `${nw.source}${nw.team ? " · " + nw.team : ""}`,
     title: nw.title,
-    body: `🚨 [${nw.source}] ${nw.title}. ${nw.summary.slice(0, 105)}`,
+    body: bodyTxt,
     page_link: `${STATE.dashboardPublicUrl}#news`,
     source_link: nw.url,
     source_name: nw.source,
     illustration: uniqueImgUrl,
     clay_prompt: prompt,
   });
+  try {
+    navigator.clipboard.writeText(bodyTxt);
+  } catch (_) {}
+  document.querySelector(".right-x-panel")?.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 
 /* ==========================================================================
@@ -4634,6 +4906,94 @@ document.addEventListener("DOMContentLoaded", () => {
       renderPlayersGrid();
     });
   });
+
+  // Controles de la caja de previsualización de Post X en Jugadores (Scout)
+  document.getElementById("playerXPostTextarea")?.addEventListener("input", (e) => {
+    const val = e.target.value || "";
+    const lenEl = document.getElementById("playerXPostCharCount");
+    if (lenEl) {
+      const len = val.length;
+      lenEl.textContent = `${len} / 280 chars`;
+      lenEl.className = `pxp-len ${len <= 265 ? "ok" : len <= 280 ? "warn" : "over"}`;
+    }
+  });
+
+  document.getElementById("btnCopyPlayerXText")?.addEventListener("click", async (e) => {
+    const btn = e.currentTarget;
+    const ta = document.getElementById("playerXPostTextarea");
+    const txt = ta?.value || "";
+    if (!txt) return;
+    try {
+      await navigator.clipboard.writeText(txt);
+    } catch (_) {
+      ta?.select();
+      document.execCommand("copy");
+    }
+    const prev = btn.textContent;
+    btn.textContent = "✅ Texto Copiado";
+    btn.classList.add("copied-ok");
+    showToast(`✅ Post X de jugador copiado al portapapeles (${txt.length} / 280 caracteres)`);
+    setTimeout(() => {
+      btn.textContent = prev;
+      btn.classList.remove("copied-ok");
+    }, 2200);
+  });
+
+  document.getElementById("btnOpenPlayerXIntent")?.addEventListener("click", async () => {
+    const ta = document.getElementById("playerXPostTextarea");
+    const txt = ta?.value || "";
+    if (!txt) return;
+    try {
+      await navigator.clipboard.writeText(txt);
+    } catch (_) {}
+    const intentUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(txt)}`;
+    window.open(intentUrl, "_blank", "noopener,noreferrer");
+  });
+
+  document.getElementById("btnClosePlayerXPreview")?.addEventListener("click", () => {
+    document.getElementById("playerXPostPreviewBox")?.classList.add("hidden");
+  });
+
+  document.getElementById("btnCopyPlayerXImg")?.addEventListener("click", async (e) => {
+    const btn = e.currentTarget;
+    const imgEl = document.getElementById("playerXPostImgPreview");
+    const src = imgEl?.src || "";
+    if (!src) return;
+    try {
+      const imgBitmap = await loadCanvasImageSafe(src);
+      if (imgBitmap && window.ClipboardItem) {
+        const tmpCanvas = document.createElement("canvas");
+        tmpCanvas.width = imgBitmap.naturalWidth || 1280;
+        tmpCanvas.height = imgBitmap.naturalHeight || 720;
+        tmpCanvas.getContext("2d").drawImage(imgBitmap, 0, 0);
+        const pngBlob = await new Promise((r) => tmpCanvas.toBlob(r, "image/png"));
+        await navigator.clipboard.write([new ClipboardItem({ "image/png": pngBlob })]);
+        const prev = btn.textContent;
+        btn.textContent = "✅ Imagen Copiada";
+        showToast("🖼️ Tarjeta 16:9 de Scouting copiada al portapapeles (pegala en X con Ctrl+V)");
+        setTimeout(() => (btn.textContent = prev), 2200);
+        return;
+      }
+      throw new Error("ClipboardItem no disponible");
+    } catch (_) {
+      document.getElementById("btnDownloadPlayerXImg")?.click();
+    }
+  });
+
+  document.getElementById("btnDownloadPlayerXImg")?.addEventListener("click", () => {
+    const imgEl = document.getElementById("playerXPostImgPreview");
+    const src = imgEl?.src || "";
+    if (!src) return;
+    const slug = imgEl?.dataset?.playerSlug || "jugador_nfl_2026";
+    const a = document.createElement("a");
+    a.href = src;
+    a.download = `nfl_scout_${slug}.png`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    showToast(`💾 Imagen descargada: nfl_scout_${slug}.png`);
+  });
+
 
   document.getElementById("btnToggleNewsGuide")?.addEventListener("click", (e) => {
     const guideEl = document.getElementById("newsOrderGuide");
