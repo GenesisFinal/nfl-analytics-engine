@@ -425,6 +425,57 @@ function getDefaultFutureDatetimeART(addMinutes = 60) {
   return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
 }
 
+const MAX_X_POST_CHARS = 279;
+
+function getXCharCount(rawText) {
+  if (!rawText) return 0;
+  const str = String(rawText);
+  // En X/Twitter toda URL http(s) cuenta exactamente 23 caracteres (t.co)
+  const normUrls = str.replace(/https?:\/\/\S+/gi, "x".repeat(23));
+  // Emojis en el plano BMP (ej. ⚡, ✅, ⚔️, ↔️) cuentan como 2 caracteres en X igual que los pares sustitutos
+  const bmpEmojiExtras = (normUrls.match(/[\u2194-\u2199\u2600-\u27BF]/g) || []).length;
+  return Math.max(normUrls.length, normUrls.length + bmpEmojiExtras);
+}
+
+function enforceMax279Chars(rawText, maxLimit = MAX_X_POST_CHARS) {
+  if (!rawText) return "";
+  let txt = String(rawText).trim();
+  const isOk = (s) => getXCharCount(s) <= maxLimit && s.length <= maxLimit;
+  if (isOk(txt)) return txt;
+
+  // 1) Compactar saltos de línea dobles (\n\n -> \n) de abajo hacia arriba
+  while (!isOk(txt) && txt.includes("\n\n")) {
+    const lastIdx = txt.lastIndexOf("\n\n");
+    txt = txt.slice(0, lastIdx) + "\n" + txt.slice(lastIdx + 2);
+  }
+  if (isOk(txt)) return txt;
+
+  // 2) Quitar sufijo redundante " pts" de abajo hacia arriba
+  while (!isOk(txt) && txt.includes(" pts")) {
+    const lastIdx = txt.lastIndexOf(" pts");
+    txt = txt.slice(0, lastIdx) + txt.slice(lastIdx + 4);
+  }
+  if (isOk(txt)) return txt;
+
+  // 3) Compactar separadores " | " -> "|" de abajo hacia arriba
+  while (!isOk(txt) && txt.includes(" | ")) {
+    const lastIdx = txt.lastIndexOf(" | ");
+    txt = txt.slice(0, lastIdx) + "|" + txt.slice(lastIdx + 3);
+  }
+  if (isOk(txt)) return txt;
+
+  // 4) Corte limpio por palabra/línea garantizando <= maxLimit
+  while (txt.length > 0 && (getXCharCount(txt + "…") > maxLimit || (txt + "…").length > maxLimit)) {
+    const lastSpace = Math.max(txt.lastIndexOf(" "), txt.lastIndexOf("\n"));
+    if (lastSpace > maxLimit * 0.65) {
+      txt = txt.slice(0, lastSpace).trimEnd();
+    } else {
+      txt = txt.slice(0, -1).trimEnd();
+    }
+  }
+  return txt + "…";
+}
+
 function initTipCardState(tip) {
   if (!isIllustrationConcordantWithTip(tip.illustration, tip)) {
     tip.illustration = buildUniqueDynamicClayUrl(
@@ -432,39 +483,48 @@ function initTipCardState(tip) {
       tip.matchup || ""
     );
   }
+  tip.body = enforceMax279Chars(tip.body || "", MAX_X_POST_CHARS);
   if (!STATE.cardState[tip.id]) {
+    const canFitLink = !tip.is_prediction_post && getXCharCount(tip.body) + 27 <= MAX_X_POST_CHARS;
     STATE.cardState[tip.id] = {
-      linkType: tip.is_prediction_post ? "none" : "source", // 'none' | 'source' | 'page'
-      pubMode: "now",     // 'now' | 'offset' | 'datetime' (Pedido en punto 2)
+      linkType: canFitLink ? "source" : "none", // 'none' | 'source' | 'page'
+      pubMode: "now",     // 'now' | 'offset' | 'datetime'
       offsetVal: 30,
       offsetUnit: "minutes",
       dtVal: getDefaultFutureDatetimeART(60),
       title: tip.title || "",
-      body: tip.body || "",
+      body: tip.body,
       illustration: tip.illustration || "assets/clay/clay_dal_phi.jpg",
     };
-  } else if (!isIllustrationConcordantWithTip(STATE.cardState[tip.id].illustration, tip)) {
-    STATE.cardState[tip.id].illustration = tip.illustration;
+  } else {
+    STATE.cardState[tip.id].body = enforceMax279Chars(STATE.cardState[tip.id].body || tip.body, MAX_X_POST_CHARS);
+    if (!isIllustrationConcordantWithTip(STATE.cardState[tip.id].illustration, tip)) {
+      STATE.cardState[tip.id].illustration = tip.illustration;
+    }
   }
   return STATE.cardState[tip.id];
 }
 
 function buildFinalPostText(tip) {
   const st = initTipCardState(tip);
+  const cleanBody = enforceMax279Chars(st.body.trim(), MAX_X_POST_CHARS);
   if (st.linkType === "none") {
-    return st.body.trim();
+    return cleanBody;
   }
   const chosenLink = st.linkType === "page" ? tip.page_link : tip.source_link;
-  return `${st.body.trim()}\n👉 ${chosenLink}`;
+  // En X todo link ocupa 23 caracteres (t.co) + "\n👉 " (4 chars en X) = 27 chars
+  const bodyForLink = enforceMax279Chars(cleanBody, MAX_X_POST_CHARS - 27);
+  return `${bodyForLink}\n👉 ${chosenLink}`;
 }
 
 function estimateXCharLength(tip) {
   const st = initTipCardState(tip);
+  const cleanBody = enforceMax279Chars(st.body.trim(), MAX_X_POST_CHARS);
   if (st.linkType === "none") {
-    return st.body.trim().length;
+    return getXCharCount(cleanBody);
   }
-  // En X/Twitter todo link ocupa 23 caracteres (t.co) + "\n👉 " (4 chars) = 27 chars
-  return st.body.trim().length + 27;
+  const bodyForLink = enforceMax279Chars(cleanBody, MAX_X_POST_CHARS - 27);
+  return getXCharCount(bodyForLink) + 27;
 }
 
 /* ==========================================================================
@@ -1084,48 +1144,79 @@ function buildPredictionXPostText(aw, hm, g, proj) {
 
   const ptsBaseE1 = `${Number(proj.baseAway).toFixed(1)} pts`;
   const ptsBaseE2 = `${Number(proj.baseHome).toFixed(1)} pts`;
+  const numBaseE1 = `${Number(proj.baseAway).toFixed(1)}`;
+  const numBaseE2 = `${Number(proj.baseHome).toFixed(1)}`;
 
-  const fmtSigned = (val) => {
+  const fmtSignedNum = (val) => {
     const rounded = Number(Number(val || 0).toFixed(1));
     const sign = rounded > 0 ? "+" : rounded < 0 ? "-" : "-";
-    return `${sign}${Math.abs(rounded).toFixed(1)} pts`;
+    return `${sign}${Math.abs(rounded).toFixed(1)}`;
   };
+  const fmtSigned = (val) => `${fmtSignedNum(val)} pts`;
 
-  const ptsPSE1 = fmtSigned(proj.airPtsAway);
-  const ptsPSE2 = fmtSigned(proj.airPtsHome);
-  const ptsCFE1 = fmtSigned(proj.groundPtsAway);
-  const ptsCFE2 = fmtSigned(proj.groundPtsHome);
-  const ptsRZ3SRE1 = fmtSigned(proj.sitPtsAway);
-  const ptsRZ3SRE2 = fmtSigned(proj.sitPtsHome);
-  const ptsELE1 = fmtSigned(Number(proj.stPtsAway) + Number(proj.hfaAway));
-  const ptsELE2 = fmtSigned(Number(proj.stPtsHome) + Number(proj.hfaHome));
-  const ptsBajasE1 = fmtSigned(proj.injPtsAway ?? 0);
-  const ptsBajasE2 = fmtSigned(proj.injPtsHome ?? 0);
+  const nPS1 = fmtSignedNum(proj.airPtsAway);
+  const nPS2 = fmtSignedNum(proj.airPtsHome);
+  const nCF1 = fmtSignedNum(proj.groundPtsAway);
+  const nCF2 = fmtSignedNum(proj.groundPtsHome);
+  const nRZ1 = fmtSignedNum(proj.sitPtsAway);
+  const nRZ2 = fmtSignedNum(proj.sitPtsHome);
+  const nEL1 = fmtSignedNum(Number(proj.stPtsAway) + Number(proj.hfaAway));
+  const nEL2 = fmtSignedNum(Number(proj.stPtsHome) + Number(proj.hfaHome));
+  const nBJ1 = fmtSignedNum(proj.injPtsAway ?? 0);
+  const nBJ2 = fmtSignedNum(proj.injPtsHome ?? 0);
 
-  const blocks = [
-    [`${eq1} ${score1} vs ${score2} ${eq2}`, `${eq1} gana: ${winE1} ↔️ ${eq2} gana: ${winE2}`, `Vegas: O/U ${ptsLV}`],
-    [`Base:`, `${eq1}: ${ptsBaseE1}`, `${eq2}: ${ptsBaseE2}`],
-    [`Pase Off:`, `${eq1}: ${ptsPSE1}`, `${eq2}: ${ptsPSE2}`],
-    [`Run Off:`, `${eq1}: ${ptsCFE1}`, `${eq2}: ${ptsCFE2}`],
-    [`RZ + 3°D + Sack + Steal:`, `${eq1}: ${ptsRZ3SRE1}`, `${eq2}: ${ptsRZ3SRE2}`],
-    [`ST + Local:`, `${eq1}: ${ptsELE1}`, `${eq2}: ${ptsELE2}`],
-    [`Bajas:`, `${eq1}: ${ptsBajasE1}`, `${eq2}: ${ptsBajasE2}`],
+  const headerLines = [
+    `${eq1} ${score1} vs ${score2} ${eq2}`,
+    `${eq1} gana: ${winE1} ↔️ ${eq2} gana: ${winE2}`,
+    `Vegas: O/U ${ptsLV}`,
   ];
 
-  // Compactar saltos en blanco de abajo hacia arriba solo los necesarios para garantizar siempre <= 278 caracteres
-  const seps = ["\n\n", "\n\n", "\n\n", "\n\n", "\n\n", "\n\n"];
+  const factorDefs = [
+    { label: "Base:", shortLabel: "Base:", full1: ptsBaseE1, full2: ptsBaseE2, num1: numBaseE1, num2: numBaseE2 },
+    { label: "Pase Off:", shortLabel: "Pase Off:", full1: fmtSigned(proj.airPtsAway), full2: fmtSigned(proj.airPtsHome), num1: nPS1, num2: nPS2 },
+    { label: "Run Off:", shortLabel: "Run Off:", full1: fmtSigned(proj.groundPtsAway), full2: fmtSigned(proj.groundPtsHome), num1: nCF1, num2: nCF2 },
+    { label: "RZ + 3°D + Sack + Steal:", shortLabel: "RZ+3°D+Sack+Steal:", full1: fmtSigned(proj.sitPtsAway), full2: fmtSigned(proj.sitPtsHome), num1: nRZ1, num2: nRZ2 },
+    { label: "ST + Local:", shortLabel: "ST + Local:", full1: fmtSigned(Number(proj.stPtsAway) + Number(proj.hfaAway)), full2: fmtSigned(Number(proj.stPtsHome) + Number(proj.hfaHome)), num1: nEL1, num2: nEL2 },
+    { label: "Bajas:", shortLabel: "Bajas:", full1: fmtSigned(proj.injPtsAway ?? 0), full2: fmtSigned(proj.injPtsHome ?? 0), num1: nBJ1, num2: nBJ2 },
+  ];
+
+  // mode 0 = 3 líneas con "pts", mode 1 = 1 línea sin "pts"
+  const modes = factorDefs.map(() => 0);
+  const seps = factorDefs.map(() => "\n\n");
+
+  const renderFactor = (f, mode) => {
+    if (mode === 0) {
+      return `${f.label}\n${eq1}: ${f.full1}\n${eq2}: ${f.full2}`;
+    }
+    return `${f.shortLabel} ${eq1} ${f.num1} | ${eq2} ${f.num2}`;
+  };
+
   const assemble = () => {
-    let out = blocks[0].join("\n");
-    for (let i = 1; i < blocks.length; i++) {
-      out += seps[i - 1] + blocks[i].join("\n");
+    let out = headerLines.join("\n");
+    for (let i = 0; i < factorDefs.length; i++) {
+      out += seps[i] + renderFactor(factorDefs[i], modes[i]);
     }
     return out;
   };
-  for (let i = seps.length - 1; i >= 1; i--) {
-    if (assemble().length <= 278) break;
+
+  const fits279 = () => {
+    const s = assemble();
+    return getXCharCount(s) <= MAX_X_POST_CHARS && s.length <= MAX_X_POST_CHARS;
+  };
+
+  // Paso 1: Reducir saltos en blanco dobles (\n\n -> \n) de abajo hacia arriba
+  for (let i = seps.length - 1; i >= 0; i--) {
+    if (fits279()) break;
     seps[i] = "\n";
   }
-  return assemble();
+
+  // Paso 2: Compactar bloques de factores de 3 líneas a 1 línea de abajo hacia arriba solo los necesarios
+  for (let i = modes.length - 1; i >= 0; i--) {
+    if (fits279()) break;
+    modes[i] = 1;
+  }
+
+  return enforceMax279Chars(assemble(), MAX_X_POST_CHARS);
 }
 
 const CLAY_ASSET_CACHE_VER = "20261027v18";
@@ -1485,10 +1576,16 @@ function getWeeklyExpectedGamesAndText(weekNum) {
     lines.push(line);
     items.push({ game: gm, aw, hm, proj, line });
   }
+  let joined = lines.join("\n");
+  for (let i = lines.length - 1; i >= 0; i--) {
+    if (getXCharCount(joined) <= MAX_X_POST_CHARS && joined.length <= MAX_X_POST_CHARS) break;
+    lines[i] = lines[i].replace(" vs ", "-");
+    joined = lines.join("\n");
+  }
   return {
     week: Number(weekNum),
     items,
-    text: lines.join("\n"),
+    text: enforceMax279Chars(joined, MAX_X_POST_CHARS),
   };
 }
 
@@ -1678,7 +1775,8 @@ function renderMatchupBoard() {
     (item) => item.teams && item.teams.length === 2 && item.teams.includes(aw.abbr) && item.teams.includes(hm.abbr)
   );
   const initialFallbackImg = exactPairForInit.length > 0 ? exactPairForInit[0].path : "assets/clay/clay_stadium_turf_bg.jpg";
-  const charLenClass = predXPostString.length <= 270 ? "ok" : predXPostString.length <= 280 ? "warn" : "over";
+  const predCharLen = getXCharCount(predXPostString);
+  const charLenClass = predCharLen <= 270 ? "ok" : predCharLen <= MAX_X_POST_CHARS ? "warn" : "over";
 
   // Preparar datos del Post X de Todos los Marcadores Esperados de la Semana (Semanas sin jugar)
   const unplayedWeeks = getUnplayedWeeksList();
@@ -1691,7 +1789,8 @@ function renderMatchupBoard() {
     : 8;
   STATE.selectedWeeklyPostWeek = defaultUnplayedWk;
   const weeklyPack = getWeeklyExpectedGamesAndText(defaultUnplayedWk);
-  const weeklyCharClass = weeklyPack.text.length <= 270 ? "ok" : weeklyPack.text.length <= 280 ? "warn" : "over";
+  const weeklyCharLen = getXCharCount(weeklyPack.text);
+  const weeklyCharClass = weeklyCharLen <= 270 ? "ok" : weeklyCharLen <= MAX_X_POST_CHARS ? "warn" : "over";
   const unplayedOptionsHtml = unplayedWeeks
     .map(
       (u) =>
@@ -1891,7 +1990,7 @@ function renderMatchupBoard() {
             <div class="pred-x-preview-box hidden" id="predXPostPreviewBox">
               <div class="pxp-header">
                 <span>🎨 Post X del Partido + Caricatura 3D de Plastilina (${aw.abbr} vs ${hm.abbr}):</span>
-                <span class="pxp-len ${charLenClass}">${predXPostString.length} / 280 máx · ✅ Entra en X</span>
+                <span class="pxp-len ${charLenClass}">${predCharLen} / 279 máx · ✅ Verificado (≤279)</span>
               </div>
               <div class="pxp-media-and-text-grid">
                 <div class="pxp-image-col">
@@ -1921,7 +2020,7 @@ function renderMatchupBoard() {
             <div class="pred-x-preview-box hidden" id="weeklyXPostPreviewBox">
               <div class="pxp-header">
                 <span id="weeklyXPostHeaderTitle">📅 Post X · Todos los Resultados Esperados — Semana ${defaultUnplayedWk} (${weeklyPack.items.length} partidos):</span>
-                <span class="pxp-len ${weeklyCharClass}" id="weeklyXPostCharBadge">${weeklyPack.text.length} / 280 máx · ✅ Entra en X</span>
+                <span class="pxp-len ${weeklyCharClass}" id="weeklyXPostCharBadge">${weeklyCharLen} / 279 máx · ✅ Verificado (≤279)</span>
               </div>
               <div class="pxp-media-and-text-grid">
                 <div class="pxp-image-col">
@@ -2236,9 +2335,10 @@ function renderMatchupBoard() {
       titleEl.textContent = `📅 Post X · Todos los Resultados Esperados — Semana ${wkNum} (${pack.items.length} partidos):`;
     }
     if (badgeEl) {
-      const cCls = pack.text.length <= 270 ? "ok" : pack.text.length <= 280 ? "warn" : "over";
+      const wkLen = getXCharCount(pack.text);
+      const cCls = wkLen <= 270 ? "ok" : wkLen <= MAX_X_POST_CHARS ? "warn" : "over";
       badgeEl.className = `pxp-len ${cCls}`;
-      badgeEl.textContent = `${pack.text.length} / 280 máx · ${pack.text.length <= 280 ? "✅ Entra en X" : "⚠️ Excede 280"}`;
+      badgeEl.textContent = `${wkLen} / 279 máx · ${wkLen <= MAX_X_POST_CHARS ? "✅ Verificado (≤279)" : "⚠️ Excede 279"}`;
     }
     if (taEl) taEl.value = pack.text;
     if (imgBadgeEl) imgBadgeEl.textContent = `Pizarra Plastilina 3D · Semana ${wkNum}`;
@@ -3846,7 +3946,7 @@ function renderXTipsFeed() {
       const st = initTipCardState(tip);
       const isChecked = STATE.selectedTipIds.has(tip.id);
       const charCount = estimateXCharLength(tip);
-      const charClass = charCount <= 270 ? "" : charCount <= 280 ? "warn" : "over";
+      const charClass = charCount <= 270 ? "" : charCount <= MAX_X_POST_CHARS ? "warn" : "over";
       const activeUrl = st.linkType === "page" ? tip.page_link : tip.source_link;
       const bodyRows = (st.body.match(/\n/g) || []).length >= 6 ? 10 : 4;
 
@@ -3878,7 +3978,7 @@ function renderXTipsFeed() {
               <input type="checkbox" class="chk-select-tip" data-tipid="${tip.id}" ${isChecked ? "checked" : ""} />
               <span>${tip.badge}</span>
             </label>
-            <span class="xtc-char-badge ${charClass}" id="charBadge-${tip.id}">${charCount} / 280 máx</span>
+            <span class="xtc-char-badge ${charClass}" id="charBadge-${tip.id}">${charCount} / 279 máx</span>
           </div>
 
           <!-- ILUSTRACIÓN DE PLASTILINA (16:9) -->
@@ -3921,7 +4021,7 @@ function renderXTipsFeed() {
             </div>
             ${
               st.linkType === "none"
-                ? `<div class="xtc-active-link-preview" style="color:#64748b;">✅ Sin link adicional (entra directo en 280 caracteres de X)</div>`
+                ? `<div class="xtc-active-link-preview" style="color:#64748b;">✅ Sin link adicional (verificado ≤ 279 caracteres)</div>`
                 : `<a href="${activeUrl}" target="_blank" class="xtc-active-link-preview" id="activeLinkPrev-${tip.id}">👉 ${activeUrl}</a>`
             }
           </div>
@@ -4063,8 +4163,8 @@ function bindXTipCardEvents() {
       const count = estimateXCharLength(tip);
       const badge = document.getElementById(`charBadge-${id}`);
       if (badge) {
-        badge.textContent = `${count} / 280 máx`;
-        badge.className = `xtc-char-badge ${count <= 270 ? "" : count <= 280 ? "warn" : "over"}`;
+        badge.textContent = `${count} / 279 máx`;
+        badge.className = `xtc-char-badge ${count <= 270 ? "" : count <= MAX_X_POST_CHARS ? "warn" : "over"}`;
       }
     });
   });
@@ -4219,6 +4319,8 @@ function prependNewTipCard(newTip) {
   if (!Array.isArray(STATE.data.tips_x)) {
     STATE.data.tips_x = [];
   }
+  const maxBodyAllowed = newTip.is_prediction_post ? MAX_X_POST_CHARS : MAX_X_POST_CHARS - 27;
+  newTip.body = enforceMax279Chars(newTip.body || "", maxBodyAllowed);
   STATE.data.tips_x.unshift(newTip);
   initTipCardState(newTip);
   STATE.tipGroupFilter = "ALL";
@@ -4243,7 +4345,8 @@ function prependNewTipCard(newTip) {
   if (!String(newTip.illustration || "").startsWith("data:image/")) {
     generateAndAssignUniqueTipImage(newTip);
   }
-  showToast("✨ Nuevo Post X creado y agregado al tope de Ángulos Técnicos");
+  const verifiedLen = estimateXCharLength(newTip);
+  showToast(`✨ Post X creado y verificado (${verifiedLen} / 279 chars máx)`);
 }
 
 function createCustomTeamTip(tm) {
@@ -4253,7 +4356,8 @@ function createCustomTeamTip(tm) {
   const [prName, prNum] = spec.pr;
   const prompt = `3D claymation (caricatura de plastilina) full-bleed widescreen 16:9 illustration extending to the edges with NO border or frame: ${spec.name} quarterback ${qbName} in ${spec.jersey} with number ${qbNum} and ${spec.helmet} throwing ONE single brown leather football alongside defensive star ${prName} (${prNum}) on the stadium turf. Handcrafted plasticine clay texture, natural anatomy.`;
   const uniqueImgUrl = buildUniqueDynamicClayUrl(prompt, tm.abbr);
-  const bodyTxt = `📊 Radiografía 2026 de ${tm.name} (#${tm.rank_total} NFL): ${qbName} (${qbNum}) comanda un ataque de ${tm.off_epa_play >= 0 ? "+" : ""}${tm.off_epa_play.toFixed(2)} EPA/jugada (${tm.off_ppg} PPG), mientras ${prName} (${prNum}) lidera la defensa con ${tm.def_sacks} sacks (${tm.def_sack_rate}% pass rush).`;
+  const rawBodyTxt = `📊 Radiografía 2026 de ${tm.name} (#${tm.rank_total} NFL): ${qbName} (${qbNum}) comanda un ataque de ${tm.off_epa_play >= 0 ? "+" : ""}${tm.off_epa_play.toFixed(2)} EPA/jugada (${tm.off_ppg} PPG), mientras ${prName} (${prNum}) lidera la defensa con ${tm.def_sacks} sacks (${tm.def_sack_rate}% pass rush).`;
+  const bodyTxt = enforceMax279Chars(rawBodyTxt, MAX_X_POST_CHARS - 27);
 
   prependNewTipCard({
     id,
@@ -4277,9 +4381,47 @@ function createCustomTeamTip(tm) {
   document.querySelector(".right-x-panel")?.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 
+const PLAYER_X_SHORT_LABELS = {
+  "EPA / Dropback": "EPA/Play",
+  "Éxito Pase %": "Éxito Pase",
+  "Yardas Pase": "Yds Pase",
+  "PFR On-Target %": "On-Target%",
+  "PFR Pressure %": "Pressure%",
+  "NGS Time to Throw": "Time to Throw",
+  "EPA / Carrera": "EPA/Run",
+  "Éxito Terrestre %": "Éxito Run",
+  "Yardas Tras Contacto / Att": "YAC/Att",
+  "Carreras Explosivas (+10y)": "Explosivas +10y",
+  "Yardas / Acarreo": "Yds/Att",
+  "TD Terrestres": "TD Run",
+  "Fumbles Perdidos": "Fumbles",
+  "EPA / Target": "EPA/Tgt",
+  "Yards / Route Run (YPRR)": "YPRR",
+  "Target Share %": "Target%",
+  "NGS Separation": "Separation",
+  "NGS Cushion": "Cushion",
+  "Air Yards Share %": "Air Yds%",
+  "YAC sobre Esperado": "YAC OE",
+  "Yardas / TD": "Yds/TD",
+  "Pass Block Win Rate": "PBWR",
+  "Run Block Win Rate": "RBWR",
+  "Sacks Permitidos": "Sacks Perm",
+  "Presiones Permitidas": "Presiones Perm",
+  "Penalidades": "Castigos",
+  "Snaps Ofensivos %": "Snaps%",
+  "Eficacia en Zona Roja": "Efic. RZ",
+  "PFR Pressures": "Pressures",
+  "QB Hits / TFL": "QBH/TFL",
+  "Tackles Totales": "Tackles",
+  "PFR Comp % Permitido": "Comp% Perm",
+  "PFR Rating Permitido": "Rating Perm",
+  "Pases Defendidos": "PD",
+  "Intercepciones": "INT",
+};
+
 function buildPlayerScoutingXPostText(pl, num) {
   const topPct = Math.max(1, 100 - Number(pl.percentile || 50));
-  const entries = Object.entries(pl.metrics || {});
+  const entries = Object.entries(pl.metrics || {}).map(([k, v]) => [PLAYER_X_SHORT_LABELS[k] || k, v]);
   const pairs = [];
   for (let i = 0; i < entries.length; i += 2) {
     const [k1, v1] = entries[i];
@@ -4297,13 +4439,13 @@ function buildPlayerScoutingXPostText(pl, num) {
     ...pairs,
   ];
   let txt = lines.join("\n");
-  if (txt.length > 276) {
+  if (getXCharCount(txt) > MAX_X_POST_CHARS || txt.length > MAX_X_POST_CHARS) {
     txt = [
-      `🏈 ${pl.name} (${num} · ${pl.pos} · ${pl.team}) | Pctl ${pl.percentile} NFL`,
+      `🏈 ${pl.name} (${num} · ${pl.pos} · ${pl.team}) | Pctl ${pl.percentile} NFL (${pl.games} PJ)`,
       ...pairs,
     ].join("\n");
   }
-  return txt.slice(0, 278);
+  return enforceMax279Chars(txt, MAX_X_POST_CHARS);
 }
 
 async function renderPlayerScoutingClayCardToDataUrl(pl, num, baseIllusPath) {
@@ -4481,9 +4623,9 @@ function updatePlayerXPreviewBoxUI(pl, num, postText, dataUrl) {
 
   const lenEl = document.getElementById("playerXPostCharCount");
   if (lenEl) {
-    const len = postText.length;
-    lenEl.textContent = `${len} / 280 chars`;
-    lenEl.className = `pxp-len ${len <= 265 ? "ok" : len <= 280 ? "warn" : "over"}`;
+    const len = getXCharCount(postText);
+    lenEl.textContent = `${len} / 279 máx · ✅ Verificado (≤279)`;
+    lenEl.className = `pxp-len ${len <= 265 ? "ok" : len <= MAX_X_POST_CHARS ? "warn" : "over"}`;
   }
 
   box.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -4548,7 +4690,7 @@ async function createCustomPlayerTip(pl, btnEl = null) {
     }, 2800);
   }
 
-  showToast(`✨ Post X (${postText.length} chars) + Tarjeta 16:9 de ${pl.name} listos y copiados`);
+  showToast(`✨ Post X verificado (${getXCharCount(postText)} / 279 chars) + Tarjeta 16:9 de ${pl.name} listos`);
 }
 
 function createCustomNewsTip(nw) {
@@ -4557,7 +4699,8 @@ function createCustomNewsTip(nw) {
   const [starName, starNum] = spec.qb;
   const prompt = `3D claymation (caricatura de plastilina) full-bleed widescreen 16:9 illustration extending to the edges with NO border or frame: ${spec.name} player in ${spec.jersey} with number ${starNum} and ${spec.helmet} on the NFL stadium sideline representing breaking news: ${nw.title}. Handcrafted plasticine clay texture, natural anatomy.`;
   const uniqueImgUrl = buildUniqueDynamicClayUrl(prompt, nw.team || "PHI");
-  const bodyTxt = `🚨 [${nw.source}] ${nw.title}. ${nw.summary.slice(0, 105)}`;
+  const rawBodyTxt = `🚨 [${nw.source}] ${nw.title}. ${nw.summary.slice(0, 105)}`;
+  const bodyTxt = enforceMax279Chars(rawBodyTxt, MAX_X_POST_CHARS - 27);
 
   prependNewTipCard({
     id,
@@ -4827,7 +4970,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("gameRibbonTrack")?.scrollBy({ left: 320, behavior: "smooth" });
   });
 
-  // Botón de crear tip del partido activo en la Pizarra Táctica (con formato compacto <280 chars + caricatura de plastilina 16:9 con equipos y logos)
+  // Botón de crear tip del partido activo en la Pizarra Táctica (con formato compacto <=279 chars + caricatura de plastilina 16:9 con equipos y logos)
   document.getElementById("btnCreateMatchupTip")?.addEventListener("click", async () => {
     const m = getActiveMatchupTeams();
     if (!m) return;
@@ -4846,7 +4989,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       await navigator.clipboard.writeText(postText);
     } catch (_) {}
-    showToast(`✨ Post X (${postText.length} chars) + Imagen 16:9 de plastilina (${aw.abbr} vs ${hm.abbr}) creados`);
+    showToast(`✨ Post X verificado (${getXCharCount(postText)} / 279 chars) + Imagen 16:9 (${aw.abbr} vs ${hm.abbr}) creados`);
   });
 
   // Simulador Libre de 2 equipos (desde vista Equipos o desde la barra rápida en Panel de Control)
@@ -4912,17 +5055,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const val = e.target.value || "";
     const lenEl = document.getElementById("playerXPostCharCount");
     if (lenEl) {
-      const len = val.length;
-      lenEl.textContent = `${len} / 280 chars`;
-      lenEl.className = `pxp-len ${len <= 265 ? "ok" : len <= 280 ? "warn" : "over"}`;
+      const len = getXCharCount(val);
+      lenEl.textContent = `${len} / 279 máx · ${len <= MAX_X_POST_CHARS ? "✅ Verificado (≤279)" : "⚠️ Excede 279"}`;
+      lenEl.className = `pxp-len ${len <= 265 ? "ok" : len <= MAX_X_POST_CHARS ? "warn" : "over"}`;
     }
   });
 
   document.getElementById("btnCopyPlayerXText")?.addEventListener("click", async (e) => {
     const btn = e.currentTarget;
     const ta = document.getElementById("playerXPostTextarea");
-    const txt = ta?.value || "";
-    if (!txt) return;
+    const rawTxt = ta?.value || "";
+    if (!rawTxt) return;
+    const txt = enforceMax279Chars(rawTxt, MAX_X_POST_CHARS);
+    if (ta && ta.value !== txt) ta.value = txt;
     try {
       await navigator.clipboard.writeText(txt);
     } catch (_) {
@@ -4932,7 +5077,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const prev = btn.textContent;
     btn.textContent = "✅ Texto Copiado";
     btn.classList.add("copied-ok");
-    showToast(`✅ Post X de jugador copiado al portapapeles (${txt.length} / 280 caracteres)`);
+    showToast(`✅ Post X de jugador copiado y verificado (${getXCharCount(txt)} / 279 caracteres)`);
     setTimeout(() => {
       btn.textContent = prev;
       btn.classList.remove("copied-ok");
@@ -4941,8 +5086,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("btnOpenPlayerXIntent")?.addEventListener("click", async () => {
     const ta = document.getElementById("playerXPostTextarea");
-    const txt = ta?.value || "";
-    if (!txt) return;
+    const rawTxt = ta?.value || "";
+    if (!rawTxt) return;
+    const txt = enforceMax279Chars(rawTxt, MAX_X_POST_CHARS);
+    if (ta && ta.value !== txt) ta.value = txt;
     try {
       await navigator.clipboard.writeText(txt);
     } catch (_) {}
