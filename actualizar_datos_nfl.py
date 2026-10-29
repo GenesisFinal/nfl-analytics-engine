@@ -1629,6 +1629,16 @@ def main():
     }
 
     out_path = os.path.join(DATA_DIR, "nfl_dashboard_data.json")
+    existing_tips_x = []
+    if os.path.exists(out_path):
+        try:
+            with open(out_path, "r", encoding="utf-8") as ef:
+                existing_tips_x = json.load(ef).get("tips_x", [])
+        except Exception:
+            existing_tips_x = []
+
+    payload["tips_x"] = existing_tips_x
+
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
 
@@ -1638,7 +1648,7 @@ def main():
         json.dump(payload, f, ensure_ascii=False)
         f.write(";\n")
 
-    print(f"[5/5] ¡Ingesta completada! Equipos: {len(teams)} | Jugadores: {len(players)} | Partidos: {len(games)} | Top News: {len(news)}")
+    print(f"[5/5] ¡Ingesta completada! Equipos: {len(teams)} | Jugadores: {len(players)} | Partidos: {len(games)} | Top News: {len(news)} | Tips X: {len(existing_tips_x)}")
     print(f"      Archivos generados: {out_path} y {js_out_path}")
 
 
