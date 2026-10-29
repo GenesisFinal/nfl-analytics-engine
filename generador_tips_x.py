@@ -373,7 +373,7 @@ def generate_tips_from_data(data: dict) -> list:
             "title": f"Dominio en EPA y CPOE: {qb['name']} ({qb_num}, {qb['team']})",
             "headline": f"Dominio en EPA y CPOE: {qb['name']} ({qb_num}, {qb['team']})",
             "body": trim_post_body(
-                f"⭐ Rendimiento élite en 2026: {qb['name']} ({qb_num}, {qb['team']}) registra {qb['primary_val']:+.3f} EPA/dropback (percentil {qb['percentile']} NFL), {qb['secondary_val']} CPOE y {qb['metrics'].get('Yds Pase', 0)} yds aéreas ({qb['metrics'].get('TD / INT', '')} TD/INT)."
+                f"⭐ Rendimiento élite en 2026: {qb['name']} ({qb_num}, {qb['team']}) registra {qb['primary_val']} EPA/dropback (percentil {qb['percentile']} NFL), {qb['secondary_val']} CPOE y {qb['metrics'].get('Yardas Pase', qb['metrics'].get('Yds Pase', 0))} yds aéreas ({qb['metrics'].get('TD / INT', '')} TD/INT)."
             ),
             "page_link": f"{DASHBOARD_PUBLIC_URL}#players",
             "source_link": qb["links"].get("rbsdm", "https://rbsdm.com/stats/stats/"),
@@ -393,10 +393,10 @@ def generate_tips_from_data(data: dict) -> list:
             "game_id": "ALL",
             "matchup": wr["team"],
             "matchup_label": f"{wr['name']} ({wr_num}, {wr['team']})",
-            "title": f"Imán de Targets: {wr['name']} ({wr_num}, {wr['team']}) lidera en yardas",
-            "headline": f"Imán de Targets: {wr['name']} ({wr_num}, {wr['team']}) lidera en yardas",
+            "title": f"Imán de Targets: {wr['name']} ({wr_num}, {wr['team']}) lidera en eficiencia",
+            "headline": f"Imán de Targets: {wr['name']} ({wr_num}, {wr['team']}) lidera en eficiencia",
             "body": trim_post_body(
-                f"🚀 Máquina de producir yardas: {wr['name']} ({wr_num}, {wr['team']}) acumula {wr['primary_val']} yds de recepción con {wr['secondary_val']} de Target Share, {wr['metrics'].get('WOPR (Opportunity)', 0)} WOPR y {wr['metrics'].get('NGS Separation', '3.0 yds')} de separación en Next Gen Stats."
+                f"🚀 Máquina de producir yardas: {wr['name']} ({wr_num}, {wr['team']}) registra {wr['primary_val']} EPA/Target con {wr['secondary_val']} YPRR, {wr['metrics'].get('Target Share %', '')} Target Share y {wr['metrics'].get('NGS Separation', '3.0 yds')} de separación en Next Gen Stats."
             ),
             "page_link": f"{DASHBOARD_PUBLIC_URL}#players",
             "source_link": wr["links"].get("playerprofiler", "https://www.playerprofiler.com/"),
