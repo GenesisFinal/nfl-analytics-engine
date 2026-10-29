@@ -614,8 +614,8 @@ function renderGameRibbon() {
    ========================================================================== */
 function computeUnitStrengthPct(val, minVal, maxVal, higherIsBetter = true) {
   const rawRatio = ((val - minVal) / (maxVal - minVal || 1)) * 100;
-  const clamped = Math.max(12, Math.min(98, rawRatio));
-  return higherIsBetter ? clamped : Math.max(12, Math.min(98, 110 - clamped));
+  const pct = higherIsBetter ? rawRatio : 100 - rawRatio;
+  return Math.max(12, Math.min(98, pct));
 }
 
 function getStrengthComparisonClasses(scoreA, scoreB) {
@@ -821,34 +821,58 @@ function computeTeamInjuryAdjustment(teamObj) {
   };
 }
 
-function computeMatchupProjection(aw, hm) {
+function computeMatchupProjection(aw, hm, g = null) {
   if (!aw || !hm) return null;
 
-  // 1. Duelo Aéreo en ambos sentidos (Sentido 1: Ataca AW vs Def HM | Sentido 2: Ataca HM vs Def AW)
+  const gameCtx =
+    g ||
+    (STATE.data?.games || []).find(
+      (x) => Number(x.week) === Number(STATE.selectedWeek) && x.away_team === aw.abbr && x.home_team === hm.abbr
+    ) ||
+    null;
+
+  // 1. Duelo Aéreo en ambos sentidos (rangos centrados en la media exacta NFL 2026)
   const buildAirRows = (offT, defT) => [
-    { leftVal: offT.off_pass_epa_play, rightVal: defT.def_pass_epa_allowed, minVal: -0.25, maxVal: 0.32, leftHigherIsBetter: true, rightHigherIsBetter: false },
-    { leftVal: offT.off_cpoe, rightVal: defT.def_cpoe_allowed, minVal: -6.0, maxVal: 7.5, leftHigherIsBetter: true, rightHigherIsBetter: false },
-    { leftVal: offT.off_explosive_pass_pct, rightVal: defT.def_explosive_pass_allowed_pct, minVal: 5.5, maxVal: 15.5, leftHigherIsBetter: true, rightHigherIsBetter: false },
-    { leftVal: offT.off_pass_ypg, rightVal: defT.def_pass_ypg_allowed, minVal: 155, maxVal: 295, leftHigherIsBetter: true, rightHigherIsBetter: false },
+    { leftVal: offT.off_pass_epa_play, rightVal: defT.def_pass_epa_allowed, minVal: -0.22, maxVal: 0.34, leftHigherIsBetter: true, rightHigherIsBetter: false },
+    { leftVal: offT.off_cpoe, rightVal: defT.def_cpoe_allowed, minVal: -6.5, maxVal: 7.8, leftHigherIsBetter: true, rightHigherIsBetter: false },
+    { leftVal: offT.off_explosive_pass_pct, rightVal: defT.def_explosive_pass_allowed_pct, minVal: 3.4, maxVal: 14.0, leftHigherIsBetter: true, rightHigherIsBetter: false },
+    { leftVal: offT.off_pass_ypg, rightVal: defT.def_pass_ypg_allowed, minVal: 170, maxVal: 300, leftHigherIsBetter: true, rightHigherIsBetter: false },
   ];
   const airS1 = calcRowsStrengthSummary(buildAirRows(aw, hm)); // positivo = ventaja Ataque AW, negativo = domina Defensa HM
   const airS2 = calcRowsStrengthSummary(buildAirRows(hm, aw)); // positivo = ventaja Ataque HM, negativo = domina Defensa AW
 
-  // 2. Duelo Terrestre vs Front-7 en ambos sentidos
+  // 2. Duelo Terrestre vs Front-7 en ambos sentidos (con TFL por partido para eliminar sesgo de Bye Week)
   const buildGroundRows = (offT, defT) => [
-    { leftVal: offT.off_rush_epa_play, rightVal: defT.def_rush_epa_allowed, minVal: -0.22, maxVal: 0.16, leftHigherIsBetter: true, rightHigherIsBetter: false },
-    { leftVal: offT.off_rush_ypg, rightVal: defT.def_rush_ypg_allowed, minVal: 75, maxVal: 170, leftHigherIsBetter: true, rightHigherIsBetter: false },
-    { leftVal: offT.off_explosive_rush_pct, rightVal: defT.def_explosive_rush_allowed_pct, minVal: 6.0, maxVal: 16.5, leftHigherIsBetter: true, rightHigherIsBetter: false },
-    { leftVal: offT.off_ypp, rightVal: defT.def_tfl, minVal: 4.3, maxVal: 6.6, leftHigherIsBetter: true, rightHigherIsBetter: true, rightMinVal: 18, rightMaxVal: 52 },
+    { leftVal: offT.off_rush_epa_play, rightVal: defT.def_rush_epa_allowed, minVal: -0.26, maxVal: 0.14, leftHigherIsBetter: true, rightHigherIsBetter: false },
+    { leftVal: offT.off_rush_ypg, rightVal: defT.def_rush_ypg_allowed, minVal: 64, maxVal: 160, leftHigherIsBetter: true, rightHigherIsBetter: false },
+    { leftVal: offT.off_explosive_rush_pct, rightVal: defT.def_explosive_rush_allowed_pct, minVal: 4.4, maxVal: 16.0, leftHigherIsBetter: true, rightHigherIsBetter: false },
+    {
+      leftVal: offT.off_ypp,
+      rightVal: Number(defT.def_tfl_pg ?? ((defT.def_tfl || 32) / 7)),
+      minVal: 4.7,
+      maxVal: 6.9,
+      leftHigherIsBetter: true,
+      rightHigherIsBetter: true,
+      rightMinVal: 2.4,
+      rightMaxVal: 6.8,
+    },
   ];
   const groundS1 = calcRowsStrengthSummary(buildGroundRows(aw, hm));
   const groundS2 = calcRowsStrengthSummary(buildGroundRows(hm, aw));
 
-  // 3. Situacional, Trincheras (Bolsillo, 3er Down, Zona Roja) y Margen de Entregas en ambos sentidos
+  // 3. Situacional, Trincheras (Bolsillo, 3er Down, Zona Roja, 1st Down Rate)
   const buildSitRows = (offT, defT) => [
-    { leftVal: offT.off_sack_rate_allowed, rightVal: defT.def_sack_rate, minVal: 3.0, maxVal: 11.5, leftHigherIsBetter: false, rightHigherIsBetter: true },
-    { leftVal: offT.off_3d_pct, rightVal: defT.def_3d_pct, minVal: 28.0, maxVal: 52.0, leftHigherIsBetter: true, rightHigherIsBetter: false },
-    { leftVal: offT.off_rz_td_pct, rightVal: defT.def_rz_td_pct, minVal: 38.0, maxVal: 72.0, leftHigherIsBetter: true, rightHigherIsBetter: false },
+    { leftVal: offT.off_sack_rate_allowed, rightVal: defT.def_sack_rate, minVal: 2.2, maxVal: 10.6, leftHigherIsBetter: false, rightHigherIsBetter: true },
+    { leftVal: offT.off_3d_pct, rightVal: defT.def_3d_pct, minVal: 29.0, maxVal: 51.0, leftHigherIsBetter: true, rightHigherIsBetter: false },
+    { leftVal: offT.off_rz_td_pct, rightVal: defT.def_rz_td_pct, minVal: 38.0, maxVal: 80.0, leftHigherIsBetter: true, rightHigherIsBetter: false },
+    {
+      leftVal: Number(offT.off_1d_rate ?? 28.5),
+      rightVal: Number(defT.def_1d_rate_allowed ?? 28.5),
+      minVal: 22.0,
+      maxVal: 35.0,
+      leftHigherIsBetter: true,
+      rightHigherIsBetter: false,
+    },
   ];
   const sitS1 = calcRowsStrengthSummary(buildSitRows(aw, hm));
   const sitS2 = calcRowsStrengthSummary(buildSitRows(hm, aw));
@@ -865,31 +889,54 @@ function computeMatchupProjection(aw, hm) {
   ];
   const stComp = calcRowsStrengthSummary(stRows);
 
-  const awOffPpg = Number(aw.off_ppg ?? 21.5);
-  const hmOffPpg = Number(hm.off_ppg ?? 21.5);
-  const awDefPpg = Number(aw.def_ppg_allowed ?? aw.def_ppg ?? 21.5);
-  const hmDefPpg = Number(hm.def_ppg_allowed ?? hm.def_ppg ?? 21.5);
+  // Base de Puntos: Ajustada por Dificultad de Calendario (SOS), Forma Reciente (L3) y Ritmo de Jugadas (Pace)
+  const awOffPpg = Number(aw.adj_off_ppg ?? aw.off_ppg ?? 22.8);
+  const hmOffPpg = Number(hm.adj_off_ppg ?? hm.off_ppg ?? 22.8);
+  const awDefPpg = Number(aw.adj_def_ppg ?? aw.def_ppg_allowed ?? aw.def_ppg ?? 22.8);
+  const hmDefPpg = Number(hm.adj_def_ppg ?? hm.def_ppg_allowed ?? hm.def_ppg ?? 22.8);
 
-  // Conversión de ventajas tácticas a puntos esperados en el marcador (modelo híbrido ponderado)
-  const baseAway = +((awOffPpg + hmDefPpg) / 2).toFixed(1);
-  const baseHome = +((hmOffPpg + awDefPpg) / 2).toFixed(1);
+  const paceAvg = (Number(aw.plays_per_game ?? 62.3) + Number(hm.plays_per_game ?? 62.3)) / 2;
+  const paceAdj = (paceAvg - 62.26) * 0.14;
 
-  const airPtsAway = +(airS1.avgDiff * 0.135).toFixed(1);
-  const airPtsHome = +(airS2.avgDiff * 0.135).toFixed(1);
+  const rawCrossAway = (awOffPpg + hmDefPpg) / 2;
+  const rawCrossHome = (hmOffPpg + awDefPpg) / 2;
 
-  const groundPtsAway = +(groundS1.avgDiff * 0.095).toFixed(1);
-  const groundPtsHome = +(groundS2.avgDiff * 0.095).toFixed(1);
+  // Regresión bayesiana (72% cruce directo + 28% media NFL 23.0) + Pace + Offset de plantel sano (+1.15)
+  const baseAway = +(0.72 * rawCrossAway + 0.28 * 23.0 + paceAdj + 1.15).toFixed(1);
+  const baseHome = +(0.72 * rawCrossHome + 0.28 * 23.0 + paceAdj + 1.15).toFixed(1);
 
-  const turnDiffAway = Number(aw.turnover_margin ?? 0) - Number(hm.turnover_margin ?? 0);
-  const sitPtsAway = +(sitS1.avgDiff * 0.075 + turnDiffAway * 0.11).toFixed(1);
-  const sitPtsHome = +(sitS2.avgDiff * 0.075 - turnDiffAway * 0.11).toFixed(1);
+  // Contexto de Partido: Duelo Divisional, Domo/Techo Cerrado y Viento
+  const isDivisional = Boolean(gameCtx?.div_game ?? (aw.div && hm.div && aw.div === hm.div));
+  const divMult = isDivisional ? 0.88 : 1.0;
+  const roofType = gameCtx?.roof || "outdoors";
+  const windMph = Number(gameCtx?.wind || 0);
+  const roofBonus = roofType === "dome" || roofType === "closed" ? 0.65 : windMph >= 15 ? -0.75 : 0.0;
 
-  const stPtsAway = +(stComp.avgDiff * 0.04).toFixed(1);
-  const stPtsHome = +(-stComp.avgDiff * 0.04).toFixed(1);
+  const airPtsAway = +((airS1.avgDiff * 0.072 * divMult) + roofBonus * 0.65).toFixed(1);
+  const airPtsHome = +((airS2.avgDiff * 0.072 * divMult) + roofBonus * 0.65).toFixed(1);
 
-  // Ventaja de localía estándar en la NFL (+1.4 pts netos a favor del equipo local)
-  const hfaAway = -0.7;
-  const hfaHome = +0.7;
+  const groundPtsAway = +(groundS1.avgDiff * 0.050 * divMult).toFixed(1);
+  const groundPtsHome = +(groundS2.avgDiff * 0.050 * divMult).toFixed(1);
+
+  // Robos Esperados por Partido (xTO/g regresionando fumbles al 50%) + Disciplina neta de castigos
+  const xtoAway = Number(aw.x_turnover_margin_pg ?? (Number(aw.turnover_margin ?? 0) / 7));
+  const xtoHome = Number(hm.x_turnover_margin_pg ?? (Number(hm.turnover_margin ?? 0) / 7));
+  const xtoDiffAway = xtoAway - xtoHome;
+  const penDiffAway = (Number(aw.net_penalty_yards_pg ?? 0) - Number(hm.net_penalty_yards_pg ?? 0)) * 0.012;
+
+  const sitPtsAway = +((sitS1.avgDiff * 0.045 + xtoDiffAway * 0.48 + penDiffAway) * divMult).toFixed(1);
+  const sitPtsHome = +((sitS2.avgDiff * 0.045 - xtoDiffAway * 0.48 - penDiffAway) * divMult).toFixed(1);
+
+  const stPtsAway = +(stComp.avgDiff * 0.035).toFixed(1);
+  const stPtsHome = +(-stComp.avgDiff * 0.035).toFixed(1);
+
+  // Ventaja de Localía Dinámica (Altitud en DEN, Neutral = 0) + Diferencial de Días de Descanso (Rest Diff)
+  const restDiffHome = Number(gameCtx?.rest_diff ?? 0);
+  const restAdjHome = Math.max(-1.2, Math.min(1.2, restDiffHome * 0.16));
+  const isNeutral = gameCtx?.location === "Neutral";
+  const hfaBase = isNeutral ? 0.0 : hm.abbr === "DEN" ? 0.95 : 0.70;
+  const hfaAway = +(-hfaBase - restAdjHome * 0.5).toFixed(1);
+  const hfaHome = +(hfaBase + restAdjHome * 0.5).toFixed(1);
 
   // 5. Ajuste por Bajas / Parte Médico & Reemplazo de Titulares (con Factor de Novedad sin doble conteo)
   const injAwayDetail = computeTeamInjuryAdjustment(aw);
@@ -928,6 +975,16 @@ function computeMatchupProjection(aw, hm) {
     hmOffPpg,
     awDefPpg,
     hmDefPpg,
+    paceAvg: +paceAvg.toFixed(1),
+    paceAdj: +paceAdj.toFixed(2),
+    isDivisional,
+    roofType,
+    windMph,
+    restDiffHome,
+    awayRest: Number(gameCtx?.away_rest ?? 7),
+    homeRest: Number(gameCtx?.home_rest ?? 7),
+    xtoAway: +xtoAway.toFixed(2),
+    xtoHome: +xtoHome.toFixed(2),
     baseAway,
     baseHome,
     airS1,
@@ -1408,7 +1465,7 @@ function getWeeklyExpectedGamesAndText(weekNum) {
     const aw = teams[gm.away_team];
     const hm = teams[gm.home_team];
     if (!aw || !hm) continue;
-    const proj = computeMatchupProjection(aw, hm);
+    const proj = computeMatchupProjection(aw, hm, gm);
     if (!proj) continue;
     const line = `${aw.abbr} ${proj.scoreAway} vs ${proj.scoreHome} ${hm.abbr}`;
     lines.push(line);
@@ -1601,7 +1658,7 @@ function renderMatchupBoard() {
     if (el) el.classList.toggle("hidden", !STATE.showInlineGuides);
   });
 
-  const proj = computeMatchupProjection(aw, hm);
+  const proj = computeMatchupProjection(aw, hm, g);
   const predXPostString = buildPredictionXPostText(aw, hm, g, proj);
   const exactPairForInit = CLAY_GALLERY.filter(
     (item) => item.teams && item.teams.length === 2 && item.teams.includes(aw.abbr) && item.teams.includes(hm.abbr)
@@ -1900,23 +1957,23 @@ function renderMatchupBoard() {
       <!-- TABLA DE DESGLOSE MATEMÁTICO DE LOS 6 FACTORES QUE CONSTRUYEN EL RESULTADO PROBABLE -->
       <div class="pred-breakdown-box">
         <div class="pbb-title">
-          <span>🧮 DESGLOSE PASO A PASO: ¿CÓMO APORTA CADA FASE (EN AMBOS SENTIDOS) Y EL PARTE MÉDICO AL RESULTADO PROBABLE?</span>
-          <span class="pbb-formula-hint">Suma exacta: Base PPG + Pase + Carrera + Situacional/Entregas + Eq. Especiales/Localía + Bajas/Titulares = Marcador Proyectado</span>
+          <span>🧮 DESGLOSE PASO A PASO: ¿CÓMO APORTA CADA FASE (SOS + FORMA L3 + CONTEXTO) Y EL PARTE MÉDICO AL RESULTADO PROBABLE?</span>
+          <span class="pbb-formula-hint">Suma exacta: Base PPG (SOS/L3/Pace) + Pase + Carrera + Situacional/xRobos/Castigos + ST/Localía/Descanso + Bajas = Marcador Proyectado</span>
         </div>
         <div class="pbb-factors-grid">
-          <!-- Factor 1: Base PPG -->
+          <!-- Factor 1: Base PPG Ajustada por SOS, Forma L3 y Pace -->
           <div class="pbb-factor-card">
-            <div class="pbb-f-head">1️⃣ Base de Puntos (PPG Cruzado)</div>
-            <div class="pbb-f-desc">Cruza los puntos que anota cada ataque con los que permite cada defensa por partido.</div>
+            <div class="pbb-f-head">1️⃣ Base de Puntos (SOS + L3 + Ritmo)</div>
+            <div class="pbb-f-desc">PPG ajustado por calendario (SOS #${aw.sos_rank ?? 16} vs #${hm.sos_rank ?? 16}), Forma L3 (${aw.l3_off_ppg ?? aw.off_ppg}/${hm.l3_off_ppg ?? hm.off_ppg}) y Ritmo (${proj.paceAvg} jug/g).</div>
             <div class="pbb-f-scores">
-              <span class="away-val">✈️ ${aw.abbr}: <strong>${proj.baseAway.toFixed(1)} pts</strong> <small>(${proj.awOffPpg} Off / ${proj.hmDefPpg} Def)</small></span>
-              <span class="home-val">🏠 ${hm.abbr}: <strong>${proj.baseHome.toFixed(1)} pts</strong> <small>(${proj.hmOffPpg} Off / ${proj.awDefPpg} Def)</small></span>
+              <span class="away-val">✈️ ${aw.abbr}: <strong>${proj.baseAway.toFixed(1)} pts</strong> <small>(${proj.awOffPpg} AdjOff / ${proj.hmDefPpg} AdjDef)</small></span>
+              <span class="home-val">🏠 ${hm.abbr}: <strong>${proj.baseHome.toFixed(1)} pts</strong> <small>(${proj.hmOffPpg} AdjOff / ${proj.awDefPpg} AdjDef)</small></span>
             </div>
           </div>
 
           <!-- Factor 2: Juego Aéreo en Ambos Sentidos -->
           <div class="pbb-factor-card">
-            <div class="pbb-f-head">2️⃣ Juego Aéreo vs. Secundaria (35%)</div>
+            <div class="pbb-f-head">2️⃣ Juego Aéreo vs. Secundaria (${proj.roofType === "dome" || proj.roofType === "closed" ? "🏟️ Domo" : proj.windMph >= 15 ? `💨 ${proj.windMph}mph` : "☀️ Exterior"})</div>
             <div class="pbb-f-badges">
               <div><small>Sentido 1 (${aw.abbr} pasa):</small> ${fmtEdgeTag(proj.airS1.avgDiff, aw.abbr, hm.abbr)}</div>
               <div><small>Sentido 2 (${hm.abbr} pasa):</small> ${fmtEdgeTag(proj.airS2.avgDiff, hm.abbr, aw.abbr)}</div>
@@ -1929,7 +1986,7 @@ function renderMatchupBoard() {
 
           <!-- Factor 3: Juego Terrestre vs Front-7 en Ambos Sentidos -->
           <div class="pbb-factor-card">
-            <div class="pbb-f-head">3️⃣ Juego Terrestre vs. Front-7 (25%)</div>
+            <div class="pbb-f-head">3️⃣ Juego Terrestre vs. Front-7 (TFL/g)</div>
             <div class="pbb-f-badges">
               <div><small>Sentido 1 (${aw.abbr} corre):</small> ${fmtEdgeTag(proj.groundS1.avgDiff, aw.abbr, hm.abbr)}</div>
               <div><small>Sentido 2 (${hm.abbr} corre):</small> ${fmtEdgeTag(proj.groundS2.avgDiff, hm.abbr, aw.abbr)}</div>
@@ -1940,12 +1997,12 @@ function renderMatchupBoard() {
             </div>
           </div>
 
-          <!-- Factor 4: Situacional, Trincheras & Entregas -->
+          <!-- Factor 4: Situacional, Trincheras, xRobos & Disciplina -->
           <div class="pbb-factor-card">
-            <div class="pbb-f-head">4️⃣ Zona Roja, 3er Down, Sacks y Robos (25%)</div>
+            <div class="pbb-f-head">4️⃣ RZ, 3°D, 1°D, Sacks, xRobos &amp; Castigos</div>
             <div class="pbb-f-badges">
               <div><small>Sentido 1 (${aw.abbr} balón):</small> ${fmtEdgeTag(proj.sitS1.avgDiff, aw.abbr, hm.abbr)}</div>
-              <div><small>Sentido 2 (${hm.abbr} balón):</small> ${fmtEdgeTag(proj.sitS2.avgDiff, hm.abbr, aw.abbr)}</div>
+              <div><small>xTO/g: ${aw.abbr} ${proj.xtoAway >= 0 ? "+" : ""}${proj.xtoAway} vs ${hm.abbr} ${proj.xtoHome >= 0 ? "+" : ""}${proj.xtoHome} · PenNet: ${aw.net_penalty_yards_pg ?? 0}y/${hm.net_penalty_yards_pg ?? 0}y</small></div>
             </div>
             <div class="pbb-f-scores">
               <span class="away-val">Impacto ${aw.abbr}: <strong class="${proj.sitPtsAway >= 0 ? "txt-sig-pos" : "txt-sig-neg"}">${fmtSignedPts(proj.sitPtsAway)}</strong></span>
@@ -1953,12 +2010,12 @@ function renderMatchupBoard() {
             </div>
           </div>
 
-          <!-- Factor 5: Equipos Especiales y Localía -->
+          <!-- Factor 5: Equipos Especiales, Localía y Descanso -->
           <div class="pbb-factor-card">
-            <div class="pbb-f-head">5️⃣ Equipos Especiales &amp; Localía (15%)</div>
+            <div class="pbb-f-head">5️⃣ Eq. Especiales, Localía &amp; Descanso</div>
             <div class="pbb-f-badges">
               <div>${stEdgeHtml}</div>
-              <div><small>Rank ST: ${aw.abbr} #${aw.rank_st} vs ${hm.abbr} #${hm.rank_st} · Localía NFL: +1.4 pts ${hm.abbr}</small></div>
+              <div><small>Descanso: ${aw.abbr} ${proj.awayRest}d vs ${hm.abbr} ${proj.homeRest}d ${proj.isDivisional ? "· ⚔️ Divisional" : ""}</small></div>
             </div>
             <div class="pbb-f-scores">
               <span class="away-val">ST + Visita ${aw.abbr}: <strong>${fmtSignedPts(proj.stPtsAway + proj.hfaAway)}</strong></span>
@@ -2106,7 +2163,7 @@ function renderMatchupBoard() {
   document.getElementById("btnResetInjuryOverrides")?.addEventListener("click", () => {
     STATE.injuryOverrides = {};
     renderMatchupBoard();
-    const freshProj = computeMatchupProjection(aw, hm);
+    const freshProj = computeMatchupProjection(aw, hm, g);
     showToast(`🔄 Parte Médico Oficial ESPN restaurado (${aw.abbr} ${freshProj.scoreAway} vs ${freshProj.scoreHome} ${hm.abbr})`);
   });
 
@@ -2123,7 +2180,7 @@ function renderMatchupBoard() {
         STATE.injuryOverrides[pid] = newW;
       }
       renderMatchupBoard();
-      const updatedProj = computeMatchupProjection(aw, hm);
+      const updatedProj = computeMatchupProjection(aw, hm, g);
       const stLabel = newW === 0 ? "✅ Juega" : newW === 0.35 ? "🟡 En Duda" : newW === 0.75 ? "🟠 Difícil" : "❌ Baja Confirmada";
       showToast(
         `🚑 ${targetItem ? targetItem.name : pid} → ${stLabel} · Nuevo Proyectado: ${aw.abbr} ${updatedProj.scoreAway} (${updatedProj.winProbAway.toFixed(1)}%) vs ${updatedProj.scoreHome} ${hm.abbr} (${updatedProj.winProbHome.toFixed(1)}%)`
@@ -2402,8 +2459,8 @@ function renderMatchupBoard() {
         rightVal: defTeam.def_pass_epa_allowed,
         rightFmt: `Cede ${defTeam.def_pass_epa_allowed >= 0 ? "+" : ""}${defTeam.def_pass_epa_allowed.toFixed(2)}`,
         rightTag: `${defTeam.abbr} Def. Pase`,
-        minVal: -0.25,
-        maxVal: 0.32,
+        minVal: -0.22,
+        maxVal: 0.34,
         leftHigherIsBetter: true,
         rightHigherIsBetter: false, // Para la defensa, permitir menos EPA (-0.15) es mejor que permitir +0.15
       },
@@ -2417,8 +2474,8 @@ function renderMatchupBoard() {
         rightVal: defTeam.def_cpoe_allowed,
         rightFmt: `Cede ${defTeam.def_cpoe_allowed >= 0 ? "+" : ""}${defTeam.def_cpoe_allowed.toFixed(1)}%`,
         rightTag: `${defTeam.abbr} Cobertura`,
-        minVal: -6.0,
-        maxVal: 7.5,
+        minVal: -6.5,
+        maxVal: 7.8,
         leftHigherIsBetter: true,
         rightHigherIsBetter: false,
       },
@@ -2432,8 +2489,8 @@ function renderMatchupBoard() {
         rightVal: defTeam.def_explosive_pass_allowed_pct,
         rightFmt: `Cede ${defTeam.def_explosive_pass_allowed_pct.toFixed(1)}%`,
         rightTag: `${defTeam.abbr} Profundo`,
-        minVal: 5.5,
-        maxVal: 15.5,
+        minVal: 3.4,
+        maxVal: 14.0,
         leftHigherIsBetter: true,
         rightHigherIsBetter: false,
       },
@@ -2447,8 +2504,8 @@ function renderMatchupBoard() {
         rightVal: defTeam.def_pass_ypg_allowed,
         rightFmt: `Cede ${defTeam.def_pass_ypg_allowed.toFixed(0)}y`,
         rightTag: `${defTeam.abbr} Yds Cedidas`,
-        minVal: 155,
-        maxVal: 295,
+        minVal: 170,
+        maxVal: 300,
         leftHigherIsBetter: true,
         rightHigherIsBetter: false,
       },
@@ -2499,6 +2556,7 @@ function renderMatchupBoard() {
   document.getElementById("groundRightTitle").textContent = `🏠 SENTIDO 2: CORRE ${hm.abbr} vs. FRONT-7 DE ${aw.abbr}`;
 
   const buildGroundDirectionCard = (offTeam, defTeam, dirClass, dirIcon, dirLabel) => {
+    const tflPg = Number(defTeam.def_tfl_pg ?? ((defTeam.def_tfl || 32) / 7));
     const rows = [
       {
         leftTag: `${offTeam.abbr} Rush EPA`,
@@ -2510,8 +2568,8 @@ function renderMatchupBoard() {
         rightVal: defTeam.def_rush_epa_allowed,
         rightFmt: `Cede ${defTeam.def_rush_epa_allowed >= 0 ? "+" : ""}${defTeam.def_rush_epa_allowed.toFixed(2)}`,
         rightTag: `${defTeam.abbr} Def. Tierra`,
-        minVal: -0.22,
-        maxVal: 0.16,
+        minVal: -0.26,
+        maxVal: 0.14,
         leftHigherIsBetter: true,
         rightHigherIsBetter: false,
       },
@@ -2525,8 +2583,8 @@ function renderMatchupBoard() {
         rightVal: defTeam.def_rush_ypg_allowed,
         rightFmt: `Cede ${defTeam.def_rush_ypg_allowed.toFixed(1)}y`,
         rightTag: `${defTeam.abbr} Muro Front-7`,
-        minVal: 75,
-        maxVal: 170,
+        minVal: 64,
+        maxVal: 160,
         leftHigherIsBetter: true,
         rightHigherIsBetter: false,
       },
@@ -2540,8 +2598,8 @@ function renderMatchupBoard() {
         rightVal: defTeam.def_explosive_rush_allowed_pct,
         rightFmt: `Cede ${defTeam.def_explosive_rush_allowed_pct.toFixed(1)}%`,
         rightTag: `${defTeam.abbr} Contención`,
-        minVal: 6.0,
-        maxVal: 16.5,
+        minVal: 4.4,
+        maxVal: 16.0,
         leftHigherIsBetter: true,
         rightHigherIsBetter: false,
       },
@@ -2549,18 +2607,18 @@ function renderMatchupBoard() {
         leftTag: `${offTeam.abbr} Avance/Jug`,
         leftVal: offTeam.off_ypp,
         leftFmt: `Genera ${offTeam.off_ypp.toFixed(1)} YPP`,
-        metricLabel: "Trincheras & TFL",
-        metricSub: "👈 Yardas/Jugada OFF | Tackles para pérdida DEF 👉",
-        metricTooltip: "Compara el avance promedio por jugada ofensiva (YPP) contra la capacidad del Front-7 rival para penetrar y derribar detrás de la línea (TFL = Tackles for Loss).",
-        rightVal: defTeam.def_tfl,
-        rightFmt: `Logra ${defTeam.def_tfl} TFL`,
+        metricLabel: "Trincheras & TFL/g",
+        metricSub: "👈 Yardas/Jugada OFF | TFL por partido DEF 👉",
+        metricTooltip: "Compara el avance promedio por jugada ofensiva (YPP) contra la capacidad del Front-7 rival para penetrar y derribar detrás de la línea por partido (TFL/g, eliminando sesgo de Bye Week).",
+        rightVal: tflPg,
+        rightFmt: `Logra ${tflPg.toFixed(1)} TFL/g`,
         rightTag: `${defTeam.abbr} Penetración`,
-        minVal: 4.3,
-        maxVal: 6.6,
+        minVal: 4.7,
+        maxVal: 6.9,
         leftHigherIsBetter: true,
         rightHigherIsBetter: true,
-        rightMinVal: 18,
-        rightMaxVal: 52,
+        rightMinVal: 2.4,
+        rightMaxVal: 6.8,
       },
     ];
 
