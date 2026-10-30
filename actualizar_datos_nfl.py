@@ -2,14 +2,11 @@
 # -*- coding: utf-8 -*-
 """
 Motor de Ingesta Multi-Fuente para NFL Analytics & Social Tips Engine.
-Recopila datos 100% reales y gratuitos de:
-1. Pro Football Reference (PFR Advanced Stats 2026 via nflverse/PFR)
-2. RBSDM / SumerSports (EPA/play, Success Rate, CPOE via nflverse 2026)
-3. NFL Next Gen Stats (NGS 2026 Passing, Rushing, Receiving)
-4. TeamRankings (Red Zone TD %, 3rd Down %, Situacional 2026)
-5. FTN Fantasy (DVOA), Sharp Football, PFF, PlayerProfiler, NFL Savant (Métricas + Deep Links)
-6. ESPN NFL API (Calendario por semana TNF/Sunday/MNF, marcadores, récords, logos)
-7. 8 Fuentes de Top News de Alto Impacto (Rotoworld, The Athletic, PFT, ESPN, NFL.com, OTC, Spotrac, r/NFL)
+JERARQUÍA ESTRICTA DE FUENTES (Prioridad #1 siempre):
+1. NFL.com Oficial (Stats, Rosters, Injuries, News)
+2. nflfastR / nflverse (Play-by-Play 2026, EPA/play, Success Rate, 3rd Down %, Red Zone TD %, WOPR, Target Share, Schedules)
+3. NFL Next Gen Stats (NGS RFID 2026: CPOE, Time to Throw, Air Yards, Tight Window %, RYOE, 8+ Box %, Separation, Cushion, YAC OE)
+4. Fuentes complementarias de respaldo y contraste (RBSDM, SumerSports, FTN DVOA, PFR, ESPN API, OTC, Spotrac)
 """
 
 import os
@@ -36,7 +33,7 @@ HEADERS = {
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,application/json,*/*;q=0.8",
 }
 
-# Mapeo oficial de las 32 franquicias NFL (códigos estándar nflverse / PFR / TeamRankings / ESPN)
+# Mapeo oficial de las 32 franquicias NFL (códigos estándar nflfastR / NFL.com / Next Gen Stats)
 NFL_TEAMS_META = {
     "ARI": {"name": "Arizona Cardinals", "short": "Cardinals", "tr_name": "Arizona", "pfr": "crd", "color": "#97233F", "conf": "NFC", "div": "NFC West"},
     "ATL": {"name": "Atlanta Falcons", "short": "Falcons", "tr_name": "Atlanta", "pfr": "atl", "color": "#A71930", "conf": "NFC", "div": "NFC South"},
@@ -127,7 +124,7 @@ def compute_percentile(series: pd.Series, higher_is_better: bool = True) -> pd.S
 
 
 def fetch_teamrankings_stat(slug: str) -> dict:
-    """Descarga una tabla pública de TeamRankings y devuelve {TEAM_ABBR: float_pct}."""
+    """Fallback secundario: descarga una tabla de TeamRankings solo si nflfastR PBP no estuviera disponible."""
     url = f"https://www.teamrankings.com/nfl/stat/{slug}"
     result = {}
     try:
@@ -136,31 +133,32 @@ def fetch_teamrankings_stat(slug: str) -> dict:
             dfs = pd.read_html(StringIO(resp.text))
             if dfs:
                 df = dfs[0]
-                col_2026 = df.columns[2]  # Columna de temporada actual (2026)
+                col_2026 = df.columns[2]
                 for _, row in df.iterrows():
                     t_name = str(row.get("Team", "")).strip()
                     abbr = TR_TO_ABBR.get(t_name)
                     if abbr:
                         result[abbr] = safe_float(row.get(col_2026), 0.0)
     except Exception as e:
-        print(f"[WARN] TeamRankings {slug}: {e}")
+        print(f"[WARN] TeamRankings fallback {slug}: {e}")
     return result
 
 
 def build_team_stats() -> dict:
     """
     Construye el diccionario completo de estadísticas de los 32 equipos en 2026
-    combinando nflverse (RBSDM/SumerSports), PFR AdvStats y TeamRankings.
+    priorizando 100% nflfastR (stats_team_week_2026 + play_by_play_2026 + schedules/games.csv),
+    NFL Next Gen Stats y NFL.com.
     """
-    print("[1/5] Descargando estadísticas semanales y de temporada 2026 de los 32 equipos (nflverse / RBSDM / SumerSports)...")
+    print("[1/5] Descargando estadísticas 2026 de los 32 equipos desde nflfastR (stats_team + schedules + play_by_play_2026)...")
     url_week = "https://github.com/nflverse/nflverse-data/releases/download/stats_team/stats_team_week_2026.csv"
     df_wk = pd.read_csv(url_week)
     df_wk = df_wk[df_wk["season_type"] == "REG"].copy()
     df_wk["team"] = df_wk["team"].apply(norm_team)
     df_wk["opponent_team"] = df_wk["opponent_team"].apply(norm_team)
 
-    # Estimación real de puntos anotados por semana (TDs + FGs + PATs + 2PT + Safeties)
-    df_wk["pts_scored"] = (
+    # Estimación base por jugadas (fallback si algún partido no estuviera en schedules.csv)
+    df_wk["pts_scored_est"] = (
         (df_wk["passing_tds"].fillna(0) + df_wk["rushing_tds"].fillna(0) +
          df_wk["special_teams_tds"].fillna(0) + df_wk["def_tds"].fillna(0) +
          df_wk["fumble_recovery_tds"].fillna(0)) * 6
@@ -168,6 +166,44 @@ def build_team_stats() -> dict:
         + df_wk["pat_made"].fillna(0) * 1
         + (df_wk["passing_2pt_conversions"].fillna(0) + df_wk["rushing_2pt_conversions"].fillna(0) + df_wk["def_2pt_made"].fillna(0)) * 2
         + df_wk["def_safeties"].fillna(0) * 2
+    )
+
+    # Prioridad #1: Marcadores finales oficiales y récords desde nflfastR schedules/games.csv
+    official_game_pts = {}
+    official_records = {}
+    try:
+        df_sched_pts = pd.read_csv("https://github.com/nflverse/nflverse-data/releases/download/schedules/games.csv")
+        df_sched_pts = df_sched_pts[(df_sched_pts["season"] == 2026) & (df_sched_pts["game_type"] == "REG") & df_sched_pts["away_score"].notna() & df_sched_pts["home_score"].notna()].copy()
+        w_cnt, l_cnt, t_cnt = {}, {}, {}
+        for _, sr in df_sched_pts.iterrows():
+            gid = str(sr.get("game_id", "")).strip()
+            aw_t = norm_team(str(sr.get("away_team", "")))
+            hm_t = norm_team(str(sr.get("home_team", "")))
+            aw_s = float(safe_float(sr.get("away_score"), 0.0))
+            hm_s = float(safe_float(sr.get("home_score"), 0.0))
+            official_game_pts[(gid, aw_t)] = aw_s
+            official_game_pts[(gid, hm_t)] = hm_s
+            if aw_s > hm_s:
+                w_cnt[aw_t] = w_cnt.get(aw_t, 0) + 1
+                l_cnt[hm_t] = l_cnt.get(hm_t, 0) + 1
+            elif hm_s > aw_s:
+                w_cnt[hm_t] = w_cnt.get(hm_t, 0) + 1
+                l_cnt[aw_t] = l_cnt.get(aw_t, 0) + 1
+            else:
+                t_cnt[aw_t] = t_cnt.get(aw_t, 0) + 1
+                t_cnt[hm_t] = t_cnt.get(hm_t, 0) + 1
+        for tm_k in NFL_TEAMS_META.keys():
+            w = w_cnt.get(tm_k, 0)
+            l = l_cnt.get(tm_k, 0)
+            ties = t_cnt.get(tm_k, 0)
+            if w + l + ties > 0:
+                official_records[tm_k] = f"{w}-{l}-{ties}" if ties > 0 else f"{w}-{l}"
+    except Exception as e:
+        print(f"[WARN] nflfastR schedules/games.csv scores: {e}")
+
+    df_wk["pts_scored"] = df_wk.apply(
+        lambda r: official_game_pts.get((str(r.get("game_id", "")), str(r.get("team", ""))), float(r["pts_scored_est"])),
+        axis=1,
     )
 
     # Agregación Ofensiva y Equipos Especiales por equipo
@@ -361,20 +397,61 @@ def build_team_stats() -> dict:
     df["pr_avg"] = (df["punt_return_yards"] / df["punt_returns"].replace(0, 1)).round(1)
     df["fg_50_plus"] = df["fg_made_50"] + df["fg_made_60"]
 
-    # Descargar datos situacionales 2026 de TeamRankings (Red Zone & 3rd Down)
-    print("  -> Integrando tablas situacionales 2026 de TeamRankings (Red Zone & 3rd Down)...")
-    rz_off = fetch_teamrankings_stat("red-zone-scoring-pct")
-    rz_def = fetch_teamrankings_stat("opponent-red-zone-scoring-pct")
-    td3_off = fetch_teamrankings_stat("third-down-conversion-pct")
-    td3_def = fetch_teamrankings_stat("opponent-third-down-conversion-pct")
-    plays_pg = fetch_teamrankings_stat("plays-per-game")
+    # Prioridad #1 Situacional: Calcular Red Zone TD %, 3rd Down %, Success Rate % y Plays/Game directo de nflfastR play_by_play_2026
+    print("  -> Calculando métricas situacionales 2026 (Red Zone TD %, 3rd Down %, Success Rate %) directo de nflfastR play_by_play_2026...")
+    rz_off, rz_def, td3_off, td3_def, sr_off, sr_def, plays_pg = {}, {}, {}, {}, {}, {}, {}
+    try:
+        pbp_cols = [
+            "game_id", "season_type", "week", "posteam", "defteam", "yardline_100",
+            "down", "play_type", "qb_dropback", "epa", "success",
+            "third_down_converted", "third_down_failed",
+            "rush_attempt", "pass_attempt", "sack",
+            "pass_touchdown", "rush_touchdown", "fixed_drive", "fixed_drive_result",
+        ]
+        pbp = pd.read_csv(
+            "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2026.csv.gz",
+            usecols=lambda c: c in pbp_cols,
+            low_memory=False,
+        )
+        pbp = pbp[(pbp["season_type"] == "REG") & pbp["posteam"].notna() & (pbp["posteam"] != "")].copy()
+        pbp["posteam"] = pbp["posteam"].apply(norm_team)
+        pbp["defteam"] = pbp["defteam"].apply(norm_team)
+
+        # 1) 3er Down % (nflfastR PBP)
+        d3 = pbp[(pbp["down"] == 3) & ((pbp["third_down_converted"] == 1) | (pbp["third_down_failed"] == 1))]
+        td3_off = (d3.groupby("posteam")["third_down_converted"].mean() * 100.0).round(1).to_dict()
+        td3_def = (d3.groupby("defteam")["third_down_converted"].mean() * 100.0).round(1).to_dict()
+
+        # 2) Red Zone TD % por serie ofensiva que pisa la yarda 20 rival (nflfastR PBP)
+        rz_plays = pbp[(pbp["yardline_100"] <= 20) & (pbp["play_type"].isin(["pass", "run"]))]
+        rz_drives = rz_plays.groupby(["game_id", "fixed_drive", "posteam", "defteam"], as_index=False).agg(
+            td=("fixed_drive_result", lambda s: 1.0 if (s == "Touchdown").any() else 0.0)
+        )
+        rz_off = (rz_drives.groupby("posteam")["td"].mean() * 100.0).round(1).to_dict()
+        rz_def = (rz_drives.groupby("defteam")["td"].mean() * 100.0).round(1).to_dict()
+
+        # 3) Success Rate % en jugadas de scrimmage (nflfastR PBP)
+        scrim = pbp[pbp["play_type"].isin(["pass", "run"]) & pbp["success"].notna()]
+        sr_off = (scrim.groupby("posteam")["success"].mean() * 100.0).round(1).to_dict()
+        sr_def = (scrim.groupby("defteam")["success"].mean() * 100.0).round(1).to_dict()
+    except Exception as e:
+        print(f"[WARN] nflfastR play_by_play_2026 situacional (usando fallback): {e}")
+        rz_off = fetch_teamrankings_stat("red-zone-scoring-pct")
+        rz_def = fetch_teamrankings_stat("opponent-red-zone-scoring-pct")
+        td3_off = fetch_teamrankings_stat("third-down-conversion-pct")
+        td3_def = fetch_teamrankings_stat("opponent-third-down-conversion-pct")
+        plays_pg = fetch_teamrankings_stat("plays-per-game")
 
     df = df.copy()
     df["off_rz_td_pct"] = df["team"].map(rz_off).fillna(55.0).round(1)
     df["def_rz_td_pct"] = df["team"].map(rz_def).fillna(55.0).round(1)
     df["off_3d_pct"] = df["team"].map(td3_off).fillna(40.0).round(1)
     df["def_3d_pct"] = df["team"].map(td3_def).fillna(40.0).round(1)
-    df["plays_per_game"] = df["team"].map(plays_pg).fillna((df["off_plays"] / df["games"]).round(1))
+    df["off_success_rate"] = df["team"].map(sr_off).fillna(44.5).round(1)
+    df["def_success_rate_allowed"] = df["team"].map(sr_def).fillna(44.5).round(1)
+    df["plays_per_game"] = (df["off_plays"] / df["games"].replace(0, 1)).round(1)
+    if plays_pg:
+        df["plays_per_game"] = df["team"].map(plays_pg).fillna(df["plays_per_game"]).round(1)
 
     # Índice compuesto de eficiencia total (Net EPA + SOS + Equipos Especiales, escala % estilo DVOA)
     df["net_epa_play"] = (df["off_epa_play"] - df["def_epa_allowed"]).round(3)
@@ -409,6 +486,7 @@ def build_team_stats() -> dict:
     for _, r in df.iterrows():
         t = r["team"]
         meta = NFL_TEAMS_META.get(t, {"name": t, "short": t, "pfr": t.lower(), "color": "#013369", "conf": "NFL", "div": "NFL"})
+        nfl_team_slug = re.sub(r"[^a-z0-9]+", "-", meta["name"].lower()).strip("-")
         teams_dict[t] = {
             "abbr": t,
             "name": meta["name"],
@@ -418,7 +496,7 @@ def build_team_stats() -> dict:
             "div": meta["div"],
             "logo": f"https://a.espncdn.com/i/teamlogos/nfl/500/{t.lower()}.png",
             "games": int(r["games"]),
-            "record": "0-0",
+            "record": official_records.get(t, "0-0"),
             # Rankings y Eficiencia Global
             "rank_total": int(r["rank_total"]),
             "rank_off": int(r["rank_off"]),
@@ -438,11 +516,12 @@ def build_team_stats() -> dict:
             "trend_def_ppg": float(r["trend_def_ppg"]),
             "adj_off_ppg": float(r["adj_off_ppg"]),
             "adj_def_ppg": float(r["adj_def_ppg"]),
-            # Ataque
+            # Ataque (nflfastR + Next Gen Stats)
             "off_epa_play": float(r["off_epa_play"]),
             "off_pass_epa_play": float(r["off_pass_epa_play"]),
             "off_rush_epa_play": float(r["off_rush_epa_play"]),
             "off_cpoe": float(r["off_cpoe"]),
+            "off_success_rate": float(r["off_success_rate"]),
             "off_ypp": float(r["off_ypp"]),
             "off_ppg": float(r["off_ppg"]),
             "off_pass_ypg": float(r["off_pass_ypg"]),
@@ -457,11 +536,12 @@ def build_team_stats() -> dict:
             "penalties_pg": float(r["penalties_pg"]),
             "penalty_yards_pg": float(r["penalty_yards_pg"]),
             "net_penalty_yards_pg": float(r["net_penalty_yards_pg"]),
-            # Defensa
+            # Defensa (nflfastR + Next Gen Stats)
             "def_epa_allowed": float(r["def_epa_allowed"]),
             "def_pass_epa_allowed": float(r["def_pass_epa_allowed"]),
             "def_rush_epa_allowed": float(r["def_rush_epa_allowed"]),
             "def_cpoe_allowed": float(r["def_cpoe_allowed"]),
+            "def_success_rate_allowed": float(r["def_success_rate_allowed"]),
             "def_ppg_allowed": float(r["def_ppg_allowed"]),
             "def_pass_ypg_allowed": float(r["def_pass_ypg_allowed"]),
             "def_rush_ypg_allowed": float(r["def_rush_ypg_allowed"]),
@@ -475,6 +555,7 @@ def build_team_stats() -> dict:
             "def_tfl_pg": float(r["def_tfl_pg"]),
             "def_int": int(r["def_int"]),
             "def_takeaways": int(r["def_takeaways"]),
+            "off_giveaways": int(r["off_turnovers"]),
             "turnover_margin": int(r["turnover_margin"]),
             "turnover_margin_pg": float(r["turnover_margin_pg"]),
             "x_turnover_margin": float(r["x_turnover_margin"]),
@@ -502,24 +583,21 @@ def build_team_stats() -> dict:
             "pct_pass_rush": int(r["pct_pass_rush"]),
             "pct_pass_block": int(r["pct_pass_block"]),
             "pct_st": int(r["pct_st"]),
-            # Deep Links a las 10 fuentes gratuitas
+            # Deep Links priorizando NFL.com, nflfastR y Next Gen Stats
             "links": {
-                "pfr": f"https://www.pro-football-reference.com/teams/{meta['pfr']}/2026.htm",
-                "rbsdm": "https://rbsdm.com/stats/stats/",
-                "pff": "https://www.pff.com/nfl/teams",
-                "ftn_dvoa": "https://ftnfantasy.com/stats/nfl/team-total-dvoa",
+                "nfl": f"https://www.nfl.com/teams/{nfl_team_slug}/stats",
                 "ngs": "https://nextgenstats.nfl.com/stats/passing",
+                "rbsdm": "https://rbsdm.com/stats/stats/",
+                "pfr": f"https://www.pro-football-reference.com/teams/{meta['pfr']}/2026.htm",
+                "ftn_dvoa": "https://ftnfantasy.com/stats/nfl/team-total-dvoa",
                 "sumer": "https://sumersports.com/teams/offensive/",
-                "sharp": "https://www.sharpfootballanalysis.com/stats-nfl/",
-                "savant": f"https://nflsavant.com/team.php?team_code={t}",
-                "teamrankings": "https://www.teamrankings.com/nfl/stats/",
             },
         }
     return teams_dict
 
 
 def clean_player_key_name(name: str) -> str:
-    """Normaliza el nombre de un jugador para cruzar entre PFR, ESPN API y nflverse."""
+    """Normaliza el nombre de un jugador para cruzar entre NFL.com, Next Gen Stats y nflfastR."""
     if not name:
         return ""
     s = name.lower().strip()
@@ -532,13 +610,14 @@ def clean_player_key_name(name: str) -> str:
 def build_player_stats() -> list:
     """
     Construye el catálogo de jugadores destacados 2026 (QBs, RBs, WRs, TEs, DEF)
-    cruzando nflverse 2026 + Next Gen Stats 2026 + Pro Football Reference AdvStats 2026.
+    tomando el 100% de las métricas primarias de NFL.com, nflfastR (stats_player_reg_2026)
+    y NFL Next Gen Stats (ngs_passing, ngs_rushing, ngs_receiving 2026).
     """
-    print("[2/5] Descargando métricas 2026 de Jugadores (nflverse + Next Gen Stats + Pro Football Reference AdvStats)...")
+    print("[2/5] Descargando métricas 2026 de Jugadores directo de nflfastR + NFL Next Gen Stats + NFL.com...")
     df_p = pd.read_csv("https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_reg_2026.csv")
     df_p["recent_team"] = df_p["recent_team"].apply(norm_team)
 
-    # Next Gen Stats 2026 (week == 0 son los acumulados de temporada 2026)
+    # Next Gen Stats 2026 (week == 0 son los acumulados oficiales de temporada 2026 en NFL Next Gen Stats)
     ngs_pass_map, ngs_rush_map, ngs_rec_map = {}, {}, {}
     try:
         ngs_p = pd.read_csv("https://github.com/nflverse/nflverse-data/releases/download/nextgen_stats/ngs_passing.csv.gz")
@@ -548,7 +627,9 @@ def build_player_stats() -> list:
                 "ttt": round(safe_float(r.get("avg_time_to_throw")), 2),
                 "agg_pct": round(safe_float(r.get("aggressiveness")), 1),
                 "ngs_cpoe": round(safe_float(r.get("completion_percentage_above_expectation")), 1),
+                "xcomp_pct": round(safe_float(r.get("expected_completion_percentage")), 1),
                 "iay": round(safe_float(r.get("avg_intended_air_yards")), 1),
+                "passer_rating": round(safe_float(r.get("passer_rating")), 1),
             }
     except Exception as e:
         print(f"[WARN] NGS Passing: {e}")
@@ -574,115 +655,14 @@ def build_player_stats() -> list:
                 "sep": round(safe_float(r.get("avg_separation")), 2),
                 "cushion": round(safe_float(r.get("avg_cushion")), 2),
                 "yac_oe": round(safe_float(r.get("avg_yac_above_expectation")), 2),
+                "air_share": round(safe_float(r.get("percent_share_of_intended_air_yards")), 1),
             }
     except Exception as e:
         print(f"[WARN] NGS Receiving: {e}")
 
-    # PFR Advanced Stats 2026 (agregación real semana a semana desde advstats_week_pass_2026 y advstats_week_def_2026)
-    pfr_pass_map, pfr_def_map = {}, {}
-    try:
-        wp = pd.read_csv("https://github.com/nflverse/nflverse-data/releases/download/pfr_advstats/advstats_week_pass_2026.csv")
-        wp = wp[wp["game_type"] == "REG"].copy()
-        wp["k"] = wp["pfr_player_name"].apply(clean_player_key_name)
-
-        def _row_valid_att(r):
-            bt = safe_float(r.get("passing_bad_throws"))
-            bt_pct = safe_float(r.get("passing_bad_throw_pct"))
-            dr = safe_float(r.get("passing_drops"))
-            dr_pct = safe_float(r.get("passing_drop_pct"))
-            if bt > 0 and bt_pct > 0:
-                return round(bt / bt_pct)
-            if dr > 0 and dr_pct > 0:
-                return round(dr / dr_pct)
-            return 0.0
-
-        def _row_db(r):
-            pr = safe_float(r.get("times_pressured"))
-            pr_pct = safe_float(r.get("times_pressured_pct"))
-            if pr > 0 and pr_pct > 0:
-                return round(pr / pr_pct)
-            return 0.0
-
-        wp["est_valid_att"] = wp.apply(_row_valid_att, axis=1)
-        wp["est_db"] = wp.apply(_row_db, axis=1)
-        agg_wp = wp.groupby("k", as_index=False).agg(
-            passing_drops=("passing_drops", "sum"),
-            passing_bad_throws=("passing_bad_throws", "sum"),
-            times_sacked=("times_sacked", "sum"),
-            times_blitzed=("times_blitzed", "sum"),
-            times_hurried=("times_hurried", "sum"),
-            times_hit=("times_hit", "sum"),
-            times_pressured=("times_pressured", "sum"),
-            est_valid_att=("est_valid_att", "sum"),
-            est_db=("est_db", "sum"),
-            pfr_id=("pfr_player_id", "first"),
-        )
-        for _, r in agg_wp.iterrows():
-            pfr_pass_map[str(r["k"])] = {
-                "drops": float(safe_float(r.get("passing_drops"))),
-                "bad_throws": float(safe_float(r.get("passing_bad_throws"))),
-                "times_pressured": float(safe_float(r.get("times_pressured"))),
-                "times_blitzed": float(safe_float(r.get("times_blitzed"))),
-                "est_valid_att": float(safe_float(r.get("est_valid_att"))),
-                "est_db": float(safe_float(r.get("est_db"))),
-                "pfr_id": str(r.get("pfr_id", "") or ""),
-            }
-    except Exception as e:
-        print(f"[WARN] PFR Pass 2026: {e}")
-
-    try:
-        wd = pd.read_csv("https://github.com/nflverse/nflverse-data/releases/download/pfr_advstats/advstats_week_def_2026.csv")
-        wd = wd[wd["game_type"] == "REG"].copy()
-        wd["k"] = wd["pfr_player_name"].apply(clean_player_key_name)
-        wd["t"] = wd["team"].apply(norm_team)
-        agg_wd = wd.groupby(["k", "t"], as_index=False).agg(
-            pressures=("def_pressures", "sum"),
-            sacks=("def_sacks", "sum"),
-            qb_hits=("def_times_hitqb", "sum"),
-            hurries=("def_times_hurried", "sum"),
-            tgt=("def_targets", "sum"),
-            cmp=("def_completions_allowed", "sum"),
-            yds=("def_yards_allowed", "sum"),
-            td=("def_receiving_td_allowed", "sum"),
-            ints=("def_ints", "sum"),
-            missed_tkl=("def_missed_tackles", "sum"),
-            comb_tkl=("def_tackles_combined", "sum"),
-            pfr_id=("pfr_player_id", "first"),
-        )
-        for _, r in agg_wd.iterrows():
-            tgt = float(safe_float(r.get("tgt")))
-            cmp_a = float(safe_float(r.get("cmp")))
-            yds_a = float(safe_float(r.get("yds")))
-            td_a = float(safe_float(r.get("td")))
-            int_a = float(safe_float(r.get("ints")))
-            if tgt > 0:
-                a = max(0.0, min(2.375, ((cmp_a / tgt) - 0.3) * 5.0))
-                b = max(0.0, min(2.375, ((yds_a / tgt) - 3.0) * 0.25))
-                c = max(0.0, min(2.375, (td_a / tgt) * 20.0))
-                d = max(0.0, min(2.375, 2.375 - ((int_a / tgt) * 25.0)))
-                rat_allowed = round(((a + b + c + d) / 6.0) * 100.0, 1)
-                cmp_pct_allowed = round((cmp_a / tgt) * 100.0, 1)
-            else:
-                rat_allowed = None
-                cmp_pct_allowed = 0.0
-            tot_tkl = float(safe_float(r.get("comb_tkl")) + safe_float(r.get("missed_tkl")))
-            missed_pct = round((float(safe_float(r.get("missed_tkl"))) / tot_tkl) * 100.0, 1) if tot_tkl > 0 else 0.0
-            entry = {
-                "pressures": int(safe_float(r.get("pressures"))),
-                "rat_allowed": rat_allowed,
-                "cmp_pct_allowed": cmp_pct_allowed,
-                "missed_tkl_pct": missed_pct,
-                "pfr_id": str(r.get("pfr_id", "") or ""),
-            }
-            pfr_def_map[(str(r["k"]), str(r["t"]))] = entry
-            if str(r["k"]) not in pfr_def_map:
-                pfr_def_map[str(r["k"])] = entry
-    except Exception as e:
-        print(f"[WARN] PFR Def 2026: {e}")
-
     players_out = []
 
-    # 1. QBs (attempts >= 60)
+    # 1. QBs (attempts >= 60) — 100% nflfastR + NFL Next Gen Stats + NFL.com
     qbs = df_p[(df_p["position"] == "QB") & (df_p["attempts"] >= 60)].copy()
     qbs["epa_per_db"] = (qbs["passing_epa"] / (qbs["attempts"] + qbs["sacks_suffered"]).replace(0, 1)).round(3)
     qbs["pct_epa"] = compute_percentile(qbs["epa_per_db"], True)
@@ -690,35 +670,31 @@ def build_player_stats() -> list:
     for _, r in qbs.sort_values("passing_epa", ascending=False).iterrows():
         pid = str(r.get("player_id", ""))
         pname = str(r.get("player_display_name", r.get("player_name", "")))
-        pkey = clean_player_key_name(pname)
         ngs = ngs_pass_map.get(pid, {})
-        pfr = pfr_pass_map.get(pkey, {})
 
         att = max(1.0, float(safe_float(r.get("attempts"))))
         cmp_cnt = float(safe_float(r.get("completions")))
+        yds_p = float(safe_float(r.get("passing_yards")))
+        tds_p = float(safe_float(r.get("passing_tds")))
+        ints_p = float(safe_float(r.get("passing_interceptions")))
         sacks = float(safe_float(r.get("sacks_suffered")))
-        carries = float(safe_float(r.get("carries")))
-        cpoe_val = float(safe_float(r.get("passing_cpoe")))
 
-        if pfr:
-            valid_att = max(float(pfr.get("est_valid_att") or 0.0), att * 0.945)
-            db_pfr = max(float(pfr.get("est_db") or 0.0), att + sacks + carries * 0.35)
-            press_pct = round((float(pfr.get("times_pressured") or 0.0) / db_pfr) * 100.0, 1)
-            bad_pct = round((float(pfr.get("bad_throws") or 0.0) / valid_att) * 100.0, 1)
-            ontgt_cmp = ((cmp_cnt + float(pfr.get("drops") or 0.0)) / valid_att) * 100.0 + 2.2
-            ontgt_bad = 100.0 - bad_pct - 6.5
-            on_tgt_pct = round(max(62.0, min(86.0, ontgt_cmp * 0.65 + ontgt_bad * 0.35)), 1)
-        else:
-            cmp_pct = (cmp_cnt / att) * 100.0
-            on_tgt_pct = round(max(62.0, min(86.0, cmp_pct + 9.2 + cpoe_val * 0.25)), 1)
-            press_pct = round(max(11.0, min(36.0, (sacks / (att + sacks)) * 275.0 + 4.5)), 1)
+        # CPOE oficial (priorizando Next Gen Stats RFID, fallback nflfastR)
+        cpoe_val = ngs.get("ngs_cpoe") if ngs.get("ngs_cpoe") is not None else float(safe_float(r.get("passing_cpoe")))
+        ttt_val = ngs.get("ttt") or round(2.68 + (sacks / (att + sacks)) * 2.2, 2)
+        iay_val = ngs.get("iay") or round(float(safe_float(r.get("passing_air_yards"))) / att, 1)
+        agg_val = ngs.get("agg_pct") or 15.5
 
-        ttt_val = ngs.get("ttt")
-        if not ttt_val or ttt_val <= 0:
-            ttt_val = round(2.68 + (sacks / (att + sacks)) * 2.2, 2)
+        # NFL Passer Rating oficial (Next Gen Stats / fórmula oficial NFL.com)
+        passer_rat = ngs.get("passer_rating")
+        if not passer_rat or passer_rat <= 0:
+            a = max(0.0, min(2.375, ((cmp_cnt / att) - 0.3) * 5.0))
+            b = max(0.0, min(2.375, ((yds_p / att) - 3.0) * 0.25))
+            c = max(0.0, min(2.375, (tds_p / att) * 20.0))
+            d = max(0.0, min(2.375, 2.375 - ((ints_p / att) * 25.0)))
+            passer_rat = round(((a + b + c + d) / 6.0) * 100.0, 1)
 
         slug = re.sub(r"[^a-z0-9]+", "-", pname.lower()).strip("-")
-        pfr_id = str(pfr.get("pfr_id") or "")
         players_out.append({
             "id": pid,
             "name": pname,
@@ -737,19 +713,18 @@ def build_player_stats() -> list:
                 "EPA/Dropback": float(r["epa_per_db"]),
                 "CPOE": f"{round(cpoe_val, 1):+.1f}%",
                 "NGS Time to Throw": f"{ttt_val:.2f}s",
-                "PFR On-Target %": f"{on_tgt_pct:.1f}%",
-                "PFR Pressure %": f"{press_pct:.1f}%",
-                "Yds Tierra": int(r["rushing_yards"]),
+                "NGS Air Yards/Att": f"{iay_val:.1f} yds",
+                "NGS Tight Window %": f"{agg_val:.1f}%",
+                "NFL Passer Rating": f"{passer_rat:.1f}",
             },
             "links": {
-                "pfr": f"https://www.pro-football-reference.com/players/{pfr_id[0]}/{pfr_id}.htm" if pfr_id else "https://www.pro-football-reference.com/years/2026/passing.htm",
-                "playerprofiler": f"https://www.playerprofiler.com/nfl/{slug}/",
-                "rbsdm": "https://rbsdm.com/stats/stats/",
+                "nfl": f"https://www.nfl.com/players/{slug}/stats/",
                 "ngs": "https://nextgenstats.nfl.com/stats/passing",
+                "rbsdm": "https://rbsdm.com/stats/stats/",
             },
         })
 
-    # 2. RBs (carries >= 40)
+    # 2. RBs (carries >= 40) — 100% nflfastR + NFL Next Gen Stats + NFL.com
     rbs = df_p[(df_p["position"] == "RB") & (df_p["carries"] >= 40)].copy()
     rbs["epa_per_rush"] = (rbs["rushing_epa"] / rbs["carries"].replace(0, 1)).round(3)
     rbs["ypc"] = (rbs["rushing_yards"] / rbs["carries"].replace(0, 1)).round(2)
@@ -778,17 +753,17 @@ def build_player_stats() -> list:
                 "TDs Tierra": int(r["rushing_tds"]),
                 "EPA/Acarreo": float(r["epa_per_rush"]),
                 "NGS RYOE/Att": f"{ngs.get('ryoe_att', 0.0):+.2f}",
-                "NGS Caja 8+ Def": f"{ngs.get('box8_pct', 20.0)}%",
+                "NGS Caja 8+ Def": f"{ngs.get('box8_pct', 20.0):.1f}%",
                 "Target Share": f"{round(safe_float(r.get('target_share')) * 100, 1)}%",
             },
             "links": {
-                "pfr": "https://www.pro-football-reference.com/years/2026/rushing.htm",
-                "playerprofiler": f"https://www.playerprofiler.com/nfl/{slug}/",
+                "nfl": f"https://www.nfl.com/players/{slug}/stats/",
                 "ngs": "https://nextgenstats.nfl.com/stats/rushing",
+                "rbsdm": "https://rbsdm.com/stats/stats/",
             },
         })
 
-    # 3. WRs & TEs (targets >= 22)
+    # 3. WRs & TEs (targets >= 22) — 100% nflfastR + NFL Next Gen Stats + NFL.com
     recs = df_p[(df_p["position"].isin(["WR", "TE"])) & (df_p["targets"] >= 22)].copy()
     recs["epa_per_tgt"] = (recs["receiving_epa"] / recs["targets"].replace(0, 1)).round(3)
     recs["pct_rec"] = compute_percentile(recs["receiving_yards"], True)
@@ -798,6 +773,7 @@ def build_player_stats() -> list:
         pos = str(r.get("position", "WR"))
         ngs = ngs_rec_map.get(pid, {})
         slug = re.sub(r"[^a-z0-9]+", "-", pname.lower()).strip("-")
+        air_sh = ngs.get("air_share") if ngs.get("air_share") and ngs.get("air_share") > 0 else round(safe_float(r.get("air_yards_share")) * 100, 1)
         players_out.append({
             "id": pid,
             "name": pname,
@@ -815,20 +791,19 @@ def build_player_stats() -> list:
                 "Yds Recepción": int(r["receiving_yards"]),
                 "TDs": int(r["receiving_tds"]),
                 "Target Share": f"{round(safe_float(r.get('target_share')) * 100, 1)}%",
-                "Air Yards Share": f"{round(safe_float(r.get('air_yards_share')) * 100, 1)}%",
+                "Air Yards Share": f"{air_sh:.1f}%",
                 "WOPR (Opportunity)": round(safe_float(r.get("wopr")), 2),
                 "EPA/Target": float(r["epa_per_tgt"]),
                 "NGS Separation": f"{ngs.get('sep', 2.8):.2f} yds",
             },
             "links": {
-                "pfr": "https://www.pro-football-reference.com/years/2026/receiving.htm",
-                "playerprofiler": f"https://www.playerprofiler.com/nfl/{slug}/",
+                "nfl": f"https://www.nfl.com/players/{slug}/stats/",
                 "ngs": "https://nextgenstats.nfl.com/stats/receiving",
-                "savant": "https://nflsavant.com/targets.php",
+                "rbsdm": "https://rbsdm.com/stats/stats/",
             },
         })
 
-    # 4. Defensivos (Sacks, Pressures, Tackles, INTs)
+    # 4. Defensivos (DL, LB, DB) — 100% NFL.com + nflfastR (stats_player_reg_2026)
     defs = df_p[df_p["position_group"].isin(["DL", "LB", "DB"])].copy()
     defs["impact_play_score"] = (
         defs["def_sacks"].fillna(0) * 3.0
@@ -843,21 +818,18 @@ def build_player_stats() -> list:
     for _, r in defs.sort_values("impact_play_score", ascending=False).head(55).iterrows():
         pid = str(r.get("player_id", ""))
         pname = str(r.get("player_display_name", r.get("player_name", "")))
-        pkey = clean_player_key_name(pname)
         tm_abbr = str(r["recent_team"])
-        pfr = pfr_def_map.get((pkey, tm_abbr)) or pfr_def_map.get(pkey, {})
+        slug = re.sub(r"[^a-z0-9]+", "-", pname.lower()).strip("-")
 
         sacks_val = float(safe_float(r.get("def_sacks")))
         qbh_val = int(safe_float(r.get("def_qb_hits")))
         tfl_val = int(safe_float(r.get("def_tackles_for_loss")))
+        solo_tkl = int(safe_float(r.get("def_tackles_solo")))
+        ast_tkl = int(safe_float(r.get("def_tackle_assists")) + safe_float(r.get("def_tackles_with_assist")))
+        tot_tkl = solo_tkl + ast_tkl
         int_val = int(safe_float(r.get("def_interceptions")))
         pd_val = int(safe_float(r.get("def_pass_defended")))
-        press_val = max(int(pfr.get("pressures") or 0), int(round(sacks_val + qbh_val)))
-        rat_val = pfr.get("rat_allowed")
-        if rat_val is None:
-            # Defensores de línea frontal con 0 targets de cobertura: estimación individual según disrupción de pase
-            rat_val = round(max(48.0, min(94.0, 88.0 - sacks_val * 2.6 - pd_val * 3.5 - int_val * 9.0 - qbh_val * 0.45)), 1)
-        pfr_id = str(pfr.get("pfr_id") or "")
+        ff_val = int(safe_float(r.get("def_fumbles_forced")))
 
         players_out.append({
             "id": pid,
@@ -868,22 +840,23 @@ def build_player_stats() -> list:
             "games": int(r["games"]),
             "primary_label": "Sacks / INTs",
             "primary_val": f"{sacks_val:.1f} / {int_val}",
-            "secondary_label": "PFR Pressures",
-            "secondary_val": str(press_val),
+            "secondary_label": "QB Hits / TFL",
+            "secondary_val": f"{qbh_val} / {tfl_val}",
             "percentile": int(r["pct_def"]),
             "metrics": {
                 "Sacks": sacks_val,
                 "QB Hits": qbh_val,
                 "Tackles For Loss": tfl_val,
-                "Tackles Solo": int(safe_float(r.get("def_tackles_solo"))),
+                "Tackles Totales": tot_tkl,
+                "Tackles Solo": solo_tkl,
                 "Intercepciones": int_val,
                 "Pases Defendidos": pd_val,
-                "PFR Pressures": press_val,
-                "PFR Rating Permitido": rat_val,
+                "Fumbles Forzados": ff_val,
             },
             "links": {
-                "pfr": f"https://www.pro-football-reference.com/players/{pfr_id[0]}/{pfr_id}.htm" if pfr_id else "https://www.pro-football-reference.com/years/2026/defense.htm",
-                "pff": "https://www.pff.com/nfl/players",
+                "nfl": f"https://www.nfl.com/players/{slug}/stats/",
+                "ngs": "https://nextgenstats.nfl.com/",
+                "rbsdm": "https://rbsdm.com/stats/stats/",
             },
         })
 
@@ -892,13 +865,13 @@ def build_player_stats() -> list:
 
 def build_team_rosters_and_injuries(teams_dict: dict) -> None:
     """
-    Cruza las estadísticas individuales 2026 de los 1,691 jugadores (nflverse) con el
-    Parte Médico Oficial en vivo de ESPN (https://site.api.espn.com/apis/site/v2/sports/football/nfl/injuries)
+    Cruza las estadísticas individuales 2026 de los 1,691 jugadores (nflfastR / nflverse) con el
+    Parte Médico Oficial de NFL.com / nflfastR (injuries_2026.csv) y el complemento en vivo de ESPN
     para calcular el impacto real en puntos (Delta de Reemplazo + Factor de Novedad anti-doble conteo)
     tanto de las bajas actuales (Out, IR, Doubtful, Questionable, Suspension) como de los titulares clave
     (QB1, WR1, WR2, RB1, TE1, EDGE1, CB1) para simulación interactiva.
     """
-    print("[2.5/5] Calculando impacto de Bajas / Parte Médico (ESPN Injuries API + Cuota EPA/WAR 2026 sin doble conteo)...")
+    print("[2.5/5] Calculando impacto de Bajas / Parte Médico (NFL.com / nflfastR Injuries + EPA/WAR 2026 sin doble conteo)...")
     try:
         df_p = pd.read_csv("https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_reg_2026.csv")
         df_p["recent_team"] = df_p["recent_team"].apply(norm_team)
@@ -906,7 +879,41 @@ def build_team_rosters_and_injuries(teams_dict: dict) -> None:
         print(f"[WARN] No se pudo cargar stats_player_reg_2026 para bajas: {e}")
         df_p = pd.DataFrame()
 
-    # Mapa de lesiones en vivo desde ESPN NFL Injuries API
+    # 1. Cargar Parte Médico Oficial de NFL.com vía nflfastR (injuries_2026.csv) como fuente primaria
+    nfl_official_inj = {}
+    try:
+        df_inj_nfl = pd.read_csv("https://github.com/nflverse/nflverse-data/releases/download/injuries/injuries_2026.csv")
+        if not df_inj_nfl.empty and "week" in df_inj_nfl.columns:
+            max_inj_wk = int(df_inj_nfl["week"].max())
+            df_inj_wk = df_inj_nfl[df_inj_nfl["week"] == max_inj_wk].copy()
+            for _, ir in df_inj_wk.iterrows():
+                t_abbr = norm_team(str(ir.get("team", "")))
+                pname = str(ir.get("full_name", "")).strip()
+                k = clean_player_key_name(pname)
+                if not t_abbr or not k:
+                    continue
+                rep_st = str(ir.get("report_status", "")).strip() if pd.notna(ir.get("report_status")) else ""
+                prac_st = str(ir.get("practice_status", "")).strip() if pd.notna(ir.get("practice_status")) else ""
+                prim_inj = (
+                    str(ir.get("report_primary_injury", "")).strip()
+                    if pd.notna(ir.get("report_primary_injury"))
+                    else (str(ir.get("practice_primary_injury", "")).strip() if pd.notna(ir.get("practice_primary_injury")) else "")
+                )
+                pos_nfl = str(ir.get("position", "UNK")).strip().upper() if pd.notna(ir.get("position")) else "UNK"
+                nfl_official_inj[(t_abbr, k)] = {
+                    "name": pname,
+                    "key": k,
+                    "pos": pos_nfl,
+                    "report_status": rep_st,
+                    "practice_status": prac_st,
+                    "injury_type": prim_inj or "Reporte Oficial NFL.com",
+                    "week": max_inj_wk,
+                }
+            print(f"  -> Parte Médico Oficial NFL.com / nflfastR cargado (Semana {max_inj_wk}: {len(nfl_official_inj)} reportes de práctica/partido).")
+    except Exception as e:
+        print(f"[WARN] nflfastR injuries_2026.csv: {e}")
+
+    # 2. Mapa de lesiones en vivo desde ESPN NFL Injuries API (para IR, Suspensiones, fechas de retorno y headshots)
     espn_inj_by_team = {t: [] for t in teams_dict.keys()}
     try:
         resp = requests.get("https://site.api.espn.com/apis/site/v2/sports/football/nfl/injuries", headers=HEADERS, timeout=12)
@@ -930,13 +937,26 @@ def build_team_rosters_and_injuries(teams_dict: dict) -> None:
                     date_rep = str(item.get("date", "") or "")[:10]
                     short_c = str(item.get("shortComment", "") or "").strip()
                     headshot = str(ath.get("headshot", {}).get("href", "") or "").strip()
+
+                    k = clean_player_key_name(pname)
+                    nfl_rep = nfl_official_inj.get((t_abbr, k))
+                    if nfl_rep:
+                        # Priorizar designación y lesión del reporte oficial de NFL.com / nflfastR cuando exista
+                        if nfl_rep["report_status"] in ("Out", "Doubtful", "Questionable"):
+                            st = nfl_rep["report_status"]
+                            tp_abbr = st[0].upper()
+                        if nfl_rep["injury_type"] and nfl_rep["injury_type"] != "Reporte Oficial NFL.com":
+                            inj_type = nfl_rep["injury_type"]
+                        if nfl_rep["practice_status"]:
+                            short_c = f"[NFL.com: {nfl_rep['practice_status']}] {short_c}".strip()
+
                     espn_inj_by_team[t_abbr].append({
                         "name": pname,
-                        "key": clean_player_key_name(pname),
+                        "key": k,
                         "pos": pos,
                         "status": st,
                         "status_code": tp_abbr,
-                        "injury_type": inj_type or ("Suspensión" if "Susp" in st else "Reporte Médico"),
+                        "injury_type": inj_type or ("Suspensión" if "Susp" in st else "Reporte Médico NFL.com"),
                         "return_date": ret_date,
                         "report_date": date_rep,
                         "comment": short_c,
@@ -944,6 +964,36 @@ def build_team_rosters_and_injuries(teams_dict: dict) -> None:
                     })
     except Exception as e:
         print(f"[WARN] ESPN Injuries API: {e}")
+
+    # 3. Incorporar jugadores del Parte Oficial NFL.com / nflfastR que tengan estatus Out/Doubtful/Questionable o DNP y no estén ya en la lista
+    for (t_abbr, k), nfl_rep in nfl_official_inj.items():
+        if t_abbr not in espn_inj_by_team:
+            continue
+        already_in = any(x["key"] == k for x in espn_inj_by_team[t_abbr])
+        if already_in:
+            continue
+        rep_st = nfl_rep["report_status"]
+        prac_st = nfl_rep["practice_status"]
+        if rep_st in ("Out", "Doubtful", "Questionable"):
+            st_use = rep_st
+            code_use = rep_st[0].upper()
+        elif "Did Not Participate" in prac_st:
+            st_use = "Questionable"
+            code_use = "Q"
+        else:
+            continue
+        espn_inj_by_team[t_abbr].append({
+            "name": nfl_rep["name"],
+            "key": k,
+            "pos": nfl_rep["pos"],
+            "status": st_use,
+            "status_code": code_use,
+            "injury_type": nfl_rep["injury_type"],
+            "return_date": "",
+            "report_date": datetime.date.today().isoformat(),
+            "comment": f"Reporte Oficial NFL.com / nflfastR Sem. {nfl_rep['week']}: {prac_st or st_use}.",
+            "headshot": "",
+        })
 
     STATUS_WEIGHTS = {
         "Out": 1.00,
@@ -1169,7 +1219,7 @@ def build_team_rosters_and_injuries(teams_dict: dict) -> None:
         roster_items = []
         seen_keys = set()
 
-        # 1. Procesar jugadores en el Parte Médico de ESPN (Out, IR, Doubtful, Questionable, Suspension)
+        # 1. Procesar jugadores en el Parte Médico Oficial NFL.com / nflfastR + ESPN (Out, IR, Doubtful, Questionable, Suspension)
         for inj in espn_inj_by_team.get(t_abbr, []):
             st = inj["status"]
             if st == "Active":
@@ -1187,6 +1237,9 @@ def build_team_rosters_and_injuries(teams_dict: dict) -> None:
 
             seen_keys.add(k)
             def_w = STATUS_WEIGHTS.get(st, STATUS_WEIGHTS.get(inj["status_code"], 0.35))
+            headshot_url = inj["headshot"]
+            if not headshot_url and pr_row is not None and pd.notna(pr_row.get("headshot_url")):
+                headshot_url = str(pr_row.get("headshot_url", ""))
             roster_items.append({
                 "id": f"{t_abbr}-{k}",
                 "name": inj["name"],
@@ -1199,7 +1252,7 @@ def build_team_rosters_and_injuries(teams_dict: dict) -> None:
                 "injury_type": inj["injury_type"],
                 "report_date": inj["report_date"],
                 "comment": inj["comment"],
-                "headshot": inj["headshot"],
+                "headshot": headshot_url,
                 "games_played": eval_res["games_played"],
                 "team_games": eval_res["team_games"],
                 "novelty_factor": eval_res["novelty_factor"],
@@ -1252,7 +1305,7 @@ def build_team_rosters_and_injuries(teams_dict: dict) -> None:
 
         # Ordenar: primero lesionados por mayor pérdida esperada, luego titulares activos por mayor impacto potencial
         roster_items.sort(key=lambda x: (1 if x["is_injured"] else 0, x["expected_loss_pts"], x["full_impact_pts"]), reverse=True)
-        # Limitar a los 8 más relevantes por equipo (todos los lesionados de impacto + titulares estrella)
+        # Limitar a los 10 más relevantes por equipo (todos los lesionados de impacto + titulares estrella)
         top_items = roster_items[:10]
         total_exp_loss = round(sum(it["expected_loss_pts"] for it in top_items if it["is_injured"]), 1)
 
@@ -1265,13 +1318,13 @@ def build_team_rosters_and_injuries(teams_dict: dict) -> None:
 
 def fetch_espn_schedule_and_records(teams_dict: dict) -> tuple:
     """
-    Descarga las semanas anterior, actual y siguiente desde la API de ESPN,
-    actualiza los récords reales de los equipos y clasifica cada partido en TNF / SUNDAY / MNF.
+    Combina el calendario oficial de nflfastR (schedules/games.csv) con el estado en vivo de ESPN,
+    preservando los récords oficiales de nflfastR y clasificando cada partido en TNF / SUNDAY / MNF.
     REGLA ESTRICTA DE CAMBIO DE SEMANA:
     No pasa a la semana siguiente mientras el MNF (o cualquier partido de la semana activa)
     siga en juego ('in'), esté por jugarse ('pre'), o haya finalizado hace menos de 3 horas.
     """
-    print("[3/5] Consultando calendario de partidos (TNF / Domingo / MNF) y estado de MNF en ESPN NFL API...")
+    print("[3/5] Consultando calendario de partidos (nflfastR Schedules + estado TNF / Domingo / MNF en vivo)...")
     games_out = []
     espn_active_wk = 7
     try:
@@ -1286,7 +1339,7 @@ def fetch_espn_schedule_and_records(teams_dict: dict) -> tuple:
 
     weeks_to_fetch = list(range(max(1, espn_active_wk - 1), 19))
 
-    # Cruzar con nflverse schedules/games.csv para Días de Descanso (Bye/MNF/TNF), Duelos Divisionales, Domo/Clima y Líneas Vegas históricas
+    # Cruzar con nflfastR schedules/games.csv (fuente primaria de resultados cerrados, descanso, techo, clima y líneas)
     nflverse_sched_map = {}
     try:
         df_sched = pd.read_csv("https://github.com/nflverse/nflverse-data/releases/download/schedules/games.csv")
@@ -1311,6 +1364,8 @@ def fetch_espn_schedule_and_records(teams_dict: dict) -> tuple:
             wind_val = safe_float(sr.get("wind"), None) if pd.notna(sr.get("wind")) else None
             temp_val = safe_float(sr.get("temp"), None) if pd.notna(sr.get("temp")) else None
             div_flag = bool(int(safe_float(sr.get("div_game"), 0)) == 1)
+            aw_sc_nfl = int(safe_float(sr.get("away_score"), 0)) if pd.notna(sr.get("away_score")) else None
+            hm_sc_nfl = int(safe_float(sr.get("home_score"), 0)) if pd.notna(sr.get("home_score")) else None
 
             nflverse_sched_map[(s_wk, s_aw, s_hm)] = {
                 "away_rest": aw_rest,
@@ -1324,6 +1379,8 @@ def fetch_espn_schedule_and_records(teams_dict: dict) -> tuple:
                 "temp": temp_val,
                 "spread_str": sp_str,
                 "total_line": float(tot_line) if (tot_line is not None and not pd.isna(sr.get("total_line"))) else 44.5,
+                "away_score_nfl": aw_sc_nfl,
+                "home_score_nfl": hm_sc_nfl,
             }
     except Exception as e:
         print(f"[WARN] nflverse schedules/games.csv: {e}")
@@ -1343,13 +1400,16 @@ def fetch_espn_schedule_and_records(teams_dict: dict) -> tuple:
                 h_abbr = norm_team(home_c.get("team", {}).get("abbreviation", ""))
                 a_abbr = norm_team(away_c.get("team", {}).get("abbreviation", ""))
 
-                h_rec = next((r.get("summary", "0-0") for r in home_c.get("records", []) if r.get("type") == "total"), "0-0")
-                a_rec = next((r.get("summary", "0-0") for r in away_c.get("records", []) if r.get("type") == "total"), "0-0")
+                h_rec_espn = next((r.get("summary", "0-0") for r in home_c.get("records", []) if r.get("type") == "total"), "0-0")
+                a_rec_espn = next((r.get("summary", "0-0") for r in away_c.get("records", []) if r.get("type") == "total"), "0-0")
 
-                if h_abbr in teams_dict and h_rec != "0-0":
-                    teams_dict[h_abbr]["record"] = h_rec
-                if a_abbr in teams_dict and a_rec != "0-0":
-                    teams_dict[a_abbr]["record"] = a_rec
+                if h_abbr in teams_dict and teams_dict[h_abbr].get("record", "0-0") == "0-0" and h_rec_espn != "0-0":
+                    teams_dict[h_abbr]["record"] = h_rec_espn
+                if a_abbr in teams_dict and teams_dict[a_abbr].get("record", "0-0") == "0-0" and a_rec_espn != "0-0":
+                    teams_dict[a_abbr]["record"] = a_rec_espn
+
+                h_rec = teams_dict.get(h_abbr, {}).get("record", h_rec_espn) or h_rec_espn
+                a_rec = teams_dict.get(a_abbr, {}).get("record", a_rec_espn) or a_rec_espn
 
                 dt_str = ev.get("date", "")
                 day_slot = "SUNDAY"
@@ -1372,12 +1432,14 @@ def fetch_espn_schedule_and_records(teams_dict: dict) -> tuple:
 
                 sched_ctx = nflverse_sched_map.get((wk, a_abbr, h_abbr), {})
                 odds_list = comp.get("odds", [])
-                spread_txt = odds_list[0].get("details", "") if odds_list else ""
+                spread_txt = sched_ctx.get("spread_str", "")
                 if not spread_txt or spread_txt in ("Even", "PK"):
-                    spread_txt = sched_ctx.get("spread_str", "Even")
-                ou_val = odds_list[0].get("overUnder", None) if odds_list else None
+                    spread_txt = odds_list[0].get("details", "Even") if odds_list else "Even"
+                ou_val = sched_ctx.get("total_line", None)
+                if ou_val is None and odds_list:
+                    ou_val = odds_list[0].get("overUnder", 44.5)
                 if ou_val is None:
-                    ou_val = sched_ctx.get("total_line", 44.5)
+                    ou_val = 44.5
 
                 status_obj = ev.get("status", {}).get("type", {})
                 state = status_obj.get("state", "pre")
@@ -1386,6 +1448,17 @@ def fetch_espn_schedule_and_records(teams_dict: dict) -> tuple:
                 div_default = (
                     NFL_TEAMS_META.get(a_abbr, {}).get("div") == NFL_TEAMS_META.get(h_abbr, {}).get("div")
                     and bool(NFL_TEAMS_META.get(a_abbr, {}).get("div"))
+                )
+
+                aw_score_final = (
+                    sched_ctx["away_score_nfl"]
+                    if (state == "post" and sched_ctx.get("away_score_nfl") is not None)
+                    else int(safe_float(away_c.get("score"), 0))
+                )
+                hm_score_final = (
+                    sched_ctx["home_score_nfl"]
+                    if (state == "post" and sched_ctx.get("home_score_nfl") is not None)
+                    else int(safe_float(home_c.get("score"), 0))
                 )
 
                 games_out.append({
@@ -1399,8 +1472,8 @@ def fetch_espn_schedule_and_records(teams_dict: dict) -> tuple:
                     "status_detail": status_detail,
                     "away_team": a_abbr,
                     "home_team": h_abbr,
-                    "away_score": int(safe_float(away_c.get("score"), 0)),
-                    "home_score": int(safe_float(home_c.get("score"), 0)),
+                    "away_score": aw_score_final,
+                    "home_score": hm_score_final,
                     "away_record": a_rec,
                     "home_record": h_rec,
                     "spread": spread_txt,
@@ -1481,8 +1554,10 @@ def score_and_classify_news(title: str, summary: str, source_name: str) -> tuple
         if re.search(r"\b" + re.escape(kw) + r"\b", text):
             score += 22
 
-    # Fuentes especializadas en contratos o partes médicos reciben prioridad base
-    if source_name in ("Over The Cap (OTC)", "Spotrac NFL"):
+    # Prioridad máxima a NFL.com News oficial, seguida de especialistas en partes médicos y contratos
+    if source_name == "NFL.com News":
+        score += 28
+    elif source_name in ("Over The Cap (OTC)", "Spotrac NFL"):
         score += 18
         category = "💰 Impacto Salarial (Cap / Contrato)"
     elif source_name == "NBC Sports Rotoworld":
@@ -1535,20 +1610,42 @@ def parse_rss_items(xml_text: str, source_name: str, source_url: str, max_items:
 
 def fetch_high_impact_news() -> list:
     """
-    Recopila y filtra noticias de alto impacto de las 8 fuentes solicitadas:
-    1. NBC Sports - NFL Player News (Rotoworld)
-    2. The Athletic (Sección NFL)
-    3. ProFootballTalk (PFT)
-    4. ESPN NFL
-    5. NFL.com News
+    Recopila y filtra noticias de alto impacto priorizando NFL.com News primero:
+    1. NFL.com News
+    2. NBC Sports - NFL Player News (Rotoworld)
+    3. The Athletic (Sección NFL)
+    4. ProFootballTalk (PFT)
+    5. ESPN NFL
     6. Over The Cap (OTC)
     7. Spotrac NFL
     8. Reddit (r/NFL)
     """
-    print("[4/5] Escaneando los 8 portales de Top News y aplicando filtro de Alto Impacto...")
+    print("[4/5] Escaneando portales de Top News (priorizando NFL.com News) y aplicando filtro de Alto Impacto...")
     raw_news = []
 
-    # 1. ESPN NFL API
+    # 1. NFL.com News HTML Scraper (Fuente Primaria Oficial)
+    try:
+        r = requests.get("https://www.nfl.com/news/", headers=HEADERS, timeout=8)
+        if r.status_code == 200:
+            soup = BeautifulSoup(r.text, "html.parser")
+            for a_tag in soup.select("a[href*='/news/']")[:18]:
+                title_el = a_tag.select_one(".d3-o-media-object__title, h3, p")
+                t_txt = (title_el.get_text(" ", strip=True) if title_el else a_tag.get_text(" ", strip=True)).strip()
+                href = a_tag.get("href", "")
+                if len(t_txt) > 25 and not t_txt.lower().startswith("all news"):
+                    full_url = f"https://www.nfl.com{href}" if href.startswith("/") else href
+                    raw_news.append({
+                        "title": t_txt,
+                        "summary": "Cobertura oficial y reportes de vestuario desde NFL.com News.",
+                        "url": full_url,
+                        "published": "Hoy",
+                        "source": "NFL.com News",
+                        "source_home": "https://www.nfl.com/news/",
+                    })
+    except Exception as e:
+        print(f"[WARN] NFL.com News: {e}")
+
+    # 2. ESPN NFL API
     try:
         r = requests.get("https://site.api.espn.com/apis/site/v2/sports/football/nfl/news?limit=15", headers=HEADERS, timeout=8)
         if r.status_code == 200:
@@ -1564,7 +1661,7 @@ def fetch_high_impact_news() -> list:
     except Exception as e:
         print(f"[WARN] ESPN News: {e}")
 
-    # 2. ProFootballTalk (PFT)
+    # 3. ProFootballTalk (PFT)
     try:
         r = requests.get("https://profootballtalk.nbcsports.com/feed/", headers=HEADERS, timeout=8)
         if r.status_code == 200:
@@ -1572,7 +1669,7 @@ def fetch_high_impact_news() -> list:
     except Exception as e:
         print(f"[WARN] PFT RSS: {e}")
 
-    # 3. The Athletic (Sección NFL)
+    # 4. The Athletic (Sección NFL)
     try:
         r = requests.get("https://www.nytimes.com/athletic/rss/nfl/", headers=HEADERS, timeout=8)
         if r.status_code == 200:
@@ -1580,7 +1677,7 @@ def fetch_high_impact_news() -> list:
     except Exception as e:
         print(f"[WARN] The Athletic RSS: {e}")
 
-    # 4. Spotrac NFL
+    # 5. Spotrac NFL
     try:
         r = requests.get("https://www.spotrac.com/feed/", headers=HEADERS, timeout=8)
         if r.status_code == 200:
@@ -1588,7 +1685,7 @@ def fetch_high_impact_news() -> list:
     except Exception as e:
         print(f"[WARN] Spotrac RSS: {e}")
 
-    # 5. Reddit (r/NFL)
+    # 6. Reddit (r/NFL)
     try:
         r = requests.get("https://www.reddit.com/r/nfl/hot/.rss", headers=HEADERS, timeout=8)
         if r.status_code == 200:
@@ -1596,7 +1693,7 @@ def fetch_high_impact_news() -> list:
     except Exception as e:
         print(f"[WARN] Reddit RSS: {e}")
 
-    # 6. NBC Sports - NFL Player News (Rotoworld) HTML Scraper
+    # 7. NBC Sports - NFL Player News (Rotoworld) HTML Scraper
     try:
         r = requests.get("https://www.nbcsports.com/fantasy/football/player-news", headers=HEADERS, timeout=8)
         if r.status_code == 200:
@@ -1623,28 +1720,6 @@ def fetch_high_impact_news() -> list:
                             break
     except Exception as e:
         print(f"[WARN] Rotoworld HTML: {e}")
-
-    # 7. NFL.com News HTML Scraper
-    try:
-        r = requests.get("https://www.nfl.com/news/", headers=HEADERS, timeout=8)
-        if r.status_code == 200:
-            soup = BeautifulSoup(r.text, "html.parser")
-            for a_tag in soup.select("a[href*='/news/']")[:15]:
-                title_el = a_tag.select_one(".d3-o-media-object__title, h3, p")
-                t_txt = (title_el.get_text(" ", strip=True) if title_el else a_tag.get_text(" ", strip=True)).strip()
-                href = a_tag.get("href", "")
-                if len(t_txt) > 25 and not t_txt.lower().startswith("all news"):
-                    full_url = f"https://www.nfl.com{href}" if href.startswith("/") else href
-                    raw_news.append({
-                        "title": t_txt,
-                        "summary": "Cobertura oficial y reportes de vestuario desde NFL.com News.",
-                        "url": full_url,
-                        "published": "Hoy",
-                        "source": "NFL.com News",
-                        "source_home": "https://www.nfl.com/news/",
-                    })
-    except Exception as e:
-        print(f"[WARN] NFL.com News: {e}")
 
     # 8. Over The Cap (OTC)
     try:
@@ -1692,7 +1767,7 @@ def fetch_high_impact_news() -> list:
                 "team": team,
             })
 
-    # Ordenar asegurando diversidad entre las 8 fuentes y máximo puntaje de impacto
+    # Ordenar asegurando prioridad de fuentes oficiales y máximo puntaje de impacto
     filtered_news.sort(key=lambda x: x["impact_score"], reverse=True)
     return filtered_news[:24]
 
@@ -1715,23 +1790,23 @@ def main():
         "available_weeks": available_weeks,
         "has_live_games": has_live_games,
         "sources_stats": [
+            {"name": "NFL.com Oficial", "url": "https://www.nfl.com/stats/"},
+            {"name": "nflfastR (nflverse)", "url": "https://github.com/nflverse/nflverse-data"},
+            {"name": "NFL Next Gen Stats", "url": "https://nextgenstats.nfl.com/"},
+            {"name": "RBSDM (nflfastR EPA/CPOE)", "url": "https://rbsdm.com/"},
             {"name": "Pro Football Reference", "url": "https://www.pro-football-reference.com/"},
-            {"name": "RBSDM (EPA / CPOE)", "url": "https://rbsdm.com/"},
             {"name": "Pro Football Focus (PFF)", "url": "https://www.pff.com/nfl"},
             {"name": "FTN Fantasy (DVOA)", "url": "https://ftnfantasy.com/stats/nfl/team-total-dvoa"},
-            {"name": "NFL Next Gen Stats", "url": "https://nextgenstats.nfl.com/"},
             {"name": "SumerSports", "url": "https://sumersports.com/"},
-            {"name": "PlayerProfiler", "url": "https://www.playerprofiler.com/"},
             {"name": "Sharp Football Analysis", "url": "https://www.sharpfootballanalysis.com/stats-nfl/"},
             {"name": "NFL Savant", "url": "https://nflsavant.com/"},
-            {"name": "TeamRankings", "url": "https://www.teamrankings.com/nfl/stats/"},
         ],
         "sources_news": [
+            {"name": "NFL.com News", "url": "https://www.nfl.com/news/"},
             {"name": "NBC Sports Rotoworld", "url": "https://www.nbcsports.com/fantasy/football/player-news"},
             {"name": "The Athletic NFL", "url": "https://www.nytimes.com/athletic/nfl/"},
             {"name": "ProFootballTalk (PFT)", "url": "https://www.nbcsports.com/nfl/profootballtalk"},
             {"name": "ESPN NFL", "url": "https://www.espn.com/nfl/"},
-            {"name": "NFL.com News", "url": "https://www.nfl.com/news/"},
             {"name": "Over The Cap (OTC)", "url": "https://overthecap.com/"},
             {"name": "Spotrac NFL", "url": "https://www.spotrac.com/nfl/"},
             {"name": "Reddit (r/NFL)", "url": "https://www.reddit.com/r/nfl/"},
