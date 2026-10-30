@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20261028v25" />
+  <link rel="stylesheet" href="styles.css?v=20261029v26" />
 </head>
 <body>
   <div class="app-shell">
@@ -185,8 +185,8 @@
                     <p>Integra la eficiencia en <strong>Zona Roja (TD%)</strong>, <strong>3er Down</strong>, <strong>Capturas (Sacks)</strong>, <strong>Margen de Entregas (Robos de balón)</strong>, las 7 métricas de <strong>Equipos Especiales (FG%, Punts, Retornos, DVOA)</strong> y la ventaja de localía NFL (<em>+1.4 pts</em>).</p>
                   </div>
                   <div class="ise-item">
-                    <strong>4. Parte Médico (ESPN) &amp; Simulador de Titulares / Bajas + Curva Logística</strong>
-                    <p>Cruza el <strong>Parte Médico Oficial de ESPN</strong> con la cuota de producción 2026 (<em>Target Share, Dropbacks, EPA y Sacks</em>) y el <strong>Factor de Novedad</strong> (sin doble conteo de lesiones antiguas), permitiendo además simular bajas en vivo (<em>Qué pasa si...</em>) y convirtiendo el margen neto a <strong>% de Victoria NFL</strong>.</p>
+                    <strong>4. Parte Médico Oficial (NFL.com + nflfastR) &amp; Simulador de Titulares / Bajas</strong>
+                    <p>Cruza el <strong>Parte Médico Oficial de NFL.com / nflfastR</strong> con la cuota de producción 2026 (<em>Target Share, Dropbacks, EPA y Sacks</em>) y el <strong>Factor de Novedad</strong> (sin doble conteo de lesiones antiguas), permitiendo además simular bajas en vivo (<em>Qué pasa si...</em>) y convirtiendo el margen neto a <strong>% de Victoria NFL</strong>.</p>
                   </div>
                 </div>
               </div>
@@ -351,7 +351,7 @@
             <div class="view-toolbar">
               <div>
                 <h2>Evaluación Integral de las 32 Franquicias NFL (Temporada 2026)</h2>
-                <p class="view-subtitle">Datos reales cruzados de RBSDM (EPA/CPOE), SumerSports, PFR, TeamRankings (Red Zone &amp; 3rd Down) y FTN DVOA. Pasá el cursor sobre cada columna para ver su explicación.</p>
+                <p class="view-subtitle">Datos oficiales en vivo de NFL.com, nflfastR (nflverse Play-by-Play: EPA, CPOE, Zona Roja TD%, 3er Down % y Success Rate) y NFL Next Gen Stats. Pasá el cursor sobre cada columna para ver su explicación.</p>
               </div>
               <div class="toolbar-filters">
                 <input type="text" id="searchTeamInput" placeholder="Buscar equipo (ej. KC, Bills, Lions)..." class="input-search" />
@@ -397,12 +397,12 @@
             </div>
           </section>
 
-          <!-- VISTA 3: JUGADORES (SCOUTING HUB: PFF / NGS / PLAYERPROFILER / PFR / SAVANT) -->
+          <!-- VISTA 3: JUGADORES (SCOUTING HUB: NFL.COM / NFLFASTR / NEXT GEN STATS) -->
           <section class="stage-view" id="view-players">
             <div class="view-toolbar">
               <div>
-                <h2>Scouting de Jugadores &amp; Métricas Avanzadas (2026) — Guía y Fórmulas</h2>
-                <p class="view-subtitle">Evaluación individual con Percentiles (0-100), EPA, CPOE, Next Gen Stats (Sensores RFID: Separation / RYOE / Time to Throw), PlayerProfiler (Target Share / WOPR) y PFR AdvStats.</p>
+                <h2>Scouting de Jugadores &amp; Métricas Oficiales (2026) — Guía y Fórmulas</h2>
+                <p class="view-subtitle">Evaluación individual con datos 100% oficiales de NFL.com, nflfastR (EPA, CPOE, Target Share, WOPR, Sacks, TFL) y NFL Next Gen Stats (Sensores RFID: Time to Throw, Air Yards/Att, Tight Window %, RYOE y Separation).</p>
               </div>
               <div class="toolbar-filters">
                 <button class="btn-toggle-guides" id="btnTogglePlayerGuide" title="Mostrar u ocultar el explicativo de métricas y fórmulas de jugadores">
@@ -422,44 +422,44 @@
 
             <!-- EXPLICATIVO DETALLADO DE CADA MÉTRICA DE JUGADORES Y CÓMO SE CALCULA -->
             <div class="inline-stat-explainer" id="playerScoutingGuide">
-              <div class="ise-title">📘 ¿Qué significa cada estadística en las tarjetas de jugadores y cómo se calcula exactamente?</div>
+              <div class="ise-title">📘 ¿Qué significa cada estadística oficial (NFL.com + nflfastR + Next Gen Stats) en las tarjetas de jugadores y cómo se calcula?</div>
               <div class="ise-grid" style="grid-template-columns: repeat(auto-fit, minmax(265px, 1fr));">
                 <div class="ise-item">
                   <strong>🏅 Percentil de Posición (Pctl 1 a 99)</strong>
                   <p><strong>¿Qué es?:</strong> Compara al jugador únicamente contra los demás de su misma posición en la NFL. Un <strong>Pctl 95</strong> significa que rinde mejor que el 95% de la liga.<br/>
-                  <strong>¿Cómo se calcula?:</strong> En <strong>QB</strong> se ordena por <em>EPA/Dropback</em>; en <strong>RB</strong> por <em>Yardas Terrestres</em>; en <strong>WR/TE</strong> por <em>Yardas de Recepción</em>; y en <strong>DEF</strong> por el <em>Puntaje de Impacto Defensivo</em> (<code>Sacks×3 + Hits×1.2 + TFL×1.5 + INT×3.5 + PD×1 + Tackles×0.25</code>).</p>
+                  <strong>¿Cómo se calcula?:</strong> En <strong>QB</strong> se ordena por <em>EPA/Dropback (nflfastR)</em>; en <strong>RB</strong> por <em>Yardas Terrestres (NFL.com)</em>; en <strong>WR/TE</strong> por <em>Yardas de Recepción (NFL.com)</em>; y en <strong>DEF</strong> por el <em>Puntaje de Impacto Defensivo Oficial</em> (<code>Sacks×3 + Hits×1.2 + TFL×1.5 + INT×3.5 + PD×1 + Tackles×0.25</code>).</p>
                 </div>
 
                 <div class="ise-item">
-                  <strong>🎯 Quarterbacks (QB): EPA, CPOE, Time to Throw, On-Target y Pressure %</strong>
-                  <p>• <strong>EPA/Dropback:</strong> <code>EPA de Pase Total ÷ (Intentos + Capturas)</code>. Puntos reales que suma cada vez que retrocede a pasar.<br/>
-                  • <strong>CPOE:</strong> <code>% Completos Real − % Esperado</code> según dificultad del tiro (distancia, presión y ventana).<br/>
+                  <strong>🎯 Quarterbacks (QB): EPA, CPOE, Time to Throw, Air Yards/Att, Tight Window % y Passer Rating</strong>
+                  <p>• <strong>EPA/Dropback (nflfastR):</strong> <code>EPA de Pase Total ÷ (Intentos + Capturas)</code>. Puntos reales que suma cada vez que retrocede a pasar.<br/>
+                  • <strong>CPOE (Next Gen Stats / nflfastR):</strong> <code>% Completos Real − % Esperado</code> según distancia y cobertura.<br/>
                   • <strong>NGS Time to Throw:</strong> Segundos promedio desde el <em>snap</em> hasta soltar el pase (chips RFID). <em>Promedio NFL: ~2.75s.</em><br/>
-                  • <strong>PFR On-Target %:</strong> <code>Pases precisos a las manos ÷ Pases lanzados</code> (<em>promedio ~75%</em>).<br/>
-                  • <strong>PFR Pressure %:</strong> <code>(Apresuramientos + Golpes + Sacks) ÷ Dropbacks</code>. % de jugadas bajo acoso defensivo.</p>
+                  • <strong>NGS Air Yards/Att &amp; Tight Window %:</strong> Profundidad media de envío y % de pases a receptores con <code>&lt; 1 yarda</code> de separación.<br/>
+                  • <strong>NFL Passer Rating:</strong> Índice oficial NFL.com (escala 0 a 158.3; promedio ~92.5).</p>
                 </div>
 
                 <div class="ise-item">
                   <strong>🏃 Corredores (RB): Yds/Acarreo, EPA/Acarreo, RYOE/Att y Caja 8+ Def</strong>
-                  <p>• <strong>Yds/Acarreo (YPC):</strong> <code>Yardas Terrestres ÷ Acarreos</code> (<em>promedio NFL: ~4.3 yds</em>).<br/>
-                  • <strong>EPA/Acarreo:</strong> <code>EPA Terrestre ÷ Acarreos</code>. Mide si sus corridas acercan al equipo al Touchdown.<br/>
-                  • <strong>NGS RYOE/Att (Rush Yards Over Expected):</strong> <code>(Yardas Reales − Yardas Esperadas por bloqueo) ÷ Acarreos</code>. Calcula mediante sensores cuántas yardas <strong>extra</strong> gana el corredor por su propia potencia/elusividad más allá del hueco de su línea.<br/>
-                  • <strong>NGS Caja 8+ Def:</strong> % de corridas donde enfrentó <strong>8 o más defensores</strong> amontonados en la línea para frenarlo.</p>
+                  <p>• <strong>Yds/Acarreo (NFL.com):</strong> <code>Yardas Terrestres ÷ Acarreos</code> (<em>promedio NFL: ~4.3 yds</em>).<br/>
+                  • <strong>EPA/Acarreo (nflfastR):</strong> <code>EPA Terrestre ÷ Acarreos</code>. Mide si sus corridas acercan al equipo al Touchdown.<br/>
+                  • <strong>NGS RYOE/Att (Rush Yards Over Expected):</strong> <code>(Yardas Reales − Yardas Esperadas por bloqueo) ÷ Acarreos</code>. Calcula con sensores RFID cuántas yardas <strong>extra</strong> gana el corredor por su propia potencia/elusividad.<br/>
+                  • <strong>NGS Caja 8+ Def:</strong> % de corridas donde enfrentó <strong>8 o más defensores</strong> en la caja.</p>
                 </div>
 
                 <div class="ise-item">
-                  <strong>🙌 Receptores (WR y TE): Target Share, Air Yards Share, WOPR y Separation</strong>
-                  <p>• <strong>Target Share (Cuota de Objetivos):</strong> <code>Pases lanzados al jugador ÷ Total de pases del equipo</code> (<em>Estrella #1: +24%</em>).<br/>
-                  • <strong>Air Yards Share:</strong> <code>Yardas aéreas voladas hacia él ÷ Total de yardas aéreas del equipo</code> (amenaza profunda).<br/>
-                  • <strong>WOPR (Weighted Opportunity Rating):</strong> Fórmula de <em>PlayerProfiler</em> que mide el rol total del receptor: <code>(1.5 × Target Share) + (0.7 × Air Yards Share)</code>. <em>Élite: &gt; 0.60.</em><br/>
-                  • <strong>NGS Separation:</strong> Distancia promedio en yardas entre el receptor y su marcador al llegar el balón (<em>promedio NFL: ~2.8 yds</em>).</p>
+                  <strong>🙌 Receptores (WR y TE): Target Share, Air Yards Share, WOPR y NGS Separation</strong>
+                  <p>• <strong>Target Share (nflfastR):</strong> <code>Pases lanzados al jugador ÷ Total de pases del equipo</code> (<em>Estrella #1: +24%</em>).<br/>
+                  • <strong>Air Yards Share (nflfastR):</strong> <code>Yardas aéreas voladas hacia él ÷ Total de yardas aéreas del equipo</code>.<br/>
+                  • <strong>WOPR (nflfastR):</strong> Rol total ponderado: <code>(1.5 × Target Share) + (0.7 × Air Yards Share)</code>. <em>Élite: &gt; 0.60.</em><br/>
+                  • <strong>NGS Separation:</strong> Distancia promedio en yardas entre el receptor y su marcador al llegar el balón (chips RFID; <em>promedio NFL: ~2.8 yds</em>).</p>
                 </div>
 
                 <div class="ise-item">
-                  <strong>🛡️ Defensores (DEF): Sacks, QB Hits, TFL, Pressures y Rating Permitido</strong>
-                  <p>• <strong>Sacks / QB Hits / TFL:</strong> Capturas al QB, golpes al QB tras lanzar y derribos detrás de la línea que restan yardas.<br/>
-                  • <strong>PFR Pressures (Presiones Totales):</strong> <code>Sacks + QB Hits + Hurries (apresuramientos)</code>. Mide cuántas jugadas arruinó el defensor en el bolsillo.<br/>
-                  • <strong>PFR Rating Permitido:</strong> Índice de pasador (escala 0 a 158.3) que logran los QBs rivales cuando lanzan contra la cobertura de este defensor. <em>¡Cuanto MÁS BAJO mejor! (&lt; 75.0 es cerrojo élite).</em></p>
+                  <strong>🛡️ Defensores (DEF): Sacks, QB Hits, TFL, Tackles, INT, PD y Fumbles Forzados</strong>
+                  <p>• <strong>Sacks / QB Hits / TFL (NFL.com &amp; nflfastR):</strong> Capturas al QB, golpes al mariscal tras lanzar y derribos detrás de la línea que hacen perder yardas.<br/>
+                  • <strong>Tackles Totales y Solo (NFL.com &amp; nflfastR):</strong> Derribos combinados e individuales en campo abierto.<br/>
+                  • <strong>Intercepciones (INT), Pases Defendidos (PD) y Fumbles Forzados (FF):</strong> Jugadas de impacto directo en cobertura y robos de balón oficiales.</p>
                 </div>
               </div>
             </div>
@@ -500,7 +500,7 @@
             <div class="view-toolbar">
               <div>
                 <h2>Radar de Top News — Solo Alto Impacto</h2>
-                <p class="view-subtitle">Filtrado en tiempo real de NBC Rotoworld, The Athletic, ProFootballTalk, ESPN, NFL.com, Over The Cap, Spotrac y Reddit (r/NFL).</p>
+                <p class="view-subtitle">Filtrado en tiempo real con prioridad en NFL.com Oficial, NBC Rotoworld, The Athletic, ProFootballTalk, ESPN, Over The Cap, Spotrac y Reddit (r/NFL).</p>
               </div>
               <div class="toolbar-filters">
                 <button class="btn-toggle-inline-guides" id="btnToggleNewsGuide" title="Mostrar u ocultar la explicación de cómo se ordenan y puntúan las noticias">📘 Cómo se ordenan las noticias: VISIBLE</button>
@@ -519,11 +519,11 @@
                 </select>
                 <select id="filterNewsSource" class="select-filter">
                   <option value="ALL">Todas las 8 Fuentes</option>
+                  <option value="NFL.com News">NFL.com News (Oficial)</option>
                   <option value="NBC Sports Rotoworld">NBC Sports Rotoworld</option>
                   <option value="The Athletic NFL">The Athletic NFL</option>
                   <option value="ProFootballTalk (PFT)">ProFootballTalk (PFT)</option>
                   <option value="ESPN NFL">ESPN NFL</option>
-                  <option value="NFL.com News">NFL.com News</option>
                   <option value="Over The Cap (OTC)">Over The Cap (OTC)</option>
                   <option value="Spotrac NFL">Spotrac NFL</option>
                   <option value="Reddit (r/NFL)">Reddit (r/NFL)</option>
@@ -547,8 +547,8 @@
                   <br>• <strong>+28 pts (Salarial / Cap):</strong> <code>contract</code>, <code>cap</code>, <code>restructure</code>, <code>extension</code>, <code>dead money</code>.
                 </div>
                 <div class="beb-card">
-                  <strong>3. Bonus por Fuente, Equipo y Filtro Anti-Ruido</strong>
-                  <br>• <strong>+18 a +25 pts de Base por Fuente:</strong> Prioriza partes médicos directos (<em>Rotoworld</em>) y análisis salariales (<em>Over The Cap / Spotrac</em>).
+                  <strong>3. Bonus por Fuente Oficial, Equipo y Filtro Anti-Ruido</strong>
+                  <br>• <strong>+28 pts de Base para NFL.com Oficial:</strong> Prioriza los partes y comunicados oficiales de <em>NFL.com News</em>, seguidos por <em>Rotoworld</em> (+25 pts) y <em>Over The Cap / Spotrac</em> (+24 pts).
                   <br>• <strong>+18 pts por Franquicia Detectada:</strong> Si identifica al equipo afectado (ej. <code>NYG</code>, <code>CIN</code>, <code>PHI</code>), suma prioridad táctica (máximo <strong>99 pts</strong>).
                   <br>• <strong>Filtro Anti-Humo:</strong> Toda noticia con menos de <strong>25 pts</strong> se descarta automáticamente.
                 </div>
@@ -567,7 +567,7 @@
             <div class="view-toolbar">
               <div>
                 <h2>Directorio Directo de las 18 Fuentes Oficiales Conectadas</h2>
-                <p class="view-subtitle">Acceso rápido a los 10 motores de estadísticas avanzadas y los 8 portales de noticias de alto impacto.</p>
+                <p class="view-subtitle">Encabezado por los 3 motores primarios oficiales (NFL.com Oficial, nflfastR / nflverse y NFL Next Gen Stats) junto al ecosistema analítico y de noticias de alto impacto.</p>
               </div>
             </div>
             <div class="sources-directory-grid" id="sourcesDirectoryGrid"></div>
@@ -577,8 +577,8 @@
           <section class="stage-view" id="view-glossary">
             <div class="view-toolbar">
               <div>
-                <h2>📖 Guía Explicativa y Diccionario de Estadísticas Avanzadas NFL</h2>
-                <p class="view-subtitle">Explicación paso a paso, en español claro y con ejemplos prácticos, de cada métrica de RBSDM, Next Gen Stats, FTN DVOA, SumerSports, PFF, PlayerProfiler y Pro Football Reference.</p>
+                <h2>📖 Guía Explicativa y Diccionario de Estadísticas Oficiales NFL</h2>
+                <p class="view-subtitle">Explicación paso a paso, en español claro y con ejemplos prácticos, de cada métrica oficial de NFL.com, nflfastR (nflverse), NFL Next Gen Stats (RFID), RBSDM y DVOA.</p>
               </div>
               <div class="toolbar-filters">
                 <input type="text" id="searchGlossaryInput" placeholder="Buscar concepto (ej. EPA, CPOE, Zona Roja, Front-7, WOPR)..." class="input-search" style="min-width:290px;" />
@@ -707,7 +707,7 @@
   <!-- TOAST DE NOTIFICACIONES -->
   <div class="toast-notification hidden" id="toastNotification"></div>
 
-  <script src="data/nfl_dashboard_data.js?v=20261028v25"></script>
-  <script src="app.js?v=20261028v25"></script>
+  <script src="data/nfl_dashboard_data.js?v=20261029v26"></script>
+  <script src="app.js?v=20261029v26"></script>
 </body>
 </html>
