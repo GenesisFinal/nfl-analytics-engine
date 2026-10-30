@@ -1529,8 +1529,8 @@ function syncPredictionPostToTipsFeed(aw, hm, g, proj, postText, illustrationUrl
       title: `Pronóstico Modelo: ${aw.abbr} ${proj.scoreAway} vs ${proj.scoreHome} ${hm.abbr}`,
       body: postText,
       page_link: `${STATE.dashboardPublicUrl}#matchup-${g.id}`,
-      source_link: "https://www.sharpfootballanalysis.com/stats-nfl/",
-      source_name: "Sharp Football / RBSDM",
+      source_link: "https://www.nfl.com/stats/team-stats/",
+      source_name: "NFL.com / nflfastR",
       illustration: illustrationUrl,
       clay_prompt: prompt,
       is_prediction_post: true,
@@ -1740,8 +1740,8 @@ function syncWeeklyPostToTipsFeed(weekNum, weeklyText, illustrationUrl) {
       title: `Resultados Esperados NFL · Semana ${weekNum} (Todos los Partidos)`,
       body: weeklyText,
       page_link: `${STATE.dashboardPublicUrl}#matchups`,
-      source_link: "https://www.sharpfootballanalysis.com/stats-nfl/",
-      source_name: "Sharp Football / RBSDM",
+      source_link: "https://www.nfl.com/stats/team-stats/",
+      source_name: "NFL.com / nflfastR",
       illustration: illustrationUrl,
       clay_prompt: prompt,
       is_prediction_post: true,
@@ -2136,12 +2136,12 @@ function renderMatchupBoard() {
             </div>
           </div>
 
-          <!-- Factor 6 (NUEVO): Impacto de Bajas & Titulares (Parte Médico ESPN + Cuota EPA/WAR) -->
+          <!-- Factor 6 (NUEVO): Impacto de Bajas & Titulares (Parte Médico NFL.com / nflfastR + Cuota EPA/WAR) -->
           <div class="pbb-factor-card inj-factor-card">
             <div class="pbb-f-head">6️⃣ Bajas &amp; Titulares (Parte Médico)</div>
             <div class="pbb-f-badges">
-              <div><small>✈️ ${aw.abbr}: ${proj.injAwayDetail.activeImpacts.length} bajas/dudas activas (${proj.injAwayDetail.overridesCount > 0 ? "⚡ Simulado" : "Oficial ESPN"})</small></div>
-              <div><small>🏠 ${hm.abbr}: ${proj.injHomeDetail.activeImpacts.length} bajas/dudas activas (${proj.injHomeDetail.overridesCount > 0 ? "⚡ Simulado" : "Oficial ESPN"})</small></div>
+              <div><small>✈️ ${aw.abbr}: ${proj.injAwayDetail.activeImpacts.length} bajas/dudas activas (${proj.injAwayDetail.overridesCount > 0 ? "⚡ Simulado" : "Oficial NFL.com / nflfastR"})</small></div>
+              <div><small>🏠 ${hm.abbr}: ${proj.injHomeDetail.activeImpacts.length} bajas/dudas activas (${proj.injHomeDetail.overridesCount > 0 ? "⚡ Simulado" : "Oficial NFL.com / nflfastR"})</small></div>
             </div>
             <div class="pbb-f-scores">
               <span class="away-val">Bajas ${aw.abbr}: <strong class="${proj.injPtsAway < 0 ? "txt-sig-neg" : "txt-sig-pos"}">${fmtSignedPts(proj.injPtsAway)}</strong></span>
@@ -2151,19 +2151,19 @@ function renderMatchupBoard() {
         </div>
       </div>
 
-      <!-- PANEL INTERACTIVO: PARTE MÉDICO OFICIAL (ESPN) & SIMULADOR DE TITULARES / BAJAS EN VIVO -->
+      <!-- PANEL INTERACTIVO: PARTE MÉDICO OFICIAL (NFL.COM / NFLFASTR) & SIMULADOR DE TITULARES / BAJAS EN VIVO -->
       <div class="injury-simulator-master-box">
         <div class="ism-header">
           <div class="ism-title-wrap">
-            <span class="ism-title">🚑 PARTE MÉDICO OFICIAL (ESPN) &amp; SIMULADOR DE TITULARES / BAJAS (QUÉ PASA SI...)</span>
-            <span class="ism-subtitle">Calcula el delta de puntos real según la cuota de producción 2026 (Target Share, Dropbacks, EPA) y el Factor de Novedad (sin doble conteo de lesiones antiguas). Tocá cualquier botón para simular qué pasa si un titular es baja o si un lesionado se recupera.</span>
+            <span class="ism-title">🚑 PARTE MÉDICO OFICIAL (NFL.COM / NFLFASTR) &amp; SIMULADOR DE TITULARES / BAJAS (QUÉ PASA SI...)</span>
+            <span class="ism-subtitle">Calcula el delta de puntos real según la cuota de producción 2026 en nflfastR (Target Share, Dropbacks, EPA) y el Factor de Novedad (sin doble conteo de lesiones antiguas). Tocá cualquier botón para simular qué pasa si un titular es baja o si un lesionado se recupera.</span>
           </div>
           <div class="ism-header-actions">
             ${
               Object.keys(STATE.injuryOverrides).length > 0
                 ? `<span class="ism-sim-active-pill">⚡ Simulación Manual Activa (${Object.keys(STATE.injuryOverrides).length} cambios)</span>
-                   <button type="button" class="btn-reset-inj-sim" id="btnResetInjuryOverrides">🔄 Restaurar Parte Oficial ESPN</button>`
-                : `<span class="ism-sim-official-pill">✅ Parte Médico Oficial ESPN Activo</span>`
+                   <button type="button" class="btn-reset-inj-sim" id="btnResetInjuryOverrides">🔄 Restaurar Parte Oficial NFL.com</button>`
+                : `<span class="ism-sim-official-pill">✅ Parte Médico Oficial NFL.com / nflfastR Activo</span>`
             }
             <button type="button" class="btn-toggle-inj-sim" id="btnToggleInjurySimBody">
               ${STATE.showInjurySimPanel ? "🔽 Ocultar Jugadores" : "▶️ Ver / Simular Jugadores"}
@@ -2277,7 +2277,7 @@ function renderMatchupBoard() {
     STATE.injuryOverrides = {};
     renderMatchupBoard();
     const freshProj = computeMatchupProjection(aw, hm, g);
-    showToast(`🔄 Parte Médico Oficial ESPN restaurado (${aw.abbr} ${freshProj.scoreAway} vs ${freshProj.scoreHome} ${hm.abbr})`);
+    showToast(`🔄 Parte Médico Oficial NFL.com / nflfastR restaurado (${aw.abbr} ${freshProj.scoreAway} vs ${freshProj.scoreHome} ${hm.abbr})`);
   });
 
   document.querySelectorAll(".btn-inj-sim").forEach((btn) => {
@@ -3243,10 +3243,10 @@ function renderTeamsTable() {
         <td>${t.off_3d_pct.toFixed(1)}%</td>
         <td>#${t.rank_st}</td>
         <td>
-          <div style="display:flex; gap:4px; justify-content:center;">
-            <a href="${t.links.pfr}" target="_blank" class="ext-source-chip" title="Pro Football Reference">PFR</a>
-            <a href="${t.links.rbsdm}" target="_blank" class="ext-source-chip" title="RBSDM EPA">RBSDM</a>
-            <a href="${t.links.ftn_dvoa}" target="_blank" class="ext-source-chip" title="FTN DVOA">DVOA</a>
+          <div style="display:flex; gap:4px; justify-content:center; flex-wrap:wrap;">
+            <a href="${t.links.nfl || "https://www.nfl.com/stats/team-stats/"}" target="_blank" class="ext-source-chip" title="NFL.com Oficial">NFL</a>
+            <a href="${t.links.ngs || "https://nextgenstats.nfl.com/"}" target="_blank" class="ext-source-chip" title="NFL Next Gen Stats">NGS</a>
+            <a href="${t.links.rbsdm}" target="_blank" class="ext-source-chip" title="nflfastR / RBSDM EPA">EPA</a>
             <button class="ext-source-chip btn-team-tip" data-team="${t.abbr}" style="border:none; cursor:pointer; background:#013369; color:#fff;">+Tip X</button>
           </div>
         </td>
@@ -3267,140 +3267,184 @@ function renderTeamsTable() {
    VISTA 3: JUGADORES (SCOUTING HUB — EXPLICACIONES Y FÓRMULAS POR MÉTRICA)
    ========================================================================== */
 const PLAYER_METRIC_EXPLAINERS = {
-  // Quarterbacks (QB)
+  // Quarterbacks (QB) — 100% NFL.com + nflfastR + Next Gen Stats
   "Yds Pase": {
-    sub: "Yardas totales por aire",
-    tip: "Suma total de yardas ganadas en todos los pases completados por el Quarterback en la temporada.",
+    sub: "Yardas totales por aire (NFL.com)",
+    tip: "Suma oficial (NFL.com / nflfastR) de yardas ganadas en todos los pases completados por el Quarterback en la temporada.",
   },
   "TD / INT": {
     sub: "Pases de TD vs Intercepciones",
-    tip: "Relación entre pases de Touchdown anotados y pases interceptados por la defensa rival. Ideal: al menos 3 TDs por cada 1 INT.",
+    tip: "Relación oficial (NFL.com) entre pases de Touchdown anotados y pases interceptados por la defensa rival. Ideal: al menos 3 TDs por cada 1 INT.",
+  },
+  "EPA / Dropback": {
+    sub: "Puntos esperados por pase (nflfastR)",
+    tip: "Fórmula (nflfastR): EPA Total de Pase ÷ (Intentos de Pase + Capturas sufridas). Mide cuántos puntos reales suma el QB cada vez que retrocede a lanzar.",
   },
   "EPA/Dropback": {
-    sub: "Puntos esperados por pase",
-    tip: "Fórmula: EPA Total de Pase ÷ (Intentos de Pase + Capturas sufridas). Mide cuántos puntos reales suma el QB cada vez que retrocede a lanzar.",
+    sub: "Puntos esperados por pase (nflfastR)",
+    tip: "Fórmula (nflfastR): EPA Total de Pase ÷ (Intentos de Pase + Capturas sufridas). Mide cuántos puntos reales suma el QB cada vez que retrocede a lanzar.",
+  },
+  "CPOE (Precisión)": {
+    sub: "% completos sobre lo esperado (NGS)",
+    tip: "Fórmula (NFL Next Gen Stats / nflfastR): % Real de Pases Completos − % Esperado según sensores RFID (distancia del tiro, separación del receptor y presión al QB).",
   },
   "CPOE": {
-    sub: "% completos sobre lo esperado",
-    tip: "Fórmula: % Real de Pases Completos − % Esperado según sensores NGS (distancia del tiro, separación del receptor y presión al QB).",
+    sub: "% completos sobre lo esperado (NGS)",
+    tip: "Fórmula (NFL Next Gen Stats / nflfastR): % Real de Pases Completos − % Esperado según sensores RFID (distancia del tiro, separación del receptor y presión al QB).",
   },
   "NGS Time to Throw": {
-    sub: "Segundos en soltar el balón",
-    tip: "Tiempo promedio en segundos (medido con chips RFID de Next Gen Stats) desde el snap hasta que el QB lanza el balón. Promedio NFL: ~2.75s.",
+    sub: "Segundos en soltar el balón (NGS)",
+    tip: "Tiempo promedio en segundos (medido con chips RFID de NFL Next Gen Stats) desde el snap hasta que el QB lanza el balón. Promedio NFL: ~2.75s.",
+  },
+  "NGS Air Yards/Att": {
+    sub: "Yardas aéreas promedio por tiro",
+    tip: "Average Intended Air Yards (NFL Next Gen Stats): Distancia vertical promedio en yardas desde la línea de golpeo hasta el punto donde cae el balón. Promedio NFL: ~7.8 yds.",
+  },
+  "NGS Tight Window %": {
+    sub: "% pases en ventana cerrada (<1 yd)",
+    tip: "Aggressiveness % (NFL Next Gen Stats): Porcentaje de pases lanzados donde el receptor tiene un defensor a menos de 1 yarda de distancia. Promedio NFL: ~15.5%.",
+  },
+  "NFL Passer Rating": {
+    sub: "Índice oficial de pasador NFL.com",
+    tip: "Fórmula Oficial NFL.com (escala 0 a 158.3): Pondera % de pases completos, yardas por intento, touchdowns por intento e intercepciones por intento. Promedio NFL: ~92.0.",
   },
   "PFR On-Target %": {
     sub: "% tiros precisos a las manos",
-    tip: "Fórmula (Pro Football Reference): Pases precisos al blanco ÷ Total de pases lanzados (sin contar balones tirados afuera deliberadamente). Promedio NFL: ~75%.",
+    tip: "Fórmula: Pases precisos al blanco ÷ Total de pases lanzados (sin contar balones tirados afuera deliberadamente). Promedio NFL: ~75%.",
   },
   "PFR Pressure %": {
     sub: "% jugadas bajo acoso defensivo",
-    tip: "Fórmula (PFR): (Apresuramientos + Golpes al QB + Capturas) ÷ Total de Dropbacks. Mide en qué % de jugadas el QB lanzó presionado.",
+    tip: "Fórmula: (Apresuramientos + Golpes al QB + Capturas) ÷ Total de Dropbacks. Mide en qué % de jugadas el QB lanzó presionado.",
   },
   "Yds Tierra": {
-    sub: "Yardas ganadas corriendo",
-    tip: "Total de yardas avanzadas por vía terrestre en acarreos.",
+    sub: "Yardas ganadas corriendo (NFL.com)",
+    tip: "Total oficial (NFL.com / nflfastR) de yardas avanzadas por vía terrestre en acarreos.",
   },
 
-  // Running Backs (RB)
+  // Running Backs (RB) — 100% NFL.com + nflfastR + Next Gen Stats
   "Acarreos": {
     sub: "Corridas totales con el balón",
-    tip: "Cantidad total de veces que el jugador recibió el balón en mano para correr por tierra.",
+    tip: "Cantidad total oficial (NFL.com / nflfastR) de veces que el jugador recibió el balón en mano para correr por tierra.",
+  },
+  "Yds / Acarreo": {
+    sub: "Yardas ÷ Acarreos (YPC NFL.com)",
+    tip: "Fórmula (NFL.com): Yardas Terrestres Totales ÷ Total de Acarreos. Promedio NFL: ~4.3 yardas por corrida.",
   },
   "Yds/Acarreo": {
-    sub: "Yardas ÷ Acarreos (YPC)",
-    tip: "Fórmula: Yardas Terrestres Totales ÷ Total de Acarreos. Promedio NFL: ~4.3 yardas por corrida.",
+    sub: "Yardas ÷ Acarreos (YPC NFL.com)",
+    tip: "Fórmula (NFL.com): Yardas Terrestres Totales ÷ Total de Acarreos. Promedio NFL: ~4.3 yardas por corrida.",
   },
   "TDs Tierra": {
-    sub: "Touchdowns por carrera",
-    tip: "Cantidad de veces que el corredor ingresó a la zona de anotación acarreando el balón.",
+    sub: "Touchdowns por carrera (NFL.com)",
+    tip: "Cantidad oficial de veces que el corredor ingresó a la zona de anotación acarreando el balón.",
+  },
+  "EPA / Acarreo": {
+    sub: "Puntos esperados por corrida (nflfastR)",
+    tip: "Fórmula (nflfastR): EPA Terrestre Total ÷ Acarreos. Mide si las corridas del jugador aumentan la probabilidad de anotar según down y distancia.",
   },
   "EPA/Acarreo": {
-    sub: "Puntos esperados por corrida",
-    tip: "Fórmula: EPA Terrestre Total ÷ Acarreos. Mide si las corridas del jugador aumentan la probabilidad de anotar según down y distancia.",
+    sub: "Puntos esperados por corrida (nflfastR)",
+    tip: "Fórmula (nflfastR): EPA Terrestre Total ÷ Acarreos. Mide si las corridas del jugador aumentan la probabilidad de anotar según down y distancia.",
   },
   "NGS RYOE/Att": {
-    sub: "Yardas extra sobre el bloqueo",
-    tip: "Rush Yards Over Expected per Attempt (Next Gen Stats): (Yardas Reales − Yardas Esperadas según ubicación/velocidad de bloqueadores y defensores) ÷ Acarreos. Mide cuántas yardas extra crea el RB por sí solo.",
+    sub: "Yardas extra sobre el bloqueo (NGS)",
+    tip: "Rush Yards Over Expected per Attempt (NFL Next Gen Stats): (Yardas Reales − Yardas Esperadas según ubicación/velocidad de bloqueadores y defensores) ÷ Acarreos.",
   },
   "NGS Caja 8+ Def": {
-    sub: "% corridas vs 8+ defensores",
-    tip: "Porcentaje de acarreos en los que la defensa rival puso 8 o más jugadores dentro de la 'caja' (frente a la línea) para frenar la carrera.",
+    sub: "% corridas vs 8+ defensores (NGS)",
+    tip: "8+ Defenders in the Box % (NFL Next Gen Stats): Porcentaje de acarreos en los que la defensa rival puso 8 o más jugadores dentro de la 'caja' para frenar la carrera.",
   },
   "Target Share": {
     sub: "% de pases del equipo hacia él",
-    tip: "Fórmula: (Pases lanzados a este jugador ÷ Total de pases lanzados por su equipo) × 100. Mide qué tan seguido el QB lo busca.",
+    tip: "Fórmula (nflfastR): (Pases lanzados a este jugador ÷ Total de pases lanzados por su equipo) × 100. Mide qué tan seguido el QB lo busca.",
   },
 
-  // Wide Receivers & Tight Ends (WR / TE)
+  // Wide Receivers & Tight Ends (WR / TE) — 100% NFL.com + nflfastR + Next Gen Stats
   "Recepciones / Tgts": {
-    sub: "Atrapados ÷ Pases buscados",
-    tip: "Cantidad de pases atrapados (Recepciones) sobre el total de veces que el QB lanzó hacia él (Targets).",
+    sub: "Atrapados ÷ Pases buscados (NFL.com)",
+    tip: "Cantidad oficial (NFL.com / nflfastR) de pases atrapados (Recepciones) sobre el total de veces que el QB lanzó hacia él (Targets).",
   },
   "Yds Recepción": {
-    sub: "Yardas totales tras atrapar",
-    tip: "Total de yardas ganadas en pases atrapados (incluye yardas en el aire + yardas corridas después de la recepción).",
+    sub: "Yardas totales tras atrapar (NFL.com)",
+    tip: "Total oficial (NFL.com / nflfastR) de yardas ganadas en pases atrapados (incluye yardas en el aire + yardas corridas después de la recepción).",
   },
   "TDs": {
-    sub: "Touchdowns de recepción",
-    tip: "Pases atrapados que terminaron en Touchdown.",
+    sub: "Touchdowns de recepción (NFL.com)",
+    tip: "Pases atrapados que terminaron oficialmente en Touchdown.",
   },
   "Air Yards Share": {
-    sub: "% yardas aéreas del equipo",
-    tip: "Fórmula: (Yardas que viajó el balón por el aire hacia este jugador ÷ Total de yardas aéreas lanzadas por el equipo) × 100. Indica quién es la amenaza profunda.",
+    sub: "% yardas aéreas del equipo (nflfastR)",
+    tip: "Fórmula (nflfastR): (Yardas que viajó el balón por el aire hacia este jugador ÷ Total de yardas aéreas lanzadas por el equipo) × 100.",
   },
   "WOPR (Opportunity)": {
-    sub: "1.5×Target% + 0.7×AirYds%",
-    tip: "Weighted Opportunity Rating (PlayerProfiler): Se calcula como (1.5 × Target Share) + (0.7 × Air Yards Share). Es la métrica reina para medir el rol ofensivo de un receptor (> 0.60 es estrella #1).",
+    sub: "1.5×Target% + 0.7×AirYds% (nflfastR)",
+    tip: "Weighted Opportunity Rating (nflfastR): Se calcula como (1.5 × Target Share) + (0.7 × Air Yards Share). Es la métrica reina para medir el rol ofensivo de un receptor (> 0.60 es estrella #1).",
+  },
+  "EPA / Target": {
+    sub: "Puntos esperados por pase buscado",
+    tip: "Fórmula (nflfastR): EPA de Recepción Total ÷ Targets. Mide cuántos puntos esperados genera cada vez que el QB decide lanzarle a este receptor.",
   },
   "EPA/Target": {
     sub: "Puntos esperados por pase buscado",
-    tip: "Fórmula: EPA de Recepción Total ÷ Targets. Mide cuántos puntos esperados genera cada vez que el QB decide lanzarle a este receptor.",
+    tip: "Fórmula (nflfastR): EPA de Recepción Total ÷ Targets. Mide cuántos puntos esperados genera cada vez que el QB decide lanzarle a este receptor.",
   },
   "NGS Separation": {
-    sub: "Distancia al defensor al atrapar",
-    tip: "Separación promedio en yardas (medida con sensores RFID de Next Gen Stats) entre el receptor y el defensor más cercano cuando llega el pase. Promedio NFL: ~2.8 yds.",
+    sub: "Distancia al defensor al atrapar (NGS)",
+    tip: "Separación promedio en yardas (medida con sensores RFID de NFL Next Gen Stats) entre el receptor y el defensor más cercano cuando llega el pase. Promedio NFL: ~2.8 yds.",
+  },
+  "NGS YAC Above Exp": {
+    sub: "Yardas tras recepción sobre esp. (NGS)",
+    tip: "YAC Above Expectation (NFL Next Gen Stats): Yardas extra ganadas corriendo tras atrapar el balón por encima de lo esperado por los sensores RFID.",
   },
 
-  // Defensores (DEF)
+  // Defensores (DEF) — 100% NFL.com + nflfastR
   "Sacks": {
     sub: "Capturas al QB atrás de la línea",
-    tip: "Veces que el defensor derriba al Quarterback rival detrás de la línea de golpeo antes de que pueda lanzar.",
+    tip: "Veces oficiales (NFL.com / nflfastR) que el defensor derriba al Quarterback rival detrás de la línea de golpeo antes de que pueda lanzar.",
   },
   "QB Hits": {
-    sub: "Golpes al QB al lanzar",
-    tip: "Veces que el defensor derriba o impacta legalmente al QB rival justo después de soltar el pase.",
+    sub: "Golpes oficiales al QB (NFL.com)",
+    tip: "Veces oficiales (NFL.com / nflfastR) que el defensor derriba o impacta legalmente al QB rival en o justo después de soltar el pase.",
   },
   "Tackles For Loss": {
     sub: "Derribos para pérdida de yardas",
-    tip: "TFL: Tacleadas realizadas detrás de la línea de golpeo que hacen retroceder al corredor o receptor rival.",
+    tip: "TFL (NFL.com / nflfastR): Tacleadas realizadas detrás de la línea de golpeo que hacen retroceder al corredor o receptor rival.",
+  },
+  "Tackles Totales": {
+    sub: "Tacleadas totales (Solo + Asist.)",
+    tip: "Total oficial de derribos defensivos registrados en NFL.com / nflfastR (suma de Tackles Solo + Tackles Asistidos).",
   },
   "Tackles Solo": {
     sub: "Tacleadas individuales sin ayuda",
-    tip: "Derribos defensivos completados íntegramente por este jugador sin asistencia de otro compañero.",
+    tip: "Derribos defensivos oficiales (NFL.com / nflfastR) completados íntegramente por este jugador sin asistencia de otro compañero.",
   },
   "Intercepciones": {
     sub: "Pases rivales robados en el aire",
-    tip: "Pases del QB rival atrapados por el defensor que cambian inmediatamente la posesión del balón.",
+    tip: "Pases del QB rival atrapados oficialmente por el defensor que cambian inmediatamente la posesión del balón.",
   },
   "Pases Defendidos": {
     sub: "Pases desviados en cobertura",
-    tip: "Pases rivales que el defensor logra manotear, desviar o romper en el aire para evitar la recepción.",
+    tip: "Passes Defended (NFL.com / nflfastR): Pases rivales que el defensor logra manotear, desviar o romper en el aire para evitar la recepción.",
+  },
+  "Fumbles Forzados": {
+    sub: "Balones sueltos provocados",
+    tip: "Forced Fumbles (NFL.com / nflfastR): Veces que el defensor golpea y arranca el balón de las manos del portador rival.",
   },
   "PFR Pressures": {
     sub: "Sacks + Golpes + Apresuramientos",
-    tip: "Fórmula (Pro Football Reference): Sacks + QB Hits + Hurries (veces que obligó al QB a lanzar antes de tiempo o huir del bolsillo).",
+    tip: "Fórmula: Sacks + QB Hits + Hurries (veces que obligó al QB a lanzar antes de tiempo o huir del bolsillo).",
   },
   "PFR Rating Permitido": {
     sub: "Rating QB rival al lanzarle (↓ mejor)",
-    tip: "Índice de pasador (0 a 158.3) que consiguen los QBs rivales cuando lanzan hacia el receptor cubierto por este defensor. ¡Cuanto MÁS BAJO mejor! (< 75.0 es cobertura élite).",
+    tip: "Índice de pasador (0 a 158.3) que consiguen los QBs rivales cuando lanzan hacia el receptor cubierto por este defensor. ¡Cuanto MÁS BAJO mejor!",
   },
 };
 
 function getPosPercentileExplanation(pos, pctl) {
-  if (pos === "QB") return `Percentil ${pctl} entre los QBs NFL (calculado por EPA/Dropback: supera al ${pctl}% de los mariscales).`;
-  if (pos === "RB") return `Percentil ${pctl} entre los RBs NFL (calculado por producción terrestre y eficiencia: supera al ${pctl}% de los corredores).`;
-  if (pos === "WR" || pos === "TE") return `Percentil ${pctl} entre los ${pos}s NFL (calculado por yardas y volumen de recepción: supera al ${pctl}% de su posición).`;
-  return `Percentil ${pctl} entre los Defensores NFL (calculado por Puntaje de Impacto: Sacks×3 + Hits×1.2 + TFL×1.5 + INT×3.5 + PD×1 + Tackles×0.25).`;
+  if (pos === "QB") return `Percentil ${pctl} entre los QBs NFL (calculado por EPA/Dropback en nflfastR: supera al ${pctl}% de los mariscales).`;
+  if (pos === "RB") return `Percentil ${pctl} entre los RBs NFL (calculado por producción terrestre en NFL.com / nflfastR: supera al ${pctl}% de los corredores).`;
+  if (pos === "WR" || pos === "TE") return `Percentil ${pctl} entre los ${pos}s NFL (calculado por yardas y volumen de recepción en NFL.com / nflfastR: supera al ${pctl}% de su posición).`;
+  return `Percentil ${pctl} entre los Defensores NFL (calculado por Puntaje de Impacto NFL.com/nflfastR: Sacks×3 + Hits×1.2 + TFL×1.5 + INT×3.5 + PD×1 + Tackles×0.25).`;
 }
 
 function renderPlayersGrid() {
@@ -3428,7 +3472,7 @@ function renderPlayersGrid() {
 
       const metricsHtml = Object.entries(p.metrics || {})
         .map(([k, v]) => {
-          const exp = PLAYER_METRIC_EXPLAINERS[k] || { sub: "Métrica oficial 2026", tip: k };
+          const exp = PLAYER_METRIC_EXPLAINERS[k] || { sub: "Métrica oficial NFL.com / nflfastR", tip: k };
           return `
             <div class="psc-metric-item" title="${exp.tip}">
               <div class="psc-metric-label-wrap">
@@ -3653,7 +3697,7 @@ const NFL_STATS_GLOSSARY = [
   {
     term: "EPA / Jugada y EPA / Dropback (Puntos Esperados Agregados)",
     category: "ATAQUE AÉREO & GENERAL",
-    source: "RBSDM / nflfastR",
+    source: "nflfastR (nflverse) / RBSDM",
     what_is_it:
       "Mide cuántos puntos reales le suma (o le resta) cada jugada a la probabilidad de anotar de un equipo según el down, la distancia y la yarda del campo. Un pase de 8 yardas en 3ra y 7 vale mucho más (+EPA) que un pase de 8 yardas en 3ra y 18 (-EPA).",
     how_to_read:
@@ -3666,7 +3710,7 @@ const NFL_STATS_GLOSSARY = [
   {
     term: "CPOE (Completion Percentage Over Expected — Precisión Real)",
     category: "ATAQUE AÉREO vs. SECUNDARIA",
-    source: "NFL Next Gen Stats / RBSDM",
+    source: "NFL Next Gen Stats / nflfastR",
     what_is_it:
       "Calcula qué porcentaje de pases completa un Quarterback por encima (o por debajo) de lo esperado según la dificultad real del pase (distancia aérea, separación del receptor, presión al QB y cercanía a las bandas).",
     how_to_read:
@@ -3679,7 +3723,7 @@ const NFL_STATS_GLOSSARY = [
   {
     term: "Pases Explosivos (+20 Yardas %)",
     category: "ATAQUE AÉREO vs. SECUNDARIA",
-    source: "Sharp Football Analysis / NFL Savant",
+    source: "nflfastR Play-by-Play / Next Gen Stats",
     what_is_it:
       "Porcentaje de jugadas aéreas que consiguen una ganancia de 20 o más yardas en un solo tiro. Es el indicador número uno de capacidad de anotar rápido (Big Plays).",
     how_to_read:
@@ -3692,7 +3736,7 @@ const NFL_STATS_GLOSSARY = [
   {
     term: "EPA / Acarreo (Rushing EPA)",
     category: "JUEGO TERRESTRE vs. FRONT-7",
-    source: "RBSDM / SumerSports",
+    source: "nflfastR (nflverse)",
     what_is_it:
       "Mide la eficiencia en puntos esperados de cada corrida por tierra. En la NFL moderna, correr suele ser menos eficiente que pasar, por lo que el promedio de la liga en acarreos ronda -0.05 EPA/jugada.",
     how_to_read:
@@ -3705,7 +3749,7 @@ const NFL_STATS_GLOSSARY = [
   {
     term: "RYOE y Acarreos Explosivos (+10 Yardas %)",
     category: "JUEGO TERRESTRE vs. FRONT-7",
-    source: "Next Gen Stats / PlayerProfiler",
+    source: "NFL Next Gen Stats / nflfastR",
     what_is_it:
       "RYOE (Rush Yards Over Expected) mide cuántas yardas extra gana el corredor por su cuenta después de lo que le bloqueó su línea ofensiva. Los Acarreos Explosivos (+10 Yds %) miden qué porcentaje de corridas superan las 10 yardas.",
     how_to_read:
@@ -3718,20 +3762,20 @@ const NFL_STATS_GLOSSARY = [
   {
     term: "Trincheras: YPP (Yardas por Jugada) vs. TFL (Tackles Para Pérdida)",
     category: "JUEGO TERRESTRE & TRINCHERAS",
-    source: "Pro Football Reference / PFF",
+    source: "NFL.com / nflfastR",
     what_is_it:
       "YPP mide el avance promedio del ataque en cada jugada. TFL (Tackles For Loss) cuenta cuántas veces la línea defensiva y los linebackers penetran la línea de golpeo y derriban al corredor o receptor detrás de la línea (pérdida de yardas).",
     how_to_read:
-      "Si una ofensiva promedia 6.0+ YPP domina el ritmo; pero si enfrenta a un Front-7 con más de 38 TFL acumulados, corre riesgo de quedar en 2da y 13 o 3ra y largo.",
-    scale_elite: "🟢 Élite: 5.8+ YPP (Ataque) | 38+ TFL (Defensa)",
-    scale_avg: "🟡 Promedio NFL: 5.1 a 5.6 YPP | 28 a 35 TFL",
-    scale_poor: "🔴 Débil: Menos de 4.8 YPP | Menos de 24 TFL",
+      "Si una ofensiva promedia 6.0+ YPP domina el ritmo; pero si enfrenta a un Front-7 con más de 5.0 TFL/partido, corre riesgo de quedar en 2da y 13 o 3ra y largo.",
+    scale_elite: "🟢 Élite: 5.8+ YPP (Ataque) | 5.2+ TFL/g (Defensa)",
+    scale_avg: "🟡 Promedio NFL: 5.1 a 5.6 YPP | 4.0 a 4.9 TFL/g",
+    scale_poor: "🔴 Débil: Menos de 4.8 YPP | Menos de 3.4 TFL/g",
     tactical_example: "Ejemplo: Un TFL en 1er Down reduce a menos de la mitad la probabilidad de que esa serie ofensiva consiga un 1er Down.",
   },
   {
     term: "Zona 1 del Mapa: Bolsillo — Sacks Permitidos OL % vs. Pass Rush Sack %",
     category: "ZONA ROJA, 3ER DOWN & BOLSILLO",
-    source: "Next Gen Stats / PFF / PFR",
+    source: "NFL.com / nflfastR / Next Gen Stats",
     what_is_it:
       "Evalúa el duelo en la trinchera de pase: 'OL Sacks Permitidos %' es el porcentaje de intentos de pase en los que la Línea Ofensiva deja que capturen a su QB. 'Pass Rush Sack %' es el porcentaje de jugadas en que la defensa rival logra capturar al QB.",
     how_to_read:
@@ -3744,9 +3788,9 @@ const NFL_STATS_GLOSSARY = [
   {
     term: "Zona 2 del Mapa: Mediocampo — Conversión de 3er Down %",
     category: "ZONA ROJA, 3ER DOWN & BOLSILLO",
-    source: "TeamRankings / Sharp Football",
+    source: "nflfastR Play-by-Play / NFL.com",
     what_is_it:
-      "Porcentaje de veces que el ataque logra las yardas necesarias en 3ra oportunidad para conseguir un nuevo 1er Down ('mover las cadenas') y mantener la posesión de la pelota.",
+      "Porcentaje oficial de veces que el ataque logra las yardas necesarias en 3ra oportunidad para conseguir un nuevo 1er Down ('mover las cadenas') y mantener la posesión de la pelota.",
     how_to_read:
       "En Ataque: más de 43% es élite (series largas que agotan al rival 🟢). En Defensa ('3er Down que cede'): permitir menos de 35% indica una defensa que obliga a despejar rápido (🔴 frena al ataque).",
     scale_elite: "🟢 Élite: 43% o más (Ataque) | Cede 35% o menos (Defensa)",
@@ -3757,9 +3801,9 @@ const NFL_STATS_GLOSSARY = [
   {
     term: "Zona 3 del Mapa: Zona Roja — Eficiencia de Touchdown (RZ TD %)",
     category: "ZONA ROJA, 3ER DOWN & BOLSILLO",
-    source: "TeamRankings / Pro Football Reference",
+    source: "nflfastR Play-by-Play / NFL.com",
     what_is_it:
-      "La Zona Roja comprende las últimas 20 yardas antes de la zona de anotación rival (Yarda 20 hasta la línea de gol). Esta estadística mide qué porcentaje de visitas a la Zona Roja terminan en TOUCHDOWN (6-7 puntos) en lugar de conformarse con un Gol de Campo (3 puntos) o perder el balón.",
+      "La Zona Roja comprende las últimas 20 yardas antes de la zona de anotación rival (Yarda 20 hasta la línea de gol). Esta estadística mide qué porcentaje de series que pisan la Zona Roja terminan en TOUCHDOWN (6-7 puntos) en lugar de conformarse con un Gol de Campo (3 puntos) o perder el balón.",
     how_to_read:
       "No mide goles de campo: mide exclusivamente letalidad de Touchdown. Si el ataque tiene 64% RZ TD y la defensa rival permite 62%, la Zona 3 se pinta de VERDE (Alta letalidad de 7 puntos). Si la defensa permite menos de 48%, se pinta de ROJO (Muralla que fuerza goles de campo).",
     scale_elite: "🟢 Élite: 60% o más de TD (Ataque) | Permite menos de 48% (Defensa)",
@@ -3770,7 +3814,7 @@ const NFL_STATS_GLOSSARY = [
   {
     term: "Seguridad del Balón: Margen de Entregas (Turnover Margin)",
     category: "ZONA ROJA, 3ER DOWN & BOLSILLO",
-    source: "Pro Football Reference / ESPN",
+    source: "NFL.com / nflfastR",
     what_is_it:
       "Es la resta exacta entre los balones robados por la defensa (Takeaways = Intercepciones + Fumbles recuperados) y los balones regalados por el propio ataque (Giveaways = Intercepciones lanzadas + Fumbles perdidos).",
     how_to_read:
@@ -3781,22 +3825,22 @@ const NFL_STATS_GLOSSARY = [
     tactical_example: "Ejemplo: En la NFL, el equipo que gana el duelo de entregas de balón en un partido tiene un 77% de probabilidad histórica de victoria.",
   },
   {
-    term: "DVOA Total (Defense-Adjusted Value Over Average)",
+    term: "Índice de Eficiencia Total (EPA Ajustado / DVOA Proxy)",
     category: "TABLA 32 EQUIPOS & RANKINGS",
-    source: "FTN Fantasy (creado por Aaron Schatz)",
+    source: "nflfastR (nflverse) / FTN DVOA",
     what_is_it:
-      "Compara el éxito de un equipo en cada jugada de la temporada contra el promedio de la NFL, ajustando por la dificultad del calendario (qué tan fuertes fueron las defensas o ataques rivales que enfrentó) y la situación del partido.",
+      "Compara el éxito de un equipo en cada jugada de la temporada contra el promedio de la NFL, combinando eficiencia ofensiva, defensiva y de equipos especiales.",
     how_to_read:
-      "Se expresa en porcentaje donde 0.0% es un equipo promedio de la NFL. En DVOA Total y Ofensivo, cuanto más positivo mejor (+20% es candidato al Super Bowl).",
+      "Se expresa en porcentaje donde 0.0% es un equipo promedio de la NFL. Cuanto más positivo mejor (+20% es candidato al Super Bowl).",
     scale_elite: "🟢 Candidato Élite: +15.0% a +30.0%",
     scale_avg: "🟡 Promedio NFL: -5.0% a +8.0%",
     scale_poor: "🔴 Reconstrucción: Menor a -12.0%",
-    tactical_example: "Ejemplo: Un equipo con récord 4-2 pero DVOA de +22% es estadísticamente mucho más peligroso que un 5-1 con DVOA de -4%.",
+    tactical_example: "Ejemplo: Un equipo con récord 4-2 pero Eficiencia Total de +22% es estadísticamente mucho más peligroso que un 5-1 con -4%.",
   },
   {
     term: "Equipos Especiales: FG %, +50 Yds, Net Punt Avg e In-20 %",
     category: "EQUIPOS ESPECIALES (KICKING & PUNTING)",
-    source: "FTN DVOA / TeamRankings / PFR",
+    source: "NFL.com / nflfastR",
     what_is_it:
       "Evalúa la tercera fase del juego: 'FG %' es el porcentaje de acierto en goles de campo; '+50 Yds' cuenta goles de campo anotados desde 50+ yardas; 'Net Punt Avg' son las yardas netas de despeje descontando la devolución; 'In-20 %' es el porcentaje de despejes que dejan al rival encerrado antes de su yarda 20.",
     how_to_read:
@@ -3809,33 +3853,33 @@ const NFL_STATS_GLOSSARY = [
   {
     term: "Scouting Jugadores: Percentil (Pctl 1 a 99) y Puntaje de Impacto",
     category: "SCOUTING DE JUGADORES (2026)",
-    source: "nflverse / Next Gen Stats / PFR",
+    source: "NFL.com / nflfastR / Next Gen Stats",
     what_is_it:
       "Ubica a cada jugador en una escala de 1 a 99 comparándolo exclusivamente contra los demás jugadores de su misma posición en la NFL. Un Pctl 94 significa que supera al 94% de la liga en su puesto.",
     how_to_read:
-      "¿Cómo se calcula?: En QBs se ordena por EPA/Dropback; en RBs por Yardas Terrestres; en WRs y TEs por Yardas de Recepción; y en Defensores (DEF) por el Puntaje de Impacto Defensivo = (Sacks × 3.0) + (QB Hits × 1.2) + (TFL × 1.5) + (Intercepciones × 3.5) + (Pases Defendidos × 1.0) + (Tackles Solo × 0.25).",
+      "¿Cómo se calcula?: En QBs se ordena por EPA/Dropback (nflfastR); en RBs por Yardas Terrestres (NFL.com); en WRs y TEs por Yardas de Recepción (NFL.com); y en Defensores (DEF) por el Puntaje de Impacto Oficial = (Sacks × 3.0) + (QB Hits × 1.2) + (TFL × 1.5) + (Intercepciones × 3.5) + (Pases Defendidos × 1.0) + (Tackles Solo × 0.25).",
     scale_elite: "🟢 Estrella Élite: Pctl 80 a 99 (Top 20% NFL)",
     scale_avg: "🟡 Titular Sólido: Pctl 50 a 79",
     scale_poor: "🔴 Rotación / Bajo: Menor a Pctl 40",
     tactical_example: "Ejemplo: Un receptor con Pctl 96 es un arma ofensiva Top-5 de toda la NFL.",
   },
   {
-    term: "Scouting QB: Time to Throw, On-Target % y Pressure %",
+    term: "Scouting QB: Time to Throw, Air Yards/Att, Tight Window % y Passer Rating",
     category: "SCOUTING DE JUGADORES (QB)",
-    source: "Next Gen Stats (RFID) / Pro Football Reference",
+    source: "NFL Next Gen Stats (RFID) / NFL.com / nflfastR",
     what_is_it:
-      "Tres métricas avanzadas de mariscales: 1) 'NGS Time to Throw' mide con chips RFID los segundos promedio desde el snap hasta soltar el pase; 2) 'PFR On-Target %' calcula (Pases precisos a las manos ÷ Pases lanzados descartando spikes); 3) 'PFR Pressure %' calcula ((Apresuramientos + Golpes + Sacks) ÷ Total de Dropbacks).",
+      "Cuatro métricas 100% oficiales de mariscales: 1) 'NGS Time to Throw' mide con chips RFID los segundos promedio desde el snap hasta soltar el pase; 2) 'NGS Air Yards/Att' mide la distancia vertical promedio de cada tiro; 3) 'NGS Tight Window %' mide el % de tiros lanzados con un defensor a <1 yarda del receptor; 4) 'NFL Passer Rating' es el índice oficial de pasador de NFL.com (0 a 158.3).",
     how_to_read:
-      "Un QB con On-Target > 78% y buen EPA pese a sufrir un Pressure % alto (> 25%) demuestra temple élite bajo presión.",
-    scale_elite: "🟢 Élite: On-Target > 78% | Pressure sufrida < 18%",
-    scale_avg: "🟡 Promedio NFL: Time to Throw ~2.75s | On-Target ~75%",
-    scale_poor: "🔴 En problemas: On-Target < 71% | Pressure sufrida > 27%",
-    tactical_example: "Ejemplo: Si un QB suelta el balón en 2.55s neutraliza incluso al mejor Pass Rush rival.",
+      "Un QB con alto CPOE (+3.5%+) y Passer Rating > 100 pese a lanzar en ventanas cerradas (Tight Window > 16%) demuestra precisión quirúrgica.",
+    scale_elite: "🟢 Élite: Passer Rating > 102.0 | CPOE > +3.5% | Time to Throw < 2.65s",
+    scale_avg: "🟡 Promedio NFL: Time to Throw ~2.75s | Tight Window ~15.5% | Rating ~92.0",
+    scale_poor: "🔴 En problemas: Passer Rating < 80.0 | CPOE < -2.0%",
+    tactical_example: "Ejemplo: Si un QB suelta el balón en 2.55s con +4.5% CPOE, neutraliza incluso al mejor Pass Rush rival.",
   },
   {
     term: "Scouting RB: NGS RYOE/Att y Caja con 8+ Defensores %",
     category: "SCOUTING DE JUGADORES (RB)",
-    source: "NFL Next Gen Stats",
+    source: "NFL Next Gen Stats / nflfastR",
     what_is_it:
       "'RYOE/Att' (Rush Yards Over Expected per Attempt) se calcula como: (Yardas Reales − Yardas Esperadas según velocidad y ubicación de los 11 bloqueadores y 11 defensores) ÷ Acarreos. 'Caja 8+ Def %' mide en qué porcentaje de corridas había 8 o más defensores cerca de la línea.",
     how_to_read:
@@ -3848,7 +3892,7 @@ const NFL_STATS_GLOSSARY = [
   {
     term: "Scouting WR/TE: Target Share, Air Yards Share, WOPR y NGS Separation",
     category: "SCOUTING DE JUGADORES (WR & TE)",
-    source: "PlayerProfiler / Next Gen Stats",
+    source: "NFL Next Gen Stats / nflfastR / NFL.com",
     what_is_it:
       "• Target Share = Pases hacia el jugador ÷ Pases totales del equipo.\n• Air Yards Share = Yardas aéreas voladas hacia él ÷ Yardas aéreas totales del equipo.\n• WOPR (Weighted Opportunity Rating) = (1.5 × Target Share) + (0.7 × Air Yards Share).\n• NGS Separation = Yardas promedio de distancia al defensor más cercano al llegar el balón.",
     how_to_read:
@@ -3859,30 +3903,30 @@ const NFL_STATS_GLOSSARY = [
     tactical_example: "Ejemplo: Jaxon Smith-Njigba o CeeDee Lamb destacan cuando combinan alto WOPR con más de 3 yardas de separación.",
   },
   {
-    term: "Scouting DEF: PFR Pressures y Passer Rating Permitido",
+    term: "Scouting DEF: Sacks, QB Hits, Tackles For Loss (TFL) y Fumbles Forzados",
     category: "SCOUTING DE JUGADORES (DEF)",
-    source: "Pro Football Reference AdvStats / PFF",
+    source: "NFL.com / nflfastR",
     what_is_it:
-      "• PFR Pressures = Sacks (Capturas) + QB Hits (Golpes al QB) + Hurries (Apresuramientos que obligan al QB a lanzar antes o escapar).\n• PFR Rating Permitido = Índice de pasador (0 a 158.3) de los QBs rivales cuando lanzan contra la cobertura de este defensor.",
+      "• Sacks y QB Hits: Capturas detrás de la línea y golpes oficiales al mariscal rival.\n• Tackles For Loss (TFL): Derribos detrás de la línea de golpeo para pérdida de yardas.\n• Pases Defendidos (PD), Intercepciones (INT) y Fumbles Forzados (FF): Jugadas de impacto que rompen pases o fuerzan entregas de balón.",
     how_to_read:
-      "En Pressures, cuanto MÁS ALTO mejor (mide disrupción constante aunque no llegue al sack). En Rating Permitido, cuanto MÁS BAJO mejor (menos de 70.0 es un esquinero o safety cerrojo).",
-    scale_elite: "🟢 Élite: 25+ Pressures | Rating Permitido < 72.0",
-    scale_avg: "🟡 Promedio NFL: 14-20 Pressures | Rating Permitido 82.0-92.0",
-    scale_poor: "🔴 Vulnerable: Rating Permitido > 102.0",
-    tactical_example: "Ejemplo: Un Pass Rusher con 30+ Pressures obliga al ataque rival a dejar un ala cerrada extra bloqueando.",
+      "Combina disrupción en la trinchera (Sacks + QB Hits + TFL) con producción en cobertura y robos de balón (INT + PD + FF), todo con registros 100% oficiales de NFL.com / nflfastR.",
+    scale_elite: "🟢 Élite: 7+ Sacks / 14+ QB Hits | 3+ INT / 8+ PD",
+    scale_avg: "🟡 Promedio Titular: 3-5 Sacks | 4-6 PD",
+    scale_poor: "🔴 Baja disrupción: 0-1 Sacks / TFL",
+    tactical_example: "Ejemplo: Un Pass Rusher con 8+ Sacks y 15+ QB Hits obliga al ataque rival a dejar un ala cerrada extra bloqueando.",
   },
   {
     term: "Radar de Top News: Puntaje de Impacto (25 a 99 pts) y Ordenamiento",
     category: "RADAR DE TOP NEWS (8 PORTALES)",
-    source: "Rotoworld / OTC / Spotrac / ESPN / PFT / The Athletic",
+    source: "NFL.com News / Rotoworld / OTC / Spotrac / ESPN / PFT",
     what_is_it:
-      "• Puntaje de Impacto (0 a 99 pts): Algoritmo que evalúa la gravedad táctica de cada noticia sumando puntos por términos clave: +32 pts por Trade/Titularidad (trade, waived, starter, benched), +30 pts por Parte Médico/Lesión (IR, ACL, concussion, surgery, out), +28 pts por Impacto Salarial (cap, restructure, extension), +18 a +25 pts de prioridad de fuente y +18 pts al detectar la franquicia NFL afectada.\n• Filtro Anti-Ruido: Toda nota menor a 25 pts se descarta.",
+      "• Puntaje de Impacto (0 a 99 pts): Algoritmo que evalúa la gravedad táctica de cada noticia sumando puntos por términos clave: +32 pts por Trade/Titularidad (trade, waived, starter, benched), +30 pts por Parte Médico/Lesión (IR, ACL, concussion, surgery, out), +28 pts de prioridad máxima a NFL.com News oficial y contratos, y +18 pts al detectar la franquicia NFL afectada.\n• Filtro Anti-Ruido: Toda nota menor a 25 pts se descarta.",
     how_to_read:
-      "Por defecto las noticias se ordenan de Mayor a Menor Impacto (#1 a #N, de 99 a 25 pts) para que una nota menor recién subida nunca tape una baja crítica de último momento. Podés cambiar el orden con el selector superior a: Más Recientes Primero (Hora), Equipo NFL (A-Z) o Portal (A-Z).",
-    scale_elite: "🔥 Impacto Crítico: 90 a 99 pts (Baja en IR, ACL, Trade o cambio de QB titular)",
+      "Por defecto las noticias se ordenan de Mayor a Menor Impacto (#1 a #N, de 99 a 25 pts) priorizando NFL.com News para que una nota menor nunca tape un reporte oficial clave.",
+    scale_elite: "🔥 Impacto Crítico: 90 a 99 pts (Baja en IR, ACL, Trade o reporte oficial NFL.com)",
     scale_avg: "⚡ Impacto Alto: 75 a 89 pts (Parte médico importante o movimiento de roster)",
     scale_poor: "📊 Impacto Relevante: 25 a 74 pts (Nota táctica o salarial que superó el umbral)",
-    tactical_example: "Ejemplo: Una lesión de tobillo/IR de un titular reportada en Rotoworld alcanza 99/99 pts y se ubica #1 en el Radar.",
+    tactical_example: "Ejemplo: Un reporte oficial en NFL.com News sobre un titular lesionado alcanza 99/99 pts y se ubica #1 en el Radar.",
   },
 ];
 
@@ -4370,8 +4414,8 @@ function createCustomTeamTip(tm) {
     title: `Radiografía Técnica de ${tm.name}: ${qbName} (${qbNum}) y ${prName} (${prNum})`,
     body: bodyTxt,
     page_link: `${STATE.dashboardPublicUrl}#teams`,
-    source_link: tm.links.pfr,
-    source_name: "Pro Football Reference / RBSDM",
+    source_link: tm.links?.nfl || tm.links?.ngs || tm.links?.rbsdm || "https://www.nfl.com/stats/team-stats/",
+    source_name: "NFL.com Oficial / nflfastR / Next Gen Stats",
     illustration: uniqueImgUrl,
     clay_prompt: prompt,
   });
@@ -4382,14 +4426,23 @@ function createCustomTeamTip(tm) {
 }
 
 const PLAYER_X_SHORT_LABELS = {
-  "EPA / Dropback": "EPA/Play",
-  "Éxito Pase %": "Éxito Pase",
+  "Yds Pase": "Yds Pase",
   "Yardas Pase": "Yds Pase",
+  "TD / INT": "TD/INT",
+  "EPA/Dropback": "EPA/Play",
+  "EPA / Dropback": "EPA/Play",
+  "CPOE": "CPOE",
+  "Éxito Pase %": "Éxito Pase",
+  "NGS Time to Throw": "Time to Throw",
+  "NGS Air Yards/Att": "Air Yds/Att",
+  "NGS Tight Window %": "Tight Win%",
+  "NFL Passer Rating": "Passer Rtg",
   "PFR On-Target %": "On-Target%",
   "PFR Pressure %": "Pressure%",
-  "NGS Time to Throw": "Time to Throw",
   "EPA / Carrera": "EPA/Run",
   "Éxito Terrestre %": "Éxito Run",
+  "NGS RYOE/Att": "RYOE/Att",
+  "NGS Caja 8+ Def": "Caja 8+%",
   "Yardas Tras Contacto / Att": "YAC/Att",
   "Carreras Explosivas (+10y)": "Explosivas +10y",
   "Yardas / Acarreo": "Yds/Att",
@@ -4410,6 +4463,11 @@ const PLAYER_X_SHORT_LABELS = {
   "Penalidades": "Castigos",
   "Snaps Ofensivos %": "Snaps%",
   "Eficacia en Zona Roja": "Efic. RZ",
+  "Sacks": "Sacks",
+  "QB Hits": "QB Hits",
+  "Tackles For Loss": "TFL",
+  "Tackles Solo": "Solo Tkl",
+  "Fumbles Forzados": "FF",
   "PFR Pressures": "Pressures",
   "QB Hits / TFL": "QBH/TFL",
   "Tackles Totales": "Tackles",
@@ -4598,7 +4656,7 @@ async function renderPlayerScoutingClayCardToDataUrl(pl, num, baseIllusPath) {
   // Pie de tarjeta
   ctx.fillStyle = "#94a3b8";
   ctx.font = "700 16px 'Inter', sans-serif";
-  ctx.fillText("NFL Analytics & X Tips Studio · Fuentes: nflverse 2026 + Next Gen Stats + Pro Football Reference AdvStats", 48, H - 22);
+  ctx.fillText("NFL Analytics & X Tips Studio · Fuentes Oficiales: NFL.com + nflfastR (nflverse) + NFL Next Gen Stats", 48, H - 22);
 
   return canvas.toDataURL("image/png");
 }
@@ -4669,8 +4727,8 @@ async function createCustomPlayerTip(pl, btnEl = null) {
     title: `Scouting 2026: ${pl.name} (${num}, ${pl.pos} · ${pl.team})`,
     body: postText,
     page_link: `${STATE.dashboardPublicUrl}#players`,
-    source_link: Object.values(pl.links || {})[0] || "https://www.pro-football-reference.com/",
-    source_name: "Next Gen Stats / Pro Football Reference",
+    source_link: pl.links?.nfl || pl.links?.ngs || Object.values(pl.links || {})[0] || "https://nextgenstats.nfl.com/",
+    source_name: "NFL.com Oficial / nflfastR / Next Gen Stats",
     illustration: cardDataUrl,
     clay_prompt: prompt,
     is_prediction_post: true,
