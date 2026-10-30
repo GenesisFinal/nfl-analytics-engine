@@ -102,8 +102,8 @@ def generate_tips_from_data(data: dict) -> list:
                     f"🏈 Duelo aéreo TNF ({aw['abbr']} @ {hm['abbr']}): {aw_qb} ({aw_qb_num}) lidera a {aw['short']} con {aw['off_pass_epa_play']:+.2f} EPA/dropback y {aw['off_cpoe']:+.1f}% CPOE ante {hm_db} ({hm_db_num}) y la secundaria de {hm['short']} ({hm['def_pass_epa_allowed']:+.2f} EPA/pase, #{hm['rank_def']} NFL)."
                 ),
                 "page_link": f"{DASHBOARD_PUBLIC_URL}#matchup-{g['id']}",
-                "source_link": "https://rbsdm.com/stats/stats/",
-                "source_name": "RBSDM / SumerSports",
+                "source_link": "https://nextgenstats.nfl.com/stats/passing",
+                "source_name": "nflfastR / Next Gen Stats",
                 "illustration": get_slot_illustration("TNF_PASS", aw["abbr"], hm["abbr"]),
             })
 
@@ -123,8 +123,8 @@ def generate_tips_from_data(data: dict) -> list:
                     f"🛡️ Trincheras en 1ra y Gol ({aw['abbr']} @ {hm['abbr']}): el DE {hm_pr} ({hm_pr_num}) impulsa a {hm['short']} ({hm['def_sack_rate']:.1f}% sack rate, {hm['def_sacks']} sacks) chocando ante el OT {aw_ol} ({aw_ol_num}) de {aw['short']} ({aw['off_sack_rate_allowed']:.1f}% presión) en Zona Roja."
                 ),
                 "page_link": f"{DASHBOARD_PUBLIC_URL}#matchup-{g['id']}",
-                "source_link": "https://www.teamrankings.com/nfl/stat/red-zone-scoring-pct",
-                "source_name": "TeamRankings / PFR",
+                "source_link": "https://www.nfl.com/stats/team-stats/",
+                "source_name": "NFL.com / nflfastR",
                 "illustration": get_slot_illustration("TNF_TRENCH", aw["abbr"], hm["abbr"]),
             })
 
@@ -171,8 +171,8 @@ def generate_tips_from_data(data: dict) -> list:
                     f"🔥 Ventaja aérea del domingo ({aw1['abbr']} @ {hm1['abbr']}): {star_playmaker} ({star_pm_num}) y {best_off['short']} registran {best_off['off_pass_epa_play']:+.2f} EPA/pase (#{best_off['rank_off']} NFL) y {best_off['off_explosive_pass_pct']:.1f}% de pases +20 yds superando en cobertura a {opp_lb} ({opp_lb_num}) de {opp_def['short']} ({opp_def['def_pass_ypg_allowed']:.0f} YPG)."
                 ),
                 "page_link": f"{DASHBOARD_PUBLIC_URL}#matchup-{g1['id']}",
-                "source_link": "https://www.sharpfootballanalysis.com/stats-nfl/",
-                "source_name": "Sharp Football / RBSDM",
+                "source_link": "https://nextgenstats.nfl.com/",
+                "source_name": "nflfastR / Next Gen Stats",
                 "illustration": get_slot_illustration("SUN_AIR", aw1["abbr"], hm1["abbr"]),
             })
 
@@ -201,8 +201,8 @@ def generate_tips_from_data(data: dict) -> list:
                     f"🏃 Duelo terrestre del domingo ({aw2['abbr']} @ {hm2['abbr']}): {rb_name} ({rb_num}) comanda el ataque por tierra de {rush_tm['short']} con {rush_tm['off_rush_ypg']:.1f} yds/partido ({rush_tm['off_rush_epa_play']:+.2f} EPA/acarreo y {rush_tm['off_explosive_rush_pct']:.1f}% +10 yds) aplicando stiff-arm ante {lb_name} ({lb_num}) de {def_tm['short']}."
                 ),
                 "page_link": f"{DASHBOARD_PUBLIC_URL}#matchup-{g2['id']}",
-                "source_link": "https://sumersports.com/teams/offensive/",
-                "source_name": "SumerSports / Next Gen Stats",
+                "source_link": "https://nextgenstats.nfl.com/stats/rushing",
+                "source_name": "NFL Next Gen Stats / nflfastR",
                 "illustration": get_slot_illustration("SUN_GROUND", aw2["abbr"], hm2["abbr"]),
             })
 
@@ -231,8 +231,8 @@ def generate_tips_from_data(data: dict) -> list:
                     f"⚡ Alerta de presión ({aw3['abbr']} @ {hm3['abbr']}): {edge_name} ({edge_num}) lidera a {rush_def['short']} con {rush_def['def_sacks']} capturas ({rush_def['def_sack_rate']:.1f}% sack rate y {rush_def['def_qb_hits']} QB hits) frente al guardia {ol_name} ({ol_num}) de {prot_off['short']} ({prot_off['off_sack_rate_allowed']:.1f}% sacks)."
                 ),
                 "page_link": f"{DASHBOARD_PUBLIC_URL}#matchup-{g3['id']}",
-                "source_link": "https://www.pro-football-reference.com/years/2026/",
-                "source_name": "Pro Football Reference / PFF",
+                "source_link": "https://www.nfl.com/stats/team-stats/",
+                "source_name": "NFL.com / nflfastR",
                 "illustration": get_slot_illustration("SUN_PASS_RUSH", aw3["abbr"], hm3["abbr"]),
             })
 
@@ -261,8 +261,8 @@ def generate_tips_from_data(data: dict) -> list:
                     f"🎯 Dato situacional en Red Zone ({aw4['abbr']} @ {hm4['abbr']}): {wr_name} ({wr_num}) y {rz_team['short']} convierten en TD el {rz_team['off_rz_td_pct']:.1f}% en Zona Roja ({rz_team['off_3d_pct']:.1f}% en 3er down) ante {def_star} ({def_num}) y {opp_rz['short']} ({opp_rz['def_rz_td_pct']:.1f}% permitido)."
                 ),
                 "page_link": f"{DASHBOARD_PUBLIC_URL}#matchup-{g4['id']}",
-                "source_link": "https://www.teamrankings.com/nfl/stat/red-zone-scoring-pct",
-                "source_name": "TeamRankings / NFL Savant",
+                "source_link": "https://www.nfl.com/stats/team-stats/",
+                "source_name": "nflfastR Play-by-Play / NFL.com",
                 "illustration": get_slot_illustration("SUN_REDZONE", aw4["abbr"], hm4["abbr"]),
             })
 
@@ -291,8 +291,8 @@ def generate_tips_from_data(data: dict) -> list:
                     f"🦵 Equipos Especiales ({aw5['abbr']} @ {hm5['abbr']}): el kicker {k_name} ({k_num}) lidera a {st_team['short']} (#{st_team['rank_st']} ST NFL) con {st_team['fg_pct']:.1f}% en goles de campo ({st_team['fg_50_plus']} de +50 yds) superando el bloqueo de {blk_name} ({blk_num}) de {opp_st['short']}."
                 ),
                 "page_link": f"{DASHBOARD_PUBLIC_URL}#matchup-{g5['id']}",
-                "source_link": "https://ftnfantasy.com/stats/nfl/team-total-dvoa",
-                "source_name": "FTN Fantasy DVOA / PFR",
+                "source_link": "https://www.nfl.com/stats/team-stats/special-teams/field-goals/2026/reg/all",
+                "source_name": "NFL.com / nflfastR",
                 "illustration": get_slot_illustration("SUN_SPECIAL_TEAMS", aw5["abbr"], hm5["abbr"]),
             })
 
@@ -327,8 +327,8 @@ def generate_tips_from_data(data: dict) -> list:
                     f"🌙 Choque de trincheras en MNF ({aw['abbr']} @ {hm['abbr']}): el guardia {aw_ol} ({aw_ol_num}) de {aw['short']} ({aw['off_pass_ypg']:.0f} yds aéreas/partido) se mide en la línea de golpeo al DT {hm_dt} ({hm_dt_num}) de {hm['short']} ({hm['off_ppg']:.1f} PPG, {hm['off_epa_play']:+.2f} EPA/jugada y {hm['def_sack_rate']:.1f}% sack rate)."
                 ),
                 "page_link": f"{DASHBOARD_PUBLIC_URL}#matchup-{gm['id']}",
-                "source_link": "https://ftnfantasy.com/stats/nfl/team-total-dvoa",
-                "source_name": "FTN DVOA / RBSDM",
+                "source_link": "https://www.nfl.com/stats/team-stats/",
+                "source_name": "nflfastR / NFL.com",
                 "illustration": get_slot_illustration("MNF_TRENCH", aw["abbr"], hm["abbr"]),
             })
 
@@ -349,7 +349,7 @@ def generate_tips_from_data(data: dict) -> list:
                 ),
                 "page_link": f"{DASHBOARD_PUBLIC_URL}#matchup-{gm['id']}",
                 "source_link": "https://nextgenstats.nfl.com/",
-                "source_name": "NFL Next Gen Stats / TeamRankings",
+                "source_name": "NFL Next Gen Stats / nflfastR",
                 "illustration": get_slot_illustration("MNF_SITUATIONAL", aw["abbr"], hm["abbr"]),
             })
 
@@ -361,6 +361,9 @@ def generate_tips_from_data(data: dict) -> list:
     if top_qbs:
         qb = top_qbs[0]
         qb_num, qb_img = PLAYER_TEAM_CLAY.get((qb["team"], "QB"), ("#16", "assets/clay/clay_det_goff.jpg"))
+        qb_epa = qb["metrics"].get("EPA / Dropback", qb["primary_val"])
+        qb_cpoe = qb["metrics"].get("CPOE (Precisión)", qb["secondary_val"])
+        qb_rtg = qb["metrics"].get("NFL Passer Rating", "")
         tips.append({
             "id": f"tip-player-qb-{qb['id']}",
             "day_group": "SUNDAY",
@@ -373,17 +376,20 @@ def generate_tips_from_data(data: dict) -> list:
             "title": f"Dominio en EPA y CPOE: {qb['name']} ({qb_num}, {qb['team']})",
             "headline": f"Dominio en EPA y CPOE: {qb['name']} ({qb_num}, {qb['team']})",
             "body": trim_post_body(
-                f"⭐ Rendimiento élite en 2026: {qb['name']} ({qb_num}, {qb['team']}) registra {qb['primary_val']} EPA/dropback (percentil {qb['percentile']} NFL), {qb['secondary_val']} CPOE y {qb['metrics'].get('Yardas Pase', qb['metrics'].get('Yds Pase', 0))} yds aéreas ({qb['metrics'].get('TD / INT', '')} TD/INT)."
+                f"⭐ Rendimiento élite en 2026: {qb['name']} ({qb_num}, {qb['team']}) suma {qb['primary_val']} ({qb['secondary_val']}) con {qb_epa} EPA/dropback, {qb_cpoe} CPOE y {qb_rtg} Passer Rating en NFL Next Gen Stats."
             ),
             "page_link": f"{DASHBOARD_PUBLIC_URL}#players",
-            "source_link": qb["links"].get("rbsdm", "https://rbsdm.com/stats/stats/"),
-            "source_name": "RBSDM / Next Gen Stats",
+            "source_link": qb["links"].get("ngs", "https://nextgenstats.nfl.com/stats/passing"),
+            "source_name": "NFL Next Gen Stats / nflfastR",
             "illustration": qb_img,
         })
 
     if top_wrs:
         wr = top_wrs[0]
         wr_num, wr_img = PLAYER_TEAM_CLAY.get((wr["team"], "WR"), ("#11", "assets/clay/clay_sea_jsn.jpg"))
+        wr_epa = wr["metrics"].get("EPA / Target", "")
+        wr_tshare = wr["metrics"].get("Target Share", wr["metrics"].get("Target Share %", ""))
+        wr_sep = wr["metrics"].get("NGS Separation", "3.0 yds")
         tips.append({
             "id": f"tip-player-wr-{wr['id']}",
             "day_group": "SUNDAY",
@@ -396,11 +402,11 @@ def generate_tips_from_data(data: dict) -> list:
             "title": f"Imán de Targets: {wr['name']} ({wr_num}, {wr['team']}) lidera en eficiencia",
             "headline": f"Imán de Targets: {wr['name']} ({wr_num}, {wr['team']}) lidera en eficiencia",
             "body": trim_post_body(
-                f"🚀 Máquina de producir yardas: {wr['name']} ({wr_num}, {wr['team']}) registra {wr['primary_val']} EPA/Target con {wr['secondary_val']} YPRR, {wr['metrics'].get('Target Share %', '')} Target Share y {wr['metrics'].get('NGS Separation', '3.0 yds')} de separación en Next Gen Stats."
+                f"🚀 Máquina de producir yardas: {wr['name']} ({wr_num}, {wr['team']}) acumula {wr['primary_val']} ({wr['secondary_val']}) con {wr_epa} EPA/Target, {wr_tshare} Target Share y {wr_sep} de separación en Next Gen Stats."
             ),
             "page_link": f"{DASHBOARD_PUBLIC_URL}#players",
-            "source_link": wr["links"].get("playerprofiler", "https://www.playerprofiler.com/"),
-            "source_name": "PlayerProfiler / NFL Savant",
+            "source_link": wr["links"].get("ngs", "https://nextgenstats.nfl.com/stats/receiving"),
+            "source_name": "NFL Next Gen Stats / NFL.com",
             "illustration": wr_img,
         })
 
