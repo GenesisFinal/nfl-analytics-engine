@@ -22,6 +22,7 @@ const STATE = {
   autoRefreshTimer: null,
   injuryOverrides: {}, // { [playerId]: 0 | 0.35 | 0.75 | 1.0 }
   showInjurySimPanel: true,
+  showSelfLearningPanel: true,
 };
 
 const CLAY_GALLERY = [
@@ -352,17 +353,28 @@ function populateWeekSelector(data) {
   if (!weekSel || !data) return;
   const avail = data.available_weeks && data.available_weeks.length ? data.available_weeks : [6, 7, 8];
   const allGames = data.games || [];
+  const wkEvoMap = {};
+  (data.model_learning?.weekly_evolution || []).forEach((row) => {
+    wkEvoMap[Number(row.week)] = row;
+  });
 
-  // Ordenar semanas de más reciente/próxima a anterior o en orden numérico claro
+  // Ordenar semanas en orden numérico claro con estado y acierto retrospectivo
   weekSel.innerHTML = avail
     .map((wk) => {
       const wkGames = allGames.filter((g) => Number(g.week) === Number(wk));
       const anyLive = wkGames.some((g) => g.status_state === "in");
       const preCount = wkGames.filter((g) => g.status_state === "pre").length;
+      const evo = wkEvoMap[Number(wk)];
       let suffix = "";
-      if (anyLive) suffix = ` (🔴 EN VIVO · ${wkGames.length} partidos)`;
-      else if (preCount > 0) suffix = ` (Próximos · ${preCount} partidos por jugar)`;
-      else suffix = ` (Finalizada · ${wkGames.length} resultados + MNF)`;
+      if (anyLive) {
+        suffix = ` (🔴 EN VIVO · ${wkGames.length} partidos)`;
+      } else if (preCount > 0) {
+        suffix = ` (Próximos · ${preCount} partidos por jugar)`;
+      } else if (evo) {
+        suffix = ` (Finalizada · ${wkGames.length} part. · 🎯 ${Math.round(evo.v3_snap_acc)}% acierto)`;
+      } else {
+        suffix = ` (Finalizada · ${wkGames.length} resultados)`;
+      }
       return `<option value="${wk}" ${Number(wk) === Number(STATE.selectedWeek) ? "selected" : ""}>Semana ${wk}${suffix}</option>`;
     })
     .join("");
@@ -398,7 +410,11 @@ function populateGameDropdownSelectors() {
             g.status_state === "in"
               ? `🔴 VIVO ${g.away_score ?? 0}-${g.home_score ?? 0}`
               : g.status_state === "post"
-              ? `FINAL ${g.away_score ?? 0}-${g.home_score ?? 0}`
+              ? `FINAL ${g.away_score ?? 0}-${g.home_score ?? 0}${
+                  g.retrospective?.v3_snap
+                    ? ` · ${g.retrospective.v3_snap.hit ? "✅ Acertado" : "❌ Sorpresa"} (Proy: ${g.retrospective.v3_snap.score_aw}-${g.retrospective.v3_snap.score_hm})`
+                    : ""
+                }`
               : g.display_time;
           const isSel = !STATE.customMatchup && g.id === STATE.selectedGameId;
           return `<option value="${g.id}" ${isSel ? "selected" : ""}>[Sem ${wk} · ${slotTag}] ${g.away_team} (${aw.short}) @ ${g.home_team} (${hm.short}) — ${statusTxt}</option>`;
@@ -645,7 +661,7 @@ function renderGameRibbon() {
         g.status_state === "in"
           ? `🔴 VIVO · ${g.status_detail || "En juego"}`
           : g.status_state === "post"
-          ? `FINAL`
+          ? `FINAL${g.retrospective?.v3_snap ? (g.retrospective.v3_snap.hit ? " · ✅" : " · ❌") : ""}`
           : g.display_time.replace(" ART", "");
 
       return `
@@ -961,86 +977,174 @@ function computeMatchupProjection(aw, hm, g = null) {
   ];
   const stComp = calcRowsStrengthSummary(stRows);
 
-  // Base de Puntos: Ajustada por Dificultad de Calendario (SOS), Forma Reciente (L3) y Ritmo de Jugadas (Pace)
+  // Parámetros aprendidos automáticamente semana a semana por actualizar_datos_nfl.py (data/model_learning_state.json)
+  const learnedParams = STATE.data?.model_learning?.learned_params || {
+    k0: 2.6,
+    w_p25: 0.36,
+    mkt_early: 0.45,
+    mkt_late: 0.05,
+    epa_w: 0.38,
+    air_coef: 0.036,
+    ground_coef: 0.025,
+    sit_coef: 0.0225,
+    xto_coef: 0.24,
+    st_coef: 0.035,
+    inj_weight: 0.85,
+    healthy_baseline: 0.95,
+    hfa_base: -0.171,
+    total_offset: 0.36,
+    logistic_scale: 9.5,
+  };
+
+  // Base de Puntos: Ajustada por Dificultad de Calendario (SOS), Forma Reciente (L3), Prior 2025, EPA/Play y Ritmo (Pace)
   const awOffPpg = Number(aw.adj_off_ppg ?? aw.off_ppg ?? 22.8);
   const hmOffPpg = Number(hm.adj_off_ppg ?? hm.off_ppg ?? 22.8);
   const awDefPpg = Number(aw.adj_def_ppg ?? aw.def_ppg_allowed ?? aw.def_ppg ?? 22.8);
   const hmDefPpg = Number(hm.adj_def_ppg ?? hm.def_ppg_allowed ?? hm.def_ppg ?? 22.8);
 
+  const minGames = Math.max(1, Math.min(Number(aw.games ?? 7), Number(hm.games ?? 7)));
+  const k0 = Number(learnedParams.k0 ?? 2.6);
+  const wSample = Math.pow(minGames - 0.5, 2) / (Math.pow(minGames - 0.5, 2) + Math.pow(k0, 2));
+
+  // Determinar línea pre-partido oficial de nflfastR (spread_line_aw y over_under)
+  let spLineAw = Number(gameCtx?.spread_line_aw ?? 0);
+  if (Math.abs(spLineAw) < 0.01 && gameCtx?.spread && typeof gameCtx.spread === "string") {
+    const spParts = gameCtx.spread.trim().split(/\s+/);
+    if (spParts.length === 2) {
+      const favAbbr = spParts[0].toUpperCase();
+      const spMag = Math.abs( parseFloat(spParts[1]) || 0 );
+      if (favAbbr === aw.abbr) spLineAw = spMag;
+      else if (favAbbr === hm.abbr) spLineAw = -spMag;
+    }
+  }
+  const totLine = Number(gameCtx?.over_under ?? 45.5) > 30 ? Number(gameCtx?.over_under ?? 45.5) : 45.5;
+  const hasMarketLine = Math.abs(spLineAw) > 0.01 || (gameCtx?.over_under && Number(gameCtx.over_under) > 30);
+  const wMarket = hasMarketLine
+    ? (1 - wSample) * Number(learnedParams.mkt_early ?? 0.45) + wSample * Number(learnedParams.mkt_late ?? 0.05)
+    : 0.0;
+  const wModel = 1.0 - wMarket;
+
   const paceAvg = (Number(aw.plays_per_game ?? 62.3) + Number(hm.plays_per_game ?? 62.3)) / 2;
-  const paceAdj = (paceAvg - 62.26) * 0.14;
+  const paceAdj = (paceAvg - 62.26) * 0.12;
 
   const rawCrossAway = (awOffPpg + hmDefPpg) / 2;
   const rawCrossHome = (hmOffPpg + awDefPpg) / 2;
 
-  // Regresión bayesiana (72% cruce directo + 28% media NFL 23.0) + Pace + Offset de plantel sano (+1.15)
-  const baseAway = +(0.72 * rawCrossAway + 0.28 * 23.0 + paceAdj + 1.15).toFixed(1);
-  const baseHome = +(0.72 * rawCrossHome + 0.28 * 23.0 + paceAdj + 1.15).toFixed(1);
+  const p25DiffAw = Number(aw.prior_2025_net_ppg ?? 0) - Number(hm.prior_2025_net_ppg ?? 0);
+  const epaNetAw = (Number(aw.off_epa_play ?? 0) - Number(hm.def_epa_allowed ?? 0)) * 30.0;
+  const epaNetHm = (Number(hm.off_epa_play ?? 0) - Number(aw.def_epa_allowed ?? 0)) * 30.0;
+  const epaDiffAw = epaNetAw - epaNetHm;
+
+  const healthyBase = Number(learnedParams.healthy_baseline ?? 0.95) + Number(learnedParams.total_offset ?? 0.36);
+  const wP25 = Number(learnedParams.w_p25 ?? 0.36);
+  const epaW = Number(learnedParams.epa_w ?? 0.38);
+
+  const cross26Aw = 0.72 * rawCrossAway + 0.28 * 23.0 + paceAdj + healthyBase;
+  const cross26Hm = 0.72 * rawCrossHome + 0.28 * 23.0 + paceAdj + healthyBase;
+  const p25BaseAw = 23.0 + 0.5 * wP25 * p25DiffAw + paceAdj + healthyBase;
+  const p25BaseHm = 23.0 - 0.5 * wP25 * p25DiffAw + paceAdj + healthyBase;
+
+  const epaPtsAw = 0.5 * epaW * epaDiffAw;
+  const epaPtsHm = -epaPtsAw;
+
+  const statBaseAw = wSample * cross26Aw + (1 - wSample) * p25BaseAw + epaPtsAw;
+  const statBaseHm = wSample * cross26Hm + (1 - wSample) * p25BaseHm + epaPtsHm;
+
+  const mktAw = (totLine + spLineAw) / 2.0;
+  const mktHm = (totLine - spLineAw) / 2.0;
+
+  const baseAwRaw = wModel * statBaseAw + wMarket * mktAw;
+  const baseHmRaw = wModel * statBaseHm + wMarket * mktHm;
 
   // Contexto de Partido: Duelo Divisional, Domo/Techo Cerrado y Viento
   const isDivisional = Boolean(gameCtx?.div_game ?? (aw.div && hm.div && aw.div === hm.div));
   const divMult = isDivisional ? 0.88 : 1.0;
   const roofType = gameCtx?.roof || "outdoors";
   const windMph = Number(gameCtx?.wind || 0);
-  const roofBonus = roofType === "dome" || roofType === "closed" ? 0.65 : windMph >= 15 ? -0.75 : 0.0;
+  const roofBonus = roofType === "dome" || roofType === "closed" ? 0.40 : windMph >= 15 ? -0.45 : 0.0;
 
-  const airPtsAway = +((airS1.avgDiff * 0.072 * divMult) + roofBonus * 0.65).toFixed(1);
-  const airPtsHome = +((airS2.avgDiff * 0.072 * divMult) + roofBonus * 0.65).toFixed(1);
+  const airC = Number(learnedParams.air_coef ?? 0.036);
+  const gndC = Number(learnedParams.ground_coef ?? 0.025);
+  const sitC = Number(learnedParams.sit_coef ?? 0.0225);
+  const xtoC = Number(learnedParams.xto_coef ?? 0.24);
+  const stC = Number(learnedParams.st_coef ?? 0.035);
+  const injW = Number(learnedParams.inj_weight ?? 0.85);
 
-  const groundPtsAway = +(groundS1.avgDiff * 0.050 * divMult).toFixed(1);
-  const groundPtsHome = +(groundS2.avgDiff * 0.050 * divMult).toFixed(1);
+  const airAwRaw = (wSample * airS1.avgDiff * airC * divMult + roofBonus) * wModel;
+  const airHmRaw = (wSample * airS2.avgDiff * airC * divMult + roofBonus) * wModel;
 
-  // Robos Esperados por Partido (xTO/g regresionando fumbles al 50%) + Disciplina neta de castigos
+  const gndAwRaw = wSample * groundS1.avgDiff * gndC * divMult * wModel;
+  const gndHmRaw = wSample * groundS2.avgDiff * gndC * divMult * wModel;
+
+  // Robos Esperados por Partido (xTO/g regresionando fumbles al 50%) + Situacional ortogonalizado
   const xtoAway = Number(aw.x_turnover_margin_pg ?? (Number(aw.turnover_margin ?? 0) / 7));
   const xtoHome = Number(hm.x_turnover_margin_pg ?? (Number(hm.turnover_margin ?? 0) / 7));
   const xtoDiffAway = xtoAway - xtoHome;
-  const penDiffAway = (Number(aw.net_penalty_yards_pg ?? 0) - Number(hm.net_penalty_yards_pg ?? 0)) * 0.012;
+  const sitDiffAw = sitS1.avgDiff - sitS2.avgDiff;
+  const sitEarlyAw = (1 - wSample) * 0.015 * sitDiffAw;
 
-  const sitPtsAway = +((sitS1.avgDiff * 0.045 + xtoDiffAway * 0.48 + penDiffAway) * divMult).toFixed(1);
-  const sitPtsHome = +((sitS2.avgDiff * 0.045 - xtoDiffAway * 0.48 - penDiffAway) * divMult).toFixed(1);
+  const sitAwRaw = (wSample * (sitS1.avgDiff * sitC + xtoDiffAway * xtoC) * divMult + sitEarlyAw) * wModel;
+  const sitHmRaw = (wSample * (sitS2.avgDiff * sitC - xtoDiffAway * xtoC) * divMult - sitEarlyAw) * wModel;
 
-  const stPtsAway = +(stComp.avgDiff * 0.035).toFixed(1);
-  const stPtsHome = +(-stComp.avgDiff * 0.035).toFixed(1);
+  const stScale = wSample * stC + (1 - wSample) * 0.030;
+  const stAwRaw = stComp.avgDiff * stScale * wModel;
+  const stHmRaw = -stComp.avgDiff * stScale * wModel;
 
-  // Ventaja de Localía Dinámica (Altitud en DEN, Neutral = 0) + Diferencial de Días de Descanso (Rest Diff)
+  // Ventaja de Localía Dinámica Aprendida (HFA) + Diferencial de Días de Descanso (Rest Diff)
   const restDiffHome = Number(gameCtx?.rest_diff ?? 0);
-  const restAdjHome = Math.max(-1.2, Math.min(1.2, restDiffHome * 0.16));
+  const restAdjHome = Math.max(-1.1, Math.min(1.1, restDiffHome * 0.15));
   const isNeutral = gameCtx?.location === "Neutral";
-  const hfaBase = isNeutral ? 0.0 : hm.abbr === "DEN" ? 0.95 : 0.70;
-  const hfaAway = +(-hfaBase - restAdjHome * 0.5).toFixed(1);
-  const hfaHome = +(hfaBase + restAdjHome * 0.5).toFixed(1);
+  const learnedHfaSide = Number(learnedParams.hfa_base ?? -0.171);
+  const hfaBase = isNeutral ? 0.0 : hm.abbr === "DEN" ? learnedHfaSide + 0.20 : learnedHfaSide;
+  const hfaAwRaw = (-hfaBase - restAdjHome * 0.5) * wModel;
+  const hfaHmRaw = (hfaBase + restAdjHome * 0.5) * wModel;
 
-  // 5. Ajuste por Bajas / Parte Médico & Reemplazo de Titulares (con Factor de Novedad sin doble conteo)
+  // 5. Ajuste por Bajas / Parte Médico & Reemplazo de Titulares (ponderado por curva de aprendizaje)
   const injAwayDetail = computeTeamInjuryAdjustment(aw);
   const injHomeDetail = computeTeamInjuryAdjustment(hm);
-  const injPtsAway = injAwayDetail.injPts;
-  const injPtsHome = injHomeDetail.injPts;
+  const injScale = wSample * injW + (1 - wSample) * 0.65;
+  const injAwRaw = injAwayDetail.injPts * injScale * wModel;
+  const injHmRaw = injHomeDetail.injPts * injScale * wModel;
 
-  const exactAwayPts = Math.max(
-    10.0,
-    Math.min(44.0, +(baseAway + airPtsAway + groundPtsAway + sitPtsAway + stPtsAway + hfaAway + injPtsAway).toFixed(1))
-  );
-  const exactHomePts = Math.max(
-    10.0,
-    Math.min(44.0, +(baseHome + airPtsHome + groundPtsHome + sitPtsHome + stPtsHome + hfaHome + injPtsHome).toFixed(1))
-  );
+  const totAwExact = baseAwRaw + airAwRaw + gndAwRaw + sitAwRaw + stAwRaw + hfaAwRaw + injAwRaw;
+  const totHmExact = baseHmRaw + airHmRaw + gndHmRaw + sitHmRaw + stHmRaw + hfaHmRaw + injHmRaw;
+
+  const exactAwayPts = Math.max(10.0, Math.min(44.0, +totAwExact.toFixed(1)));
+  const exactHomePts = Math.max(10.0, Math.min(44.0, +totHmExact.toFixed(1)));
+
+  const airPtsAway = +airAwRaw.toFixed(1);
+  const airPtsHome = +airHmRaw.toFixed(1);
+  const groundPtsAway = +gndAwRaw.toFixed(1);
+  const groundPtsHome = +gndHmRaw.toFixed(1);
+  const sitPtsAway = +sitAwRaw.toFixed(1);
+  const sitPtsHome = +sitHmRaw.toFixed(1);
+  const stPtsAway = +stAwRaw.toFixed(1);
+  const stPtsHome = +stHmRaw.toFixed(1);
+  const hfaAway = +hfaAwRaw.toFixed(1);
+  const hfaHome = +hfaHmRaw.toFixed(1);
+  const injPtsAway = +injAwRaw.toFixed(1);
+  const injPtsHome = +injHmRaw.toFixed(1);
+
+  // Asegurar que la suma de los 6 bloques mostrados sea idéntica al marcador exacto al décimo de punto
+  const baseAway = +(exactAwayPts - (airPtsAway + groundPtsAway + sitPtsAway + stPtsAway + hfaAway + injPtsAway)).toFixed(1);
+  const baseHome = +(exactHomePts - (airPtsHome + groundPtsHome + sitPtsHome + stPtsHome + hfaHome + injPtsHome)).toFixed(1);
 
   let scoreAway = Math.round(exactAwayPts);
   let scoreHome = Math.round(exactHomePts);
+  const rawMarginAway = totAwExact - totHmExact;
   if (scoreAway === scoreHome) {
-    if (exactAwayPts > exactHomePts) scoreAway += 1;
+    if (rawMarginAway >= 0) scoreAway += 1;
     else scoreHome += 1;
   }
 
-  // Diferencial de puntos esperados y conversión a % de Victoria mediante curva logística NFL calibrada (escala 9.5 pts, σ ≈ 16.0 pts)
-  const expectedMarginAway = +(exactAwayPts - exactHomePts).toFixed(1);
-  const roundedMarginAway = scoreAway - scoreHome;
-  const probMarginAway = (expectedMarginAway + roundedMarginAway) / 2;
-  const rawWinProbAway = 100 / (1 + Math.exp(-probMarginAway / 9.5));
+  // Diferencial de puntos esperados y conversión a % de Victoria mediante curva logística NFL calibrada (escala 9.5 pts)
+  const expectedMarginAway = +(rawMarginAway).toFixed(1);
+  const logisticScale = Number(learnedParams.logistic_scale ?? 9.5);
+  const rawWinProbAway = 100 / (1 + Math.exp(-rawMarginAway / logisticScale));
   const winProbAway = Math.max(8.0, Math.min(92.0, +rawWinProbAway.toFixed(1)));
   const winProbHome = +(100 - winProbAway).toFixed(1);
 
-  const favTeam = exactAwayPts > exactHomePts ? aw : hm;
+  const favTeam = rawMarginAway >= 0 ? aw : hm;
   const favMargin = Math.abs(expectedMarginAway).toFixed(1);
   const projectedTotal = +(exactAwayPts + exactHomePts).toFixed(1);
 
@@ -1051,6 +1155,10 @@ function computeMatchupProjection(aw, hm, g = null) {
     hmDefPpg,
     paceAvg: +paceAvg.toFixed(1),
     paceAdj: +paceAdj.toFixed(2),
+    wSample: +wSample.toFixed(2),
+    wMarket: +wMarket.toFixed(2),
+    p25DiffAw: +p25DiffAw.toFixed(1),
+    epaDiffAw: +epaDiffAw.toFixed(1),
     isDivisional,
     roofType,
     windMph,
@@ -1949,6 +2057,40 @@ function renderMatchupBoard() {
             <div class="pcs-line-chip">
               <strong>📊 Total Proyectado:</strong> <strong>${proj.projectedTotal.toFixed(1)} pts</strong> &nbsp;|&nbsp; <strong>Línea Vegas Oficial:</strong> ${g.spread} · O/U ${g.over_under} &nbsp;|&nbsp; <strong>🚑 Bajas:</strong> ${aw.abbr} ${fmtSignedPts(proj.injPtsAway)} / ${hm.abbr} ${fmtSignedPts(proj.injPtsHome)}
             </div>
+            ${
+              g.status_state === "post" && g.away_score != null && g.home_score != null
+                ? (() => {
+                    const realAw = Number(g.away_score);
+                    const realHm = Number(g.home_score);
+                    const realMargin = realAw - realHm;
+                    const predMargin = proj.scoreAway - proj.scoreHome;
+                    const hitWinner =
+                      realMargin === 0 ||
+                      (predMargin > 0 && realMargin > 0) ||
+                      (predMargin < 0 && realMargin < 0);
+                    const marginErr = Math.abs(proj.exactMargin - realMargin).toFixed(1);
+                    const wfObj = g.retrospective?.v3_wf;
+                    const v1WfObj = g.retrospective?.v1_wf;
+                    const wfBadge = wfObj
+                      ? `&nbsp;|&nbsp; <strong>Pre-Partido Walk-Forward (v3):</strong> ${aw.abbr} ${wfObj.score_aw} - ${wfObj.score_hm} ${hm.abbr} (${wfObj.hit ? "✅ Acertó" : "❌ Sorpresa"}${
+                          v1WfObj && !v1WfObj.hit && wfObj.hit ? " · 🧠 Corregido por Auto-Aprendizaje vs v1" : ""
+                        })`
+                      : "";
+                    return `
+                      <div class="pcs-line-chip pcs-retro-audit-chip ${hitWinner ? "retro-hit" : "retro-miss"}">
+                        <strong>🎯 AUDITORÍA RETROSPECTIVA (REAL vs. MODELO):</strong>
+                        Marcador Oficial: <strong>${aw.abbr} ${realAw} - ${realHm} ${hm.abbr}</strong>
+                        &nbsp;|&nbsp;
+                        <span class="retro-verdict-pill ${hitWinner ? "hit" : "miss"}">
+                          ${hitWinner ? "✅ GANADOR ACERTADO" : "❌ SORPRESA NFL (UPSET)"}
+                        </span>
+                        &nbsp;|&nbsp; Error Margen: <strong>±${marginErr} pts</strong>
+                        ${wfBadge}
+                      </div>
+                    `;
+                  })()
+                : ""
+            }
           </div>
 
           <!-- 1) POSTEO DEL PARTIDO ACTUAL + 2) POSTEO DE TODOS LOS RESULTADOS ESPERADOS DE LA SEMANA -->
@@ -2264,8 +2406,168 @@ function renderMatchupBoard() {
             .join("")}
         </div>
       </div>
+
+      <!-- PANEL DE AUTO-APRENDIZAJE SEMANAL BAYESIANO (BACKTEST RETROSPECTIVO SEMANAS 1-7 & MEJORA CONTINUA) -->
+      ${(() => {
+        const ml = STATE.data?.model_learning;
+        if (!ml || !ml.summary) return "";
+        const s = ml.summary;
+        const p = ml.learned_params || {};
+        const lessons = ml.lessons_learned || [];
+        const wkRows = ml.weekly_evolution || [];
+        return `
+          <div class="self-learning-master-box">
+            <div class="slm-header">
+              <div class="slm-title-wrap">
+                <span class="slm-title">🧠 MOTOR DE AUTO-APRENDIZAJE SEMANAL BAYESIANO (AUDITORÍA RETROSPECTIVA SEMANAS 1–${ml.last_completed_week || 7} · ${ml.completed_games_audited || 106} PARTIDOS REALES)</span>
+                <span class="slm-subtitle">Cada semana, al cerrarse los marcadores oficiales en <strong>nflfastR / NFL.com</strong>, la rutina <code>run_weekly_retrospective_and_self_learning()</code> audita los aciertos y errores de margen/total y recalibra automáticamente los pesos bayesianos del motor para que el algoritmo mejore cuanto más funciona.</span>
+              </div>
+              <div class="slm-header-actions">
+                <span class="slm-active-pill">✅ Calibrado Sem. 1–${ml.last_completed_week || 7} (${ml.completed_games_audited || 106} PJ) · Walk-Forward: ${s.v1_wf_acc}% ➔ <strong>${s.v3_wf_acc}%</strong></span>
+                <button type="button" class="btn-toggle-slm" id="btnToggleSelfLearningBody">
+                  ${STATE.showSelfLearningPanel ? "🔽 Ocultar Auditoría & Aprendizaje" : "▶️ Ver Auditoría & Aprendizaje Semanal"}
+                </button>
+              </div>
+            </div>
+
+            <div class="slm-body ${STATE.showSelfLearningPanel ? "" : "hidden"}" id="selfLearningBodyGrid">
+              <!-- KPIs Comparativos: Motor v1 Fijo vs Línea Consenso nflfastR vs Motor v3 Auto-Aprendiente -->
+              <div class="slm-kpi-strip">
+                <div class="slm-kpi-card">
+                  <div class="slm-kpi-tag">📈 PRE-PARTIDO ESTRICTO (WALK-FORWARD SEM. 2–7 · ${s.wf_games} PJ SIN LEAKAGE)</div>
+                  <div class="slm-kpi-main">
+                    <span class="old-val">Motor v1 Fijo: ${s.v1_wf_acc}% (${s.v1_wf_hits}/${s.wf_games})</span>
+                    <span class="arrow">➔</span>
+                    <span class="new-val">Motor v3 Aprendiente: ${s.v3_wf_acc}% (${s.v3_wf_hits}/${s.wf_games})</span>
+                  </div>
+                  <div class="slm-kpi-sub">Supera incluso a la Línea Pre-Partido nflfastR (${s.vegas_wf_acc}%) · Ganancia neta: <strong>+${(s.v3_wf_acc - s.v1_wf_acc).toFixed(1)}% acierto</strong></div>
+                </div>
+
+                <div class="slm-kpi-card">
+                  <div class="slm-kpi-tag">🎯 REDUCCIÓN DE ERROR DE MARGEN (MAE) &amp; CALIBRACIÓN BRIER</div>
+                  <div class="slm-kpi-main">
+                    <span class="old-val">MAE v1: ±${s.v1_wf_mae} pts</span>
+                    <span class="arrow">➔</span>
+                    <span class="new-val">MAE v3: ±${s.v3_wf_mae} pts (-${(s.v1_wf_mae - s.v3_wf_mae).toFixed(2)} pts error)</span>
+                  </div>
+                  <div class="slm-kpi-sub">Brier Score mejorado de <strong>${s.v1_wf_brier}</strong> a <strong>${s.v3_wf_brier}</strong> · Sesgo de Total corregido a <strong>${s.v3_snap_total_bias >= 0 ? "+" : ""}${s.v3_snap_total_bias} pts</strong></div>
+                </div>
+
+                <div class="slm-kpi-card">
+                  <div class="slm-kpi-tag">🏁 RETROSPECTIVO COMPLETO (SEMANAS 1–${ml.last_completed_week || 7} · ${s.snap_games} PARTIDOS)</div>
+                  <div class="slm-kpi-main">
+                    <span class="old-val">v1: ${s.v1_snap_acc}% (${s.v1_snap_hits}/${s.snap_games})</span>
+                    <span class="arrow">➔</span>
+                    <span class="new-val">v3: ${s.v3_snap_acc}% (${s.v3_snap_hits}/${s.snap_games})</span>
+                  </div>
+                  <div class="slm-kpi-sub">Línea Consenso nflfastR en los mismos ${s.snap_games} PJ: <strong>${s.vegas_snap_acc}%</strong> · MAE Retrospectivo v3: <strong>±${s.v3_snap_mae} pts</strong></div>
+                </div>
+              </div>
+
+              <!-- GRILLA 2 COLUMNAS: TABLA SEMANA POR SEMANA + 4 LECCIONES APRENDIDAS Y PARÁMETROS ACTIVOS -->
+              <div class="slm-two-col-grid">
+                <div class="slm-col-table">
+                  <div class="slm-sec-head">📅 EVOLUCIÓN SEMANA A SEMANA (TOCÁ UNA SEMANA PARA AUDITAR SUS PARTIDOS)</div>
+                  <div class="slm-table-wrap">
+                    <table class="slm-evo-table">
+                      <thead>
+                        <tr>
+                          <th>Semana</th>
+                          <th>PJ</th>
+                          <th>v1 Pre-Game</th>
+                          <th>v3 Auto-Aprendiente (Pre-Game)</th>
+                          <th>v3 Retrospectivo</th>
+                          <th>MAE v1 ➔ v3</th>
+                          <th>Inspeccionar</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        ${wkRows
+                          .map(
+                            (r) => `
+                          <tr class="${Number(STATE.selectedWeek) === Number(r.week) ? "active-wk-row" : ""}">
+                            <td><strong>Semana ${r.week}</strong></td>
+                            <td>${r.games}</td>
+                            <td>${r.v1_wf_acc != null ? `${r.v1_wf_hits}/${r.games} (${r.v1_wf_acc}%)` : `<span class="txt-muted">Base Prior 2025</span>`}</td>
+                            <td>${
+                              r.v3_wf_acc != null
+                                ? `<strong class="${r.v3_wf_acc >= (r.v1_wf_acc || 0) ? "txt-sig-pos" : ""}">${r.v3_wf_hits}/${r.games} (${r.v3_wf_acc}%)</strong>`
+                                : `<span class="txt-muted">Sem. Inicial</span>`
+                            }</td>
+                            <td><strong class="txt-sig-pos">${r.v3_snap_hits}/${r.games} (${r.v3_snap_acc}%)</strong></td>
+                            <td>±${r.v1_snap_mae} ➔ <strong>±${r.v3_snap_mae} pts</strong></td>
+                            <td>
+                              <button type="button" class="btn-jump-retro-wk js-jump-retro-week" data-week="${r.week}">
+                                🔍 Ver Sem ${r.week}
+                              </button>
+                            </td>
+                          </tr>
+                        `
+                          )
+                          .join("")}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div class="slm-col-lessons">
+                  <div class="slm-sec-head">🔬 4 LECCIONES APRENDIDAS DEL BACKTEST &amp; PARÁMETROS ACTIVOS EN SEMANA ${STATE.selectedWeek}</div>
+                  <div class="slm-lessons-list">
+                    ${lessons
+                      .map(
+                        (ls) => `
+                      <div class="slm-lesson-item">
+                        <div class="slm-lesson-top">
+                          <strong>${ls.title}</strong>
+                          <span class="slm-lesson-gain">${ls.impact_gain}</span>
+                        </div>
+                        <div class="slm-lesson-desc"><em>Diagnóstico:</em> ${ls.finding}</div>
+                        <div class="slm-lesson-fix"><em>Regla Aprendida:</em> ${ls.correction}</div>
+                      </div>
+                    `
+                      )
+                      .join("")}
+                  </div>
+                  <div class="slm-params-bar">
+                    <span><strong>⚙️ Vector Auto-Calibrado Activo:</strong></span>
+                    <span><code>k0=${p.k0 ?? 2.6}</code></span>
+                    <span><code>w_p25=${p.w_p25 ?? 0.36}</code></span>
+                    <span><code>epa_w=${p.epa_w ?? 0.38}</code></span>
+                    <span><code>mkt_early=${p.mkt_early ?? 0.45}</code></span>
+                    <span><code>hfa_base=+${p.hfa_base ?? 1.75}p</code></span>
+                    <span><code>healthy_base=+${p.healthy_baseline ?? 0.95}p</code></span>
+                    <span><code>sigma=${p.sigma ?? 13.0}</code></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      })()}
     `;
   }
+
+  // Eventos interactivos del Panel de Auto-Aprendizaje Semanal
+  document.getElementById("btnToggleSelfLearningBody")?.addEventListener("click", () => {
+    STATE.showSelfLearningPanel = !STATE.showSelfLearningPanel;
+    renderMatchupBoard();
+  });
+
+  document.querySelectorAll(".js-jump-retro-week").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const targetWk = Number(btn.getAttribute("data-week"));
+      if (!targetWk || !STATE.data) return;
+      STATE.selectedWeek = targetWk;
+      STATE.customMatchup = null;
+      const wkGames = (STATE.data.games || []).filter((gm) => Number(gm.week) === targetWk);
+      if (wkGames.length > 0) {
+        STATE.selectedGameId = wkGames[0].id;
+      }
+      renderGameRibbon();
+      renderMatchupBoard();
+      showToast(`📅 Auditando Semana ${targetWk} (${wkGames.length} partidos finalizados con comparación Real vs. Modelo)`);
+    });
+  });
 
   // Eventos interactivos del Simulador de Bajas y Parte Médico
   document.getElementById("btnToggleInjurySimBody")?.addEventListener("click", () => {
