@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20261029v26" />
+  <link rel="stylesheet" href="styles.css?v=20261029v27" />
 </head>
 <body>
   <div class="app-shell">
@@ -168,25 +168,25 @@
                 <span class="team-side-tag right" id="predRightTitle">PROBABILIDAD LOCAL</span>
               </div>
 
-              <!-- Explicativo Detallado del Modelo de Pronóstico -->
+              <!-- Explicativo Detallado del Modelo de Pronóstico Auto-Aprendiente v3 -->
               <div class="inline-stat-explainer" id="guidePredBlock">
-                <div class="ise-title">📘 ¿Cómo calcula el modelo el % de Ganar de cada equipo y el Resultado Probable?</div>
+                <div class="ise-title">📘 ¿Cómo calcula y aprende cada semana el Motor Bayesiano v3 el % de Ganar y el Resultado Probable?</div>
                 <div class="ise-grid">
                   <div class="ise-item">
-                    <strong>1. Base de Puntos Cruzada (PPG Ofensivo vs. Defensivo)</strong>
-                    <p>Parte del promedio entre los puntos que anota el ataque de cada equipo por partido (<em>Off PPG</em>) y los puntos que permite la defensa rival por partido (<em>Def PPG</em>) en ambos sentidos.</p>
+                    <strong>1. Base Bayesiana (Shrinkage por Muestra + Prior 2025 + EPA/Play)</strong>
+                    <p>Pondera dinámicamente las estadísticas 2026 (con curva cuadrática <code>w_s(N) = (N-0.5)² / ((N-0.5)² + k₀²)</code>), el diferencial estructural 2025 de <strong>nflfastR</strong> y el <strong>EPA/Play</strong> neto, evitando sobre-reaccionar a muestras chicas en las primeras semanas.</p>
                   </div>
                   <div class="ise-item">
-                    <strong>2. Ajuste por Duelo Aéreo (35%) y Terrestre (25%) en Ambos Sentidos</strong>
-                    <p>Suma o resta puntos reales según la ventaja táctica (0-100%) en <strong>Sentido 1</strong> (<em>Ataca Visitante vs. Defiende Local</em>) y <strong>Sentido 2</strong> (<em>Ataca Local vs. Defiende Visitante</em>) tanto por aire (EPA, CPOE, +20y) como por tierra (Rush EPA, Front-7, TFL).</p>
+                    <strong>2. Duelo Aéreo, Terrestre y Situacional Ortogonalizado (Sin Doble Conteo)</strong>
+                    <p>Suma o resta puntos reales según la ventaja táctica (0-100%) en <strong>Sentido 1</strong> y <strong>Sentido 2</strong> por aire (EPA, CPOE, +20y), por tierra (Rush EPA, Front-7, TFL) y situacional (RZ, 3°D, Sacks, <strong>xRobos</strong>, Castigos y ST), con pesos ortogonalizados respecto al PPG base.</p>
                   </div>
                   <div class="ise-item">
-                    <strong>3. Ajuste Situacional, Trincheras (25%) y Equipos Especiales + Localía (15%)</strong>
-                    <p>Integra la eficiencia en <strong>Zona Roja (TD%)</strong>, <strong>3er Down</strong>, <strong>Capturas (Sacks)</strong>, <strong>Margen de Entregas (Robos de balón)</strong>, las 7 métricas de <strong>Equipos Especiales (FG%, Punts, Retornos, DVOA)</strong> y la ventaja de localía NFL (<em>+1.4 pts</em>).</p>
+                    <strong>3. Parte Médico Oficial (NFL.com + nflfastR) &amp; Línea Base de Salud</strong>
+                    <p>Cruza el <strong>Parte Médico Oficial</strong> con la cuota de producción 2026 (<em>Target Share, Dropbacks, EPA y Sacks</em>), el <strong>Factor de Novedad</strong> y la <strong>Línea Base de Salud NFL (+0.95 pts)</strong> para eliminar el sesgo negativo en los totales proyectados.</p>
                   </div>
                   <div class="ise-item">
-                    <strong>4. Parte Médico Oficial (NFL.com + nflfastR) &amp; Simulador de Titulares / Bajas</strong>
-                    <p>Cruza el <strong>Parte Médico Oficial de NFL.com / nflfastR</strong> con la cuota de producción 2026 (<em>Target Share, Dropbacks, EPA y Sacks</em>) y el <strong>Factor de Novedad</strong> (sin doble conteo de lesiones antiguas), permitiendo además simular bajas en vivo (<em>Qué pasa si...</em>) y convirtiendo el margen neto a <strong>% de Victoria NFL</strong>.</p>
+                    <strong>4. Rutina de Auto-Aprendizaje Semanal (Backtest &amp; Recalibración Automática)</strong>
+                    <p>Cada semana, al cerrarse los resultados oficiales en <strong>nflfastR / NFL.com</strong>, el motor audita todos los partidos jugados (Semanas 1–7: <strong>64.4% acierto Walk-Forward Pre-Game</strong> y <strong>73.6% Retrospectivo</strong>) y recalibra automáticamente la ventaja de localía, el sesgo de total y la desviación estándar (<code>σ</code>).</p>
                   </div>
                 </div>
               </div>
@@ -707,7 +707,7 @@
   <!-- TOAST DE NOTIFICACIONES -->
   <div class="toast-notification hidden" id="toastNotification"></div>
 
-  <script src="data/nfl_dashboard_data.js?v=20261029v26"></script>
-  <script src="app.js?v=20261029v26"></script>
+  <script src="data/nfl_dashboard_data.js?v=20261029v27"></script>
+  <script src="app.js?v=20261029v27"></script>
 </body>
 </html>
