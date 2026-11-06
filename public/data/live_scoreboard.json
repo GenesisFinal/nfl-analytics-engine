@@ -1,10 +1,10 @@
 {
-  "updated_at": "2026-11-03T06:04:35.752855+00:00",
+  "updated_at": "2026-11-06T05:56:50.919354+00:00",
   "source": "ESPN JSON API",
   "season": 2026,
   "season_type": "REG",
   "preseason_excluded": true,
-  "week": 8,
+  "week": 9,
   "weeks_available": [
     1,
     2,
@@ -13,12 +13,484 @@
     5,
     6,
     7,
-    8
+    8,
+    9
   ],
-  "total_games": 121,
-  "completed_games": 121,
+  "total_games": 136,
+  "completed_games": 122,
   "hinge_games_count": 88,
   "games": [
+    {
+      "event_id": "401873037",
+      "week": 9,
+      "season_type": "REG",
+      "name": "Jacksonville Jaguars at Baltimore Ravens",
+      "short_name": "JAX @ BAL",
+      "date": "2026-11-06T01:15Z",
+      "status": {
+        "state": "post",
+        "detail": "Final",
+        "period": 4,
+        "clock": "0:00",
+        "completed": true
+      },
+      "home_team": {
+        "id": "33",
+        "abbreviation": "BAL",
+        "name": "Baltimore Ravens",
+        "score": 10,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/bal.png"
+      },
+      "away_team": {
+        "id": "30",
+        "abbreviation": "JAX",
+        "name": "Jacksonville Jaguars",
+        "score": 33,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/jax.png"
+      },
+      "win_probability": {
+        "home_wp": 0.0,
+        "away_wp": 1.0
+      },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873037/jaguars-ravens",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873037",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873037"
+      },
+      "critical_moments": [],
+      "hinge_play": {
+        "play_id": "4018730371721",
+        "qtr": 2,
+        "clock": "0:58",
+        "description": "(No Huddle, Shotgun) T.Lawrence pass deep left to P.Washington for 50 yards, TOUCHDOWN. C.Little extra point is GOOD, Center-R.Matiscik, Holder-L.Cooke.",
+        "home_wp_before": 0.1042,
+        "home_wp_after": 0.0483,
+        "delta_wp": -0.0559,
+        "abs_delta_wp": 0.0559,
+        "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873037",
+        "play_label": "Trevor Lawrence a Parker Washington TD (50 yds)",
+        "video_query": "Trevor Lawrence Parker Washington 50 yard touchdown Jaguars Ravens",
+        "video_query_v2": "Trevor Lawrence Parker Washington 50 yard touchdown Jaguars Ravens",
+        "video_url": "https://espnmedia-cdn.akamaized.net/espn/media/16x9/wsc/2026/1106/7b74a7e2-ca70-462c-b41a-37fcda4e6b4c/7b74a7e2-ca70-462c-b41a-37fcda4e6b4c.mp4",
+        "video_source": "ESPN Video Oficial",
+        "video_title": "Trevor Lawrence dimes Parker Washington for 50-yard TD",
+        "has_direct_video": true,
+        "youtube_search_url": "https://www.youtube.com/results?search_query=Trevor+Lawrence+Parker+Washington+50+yard+touchdown+Jaguars+Ravens&sp=EgIYAQ%3D%3D",
+        "x_video_url": "https://x.com/search?q=Trevor+Lawrence+Parker+Washington+50+yard+touchdown+Jaguars+Ravens&f=video",
+        "exceeds_threshold": false
+      },
+      "wp_timeline": [
+        {
+          "step": 0,
+          "qtr": 1,
+          "clock": "15:00",
+          "home_wp": 0.5,
+          "delta_wp": 0.0,
+          "label": "Kickoff",
+          "is_critical": false
+        },
+        {
+          "step": 1,
+          "play_id": "40187303741",
+          "qtr": 1,
+          "clock": "15:00",
+          "home_wp": 0.1797,
+          "delta_wp": -0.0096,
+          "label": "J.Moody kicks 65 yards from BLT 35 to JAX 0. J.Cameron pushed ob at JAX 23 for 23 yards (J",
+          "is_critical": false
+        },
+        {
+          "step": 2,
+          "play_id": "401873037141",
+          "qtr": 1,
+          "clock": "12:44",
+          "home_wp": 0.1172,
+          "delta_wp": -0.0184,
+          "label": "(Shotgun) T.Lawrence pass short left to J.Meyers pushed ob at BLT 1 for 16 yards (C.Awuzie",
+          "is_critical": false
+        },
+        {
+          "step": 3,
+          "play_id": "401873037249",
+          "qtr": 1,
+          "clock": "11:20",
+          "home_wp": 0.1104,
+          "delta_wp": -0.0009,
+          "label": "Official Timeout at 11:20.",
+          "is_critical": false
+        },
+        {
+          "step": 4,
+          "play_id": "401873037334",
+          "qtr": 1,
+          "clock": "9:48",
+          "home_wp": 0.1409,
+          "delta_wp": 0.0135,
+          "label": "(Shotgun) Z.Flowers left end to JAX 42 for 9 yards (V.Miller; F.Oluokun).",
+          "is_critical": false
+        },
+        {
+          "step": 5,
+          "play_id": "401873037439",
+          "qtr": 1,
+          "clock": "6:55",
+          "home_wp": 0.1165,
+          "delta_wp": -0.0101,
+          "label": "(Shotgun) J.Fagnano pass short left to J.Hill pushed ob at JAX 35 for 2 yards (A.Johnson; ",
+          "is_critical": false
+        },
+        {
+          "step": 6,
+          "play_id": "401873037526",
+          "qtr": 1,
+          "clock": "6:31",
+          "home_wp": 0.1181,
+          "delta_wp": -0.011,
+          "label": "T.Lawrence pass short middle to J.Meyers to BLT 48 for 17 yards (K.Hamilton).",
+          "is_critical": false
+        },
+        {
+          "step": 7,
+          "play_id": "401873037618",
+          "qtr": 1,
+          "clock": "4:25",
+          "home_wp": 0.1123,
+          "delta_wp": -0.0359,
+          "label": "(Shotgun) PENALTY on BLT-N.Madubuike, Neutral Zone Infraction, 5 yards, enforced at BLT 42",
+          "is_critical": false
+        },
+        {
+          "step": 8,
+          "play_id": "401873037712",
+          "qtr": 1,
+          "clock": "2:53",
+          "home_wp": 0.1107,
+          "delta_wp": -0.0005,
+          "label": "C.Rodriguez left guard to BLT 18 for 3 yards (T.Simpson; R.Smith).",
+          "is_critical": false
+        },
+        {
+          "step": 9,
+          "play_id": "401873037777",
+          "qtr": 1,
+          "clock": "2:00",
+          "home_wp": 0.1107,
+          "delta_wp": -0.0067,
+          "label": "C.Little kicks 62 yards from JAX 35 to BLT 3. J.Hill to BLT 22 for 19 yards (J.Cameron; J.",
+          "is_critical": false
+        },
+        {
+          "step": 10,
+          "play_id": "401873037907",
+          "qtr": 2,
+          "clock": "15:00",
+          "home_wp": 0.1118,
+          "delta_wp": -0.0058,
+          "label": "(Shotgun) J.Fagnano pass incomplete short middle.",
+          "is_critical": false
+        },
+        {
+          "step": 11,
+          "play_id": "4018730371003",
+          "qtr": 2,
+          "clock": "12:48",
+          "home_wp": 0.1358,
+          "delta_wp": 0.0061,
+          "label": "(Shotgun) J.Fagnano right end to BLT 44 for 4 yards (T.Hunter).",
+          "is_critical": false
+        },
+        {
+          "step": 12,
+          "play_id": "4018730371099",
+          "qtr": 2,
+          "clock": "10:48",
+          "home_wp": 0.1234,
+          "delta_wp": 0.0048,
+          "label": "(Shotgun) J.Fagnano pass short left to R.Bateman to BLT 45 for 6 yards (M.Brown).",
+          "is_critical": false
+        },
+        {
+          "step": 13,
+          "play_id": "4018730371165",
+          "qtr": 2,
+          "clock": "9:32",
+          "home_wp": 0.1395,
+          "delta_wp": 0.018,
+          "label": "B.Tuten right end to JAX 1 for -3 yards (K.Hamilton).",
+          "is_critical": false
+        },
+        {
+          "step": 14,
+          "play_id": "4018730371266",
+          "qtr": 2,
+          "clock": "6:47",
+          "home_wp": 0.1225,
+          "delta_wp": 0.0057,
+          "label": "(Shotgun) T.Lawrence pass incomplete short right to J.Meyers.",
+          "is_critical": false
+        },
+        {
+          "step": 15,
+          "play_id": "4018730371332",
+          "qtr": 2,
+          "clock": "6:31",
+          "home_wp": 0.1184,
+          "delta_wp": -0.0042,
+          "label": "(Shotgun) D.Henry right end to BLT 22 for 2 yards (A.Johnson; A.Regis).",
+          "is_critical": false
+        },
+        {
+          "step": 16,
+          "play_id": "4018730371440",
+          "qtr": 2,
+          "clock": "3:57",
+          "home_wp": 0.1241,
+          "delta_wp": -0.0084,
+          "label": "(Shotgun) J.Fagnano pass incomplete short left [D.Striggow].",
+          "is_critical": false
+        },
+        {
+          "step": 17,
+          "play_id": "4018730371549",
+          "qtr": 2,
+          "clock": "2:58",
+          "home_wp": 0.1279,
+          "delta_wp": -0.0037,
+          "label": "(Shotgun) D.Henry right end to BLT 45 for 1 yard (J.Lewis).",
+          "is_critical": false
+        },
+        {
+          "step": 18,
+          "play_id": "4018730371643",
+          "qtr": 2,
+          "clock": "1:57",
+          "home_wp": 0.1192,
+          "delta_wp": 0.0132,
+          "label": "(Shotgun) PENALTY on JAX-E.Pregnon, False Start, 5 yards, enforced at JAX 38 - No Play.",
+          "is_critical": false
+        },
+        {
+          "step": 19,
+          "play_id": "4018730371755",
+          "qtr": 2,
+          "clock": "0:58",
+          "home_wp": 0.0428,
+          "delta_wp": -0.0055,
+          "label": "Official Timeout at 00:58.",
+          "is_critical": false
+        },
+        {
+          "step": 20,
+          "play_id": "4018730371847",
+          "qtr": 2,
+          "clock": "0:27",
+          "home_wp": 0.0462,
+          "delta_wp": -0.0069,
+          "label": "(No Huddle, Shotgun) PENALTY on BLT-J.Lane, False Start, 5 yards, enforced at BLT 39 - No ",
+          "is_critical": false
+        },
+        {
+          "step": 21,
+          "play_id": "4018730371964",
+          "qtr": 3,
+          "clock": "15:00",
+          "home_wp": 0.0538,
+          "delta_wp": 0.0093,
+          "label": "C.Little kicks 58 yards from JAX 35 to BLT 7. L.Wester to BLT 29 for 22 yards (R.Lane).",
+          "is_critical": false
+        },
+        {
+          "step": 22,
+          "play_id": "4018730372060",
+          "qtr": 3,
+          "clock": "13:49",
+          "home_wp": 0.0269,
+          "delta_wp": -0.0128,
+          "label": "(Shotgun) J.Fagnano pass short left intended for Z.Flowers INTERCEPTED by M.Brown at BLT 3",
+          "is_critical": false
+        },
+        {
+          "step": 23,
+          "play_id": "4018730372162",
+          "qtr": 3,
+          "clock": "12:48",
+          "home_wp": 0.0298,
+          "delta_wp": -0.0068,
+          "label": "C.Little 45 yard field goal is GOOD, Center-R.Matiscik, Holder-L.Cooke.",
+          "is_critical": false
+        },
+        {
+          "step": 24,
+          "play_id": "4018730372239",
+          "qtr": 3,
+          "clock": "12:05",
+          "home_wp": 0.0222,
+          "delta_wp": -0.0063,
+          "label": "(Shotgun) Z.Flowers left end to BLT 35 for 5 yards (A.Johnson).PENALTY on BLT-M.Hibner, Of",
+          "is_critical": false
+        },
+        {
+          "step": 25,
+          "play_id": "4018730372337",
+          "qtr": 3,
+          "clock": "10:01",
+          "home_wp": 0.0239,
+          "delta_wp": -0.0001,
+          "label": "Official Timeout at 10:01.",
+          "is_critical": false
+        },
+        {
+          "step": 26,
+          "play_id": "4018730372425",
+          "qtr": 3,
+          "clock": "8:18",
+          "home_wp": 0.0292,
+          "delta_wp": 0.0002,
+          "label": "(Shotgun) T.Lawrence pass short left to B.Strange to JAX 23 for 7 yards (M.Humphrey).",
+          "is_critical": false
+        },
+        {
+          "step": 27,
+          "play_id": "4018730372509",
+          "qtr": 3,
+          "clock": "6:51",
+          "home_wp": 0.0215,
+          "delta_wp": -0.0038,
+          "label": "(Shotgun) D.Henry left end to BLT 30 for -2 yards (T.Walker).",
+          "is_critical": false
+        },
+        {
+          "step": 28,
+          "play_id": "4018730372580",
+          "qtr": 3,
+          "clock": "5:50",
+          "home_wp": 0.013,
+          "delta_wp": -0.002,
+          "label": "T.Lawrence pass short middle to N.Boerkircher to BLT 49 for 9 yards (R.Smith; T.Buchanan).",
+          "is_critical": false
+        },
+        {
+          "step": 29,
+          "play_id": "4018730372713",
+          "qtr": 3,
+          "clock": "3:38",
+          "home_wp": 0.0191,
+          "delta_wp": -0.0081,
+          "label": "J.Hill right guard to JAX 41 for 4 yards (A.Johnson; Bry.Thomas).",
+          "is_critical": false
+        },
+        {
+          "step": 30,
+          "play_id": "4018730372792",
+          "qtr": 3,
+          "clock": "2:25",
+          "home_wp": 0.013,
+          "delta_wp": 0.0007,
+          "label": "C.Rodriguez right tackle to JAX 47 for 1 yard (N.Madubuike; T.Simpson).",
+          "is_critical": false
+        },
+        {
+          "step": 31,
+          "play_id": "4018730372920",
+          "qtr": 4,
+          "clock": "15:00",
+          "home_wp": 0.0075,
+          "delta_wp": -0.0001,
+          "label": "(Shotgun) W.Milum reported in as eligible. Direct snap to C.Rodriguez.  C.Rodriguez right ",
+          "is_critical": false
+        },
+        {
+          "step": 32,
+          "play_id": "4018730372988",
+          "qtr": 4,
+          "clock": "13:35",
+          "home_wp": 0.0066,
+          "delta_wp": 0.0005,
+          "label": "C.Little kicks 62 yards from JAX 35 to BLT 3. J.Hill to BLT 29 for 26 yards (J.Tavai).",
+          "is_critical": false
+        },
+        {
+          "step": 33,
+          "play_id": "4018730373092",
+          "qtr": 4,
+          "clock": "12:02",
+          "home_wp": 0.0011,
+          "delta_wp": 0.0001,
+          "label": "(Shotgun) T.Lawrence pass incomplete short left to P.Washington.",
+          "is_critical": false
+        },
+        {
+          "step": 34,
+          "play_id": "4018730373170",
+          "qtr": 4,
+          "clock": "11:46",
+          "home_wp": 0.001,
+          "delta_wp": 0.0,
+          "label": "C.Rodriguez right tackle to BLT 30 for 2 yards (T.Buchanan).",
+          "is_critical": false
+        },
+        {
+          "step": 35,
+          "play_id": "4018730373306",
+          "qtr": 4,
+          "clock": "9:38",
+          "home_wp": 0.001,
+          "delta_wp": 0.0,
+          "label": "A.Abdullah right guard to BLT 12 for 4 yards (T.Jones).",
+          "is_critical": false
+        },
+        {
+          "step": 36,
+          "play_id": "4018730373438",
+          "qtr": 4,
+          "clock": "7:26",
+          "home_wp": 0.001,
+          "delta_wp": 0.0,
+          "label": "PENALTY on JAX-E.Pregnon, False Start, 5 yards, enforced at BLT 15 - No Play.",
+          "is_critical": false
+        },
+        {
+          "step": 37,
+          "play_id": "4018730373553",
+          "qtr": 4,
+          "clock": "7:08",
+          "home_wp": 0.001,
+          "delta_wp": 0.0,
+          "label": "C.Rodriguez left guard to JAX 25 for 1 yard (K.Martin).",
+          "is_critical": false
+        },
+        {
+          "step": 38,
+          "play_id": "4018730373638",
+          "qtr": 4,
+          "clock": "4:52",
+          "home_wp": 0.001,
+          "delta_wp": 0.0,
+          "label": "(Shotgun) J.Hill right tackle to BLT 16 for 3 yards (D.Striggow).",
+          "is_critical": false
+        },
+        {
+          "step": 39,
+          "play_id": "4018730373734",
+          "qtr": 4,
+          "clock": "2:46",
+          "home_wp": 0.001,
+          "delta_wp": 0.0,
+          "label": "(Shotgun) D.Henry left end to BLT 32 for 2 yards (A.Regis; B.Combs).",
+          "is_critical": false
+        },
+        {
+          "step": 40,
+          "play_id": "4018730373829",
+          "qtr": 4,
+          "clock": "0:30",
+          "home_wp": 0.001,
+          "delta_wp": 0.0,
+          "label": "(Shotgun) J.Hill left tackle to BLT 49 for 2 yards (B.Combs).",
+          "is_critical": false
+        }
+      ]
+    },
     {
       "event_id": "401873023",
       "week": 8,
@@ -34188,6 +34660,846 @@
           "home_wp": 1.0,
           "delta_wp": 0.0914,
           "label": "Resultado Final",
+          "is_critical": false
+        }
+      ]
+    },
+    {
+      "event_id": "401873038",
+      "week": 9,
+      "season_type": "REG",
+      "name": "Cincinnati Bengals at Atlanta Falcons",
+      "short_name": "CIN VS ATL",
+      "date": "2026-11-08T14:30Z",
+      "status": {
+        "state": "pre",
+        "detail": "11/8 - 9:30 AM EST",
+        "period": 0,
+        "clock": "0:00",
+        "completed": false
+      },
+      "home_team": {
+        "id": "1",
+        "abbreviation": "ATL",
+        "name": "Atlanta Falcons",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/atl.png"
+      },
+      "away_team": {
+        "id": "4",
+        "abbreviation": "CIN",
+        "name": "Cincinnati Bengals",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/cin.png"
+      },
+      "win_probability": {
+        "home_wp": 0.5,
+        "away_wp": 0.5
+      },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873038/bengals-falcons",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873038",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873038"
+      },
+      "critical_moments": [],
+      "hinge_play": null,
+      "wp_timeline": [
+        {
+          "step": 0,
+          "qtr": 1,
+          "clock": "15:00",
+          "home_wp": 0.5,
+          "delta_wp": 0.0,
+          "label": "Kickoff (Inicio 50/50)",
+          "is_critical": false
+        },
+        {
+          "step": 1,
+          "qtr": 4,
+          "clock": "0:00",
+          "home_wp": 0.5,
+          "delta_wp": 0.0,
+          "label": "Final del partido",
+          "is_critical": false
+        }
+      ]
+    },
+    {
+      "event_id": "401873040",
+      "week": 9,
+      "season_type": "REG",
+      "name": "Dallas Cowboys at Indianapolis Colts",
+      "short_name": "DAL @ IND",
+      "date": "2026-11-08T18:00Z",
+      "status": {
+        "state": "pre",
+        "detail": "11/8 - 1:00 PM EST",
+        "period": 0,
+        "clock": "0:00",
+        "completed": false
+      },
+      "home_team": {
+        "id": "11",
+        "abbreviation": "IND",
+        "name": "Indianapolis Colts",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/ind.png"
+      },
+      "away_team": {
+        "id": "6",
+        "abbreviation": "DAL",
+        "name": "Dallas Cowboys",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/dal.png"
+      },
+      "win_probability": {
+        "home_wp": 0.5,
+        "away_wp": 0.5
+      },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873040/cowboys-colts",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873040",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873040"
+      },
+      "critical_moments": [],
+      "hinge_play": null,
+      "wp_timeline": [
+        {
+          "step": 0,
+          "qtr": 1,
+          "clock": "15:00",
+          "home_wp": 0.5,
+          "delta_wp": 0.0,
+          "label": "Kickoff (Inicio 50/50)",
+          "is_critical": false
+        },
+        {
+          "step": 1,
+          "qtr": 4,
+          "clock": "0:00",
+          "home_wp": 0.5,
+          "delta_wp": 0.0,
+          "label": "Final del partido",
+          "is_critical": false
+        }
+      ]
+    },
+    {
+      "event_id": "401873045",
+      "week": 9,
+      "season_type": "REG",
+      "name": "New York Jets at Kansas City Chiefs",
+      "short_name": "NYJ @ KC",
+      "date": "2026-11-08T18:00Z",
+      "status": {
+        "state": "pre",
+        "detail": "11/8 - 1:00 PM EST",
+        "period": 0,
+        "clock": "0:00",
+        "completed": false
+      },
+      "home_team": {
+        "id": "12",
+        "abbreviation": "KC",
+        "name": "Kansas City Chiefs",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/kc.png"
+      },
+      "away_team": {
+        "id": "20",
+        "abbreviation": "NYJ",
+        "name": "New York Jets",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/nyj.png"
+      },
+      "win_probability": {
+        "home_wp": 0.5,
+        "away_wp": 0.5
+      },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873045/jets-chiefs",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873045",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873045"
+      },
+      "critical_moments": [],
+      "hinge_play": null,
+      "wp_timeline": [
+        {
+          "step": 0,
+          "qtr": 1,
+          "clock": "15:00",
+          "home_wp": 0.5,
+          "delta_wp": 0.0,
+          "label": "Kickoff (Inicio 50/50)",
+          "is_critical": false
+        },
+        {
+          "step": 1,
+          "qtr": 4,
+          "clock": "0:00",
+          "home_wp": 0.5,
+          "delta_wp": 0.0,
+          "label": "Final del partido",
+          "is_critical": false
+        }
+      ]
+    },
+    {
+      "event_id": "401873042",
+      "week": 9,
+      "season_type": "REG",
+      "name": "Detroit Lions at Miami Dolphins",
+      "short_name": "DET @ MIA",
+      "date": "2026-11-08T18:00Z",
+      "status": {
+        "state": "pre",
+        "detail": "11/8 - 1:00 PM EST",
+        "period": 0,
+        "clock": "0:00",
+        "completed": false
+      },
+      "home_team": {
+        "id": "15",
+        "abbreviation": "MIA",
+        "name": "Miami Dolphins",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/mia.png"
+      },
+      "away_team": {
+        "id": "8",
+        "abbreviation": "DET",
+        "name": "Detroit Lions",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/det.png"
+      },
+      "win_probability": {
+        "home_wp": 0.5,
+        "away_wp": 0.5
+      },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873042/lions-dolphins",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873042",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873042"
+      },
+      "critical_moments": [],
+      "hinge_play": null,
+      "wp_timeline": [
+        {
+          "step": 0,
+          "qtr": 1,
+          "clock": "15:00",
+          "home_wp": 0.5,
+          "delta_wp": 0.0,
+          "label": "Kickoff (Inicio 50/50)",
+          "is_critical": false
+        },
+        {
+          "step": 1,
+          "qtr": 4,
+          "clock": "0:00",
+          "home_wp": 0.5,
+          "delta_wp": 0.0,
+          "label": "Final del partido",
+          "is_critical": false
+        }
+      ]
+    },
+    {
+      "event_id": "401873039",
+      "week": 9,
+      "season_type": "REG",
+      "name": "Cleveland Browns at New Orleans Saints",
+      "short_name": "CLE @ NO",
+      "date": "2026-11-08T18:00Z",
+      "status": {
+        "state": "pre",
+        "detail": "11/8 - 1:00 PM EST",
+        "period": 0,
+        "clock": "0:00",
+        "completed": false
+      },
+      "home_team": {
+        "id": "18",
+        "abbreviation": "NO",
+        "name": "New Orleans Saints",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/no.png"
+      },
+      "away_team": {
+        "id": "5",
+        "abbreviation": "CLE",
+        "name": "Cleveland Browns",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/cle.png"
+      },
+      "win_probability": {
+        "home_wp": 0.5,
+        "away_wp": 0.5
+      },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873039/browns-saints",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873039",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873039"
+      },
+      "critical_moments": [],
+      "hinge_play": null,
+      "wp_timeline": [
+        {
+          "step": 0,
+          "qtr": 1,
+          "clock": "15:00",
+          "home_wp": 0.5,
+          "delta_wp": 0.0,
+          "label": "Kickoff (Inicio 50/50)",
+          "is_critical": false
+        },
+        {
+          "step": 1,
+          "qtr": 4,
+          "clock": "0:00",
+          "home_wp": 0.5,
+          "delta_wp": 0.0,
+          "label": "Final del partido",
+          "is_critical": false
+        }
+      ]
+    },
+    {
+      "event_id": "401873044",
+      "week": 9,
+      "season_type": "REG",
+      "name": "New York Giants at Philadelphia Eagles",
+      "short_name": "NYG @ PHI",
+      "date": "2026-11-08T18:00Z",
+      "status": {
+        "state": "pre",
+        "detail": "11/8 - 1:00 PM EST",
+        "period": 0,
+        "clock": "0:00",
+        "completed": false
+      },
+      "home_team": {
+        "id": "21",
+        "abbreviation": "PHI",
+        "name": "Philadelphia Eagles",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/phi.png"
+      },
+      "away_team": {
+        "id": "19",
+        "abbreviation": "NYG",
+        "name": "New York Giants",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/nyg.png"
+      },
+      "win_probability": {
+        "home_wp": 0.5,
+        "away_wp": 0.5
+      },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873044/giants-eagles",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873044",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873044"
+      },
+      "critical_moments": [],
+      "hinge_play": null,
+      "wp_timeline": [
+        {
+          "step": 0,
+          "qtr": 1,
+          "clock": "15:00",
+          "home_wp": 0.5,
+          "delta_wp": 0.0,
+          "label": "Kickoff (Inicio 50/50)",
+          "is_critical": false
+        },
+        {
+          "step": 1,
+          "qtr": 4,
+          "clock": "0:00",
+          "home_wp": 0.5,
+          "delta_wp": 0.0,
+          "label": "Final del partido",
+          "is_critical": false
+        }
+      ]
+    },
+    {
+      "event_id": "401873043",
+      "week": 9,
+      "season_type": "REG",
+      "name": "Los Angeles Rams at Washington Commanders",
+      "short_name": "LAR @ WSH",
+      "date": "2026-11-08T18:00Z",
+      "status": {
+        "state": "pre",
+        "detail": "11/8 - 1:00 PM EST",
+        "period": 0,
+        "clock": "0:00",
+        "completed": false
+      },
+      "home_team": {
+        "id": "28",
+        "abbreviation": "WSH",
+        "name": "Washington Commanders",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/wsh.png"
+      },
+      "away_team": {
+        "id": "14",
+        "abbreviation": "LAR",
+        "name": "Los Angeles Rams",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/lar.png"
+      },
+      "win_probability": {
+        "home_wp": 0.5,
+        "away_wp": 0.5
+      },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873043/rams-commanders",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873043",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873043"
+      },
+      "critical_moments": [],
+      "hinge_play": null,
+      "wp_timeline": [
+        {
+          "step": 0,
+          "qtr": 1,
+          "clock": "15:00",
+          "home_wp": 0.5,
+          "delta_wp": 0.0,
+          "label": "Kickoff (Inicio 50/50)",
+          "is_critical": false
+        },
+        {
+          "step": 1,
+          "qtr": 4,
+          "clock": "0:00",
+          "home_wp": 0.5,
+          "delta_wp": 0.0,
+          "label": "Final del partido",
+          "is_critical": false
+        }
+      ]
+    },
+    {
+      "event_id": "401873041",
+      "week": 9,
+      "season_type": "REG",
+      "name": "Denver Broncos at Carolina Panthers",
+      "short_name": "DEN @ CAR",
+      "date": "2026-11-08T18:00Z",
+      "status": {
+        "state": "pre",
+        "detail": "11/8 - 1:00 PM EST",
+        "period": 0,
+        "clock": "0:00",
+        "completed": false
+      },
+      "home_team": {
+        "id": "29",
+        "abbreviation": "CAR",
+        "name": "Carolina Panthers",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/car.png"
+      },
+      "away_team": {
+        "id": "7",
+        "abbreviation": "DEN",
+        "name": "Denver Broncos",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/den.png"
+      },
+      "win_probability": {
+        "home_wp": 0.5,
+        "away_wp": 0.5
+      },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873041/broncos-panthers",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873041",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873041"
+      },
+      "critical_moments": [],
+      "hinge_play": null,
+      "wp_timeline": [
+        {
+          "step": 0,
+          "qtr": 1,
+          "clock": "15:00",
+          "home_wp": 0.5,
+          "delta_wp": 0.0,
+          "label": "Kickoff (Inicio 50/50)",
+          "is_critical": false
+        },
+        {
+          "step": 1,
+          "qtr": 4,
+          "clock": "0:00",
+          "home_wp": 0.5,
+          "delta_wp": 0.0,
+          "label": "Final del partido",
+          "is_critical": false
+        }
+      ]
+    },
+    {
+      "event_id": "401873046",
+      "week": 9,
+      "season_type": "REG",
+      "name": "Houston Texans at Los Angeles Chargers",
+      "short_name": "HOU @ LAC",
+      "date": "2026-11-08T21:05Z",
+      "status": {
+        "state": "pre",
+        "detail": "11/8 - 4:05 PM EST",
+        "period": 0,
+        "clock": "0:00",
+        "completed": false
+      },
+      "home_team": {
+        "id": "24",
+        "abbreviation": "LAC",
+        "name": "Los Angeles Chargers",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/lac.png"
+      },
+      "away_team": {
+        "id": "34",
+        "abbreviation": "HOU",
+        "name": "Houston Texans",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/hou.png"
+      },
+      "win_probability": {
+        "home_wp": 0.5,
+        "away_wp": 0.5
+      },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873046/texans-chargers",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873046",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873046"
+      },
+      "critical_moments": [],
+      "hinge_play": null,
+      "wp_timeline": [
+        {
+          "step": 0,
+          "qtr": 1,
+          "clock": "15:00",
+          "home_wp": 0.5,
+          "delta_wp": 0.0,
+          "label": "Kickoff (Inicio 50/50)",
+          "is_critical": false
+        },
+        {
+          "step": 1,
+          "qtr": 4,
+          "clock": "0:00",
+          "home_wp": 0.5,
+          "delta_wp": 0.0,
+          "label": "Final del partido",
+          "is_critical": false
+        }
+      ]
+    },
+    {
+      "event_id": "401873049",
+      "week": 9,
+      "season_type": "REG",
+      "name": "Green Bay Packers at New England Patriots",
+      "short_name": "GB @ NE",
+      "date": "2026-11-08T21:25Z",
+      "status": {
+        "state": "pre",
+        "detail": "11/8 - 4:25 PM EST",
+        "period": 0,
+        "clock": "0:00",
+        "completed": false
+      },
+      "home_team": {
+        "id": "17",
+        "abbreviation": "NE",
+        "name": "New England Patriots",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/ne.png"
+      },
+      "away_team": {
+        "id": "9",
+        "abbreviation": "GB",
+        "name": "Green Bay Packers",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/gb.png"
+      },
+      "win_probability": {
+        "home_wp": 0.5,
+        "away_wp": 0.5
+      },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873049/packers-patriots",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873049",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873049"
+      },
+      "critical_moments": [],
+      "hinge_play": null,
+      "wp_timeline": [
+        {
+          "step": 0,
+          "qtr": 1,
+          "clock": "15:00",
+          "home_wp": 0.5,
+          "delta_wp": 0.0,
+          "label": "Kickoff (Inicio 50/50)",
+          "is_critical": false
+        },
+        {
+          "step": 1,
+          "qtr": 4,
+          "clock": "0:00",
+          "home_wp": 0.5,
+          "delta_wp": 0.0,
+          "label": "Final del partido",
+          "is_critical": false
+        }
+      ]
+    },
+    {
+      "event_id": "401873047",
+      "week": 9,
+      "season_type": "REG",
+      "name": "Las Vegas Raiders at San Francisco 49ers",
+      "short_name": "LV @ SF",
+      "date": "2026-11-08T21:25Z",
+      "status": {
+        "state": "pre",
+        "detail": "11/8 - 4:25 PM EST",
+        "period": 0,
+        "clock": "0:00",
+        "completed": false
+      },
+      "home_team": {
+        "id": "25",
+        "abbreviation": "SF",
+        "name": "San Francisco 49ers",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/sf.png"
+      },
+      "away_team": {
+        "id": "13",
+        "abbreviation": "LV",
+        "name": "Las Vegas Raiders",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/lv.png"
+      },
+      "win_probability": {
+        "home_wp": 0.5,
+        "away_wp": 0.5
+      },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873047/raiders-49ers",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873047",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873047"
+      },
+      "critical_moments": [],
+      "hinge_play": null,
+      "wp_timeline": [
+        {
+          "step": 0,
+          "qtr": 1,
+          "clock": "15:00",
+          "home_wp": 0.5,
+          "delta_wp": 0.0,
+          "label": "Kickoff (Inicio 50/50)",
+          "is_critical": false
+        },
+        {
+          "step": 1,
+          "qtr": 4,
+          "clock": "0:00",
+          "home_wp": 0.5,
+          "delta_wp": 0.0,
+          "label": "Final del partido",
+          "is_critical": false
+        }
+      ]
+    },
+    {
+      "event_id": "401873048",
+      "week": 9,
+      "season_type": "REG",
+      "name": "Arizona Cardinals at Seattle Seahawks",
+      "short_name": "ARI @ SEA",
+      "date": "2026-11-08T21:25Z",
+      "status": {
+        "state": "pre",
+        "detail": "11/8 - 4:25 PM EST",
+        "period": 0,
+        "clock": "0:00",
+        "completed": false
+      },
+      "home_team": {
+        "id": "26",
+        "abbreviation": "SEA",
+        "name": "Seattle Seahawks",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/sea.png"
+      },
+      "away_team": {
+        "id": "22",
+        "abbreviation": "ARI",
+        "name": "Arizona Cardinals",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/ari.png"
+      },
+      "win_probability": {
+        "home_wp": 0.5,
+        "away_wp": 0.5
+      },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873048/cardinals-seahawks",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873048",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873048"
+      },
+      "critical_moments": [],
+      "hinge_play": null,
+      "wp_timeline": [
+        {
+          "step": 0,
+          "qtr": 1,
+          "clock": "15:00",
+          "home_wp": 0.5,
+          "delta_wp": 0.0,
+          "label": "Kickoff (Inicio 50/50)",
+          "is_critical": false
+        },
+        {
+          "step": 1,
+          "qtr": 4,
+          "clock": "0:00",
+          "home_wp": 0.5,
+          "delta_wp": 0.0,
+          "label": "Final del partido",
+          "is_critical": false
+        }
+      ]
+    },
+    {
+      "event_id": "401873050",
+      "week": 9,
+      "season_type": "REG",
+      "name": "Tampa Bay Buccaneers at Chicago Bears",
+      "short_name": "TB @ CHI",
+      "date": "2026-11-09T01:20Z",
+      "status": {
+        "state": "pre",
+        "detail": "11/8 - 8:20 PM EST",
+        "period": 0,
+        "clock": "0:00",
+        "completed": false
+      },
+      "home_team": {
+        "id": "3",
+        "abbreviation": "CHI",
+        "name": "Chicago Bears",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/chi.png"
+      },
+      "away_team": {
+        "id": "27",
+        "abbreviation": "TB",
+        "name": "Tampa Bay Buccaneers",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/tb.png"
+      },
+      "win_probability": {
+        "home_wp": 0.5,
+        "away_wp": 0.5
+      },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873050/buccaneers-bears",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873050",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873050"
+      },
+      "critical_moments": [],
+      "hinge_play": null,
+      "wp_timeline": [
+        {
+          "step": 0,
+          "qtr": 1,
+          "clock": "15:00",
+          "home_wp": 0.5,
+          "delta_wp": 0.0,
+          "label": "Kickoff (Inicio 50/50)",
+          "is_critical": false
+        },
+        {
+          "step": 1,
+          "qtr": 4,
+          "clock": "0:00",
+          "home_wp": 0.5,
+          "delta_wp": 0.0,
+          "label": "Final del partido",
+          "is_critical": false
+        }
+      ]
+    },
+    {
+      "event_id": "401873051",
+      "week": 9,
+      "season_type": "REG",
+      "name": "Buffalo Bills at Minnesota Vikings",
+      "short_name": "BUF @ MIN",
+      "date": "2026-11-10T01:15Z",
+      "status": {
+        "state": "pre",
+        "detail": "11/9 - 8:15 PM EST",
+        "period": 0,
+        "clock": "0:00",
+        "completed": false
+      },
+      "home_team": {
+        "id": "16",
+        "abbreviation": "MIN",
+        "name": "Minnesota Vikings",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/min.png"
+      },
+      "away_team": {
+        "id": "2",
+        "abbreviation": "BUF",
+        "name": "Buffalo Bills",
+        "score": 0,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/buf.png"
+      },
+      "win_probability": {
+        "home_wp": 0.5,
+        "away_wp": 0.5
+      },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873051/bills-vikings",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873051",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873051"
+      },
+      "critical_moments": [],
+      "hinge_play": null,
+      "wp_timeline": [
+        {
+          "step": 0,
+          "qtr": 1,
+          "clock": "15:00",
+          "home_wp": 0.5,
+          "delta_wp": 0.0,
+          "label": "Kickoff (Inicio 50/50)",
+          "is_critical": false
+        },
+        {
+          "step": 1,
+          "qtr": 4,
+          "clock": "0:00",
+          "home_wp": 0.5,
+          "delta_wp": 0.0,
+          "label": "Final del partido",
           "is_critical": false
         }
       ]
