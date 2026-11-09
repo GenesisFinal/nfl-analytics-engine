@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-08T22:12:06.558080+00:00",
+  "updated_at": "2026-11-09T01:44:47.616620+00:00",
   "source": "ESPN JSON API",
   "season": 2026,
   "season_type": "REG",
@@ -17,570 +17,67 @@
     9
   ],
   "total_games": 136,
-  "completed_games": 130,
-  "hinge_games_count": 94,
+  "completed_games": 134,
+  "hinge_games_count": 95,
   "games": [
     {
-      "event_id": "401873046",
+      "event_id": "401873050",
       "week": 9,
       "season_type": "REG",
-      "name": "Houston Texans at Los Angeles Chargers",
-      "short_name": "HOU @ LAC",
-      "date": "2026-11-08T21:05Z",
+      "name": "Tampa Bay Buccaneers at Chicago Bears",
+      "short_name": "TB @ CHI",
+      "date": "2026-11-09T01:20Z",
       "status": {
         "state": "in",
-        "detail": "4:28 - 2nd",
-        "period": 2,
-        "clock": "4:28",
+        "detail": "6:00 - 1st",
+        "period": 1,
+        "clock": "6:00",
         "completed": false
       },
       "home_team": {
-        "id": "24",
-        "abbreviation": "LAC",
-        "name": "Los Angeles Chargers",
-        "score": 9,
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/lac.png"
+        "id": "3",
+        "abbreviation": "CHI",
+        "name": "Chicago Bears",
+        "score": 14,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/chi.png"
       },
       "away_team": {
-        "id": "34",
-        "abbreviation": "HOU",
-        "name": "Houston Texans",
-        "score": 17,
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/hou.png"
-      },
-      "win_probability": {
-        "home_wp": 0.2079,
-        "away_wp": 0.7921
-      },
-      "game_links": {
-        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873046",
-        "recap": "https://www.espn.com/nfl/recap?gameId=401873046",
-        "summary": "https://www.espn.com/nfl/game/_/gameId/401873046"
-      },
-      "critical_moments": [
-        {
-          "play_id": "4018730461689",
-          "qtr": 2,
-          "clock": "4:28",
-          "description": "(Shotgun) C.Stroud pass deep right to T.Dell for 63 yards, TOUCHDOWN. K.Fairbairn extra point is GOOD, Center-A.Brinkman, Holder-K.Kroeger.",
-          "home_wp_before": 0.3493,
-          "home_wp_after": 0.2079,
-          "delta_wp": -0.1414,
-          "abs_delta_wp": 0.1414,
-          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873046",
-          "play_label": "C.J. Stroud a Tank Dell TD (63 yds)",
-          "video_query": "C.J. Stroud Tank Dell 63 yard touchdown Texans Chargers",
-          "video_query_v2": "C.J. Stroud Tank Dell 63 yard touchdown Texans Chargers",
-          "video_url": "https://www.youtube.com/results?search_query=C.J.+Stroud+Tank+Dell+63+yard+touchdown+Texans+Chargers&sp=EgIYAQ%3D%3D",
-          "video_source": "Clip Puntual (<4m)",
-          "video_title": "Jugada Puntual: C.J. Stroud a Tank Dell TD (63 yds) (HOU @ LAC Q2)",
-          "has_direct_video": false,
-          "youtube_search_url": "https://www.youtube.com/results?search_query=C.J.+Stroud+Tank+Dell+63+yard+touchdown+Texans+Chargers&sp=EgIYAQ%3D%3D",
-          "x_video_url": "https://x.com/search?q=C.J.+Stroud+Tank+Dell+63+yard+touchdown+Texans+Chargers&f=video"
-        }
-      ],
-      "hinge_play": {
-        "play_id": "4018730461689",
-        "qtr": 2,
-        "clock": "4:28",
-        "description": "(Shotgun) C.Stroud pass deep right to T.Dell for 63 yards, TOUCHDOWN. K.Fairbairn extra point is GOOD, Center-A.Brinkman, Holder-K.Kroeger.",
-        "home_wp_before": 0.3493,
-        "home_wp_after": 0.2079,
-        "delta_wp": -0.1414,
-        "abs_delta_wp": 0.1414,
-        "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873046",
-        "play_label": "C.J. Stroud a Tank Dell TD (63 yds)",
-        "video_query": "C.J. Stroud Tank Dell 63 yard touchdown Texans Chargers",
-        "video_query_v2": "C.J. Stroud Tank Dell 63 yard touchdown Texans Chargers",
-        "video_url": "https://www.youtube.com/results?search_query=C.J.+Stroud+Tank+Dell+63+yard+touchdown+Texans+Chargers&sp=EgIYAQ%3D%3D",
-        "video_source": "Clip Puntual (<4m)",
-        "video_title": "Jugada Puntual: C.J. Stroud a Tank Dell TD (63 yds) (HOU @ LAC Q2)",
-        "has_direct_video": false,
-        "youtube_search_url": "https://www.youtube.com/results?search_query=C.J.+Stroud+Tank+Dell+63+yard+touchdown+Texans+Chargers&sp=EgIYAQ%3D%3D",
-        "x_video_url": "https://x.com/search?q=C.J.+Stroud+Tank+Dell+63+yard+touchdown+Texans+Chargers&f=video",
-        "exceeds_threshold": true
-      },
-      "wp_timeline": [
-        {
-          "step": 0,
-          "qtr": 1,
-          "clock": "15:00",
-          "home_wp": 0.5,
-          "delta_wp": 0.0,
-          "label": "Kickoff",
-          "is_critical": false
-        },
-        {
-          "step": 1,
-          "play_id": "40187304640",
-          "qtr": 1,
-          "clock": "15:00",
-          "home_wp": 0.3598,
-          "delta_wp": -0.0194,
-          "label": "C.Dicker kicks 60 yards from LAC 35 to HST 5. T.Smith to HST 27 for 22 yards (D.Phillips).",
-          "is_critical": false
-        },
-        {
-          "step": 2,
-          "play_id": "40187304688",
-          "qtr": 1,
-          "clock": "14:17",
-          "home_wp": 0.3409,
-          "delta_wp": 0.0035,
-          "label": "(Shotgun) W.Marks right end to 50 for 4 yards (T.Jefferson).",
-          "is_critical": false
-        },
-        {
-          "step": 3,
-          "play_id": "401873046135",
-          "qtr": 1,
-          "clock": "13:14",
-          "home_wp": 0.3064,
-          "delta_wp": -0.0341,
-          "label": "(No Huddle, Shotgun) C.Stroud pass incomplete short middle to D.Schultz (E.Molden).PENALTY",
-          "is_critical": false
-        },
-        {
-          "step": 4,
-          "play_id": "401873046198",
-          "qtr": 1,
-          "clock": "12:29",
-          "home_wp": 0.288,
-          "delta_wp": -0.023,
-          "label": "(Shotgun) C.Stroud pass short right to E.Demercado to LAC 21 for 8 yards (T.Still).",
-          "is_critical": false
-        },
-        {
-          "step": 5,
-          "play_id": "401873046248",
-          "qtr": 1,
-          "clock": "11:26",
-          "home_wp": 0.2675,
-          "delta_wp": -0.0097,
-          "label": "B.Fisher reported in as eligible.  W.Marks up the middle to LAC 12 for 3 yards (J.Eboigbe;",
-          "is_critical": false
-        },
-        {
-          "step": 6,
-          "play_id": "401873046300",
-          "qtr": 1,
-          "clock": "10:16",
-          "home_wp": 0.2412,
-          "delta_wp": -0.0647,
-          "label": "(Shotgun) C.Stroud pass deep right to X.Hutchinson for 17 yards, TOUCHDOWN. K.Fairbairn ex",
-          "is_critical": false
-        },
-        {
-          "step": 7,
-          "play_id": "401873046336",
-          "qtr": 1,
-          "clock": "10:16",
-          "home_wp": 0.2499,
-          "delta_wp": 0.0104,
-          "label": "K.Fairbairn kicks 60 yards from HST 35 to LAC 5. K.Mitchell to LAC 32 for 27 yards (J.Ingr",
-          "is_critical": false
-        },
-        {
-          "step": 8,
-          "play_id": "401873046393",
-          "qtr": 1,
-          "clock": "9:49",
-          "home_wp": 0.2631,
-          "delta_wp": 0.0217,
-          "label": "(No Huddle) J.Herbert pass short left to C.Kolar to LAC 44 for 10 yards (J.Hansen).",
-          "is_critical": false
-        },
-        {
-          "step": 9,
-          "play_id": "401873046443",
-          "qtr": 1,
-          "clock": "8:43",
-          "home_wp": 0.2527,
-          "delta_wp": -0.0122,
-          "label": "Direct snap to O.Hampton.  J.Herbert pass incomplete deep middle to T.Harris.",
-          "is_critical": false
-        },
-        {
-          "step": 10,
-          "play_id": "401873046505",
-          "qtr": 1,
-          "clock": "8:01",
-          "home_wp": 0.2642,
-          "delta_wp": -0.0178,
-          "label": "(Shotgun) O.Hampton right end to HST 40 for 1 yard (J.Pitre).",
-          "is_critical": false
-        },
-        {
-          "step": 11,
-          "play_id": "401873046551",
-          "qtr": 1,
-          "clock": "6:58",
-          "home_wp": 0.2459,
-          "delta_wp": -0.0059,
-          "label": "(Shotgun) K.Vidal up the middle to HST 34 for 6 yards (J.Pitre).",
-          "is_critical": false
-        },
-        {
-          "step": 12,
-          "play_id": "401873046583",
-          "qtr": 1,
-          "clock": "6:14",
-          "home_wp": 0.2794,
-          "delta_wp": 0.0,
-          "label": "Official Timeout at 06:14.",
-          "is_critical": false
-        },
-        {
-          "step": 13,
-          "play_id": "401873046623",
-          "qtr": 1,
-          "clock": "6:09",
-          "home_wp": 0.2806,
-          "delta_wp": 0.0163,
-          "label": "B.Fisher reported in as eligible.  C.Stroud pass incomplete deep right to T.Dell.",
-          "is_critical": false
-        },
-        {
-          "step": 14,
-          "play_id": "401873046682",
-          "qtr": 1,
-          "clock": "6:00",
-          "home_wp": 0.2785,
-          "delta_wp": 0.0153,
-          "label": "(Shotgun) W.Marks left end to HST 40 for -1 yards (A.Mesidor).",
-          "is_critical": false
-        },
-        {
-          "step": 15,
-          "play_id": "401873046729",
-          "qtr": 1,
-          "clock": "4:38",
-          "home_wp": 0.2386,
-          "delta_wp": -0.0143,
-          "label": "(Shotgun) C.Stroud scrambles left end ran ob at LAC 42 for 12 yards (C.Hart).",
-          "is_critical": false
-        },
-        {
-          "step": 16,
-          "play_id": "401873046778",
-          "qtr": 1,
-          "clock": "3:24",
-          "home_wp": 0.2582,
-          "delta_wp": 0.015,
-          "label": "(Shotgun) C.Stroud pass incomplete deep right to T.Dell.",
-          "is_critical": false
-        },
-        {
-          "step": 17,
-          "play_id": "401873046824",
-          "qtr": 1,
-          "clock": "3:12",
-          "home_wp": 0.238,
-          "delta_wp": -0.055,
-          "label": "K.Fairbairn 56 yard field goal is GOOD, Center-A.Brinkman, Holder-K.Kroeger.",
-          "is_critical": false
-        },
-        {
-          "step": 18,
-          "play_id": "401873046849",
-          "qtr": 1,
-          "clock": "3:12",
-          "home_wp": 0.2524,
-          "delta_wp": 0.0144,
-          "label": "K.Fairbairn kicks 65 yards from HST 35 to end zone, Touchback to the LAC 35.",
-          "is_critical": false
-        },
-        {
-          "step": 19,
-          "play_id": "401873046895",
-          "qtr": 1,
-          "clock": "2:40",
-          "home_wp": 0.2432,
-          "delta_wp": -0.0116,
-          "label": "(Shotgun) J.Herbert pass incomplete deep right to O.Gadsden.",
-          "is_critical": false
-        },
-        {
-          "step": 20,
-          "play_id": "401873046943",
-          "qtr": 1,
-          "clock": "2:06",
-          "home_wp": 0.2702,
-          "delta_wp": -0.0085,
-          "label": "(Shotgun) J.Herbert pass short left to T.Harris to HST 41 for 3 yards (A.Al-Shaair).",
-          "is_critical": false
-        },
-        {
-          "step": 21,
-          "play_id": "401873046990",
-          "qtr": 1,
-          "clock": "0:50",
-          "home_wp": 0.2249,
-          "delta_wp": -0.0306,
-          "label": "(Shotgun) J.Herbert pass incomplete short right to K.Vidal.",
-          "is_critical": false
-        },
-        {
-          "step": 22,
-          "play_id": "4018730461023",
-          "qtr": 1,
-          "clock": "0:40",
-          "home_wp": 0.2312,
-          "delta_wp": -0.0001,
-          "label": "Official Timeout at 00:40.",
-          "is_critical": false
-        },
-        {
-          "step": 23,
-          "play_id": "4018730461092",
-          "qtr": 2,
-          "clock": "15:00",
-          "home_wp": 0.2302,
-          "delta_wp": 0.0155,
-          "label": "B.Fisher reported in as eligible.  E.Demercado up the middle to HST 16 for -1 yards (D.Hen",
-          "is_critical": false
-        },
-        {
-          "step": 24,
-          "play_id": "4018730461143",
-          "qtr": 2,
-          "clock": "13:39",
-          "home_wp": 0.2687,
-          "delta_wp": 0.0074,
-          "label": "K.Kroeger punts 34 yards to LAC 49, Center-A.Brinkman, out of bounds.",
-          "is_critical": false
-        },
-        {
-          "step": 25,
-          "play_id": "4018730461162",
-          "qtr": 2,
-          "clock": "13:33",
-          "home_wp": 0.2922,
-          "delta_wp": 0.0236,
-          "label": "(Shotgun) K.Vidal left end to HST 42 for 9 yards (C.Bullock).  The first down was assisted",
-          "is_critical": false
-        },
-        {
-          "step": 26,
-          "play_id": "4018730461215",
-          "qtr": 2,
-          "clock": "12:19",
-          "home_wp": 0.286,
-          "delta_wp": 0.0249,
-          "label": "(Shotgun) J.Herbert pass short right to O.Gadsden to HST 38 for 7 yards (D.Stingley).",
-          "is_critical": false
-        },
-        {
-          "step": 27,
-          "play_id": "4018730461273",
-          "qtr": 2,
-          "clock": "11:31",
-          "home_wp": 0.308,
-          "delta_wp": -0.0036,
-          "label": "(Shotgun) K.Mitchell left end to HST 20 for 3 yards (D.Hunter).",
-          "is_critical": false
-        },
-        {
-          "step": 28,
-          "play_id": "4018730461317",
-          "qtr": 2,
-          "clock": "10:21",
-          "home_wp": 0.3226,
-          "delta_wp": -0.0033,
-          "label": "O.Hampton left end to HST 8 for 1 yard (T.Togiai; A.Al-Shaair).",
-          "is_critical": false
-        },
-        {
-          "step": 29,
-          "play_id": "4018730461361",
-          "qtr": 2,
-          "clock": "8:58",
-          "home_wp": 0.2708,
-          "delta_wp": -0.0329,
-          "label": "(Shotgun) J.Herbert pass short right to T.Harris to HST 15 for -7 yards (J.Pitre).",
-          "is_critical": false
-        },
-        {
-          "step": 30,
-          "play_id": "4018730461396",
-          "qtr": 2,
-          "clock": "8:13",
-          "home_wp": 0.2826,
-          "delta_wp": 0.0,
-          "label": "Official Timeout at 08:13.",
-          "is_critical": false
-        },
-        {
-          "step": 31,
-          "play_id": "4018730461439",
-          "qtr": 2,
-          "clock": "8:08",
-          "home_wp": 0.2562,
-          "delta_wp": -0.0161,
-          "label": "(Shotgun) C.Stroud pass short middle to N.Collins to HST 45 for 14 yards (T.Still; M.Wax).",
-          "is_critical": false
-        },
-        {
-          "step": 32,
-          "play_id": "4018730461464",
-          "qtr": 2,
-          "clock": "7:32",
-          "home_wp": 0.364,
-          "delta_wp": 0.1078,
-          "label": "(Shotgun) C.Stroud pass short middle intended for K.Boutte INTERCEPTED by D.Henley (M.Wax)",
-          "is_critical": false
-        },
-        {
-          "step": 33,
-          "play_id": "4018730461491",
-          "qtr": 2,
-          "clock": "7:23",
-          "home_wp": 0.3358,
-          "delta_wp": -0.0282,
-          "label": "(Shotgun) J.Herbert pass incomplete deep middle to T.Harris (C.Bullock).",
-          "is_critical": false
-        },
-        {
-          "step": 34,
-          "play_id": "4018730461536",
-          "qtr": 2,
-          "clock": "6:40",
-          "home_wp": 0.3519,
-          "delta_wp": -0.0327,
-          "label": "K.Mitchell left end to HST 30 for -3 yards (K.Lassiter).",
-          "is_critical": false
-        },
-        {
-          "step": 35,
-          "play_id": "4018730461588",
-          "qtr": 2,
-          "clock": "5:19",
-          "home_wp": 0.3409,
-          "delta_wp": -0.0282,
-          "label": "(Shotgun) J.Herbert pass incomplete deep left to Q.Johnston (K.Lassiter).",
-          "is_critical": false
-        },
-        {
-          "step": 36,
-          "play_id": "4018730461621",
-          "qtr": 2,
-          "clock": "5:11",
-          "home_wp": 0.365,
-          "delta_wp": 0.0,
-          "label": "Official Timeout at 05:11.",
-          "is_critical": false
-        },
-        {
-          "step": 37,
-          "play_id": "4018730461664",
-          "qtr": 2,
-          "clock": "5:06",
-          "home_wp": 0.3493,
-          "delta_wp": -0.0023,
-          "label": "(Shotgun) C.Stroud pass short left to M.Harrison pushed ob at HST 37 for 5 yards (C.Hart).",
-          "is_critical": false
-        },
-        {
-          "step": 38,
-          "play_id": "4018730461689",
-          "qtr": 2,
-          "clock": "4:28",
-          "home_wp": 0.2079,
-          "delta_wp": -0.1414,
-          "label": "C.J. Stroud a Tank Dell TD (63 yds)",
-          "is_critical": true
-        },
-        {
-          "step": 39,
-          "play_id": "4018730461718",
-          "qtr": 2,
-          "clock": "4:28",
-          "home_wp": 0.2079,
-          "delta_wp": 0.0,
-          "label": "Official Timeout at 04:28.",
-          "is_critical": false
-        }
-      ]
-    },
-    {
-      "event_id": "401873049",
-      "week": 9,
-      "season_type": "REG",
-      "name": "Green Bay Packers at New England Patriots",
-      "short_name": "GB @ NE",
-      "date": "2026-11-08T21:25Z",
-      "status": {
-        "state": "in",
-        "detail": "12:46 - 2nd",
-        "period": 2,
-        "clock": "12:46",
-        "completed": false
-      },
-      "home_team": {
-        "id": "17",
-        "abbreviation": "NE",
-        "name": "New England Patriots",
+        "id": "27",
+        "abbreviation": "TB",
+        "name": "Tampa Bay Buccaneers",
         "score": 0,
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/ne.png"
-      },
-      "away_team": {
-        "id": "9",
-        "abbreviation": "GB",
-        "name": "Green Bay Packers",
-        "score": 17,
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/gb.png"
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/tb.png"
       },
       "win_probability": {
-        "home_wp": 0.0853,
-        "away_wp": 0.9147
+        "home_wp": 0.8807,
+        "away_wp": 0.1193
       },
       "game_links": {
-        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873049",
-        "recap": "https://www.espn.com/nfl/recap?gameId=401873049",
-        "summary": "https://www.espn.com/nfl/game/_/gameId/401873049"
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873050",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873050",
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873050"
       },
-      "critical_moments": [
-        {
-          "play_id": "40187304998",
-          "qtr": 1,
-          "clock": "14:32",
-          "description": "D.Maye pass deep left intended for M.Hollins INTERCEPTED by X.McKinney at 50. X.McKinney pushed ob at NE 14 for 36 yards (M.Pryor).",
-          "home_wp_before": 0.5702,
-          "home_wp_after": 0.4459,
-          "delta_wp": -0.1243,
-          "abs_delta_wp": 0.1243,
-          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873049",
-          "play_label": "Xavier McKinney INT a Drake Maye",
-          "video_query": "Xavier McKinney Drake Maye interception Packers Patriots",
-          "video_query_v2": "Xavier McKinney Drake Maye interception Packers Patriots",
-          "video_url": "https://www.youtube.com/results?search_query=Xavier+McKinney+Drake+Maye+interception+Packers+Patriots&sp=EgIYAQ%3D%3D",
-          "video_source": "Clip Puntual (<4m)",
-          "video_title": "Jugada Puntual: Xavier McKinney INT a Drake Maye (GB @ NE Q1)",
-          "has_direct_video": false,
-          "youtube_search_url": "https://www.youtube.com/results?search_query=Xavier+McKinney+Drake+Maye+interception+Packers+Patriots&sp=EgIYAQ%3D%3D",
-          "x_video_url": "https://x.com/search?q=Xavier+McKinney+Drake+Maye+interception+Packers+Patriots&f=video"
-        }
-      ],
+      "critical_moments": [],
       "hinge_play": {
-        "play_id": "40187304998",
+        "play_id": "401873050546",
         "qtr": 1,
-        "clock": "14:32",
-        "description": "D.Maye pass deep left intended for M.Hollins INTERCEPTED by X.McKinney at 50. X.McKinney pushed ob at NE 14 for 36 yards (M.Pryor).",
-        "home_wp_before": 0.5702,
-        "home_wp_after": 0.4459,
-        "delta_wp": -0.1243,
-        "abs_delta_wp": 0.1243,
-        "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873049",
-        "play_label": "Xavier McKinney INT a Drake Maye",
-        "video_query": "Xavier McKinney Drake Maye interception Packers Patriots",
-        "video_query_v2": "Xavier McKinney Drake Maye interception Packers Patriots",
-        "video_url": "https://www.youtube.com/results?search_query=Xavier+McKinney+Drake+Maye+interception+Packers+Patriots&sp=EgIYAQ%3D%3D",
+        "clock": "6:00",
+        "description": "(Shotgun) C.Williams pass short middle to L.Burden for 56 yards, TOUCHDOWN. C.Santos extra point is GOOD, Center-S.Daly, Holder-T.Taylor.",
+        "home_wp_before": 0.7863,
+        "home_wp_after": 0.8807,
+        "delta_wp": 0.0944,
+        "abs_delta_wp": 0.0944,
+        "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873050",
+        "play_label": "Caleb Williams a Luther Burden III TD (56 yds)",
+        "video_query": "Caleb Williams Luther Burden III 56 yard touchdown Buccaneers Bears",
+        "video_query_v2": "Caleb Williams Luther Burden III 56 yard touchdown Buccaneers Bears",
+        "video_url": "https://www.youtube.com/results?search_query=Caleb+Williams+Luther+Burden+III+56+yard+touchdown+Buccaneers+Bears&sp=EgIYAQ%3D%3D",
         "video_source": "Clip Puntual (<4m)",
-        "video_title": "Jugada Puntual: Xavier McKinney INT a Drake Maye (GB @ NE Q1)",
+        "video_title": "Jugada Puntual: Caleb Williams a Luther Burden III TD (56 yds) (TB @ CHI Q1)",
         "has_direct_video": false,
-        "youtube_search_url": "https://www.youtube.com/results?search_query=Xavier+McKinney+Drake+Maye+interception+Packers+Patriots&sp=EgIYAQ%3D%3D",
-        "x_video_url": "https://x.com/search?q=Xavier+McKinney+Drake+Maye+interception+Packers+Patriots&f=video",
-        "exceeds_threshold": true
+        "youtube_search_url": "https://www.youtube.com/results?search_query=Caleb+Williams+Luther+Burden+III+56+yard+touchdown+Buccaneers+Bears&sp=EgIYAQ%3D%3D",
+        "x_video_url": "https://x.com/search?q=Caleb+Williams+Luther+Burden+III+56+yard+touchdown+Buccaneers+Bears&f=video",
+        "exceeds_threshold": false
       },
       "wp_timeline": [
         {
@@ -594,1584 +91,232 @@
         },
         {
           "step": 1,
-          "play_id": "40187304940",
+          "play_id": "40187305039",
           "qtr": 1,
           "clock": "15:00",
-          "home_wp": 0.5857,
-          "delta_wp": 0.018,
-          "label": "T.Smack kicks 60 yards from GB 35 to NE 5. C.Kiner to NE 25 for 20 yards (B.Melton).",
+          "home_wp": 0.67,
+          "delta_wp": 0.0428,
+          "label": "C.McLaughlin kicks 58 yards from TB 35 to CHI 7. Z.Thomas to CHI 47 for 40 yards (D.Sills;",
           "is_critical": false
         },
         {
           "step": 2,
-          "play_id": "40187304963",
+          "play_id": "40187305062",
           "qtr": 1,
-          "clock": "14:52",
-          "home_wp": 0.5702,
-          "delta_wp": -0.0155,
-          "label": "(14:52) C.Lomu reported in as eligible.  R.Stevenson left tackle to NE 26 for 1 yard (B.So",
+          "clock": "14:51",
+          "home_wp": 0.6463,
+          "delta_wp": -0.0237,
+          "label": "(Shotgun) C.Williams pass short left to L.Burden to CHI 46 for -1 yards (J.Parrish).",
           "is_critical": false
         },
         {
           "step": 3,
-          "play_id": "40187304998",
+          "play_id": "40187305087",
           "qtr": 1,
-          "clock": "14:32",
-          "home_wp": 0.4459,
-          "delta_wp": -0.1243,
-          "label": "Xavier McKinney INT a Drake Maye",
-          "is_critical": true
+          "clock": "14:18",
+          "home_wp": 0.6521,
+          "delta_wp": 0.0058,
+          "label": "(Shotgun) C.Williams pass short left to S.Roush pushed ob at TB 49 for 5 yards (T.Smith).",
+          "is_critical": false
         },
         {
           "step": 4,
-          "play_id": "401873049130",
+          "play_id": "401873050117",
           "qtr": 1,
-          "clock": "14:14",
-          "home_wp": 0.4736,
-          "delta_wp": 0.0277,
-          "label": "S.Williams left end to NE 13 for 1 yard (C.Gonzalez; R.Spillane).",
+          "clock": "13:44",
+          "home_wp": 0.6843,
+          "delta_wp": 0.0322,
+          "label": "(Shotgun) C.Williams scrambles left tackle to TB 42 for 7 yards (T.Smith; A.Nelson).",
           "is_critical": false
         },
         {
           "step": 5,
-          "play_id": "401873049152",
+          "play_id": "401873050139",
           "qtr": 1,
-          "clock": "13:19",
-          "home_wp": 0.4042,
-          "delta_wp": -0.0694,
-          "label": "(Shotgun) J.Love scrambles up the middle for 13 yards, TOUCHDOWN. T.Smack extra point is G",
+          "clock": "13:02",
+          "home_wp": 0.7048,
+          "delta_wp": 0.0205,
+          "label": "S.Ahmed right end to TB 34 for 8 yards (A.Winfield).",
           "is_critical": false
         },
         {
           "step": 6,
-          "play_id": "401873049190",
+          "play_id": "401873050161",
           "qtr": 1,
-          "clock": "13:19",
-          "home_wp": 0.4182,
-          "delta_wp": 0.014,
-          "label": "T.Smack kicks 54 yards from GB 35 to NE 11. C.Kiner to NE 34 for 23 yards (K.Welch; D.Denn",
+          "clock": "12:33",
+          "home_wp": 0.7019,
+          "delta_wp": -0.0029,
+          "label": "C.Williams scrambles left end ran ob at TB 30 for 4 yards (K.Scott).",
           "is_critical": false
         },
         {
           "step": 7,
-          "play_id": "401873049218",
-          "qtr": 1,
-          "clock": "13:13",
-          "home_wp": 0.411,
-          "delta_wp": -0.0072,
-          "label": "(Shotgun) R.Stevenson up the middle to NE 37 for 3 yards (L.Van Ness).",
-          "is_critical": false
-        },
-        {
-          "step": 8,
-          "play_id": "401873049240",
-          "qtr": 1,
-          "clock": "12:39",
-          "home_wp": 0.3965,
-          "delta_wp": -0.0145,
-          "label": "(Shotgun) D.Maye pass incomplete short right.",
-          "is_critical": false
-        },
-        {
-          "step": 9,
-          "play_id": "401873049263",
-          "qtr": 1,
-          "clock": "12:34",
-          "home_wp": 0.3604,
-          "delta_wp": -0.0361,
-          "label": "(Shotgun) D.Maye sacked at NE 28 for -9 yards (I.McDuffie).",
-          "is_critical": false
-        },
-        {
-          "step": 10,
-          "play_id": "401873049283",
+          "play_id": "401873050188",
           "qtr": 1,
           "clock": "11:58",
-          "home_wp": 0.3823,
-          "delta_wp": 0.0219,
-          "label": "M.Wishnowsky punts 58 yards to GB 14, Center-J.Ashby, downed by NE-M.Brown.",
-          "is_critical": false
-        },
-        {
-          "step": 11,
-          "play_id": "401873049303",
-          "qtr": 1,
-          "clock": "11:44",
-          "home_wp": 0.3911,
-          "delta_wp": 0.0088,
-          "label": "J.Jacobs up the middle to GB 17 for 3 yards (J.Reed; C.Elliss).",
-          "is_critical": false
-        },
-        {
-          "step": 12,
-          "play_id": "401873049325",
-          "qtr": 1,
-          "clock": "11:03",
-          "home_wp": 0.3575,
-          "delta_wp": -0.0336,
-          "label": "J.Love pass deep right to M.Golden pushed ob at GB 33 for 16 yards (C.Gonzalez).",
-          "is_critical": false
-        },
-        {
-          "step": 13,
-          "play_id": "401873049359",
-          "qtr": 1,
-          "clock": "10:50",
-          "home_wp": 0.2834,
-          "delta_wp": -0.0741,
-          "label": "(No Huddle, Shotgun) J.Love pass deep right to M.Golden to NE 18 for 49 yards (K.Byard).",
-          "is_critical": false
-        },
-        {
-          "step": 14,
-          "play_id": "401873049388",
-          "qtr": 1,
-          "clock": "10:03",
-          "home_wp": 0.3141,
-          "delta_wp": 0.0307,
-          "label": "(Shotgun) J.Jacobs right tackle to NE 20 for -2 yards (C.Durden).",
-          "is_critical": false
-        },
-        {
-          "step": 15,
-          "play_id": "401873049410",
-          "qtr": 1,
-          "clock": "9:23",
-          "home_wp": 0.2812,
-          "delta_wp": -0.0329,
-          "label": "(Shotgun) J.Love pass short right intended for B.Melton INTERCEPTED by C.Gonzalez at NE 8.",
-          "is_critical": false
-        },
-        {
-          "step": 16,
-          "play_id": "401873049448",
-          "qtr": 1,
-          "clock": "9:15",
-          "home_wp": 0.2785,
-          "delta_wp": -0.0027,
-          "label": "(Shotgun) J.Jacobs right guard to NE 7 for 2 yards (C.Durden; C.Elliss).",
-          "is_critical": false
-        },
-        {
-          "step": 17,
-          "play_id": "401873049470",
-          "qtr": 1,
-          "clock": "8:41",
-          "home_wp": 0.288,
-          "delta_wp": 0.0095,
-          "label": "(No Huddle, Shotgun) J.Jacobs left end to NE 5 for 2 yards (C.Woodson). FUMBLES (C.Woodson",
-          "is_critical": false
-        },
-        {
-          "step": 18,
-          "play_id": "401873049501",
-          "qtr": 1,
-          "clock": "7:59",
-          "home_wp": 0.2267,
-          "delta_wp": -0.0613,
-          "label": "(Shotgun) J.Love pass short middle to M.Golden for 5 yards, TOUCHDOWN. T.Smack extra point",
-          "is_critical": false
-        },
-        {
-          "step": 19,
-          "play_id": "401873049535",
-          "qtr": 1,
-          "clock": "7:59",
-          "home_wp": 0.2248,
-          "delta_wp": -0.0019,
-          "label": "Official Timeout at 07:59.",
-          "is_critical": false
-        },
-        {
-          "step": 20,
-          "play_id": "401873049542",
-          "qtr": 1,
-          "clock": "7:59",
-          "home_wp": 0.2328,
-          "delta_wp": 0.008,
-          "label": "T.Smack kicks 60 yards from GB 35 to NE 5. C.Kiner to NE 30 for 25 yards (D.Dennis-Sutton)",
-          "is_critical": false
-        },
-        {
-          "step": 21,
-          "play_id": "401873049577",
-          "qtr": 1,
-          "clock": "7:53",
-          "home_wp": 0.2346,
-          "delta_wp": 0.0018,
-          "label": "(Shotgun) D.Maye pass short right to M.Hollins to NE 35 for 5 yards (K.Nixon).",
-          "is_critical": false
-        },
-        {
-          "step": 22,
-          "play_id": "401873049602",
-          "qtr": 1,
-          "clock": "7:17",
-          "home_wp": 0.2457,
-          "delta_wp": 0.0111,
-          "label": "(Shotgun) D.Maye pass short left to H.Henry to NE 44 for 9 yards (B.Cisse; I.McDuffie).",
-          "is_critical": false
-        },
-        {
-          "step": 23,
-          "play_id": "401873049627",
-          "qtr": 1,
-          "clock": "6:42",
-          "home_wp": 0.2297,
-          "delta_wp": -0.016,
-          "label": "(Shotgun) D.Maye pass incomplete deep left to D.Douglas.",
-          "is_critical": false
-        },
-        {
-          "step": 24,
-          "play_id": "401873049650",
-          "qtr": 1,
-          "clock": "6:36",
-          "home_wp": 0.2204,
-          "delta_wp": -0.0093,
-          "label": "(Shotgun) D.Maye pass incomplete short right.",
-          "is_critical": false
-        },
-        {
-          "step": 25,
-          "play_id": "401873049673",
-          "qtr": 1,
-          "clock": "6:31",
-          "home_wp": 0.2563,
-          "delta_wp": 0.0359,
-          "label": "(6:31) (Shotgun) D.Maye pass short left to E.Chism to GB 46 for 10 yards (J.Bullard) [B.Co",
-          "is_critical": false
-        },
-        {
-          "step": 26,
-          "play_id": "401873049709",
-          "qtr": 1,
-          "clock": "6:19",
-          "home_wp": 0.2215,
-          "delta_wp": -0.0348,
-          "label": "C.Lomu reported in as eligible.  R.Stevenson left end to NE 48 for -6 yards (I.McDuffie, B",
-          "is_critical": false
-        },
-        {
-          "step": 27,
-          "play_id": "401873049733",
-          "qtr": 1,
-          "clock": "5:38",
-          "home_wp": 0.2122,
-          "delta_wp": -0.0093,
-          "label": "(Shotgun) D.Maye pass incomplete short right.",
-          "is_critical": false
-        },
-        {
-          "step": 28,
-          "play_id": "401873049756",
-          "qtr": 1,
-          "clock": "5:31",
-          "home_wp": 0.2036,
-          "delta_wp": -0.0086,
-          "label": "(Shotgun) D.Maye pass incomplete deep left to K.Williams.",
-          "is_critical": false
-        },
-        {
-          "step": 29,
-          "play_id": "401873049779",
-          "qtr": 1,
-          "clock": "5:24",
-          "home_wp": 0.2179,
-          "delta_wp": 0.0143,
-          "label": "M.Wishnowsky punts 50 yards to GB 2, impetus ends at GB 1, Center-J.Ashby, downed by NE-E.",
-          "is_critical": false
-        },
-        {
-          "step": 30,
-          "play_id": "401873049789",
-          "qtr": 1,
-          "clock": "5:13",
-          "home_wp": 0.2175,
-          "delta_wp": -0.0004,
-          "label": "Official Timeout at 05:13.",
-          "is_critical": false
-        },
-        {
-          "step": 31,
-          "play_id": "401873049799",
-          "qtr": 1,
-          "clock": "5:13",
-          "home_wp": 0.2277,
-          "delta_wp": 0.0102,
-          "label": "P.Strong left guard to GB 5 for 3 yards (L.Taylor; J.Reed).",
-          "is_critical": false
-        },
-        {
-          "step": 32,
-          "play_id": "401873049831",
-          "qtr": 1,
-          "clock": "4:35",
-          "home_wp": 0.2363,
-          "delta_wp": 0.0086,
-          "label": "(Shotgun) J.Love pass incomplete short middle to T.Kraft [J.Farmer].",
-          "is_critical": false
-        },
-        {
-          "step": 33,
-          "play_id": "401873049854",
-          "qtr": 1,
-          "clock": "4:31",
-          "home_wp": 0.2052,
-          "delta_wp": -0.0311,
-          "label": "(Shotgun) J.Love pass short right to C.Watson ran ob at GB 15 for 10 yards.",
-          "is_critical": false
-        },
-        {
-          "step": 34,
-          "play_id": "401873049884",
-          "qtr": 1,
-          "clock": "3:56",
-          "home_wp": 0.2158,
-          "delta_wp": 0.0106,
-          "label": "(No Huddle, Shotgun) P.Strong right tackle to GB 16 for 1 yard (Dr.Jones).",
-          "is_critical": false
-        },
-        {
-          "step": 35,
-          "play_id": "401873049906",
-          "qtr": 1,
-          "clock": "3:18",
-          "home_wp": 0.2115,
-          "delta_wp": -0.0043,
-          "label": "J.Love pass short right to M.Golden to GB 20 for 4 yards (C.Gonzalez).",
-          "is_critical": false
-        },
-        {
-          "step": 36,
-          "play_id": "401873049941",
-          "qtr": 1,
-          "clock": "2:36",
-          "home_wp": 0.1907,
-          "delta_wp": -0.0208,
-          "label": "(Shotgun) PENALTY on NE-G.Jacas, Neutral Zone Infraction, 5 yards, enforced at GB 20 - No ",
-          "is_critical": false
-        },
-        {
-          "step": 37,
-          "play_id": "401873049970",
-          "qtr": 1,
-          "clock": "2:15",
-          "home_wp": 0.1923,
-          "delta_wp": 0.0016,
-          "label": "P.Strong right guard to GB 29 for 4 yards (C.Durden).",
-          "is_critical": false
-        },
-        {
-          "step": 38,
-          "play_id": "401873049992",
-          "qtr": 1,
-          "clock": "1:37",
-          "home_wp": 0.176,
-          "delta_wp": -0.0163,
-          "label": "(Shotgun) J.Love pass short left to M.Golden pushed ob at GB 38 for 9 yards (C.Gonzalez).",
-          "is_critical": false
-        },
-        {
-          "step": 39,
-          "play_id": "4018730491022",
-          "qtr": 1,
-          "clock": "1:09",
-          "home_wp": 0.1281,
-          "delta_wp": -0.0479,
-          "label": "(Shotgun) J.Love pass deep right to M.Golden to NE 19 for 43 yards (C.Gonzalez).",
-          "is_critical": false
-        },
-        {
-          "step": 40,
-          "play_id": "4018730491047",
-          "qtr": 1,
-          "clock": "0:23",
-          "home_wp": 0.1296,
-          "delta_wp": 0.0015,
-          "label": "K.Johnson right end to NE 16 for 3 yards (R.Spillane; J.Farmer).",
-          "is_critical": false
-        },
-        {
-          "step": 41,
-          "play_id": "4018730491089",
-          "qtr": 2,
-          "clock": "15:00",
-          "home_wp": 0.131,
-          "delta_wp": 0.0023,
-          "label": "P.Strong up the middle to NE 14 for 2 yards (K.Byard).",
-          "is_critical": false
-        },
-        {
-          "step": 42,
-          "play_id": "4018730491111",
-          "qtr": 2,
-          "clock": "14:23",
-          "home_wp": 0.1603,
-          "delta_wp": 0.0293,
-          "label": "(Shotgun) J.Love sacked at NE 23 for -9 yards (E.Ponder).",
-          "is_critical": false
-        },
-        {
-          "step": 43,
-          "play_id": "4018730491131",
-          "qtr": 2,
-          "clock": "13:37",
-          "home_wp": 0.1422,
-          "delta_wp": -0.0181,
-          "label": "T.Smack 41 yard field goal is GOOD, Center-M.Orzech, Holder-D.Whelan.",
-          "is_critical": false
-        },
-        {
-          "step": 44,
-          "play_id": "4018730491141",
-          "qtr": 2,
-          "clock": "13:37",
-          "home_wp": 0.1422,
-          "delta_wp": 0.0,
-          "label": "Official Timeout at 13:37.",
-          "is_critical": false
-        },
-        {
-          "step": 45,
-          "play_id": "4018730491151",
-          "qtr": 2,
-          "clock": "13:37",
-          "home_wp": 0.1475,
-          "delta_wp": 0.0053,
-          "label": "T.Smack kicks 62 yards from GB 35 to NE 3. C.Kiner to NE 28 for 25 yards (N.Niemann).",
-          "is_critical": false
-        },
-        {
-          "step": 46,
-          "play_id": "4018730491181",
-          "qtr": 2,
-          "clock": "13:31",
-          "home_wp": 0.1584,
-          "delta_wp": 0.0109,
-          "label": "R.Stevenson left end to NE 40 for 12 yards (I.McDuffie; X.McKinney).",
-          "is_critical": false
-        },
-        {
-          "step": 47,
-          "play_id": "4018730491203",
-          "qtr": 2,
-          "clock": "12:53",
-          "home_wp": 0.1245,
-          "delta_wp": -0.0339,
-          "label": "(Shotgun) D.Maye pass deep left intended for K.Williams INTERCEPTED by E.Williams (B.Cisse",
-          "is_critical": false
-        },
-        {
-          "step": 48,
-          "play_id": "4018730491219",
-          "qtr": 2,
-          "clock": "12:46",
-          "home_wp": 0.0853,
-          "delta_wp": -0.0392,
-          "label": "Official Timeout at 12:46.",
-          "is_critical": false
-        }
-      ]
-    },
-    {
-      "event_id": "401873047",
-      "week": 9,
-      "season_type": "REG",
-      "name": "Las Vegas Raiders at San Francisco 49ers",
-      "short_name": "LV @ SF",
-      "date": "2026-11-08T21:25Z",
-      "status": {
-        "state": "in",
-        "detail": "12:33 - 2nd",
-        "period": 2,
-        "clock": "12:33",
-        "completed": false
-      },
-      "home_team": {
-        "id": "25",
-        "abbreviation": "SF",
-        "name": "San Francisco 49ers",
-        "score": 14,
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/sf.png"
-      },
-      "away_team": {
-        "id": "13",
-        "abbreviation": "LV",
-        "name": "Las Vegas Raiders",
-        "score": 7,
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/lv.png"
-      },
-      "win_probability": {
-        "home_wp": 0.9058,
-        "away_wp": 0.0942
-      },
-      "game_links": {
-        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873047",
-        "recap": "https://www.espn.com/nfl/recap?gameId=401873047",
-        "summary": "https://www.espn.com/nfl/game/_/gameId/401873047"
-      },
-      "critical_moments": [],
-      "hinge_play": {
-        "play_id": "401873047189",
-        "qtr": 1,
-        "clock": "13:26",
-        "description": "(Shotgun) B.Purdy pass short left to G.Kittle to LV 41 for 4 yards (T.Stukes).",
-        "home_wp_before": 0.8336,
-        "home_wp_after": 0.8701,
-        "delta_wp": 0.0365,
-        "abs_delta_wp": 0.0365,
-        "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873047",
-        "play_label": "Brock Purdy a George Kittle (4 yds)",
-        "video_query": "Brock Purdy George Kittle 4 yard catch Raiders 49ers",
-        "video_query_v2": "Brock Purdy George Kittle 4 yard catch Raiders 49ers",
-        "video_url": "https://www.youtube.com/results?search_query=Brock+Purdy+George+Kittle+4+yard+catch+Raiders+49ers&sp=EgIYAQ%3D%3D",
-        "video_source": "Clip Puntual (<4m)",
-        "video_title": "Jugada Puntual: Brock Purdy a George Kittle (4 yds) (LV @ SF Q1)",
-        "has_direct_video": false,
-        "youtube_search_url": "https://www.youtube.com/results?search_query=Brock+Purdy+George+Kittle+4+yard+catch+Raiders+49ers&sp=EgIYAQ%3D%3D",
-        "x_video_url": "https://x.com/search?q=Brock+Purdy+George+Kittle+4+yard+catch+Raiders+49ers&f=video",
-        "exceeds_threshold": false
-      },
-      "wp_timeline": [
-        {
-          "step": 0,
-          "qtr": 1,
-          "clock": "15:00",
-          "home_wp": 0.5,
-          "delta_wp": 0.0,
-          "label": "Kickoff",
-          "is_critical": false
-        },
-        {
-          "step": 1,
-          "play_id": "40187304740",
-          "qtr": 1,
-          "clock": "15:00",
-          "home_wp": 0.8532,
-          "delta_wp": 0.0133,
-          "label": "M.Gay kicks 65 yards from LV 35 to SF 0. K.Black to SF 31 for 31 yards (D.Young).",
-          "is_critical": false
-        },
-        {
-          "step": 2,
-          "play_id": "40187304763",
-          "qtr": 1,
-          "clock": "14:54",
-          "home_wp": 0.8567,
-          "delta_wp": 0.0035,
-          "label": "B.Purdy pass incomplete short left to C.McCaffrey.PENALTY on LV-Q.Walker, Defensive Offsid",
-          "is_critical": false
-        },
-        {
-          "step": 3,
-          "play_id": "40187304797",
-          "qtr": 1,
-          "clock": "14:50",
-          "home_wp": 0.8634,
-          "delta_wp": 0.0067,
-          "label": "B.Purdy pass short right to D.Robinson to SF 47 for 11 yards (E.Stokes).",
-          "is_critical": false
-        },
-        {
-          "step": 4,
-          "play_id": "401873047122",
-          "qtr": 1,
-          "clock": "14:21",
-          "home_wp": 0.8634,
-          "delta_wp": 0.0,
-          "label": "(No Huddle) C.McCaffrey up the middle to LV 48 for 5 yards (T.Keenan; M.Crosby).",
-          "is_critical": false
-        },
-        {
-          "step": 5,
-          "play_id": "401873047144",
-          "qtr": 1,
-          "clock": "14:00",
-          "home_wp": 0.8646,
-          "delta_wp": 0.0012,
-          "label": "(No Huddle) C.McCaffrey right end to LV 45 for 3 yards (T.Eichenberg).",
-          "is_critical": false
-        },
-        {
-          "step": 6,
-          "play_id": "401873047166",
-          "qtr": 1,
-          "clock": "13:31",
-          "home_wp": 0.8336,
-          "delta_wp": -0.031,
-          "label": "(No Huddle) B.Purdy pass incomplete deep left to G.Kittle.",
-          "is_critical": false
-        },
-        {
-          "step": 7,
-          "play_id": "401873047189",
-          "qtr": 1,
-          "clock": "13:26",
-          "home_wp": 0.8701,
-          "delta_wp": 0.0365,
-          "label": "(Shotgun) B.Purdy pass short left to G.Kittle to LV 41 for 4 yards (T.Stukes).",
+          "home_wp": 0.7021,
+          "delta_wp": 0.0002,
+          "label": "D.Swift right end to TB 26 for 4 yards (Z.McCollum).",
           "is_critical": false
         },
         {
           "step": 8,
-          "play_id": "401873047214",
+          "play_id": "401873050210",
           "qtr": 1,
-          "clock": "12:49",
-          "home_wp": 0.864,
-          "delta_wp": -0.0061,
-          "label": "(Shotgun) K.Black up the middle to LV 38 for 3 yards (Q.Walker; J.Chinn).",
+          "clock": "11:11",
+          "home_wp": 0.7318,
+          "delta_wp": 0.0297,
+          "label": "C.Williams pass short right to Z.Thomas to TB 13 for 13 yards (Z.McCollum).",
           "is_critical": false
         },
         {
           "step": 9,
-          "play_id": "401873047236",
+          "play_id": "401873050235",
           "qtr": 1,
-          "clock": "12:12",
-          "home_wp": 0.878,
-          "delta_wp": 0.014,
-          "label": "K.Black right end to LV 29 for 9 yards (J.Chinn).",
+          "clock": "10:25",
+          "home_wp": 0.7032,
+          "delta_wp": -0.0286,
+          "label": "(Shotgun) C.Williams pass incomplete short middle to R.Odunze.",
           "is_critical": false
         },
         {
           "step": 10,
-          "play_id": "401873047258",
+          "play_id": "401873050270",
           "qtr": 1,
-          "clock": "11:30",
-          "home_wp": 0.8886,
-          "delta_wp": 0.0106,
-          "label": "(Shotgun) B.Purdy pass short left to B.Cooks ran ob at LV 16 for 13 yards.",
+          "clock": "10:19",
+          "home_wp": 0.7076,
+          "delta_wp": 0.0044,
+          "label": "(Shotgun) D.Swift left end to TB 9 for 4 yards (J.Trotter).",
           "is_critical": false
         },
         {
           "step": 11,
-          "play_id": "401873047288",
+          "play_id": "401873050292",
           "qtr": 1,
-          "clock": "10:56",
-          "home_wp": 0.8751,
-          "delta_wp": -0.0135,
-          "label": "(Shotgun) B.Purdy pass incomplete deep left to G.Kittle.",
+          "clock": "9:38",
+          "home_wp": 0.7636,
+          "delta_wp": 0.056,
+          "label": "(Shotgun) C.Williams pass short right to R.Odunze for 9 yards, TOUCHDOWN. C.Santos extra p",
           "is_critical": false
         },
         {
           "step": 12,
-          "play_id": "401873047311",
+          "play_id": "401873050326",
           "qtr": 1,
-          "clock": "10:52",
-          "home_wp": 0.8941,
-          "delta_wp": 0.019,
-          "label": "(Shotgun) C.McCaffrey up the middle to LV 5 for 11 yards (E.Stokes; J.Chinn).",
+          "clock": "9:38",
+          "home_wp": 0.7814,
+          "delta_wp": 0.0178,
+          "label": "Official Timeout at 09:38.",
           "is_critical": false
         },
         {
           "step": 13,
-          "play_id": "401873047333",
+          "play_id": "401873050333",
           "qtr": 1,
-          "clock": "10:11",
-          "home_wp": 0.8968,
-          "delta_wp": 0.0027,
-          "label": "K.Juszczyk up the middle to LV 1 for 4 yards (Q.Walker).",
+          "clock": "9:38",
+          "home_wp": 0.7463,
+          "delta_wp": -0.0351,
+          "label": "C.Santos kicks 42 yards from CHI 35 to TB 23, short of landing zone.PENALTY on CHI-C.Santo",
           "is_critical": false
         },
         {
           "step": 14,
-          "play_id": "401873047355",
+          "play_id": "401873050369",
           "qtr": 1,
-          "clock": "9:32",
-          "home_wp": 0.9052,
-          "delta_wp": 0.0084,
-          "label": "C.McCaffrey left guard for 1 yard, TOUCHDOWN. E.Pineiro extra point is GOOD, Center-J.Week",
+          "clock": "9:38",
+          "home_wp": 0.7519,
+          "delta_wp": 0.0056,
+          "label": "(Shotgun) B.Irving right tackle to TB 43 for 3 yards (C.Lewis).",
           "is_critical": false
         },
         {
           "step": 15,
-          "play_id": "401873047393",
+          "play_id": "401873050391",
           "qtr": 1,
-          "clock": "9:32",
-          "home_wp": 0.8986,
-          "delta_wp": -0.0066,
-          "label": "E.Pineiro kicks 65 yards from SF 35 to LV 0. D.Laube to LV 16 for 16 yards. Lateral to D.Y",
+          "clock": "8:56",
+          "home_wp": 0.7524,
+          "delta_wp": 0.0005,
+          "label": "(Shotgun) B.Mayfield pass short left to B.Irving to TB 46 for 3 yards (A.Booker).",
           "is_critical": false
         },
         {
           "step": 16,
-          "play_id": "401873047431",
+          "play_id": "401873050416",
           "qtr": 1,
-          "clock": "9:23",
-          "home_wp": 0.9056,
-          "delta_wp": 0.007,
-          "label": "(Shotgun) K.Cousins pass incomplete short middle to A.Jeanty.",
+          "clock": "8:12",
+          "home_wp": 0.7835,
+          "delta_wp": 0.0311,
+          "label": "(Shotgun) B.Irving left tackle to TB 46 for no gain (A.Booker; G.Jarrett).",
           "is_critical": false
         },
         {
           "step": 17,
-          "play_id": "401873047454",
+          "play_id": "401873050438",
           "qtr": 1,
-          "clock": "9:19",
-          "home_wp": 0.8989,
-          "delta_wp": -0.0067,
-          "label": "A.Jeanty up the middle to LV 44 for 7 yards (D.Buckner).",
+          "clock": "7:34",
+          "home_wp": 0.7827,
+          "delta_wp": -0.0008,
+          "label": "R.Dixon punts 44 yards to CHI 10, Center-E.Deckers. K.Raymond to CHI 19 for 9 yards (K.Kno",
           "is_critical": false
         },
         {
           "step": 18,
-          "play_id": "401873047476",
+          "play_id": "401873050451",
           "qtr": 1,
-          "clock": "8:32",
-          "home_wp": 0.9142,
-          "delta_wp": 0.0153,
-          "label": "(Shotgun) K.Cousins pass incomplete short right to B.Bowers (U.Stout) [R.Height].",
+          "clock": "7:24",
+          "home_wp": 0.7827,
+          "delta_wp": 0.0,
+          "label": "Official Timeout at 07:24.",
           "is_critical": false
         },
         {
           "step": 19,
-          "play_id": "401873047499",
+          "play_id": "401873050464",
           "qtr": 1,
-          "clock": "8:29",
-          "home_wp": 0.9097,
-          "delta_wp": -0.0045,
-          "label": "A.Cole punts 45 yards to SF 11, Center-A.Ward, out of bounds.",
+          "clock": "7:24",
+          "home_wp": 0.804,
+          "delta_wp": 0.0213,
+          "label": "(Shotgun) C.Williams pass short right to R.Odunze pushed ob at CHI 42 for 23 yards (T.Smit",
           "is_critical": false
         },
         {
           "step": 20,
-          "play_id": "401873047509",
-          "qtr": 1,
-          "clock": "8:21",
-          "home_wp": 0.9096,
-          "delta_wp": -0.0001,
-          "label": "Official Timeout at 08:21.",
-          "is_critical": false
-        },
-        {
-          "step": 21,
-          "play_id": "401873047518",
-          "qtr": 1,
-          "clock": "8:21",
-          "home_wp": 0.9254,
-          "delta_wp": 0.0158,
-          "label": "(Shotgun) B.Purdy pass deep middle to G.Kittle pushed ob at SF 48 for 37 yards (J.Chinn).",
-          "is_critical": false
-        },
-        {
-          "step": 22,
-          "play_id": "401873047555",
-          "qtr": 1,
-          "clock": "7:48",
-          "home_wp": 0.9299,
-          "delta_wp": 0.0045,
-          "label": "(No Huddle) C.McCaffrey up the middle to LV 41 for 11 yards (T.Eichenberg; N.Dean).",
-          "is_critical": false
-        },
-        {
-          "step": 23,
-          "play_id": "401873047577",
-          "qtr": 1,
-          "clock": "7:23",
-          "home_wp": 0.9358,
-          "delta_wp": 0.0059,
-          "label": "(No Huddle) C.McCaffrey right guard to LV 33 for 8 yards (T.Hemingway).",
-          "is_critical": false
-        },
-        {
-          "step": 24,
-          "play_id": "401873047599",
+          "play_id": "401873050501",
           "qtr": 1,
           "clock": "6:56",
-          "home_wp": 0.9322,
-          "delta_wp": -0.0036,
-          "label": "(No Huddle) B.Purdy pass incomplete short right.",
-          "is_critical": false
-        },
-        {
-          "step": 25,
-          "play_id": "401873047631",
-          "qtr": 1,
-          "clock": "6:50",
-          "home_wp": 0.934,
-          "delta_wp": 0.0018,
-          "label": "B.Purdy up the middle to LV 31 for 2 yards (N.Dean).",
-          "is_critical": false
-        },
-        {
-          "step": 26,
-          "play_id": "401873047653",
-          "qtr": 1,
-          "clock": "6:10",
-          "home_wp": 0.9137,
-          "delta_wp": -0.0204,
-          "label": "(Shotgun) B.Purdy pass incomplete short left.PENALTY on SF-B.Purdy, Intentional Grounding,",
-          "is_critical": false
-        },
-        {
-          "step": 27,
-          "play_id": "401873047694",
-          "qtr": 1,
-          "clock": "6:06",
-          "home_wp": 0.9174,
-          "delta_wp": 0.0037,
-          "label": "(Shotgun) B.Purdy pass short left to D.Robinson to LV 36 for 5 yards (T.Stukes).",
-          "is_critical": false
-        },
-        {
-          "step": 28,
-          "play_id": "401873047719",
-          "qtr": 1,
-          "clock": "5:27",
-          "home_wp": 0.9405,
-          "delta_wp": 0.0231,
-          "label": "(Shotgun) B.Purdy scrambles left tackle to LV 18 for 18 yards (N.Dean).",
-          "is_critical": false
-        },
-        {
-          "step": 29,
-          "play_id": "401873047741",
-          "qtr": 1,
-          "clock": "4:40",
-          "home_wp": 0.9299,
-          "delta_wp": -0.0106,
-          "label": "PENALTY on SF-J.Watkins, False Start, 5 yards, enforced at LV 18 - No Play.",
-          "is_critical": false
-        },
-        {
-          "step": 30,
-          "play_id": "401873047765",
-          "qtr": 1,
-          "clock": "4:25",
-          "home_wp": 0.9317,
-          "delta_wp": 0.0018,
-          "label": "(Shotgun) K.Black left guard to LV 19 for 4 yards (T.Eichenberg; T.Keenan).",
-          "is_critical": false
-        },
-        {
-          "step": 31,
-          "play_id": "401873047787",
-          "qtr": 1,
-          "clock": "3:48",
-          "home_wp": 0.9415,
-          "delta_wp": 0.0098,
-          "label": "(Shotgun) B.Purdy scrambles right end ran ob at LV 8 for 11 yards (N.Dean).",
-          "is_critical": false
-        },
-        {
-          "step": 32,
-          "play_id": "401873047814",
-          "qtr": 1,
-          "clock": "3:13",
-          "home_wp": 0.9424,
-          "delta_wp": 0.0009,
-          "label": "(Shotgun) C.McCaffrey up the middle to LV 5 for 3 yards (Q.Walker).",
-          "is_critical": false
-        },
-        {
-          "step": 33,
-          "play_id": "401873047836",
-          "qtr": 1,
-          "clock": "2:39",
-          "home_wp": 0.948,
-          "delta_wp": 0.0056,
-          "label": "B.Purdy pass incomplete short left to J.Cowing (E.Stokes).PENALTY on LV-E.Stokes, Defensiv",
-          "is_critical": false
-        },
-        {
-          "step": 34,
-          "play_id": "401873047870",
-          "qtr": 1,
-          "clock": "2:34",
-          "home_wp": 0.9466,
-          "delta_wp": -0.0014,
-          "label": "C.McCaffrey left guard to LV 1 for no gain (M.Crosby; Q.Walker).",
-          "is_critical": false
-        },
-        {
-          "step": 35,
-          "play_id": "401873047892",
-          "qtr": 1,
-          "clock": "1:52",
-          "home_wp": 0.9534,
-          "delta_wp": 0.0068,
-          "label": "B.Purdy scrambles right end for 1 yard, TOUCHDOWN. E.Pineiro extra point is GOOD, Center-J",
-          "is_critical": false
-        },
-        {
-          "step": 36,
-          "play_id": "401873047923",
-          "qtr": 1,
-          "clock": "1:52",
-          "home_wp": 0.954,
-          "delta_wp": 0.0006,
-          "label": "Official Timeout at 01:52.",
-          "is_critical": false
-        },
-        {
-          "step": 37,
-          "play_id": "401873047930",
-          "qtr": 1,
-          "clock": "1:52",
-          "home_wp": 0.9493,
-          "delta_wp": -0.0047,
-          "label": "E.Pineiro kicks 57 yards from SF 35 to LV 8. D.Laube to LV 38 for 30 yards (L.Gifford; B.W",
-          "is_critical": false
-        },
-        {
-          "step": 38,
-          "play_id": "401873047960",
-          "qtr": 1,
-          "clock": "1:45",
-          "home_wp": 0.9486,
-          "delta_wp": -0.0007,
-          "label": "M.Washington right guard to LV 43 for 5 yards (J.Dugger).",
-          "is_critical": false
-        },
-        {
-          "step": 39,
-          "play_id": "401873047982",
-          "qtr": 1,
-          "clock": "1:12",
-          "home_wp": 0.9449,
-          "delta_wp": -0.0037,
-          "label": "K.Cousins pass short left to J.Bech pushed ob at SF 49 for 8 yards (J.Dugger).",
-          "is_critical": false
-        },
-        {
-          "step": 40,
-          "play_id": "4018730471012",
-          "qtr": 1,
-          "clock": "0:43",
-          "home_wp": 0.9363,
-          "delta_wp": -0.0086,
-          "label": "(Shotgun) K.Cousins pass short middle to B.Bowers to SF 29 for 20 yards (M.Sigle) [D.Buckn",
-          "is_critical": false
-        },
-        {
-          "step": 41,
-          "play_id": "4018730471037",
-          "qtr": 1,
-          "clock": "0:18",
-          "home_wp": 0.9312,
-          "delta_wp": -0.0051,
-          "label": "(No Huddle, Shotgun) K.Cousins pass short left to J.Nailor ran ob at SF 23 for 6 yards (R.",
-          "is_critical": false
-        },
-        {
-          "step": 42,
-          "play_id": "4018730471087",
-          "qtr": 2,
-          "clock": "15:00",
-          "home_wp": 0.939,
-          "delta_wp": 0.0079,
-          "label": "A.Jeanty up the middle to SF 25 for -2 yards (O.Odighizuwa, F.Warner).",
-          "is_critical": false
-        },
-        {
-          "step": 43,
-          "play_id": "4018730471109",
-          "qtr": 2,
-          "clock": "14:30",
-          "home_wp": 0.9228,
-          "delta_wp": -0.0162,
-          "label": "(Shotgun) K.Cousins pass short left to T.Tucker ran ob at SF 11 for 14 yards.",
-          "is_critical": false
-        },
-        {
-          "step": 44,
-          "play_id": "4018730471139",
-          "qtr": 2,
-          "clock": "14:01",
-          "home_wp": 0.9193,
-          "delta_wp": -0.0035,
-          "label": "PENALTY on SF-S.Valdez, Neutral Zone Infraction, 5 yards, enforced at SF 11 - No Play.",
-          "is_critical": false
-        },
-        {
-          "step": 45,
-          "play_id": "4018730471163",
-          "qtr": 2,
-          "clock": "13:39",
-          "home_wp": 0.9168,
-          "delta_wp": -0.0026,
-          "label": "A.Jeanty up the middle to SF 2 for 4 yards (S.Valdez).",
-          "is_critical": false
-        },
-        {
-          "step": 46,
-          "play_id": "4018730471192",
-          "qtr": 2,
-          "clock": "12:57",
-          "home_wp": 0.9166,
-          "delta_wp": -0.0002,
-          "label": "PENALTY on SF, Defensive Too Many Men on Field, 0 yards, enforced at SF 2 - No Play.",
-          "is_critical": false
-        },
-        {
-          "step": 47,
-          "play_id": "4018730471225",
-          "qtr": 2,
-          "clock": "12:41",
-          "home_wp": 0.9058,
-          "delta_wp": -0.0108,
-          "label": "K.Cousins up the middle for 2 yards, TOUCHDOWN. M.Gay extra point is GOOD, Center-A.Ward, ",
-          "is_critical": false
-        },
-        {
-          "step": 48,
-          "play_id": "4018730471256",
-          "qtr": 2,
-          "clock": "12:41",
-          "home_wp": 0.905,
-          "delta_wp": -0.0008,
-          "label": "Official Timeout at 12:41.",
-          "is_critical": false
-        },
-        {
-          "step": 49,
-          "play_id": "4018730471263",
-          "qtr": 2,
-          "clock": "12:41",
-          "home_wp": 0.9021,
-          "delta_wp": -0.0029,
-          "label": "M.Gay kicks 60 yards from LV 35 to SF 5. J.James MUFFS catch, and recovers at SF 6. J.Jame",
-          "is_critical": false
-        },
-        {
-          "step": 50,
-          "play_id": "4018730471306",
-          "qtr": 2,
-          "clock": "12:33",
-          "home_wp": 0.9058,
-          "delta_wp": 0.0037,
-          "label": "(Shotgun) C.McCaffrey left tackle to SF 23 for 7 yards (T.Eichenberg).",
-          "is_critical": false
-        }
-      ]
-    },
-    {
-      "event_id": "401873048",
-      "week": 9,
-      "season_type": "REG",
-      "name": "Arizona Cardinals at Seattle Seahawks",
-      "short_name": "ARI @ SEA",
-      "date": "2026-11-08T21:25Z",
-      "status": {
-        "state": "in",
-        "detail": "13:54 - 2nd",
-        "period": 2,
-        "clock": "13:54",
-        "completed": false
-      },
-      "home_team": {
-        "id": "26",
-        "abbreviation": "SEA",
-        "name": "Seattle Seahawks",
-        "score": 7,
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/sea.png"
-      },
-      "away_team": {
-        "id": "22",
-        "abbreviation": "ARI",
-        "name": "Arizona Cardinals",
-        "score": 3,
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/ari.png"
-      },
-      "win_probability": {
-        "home_wp": 0.7428,
-        "away_wp": 0.2572
-      },
-      "game_links": {
-        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873048",
-        "recap": "https://www.espn.com/nfl/recap?gameId=401873048",
-        "summary": "https://www.espn.com/nfl/game/_/gameId/401873048"
-      },
-      "critical_moments": [],
-      "hinge_play": {
-        "play_id": "401873048834",
-        "qtr": 1,
-        "clock": "3:58",
-        "description": "(Shotgun) D.Lock pass short left to J.Price pushed ob at ARZ 41 for 15 yards (B.Browning).",
-        "home_wp_before": 0.5886,
-        "home_wp_after": 0.6399,
-        "delta_wp": 0.0513,
-        "abs_delta_wp": 0.0513,
-        "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873048",
-        "play_label": "Drew Lock a Jadarian Price (15 yds)",
-        "video_query": "Drew Lock Jadarian Price 15 yard catch Cardinals Seahawks",
-        "video_query_v2": "Drew Lock Jadarian Price 15 yard catch Cardinals Seahawks",
-        "video_url": "https://www.youtube.com/results?search_query=Drew+Lock+Jadarian+Price+15+yard+catch+Cardinals+Seahawks&sp=EgIYAQ%3D%3D",
-        "video_source": "Clip Puntual (<4m)",
-        "video_title": "Jugada Puntual: Drew Lock a Jadarian Price (15 yds) (ARI @ SEA Q1)",
-        "has_direct_video": false,
-        "youtube_search_url": "https://www.youtube.com/results?search_query=Drew+Lock+Jadarian+Price+15+yard+catch+Cardinals+Seahawks&sp=EgIYAQ%3D%3D",
-        "x_video_url": "https://x.com/search?q=Drew+Lock+Jadarian+Price+15+yard+catch+Cardinals+Seahawks&f=video",
-        "exceeds_threshold": false
-      },
-      "wp_timeline": [
-        {
-          "step": 0,
-          "qtr": 1,
-          "clock": "15:00",
-          "home_wp": 0.5,
-          "delta_wp": 0.0,
-          "label": "Kickoff",
-          "is_critical": false
-        },
-        {
-          "step": 1,
-          "play_id": "40187304840",
-          "qtr": 1,
-          "clock": "15:00",
-          "home_wp": 0.6951,
-          "delta_wp": 0.0288,
-          "label": "C.Ryland kicks 62 yards from ARZ 35 to SEA 3. J.Price to SEA 37 for 34 yards (K.King).",
-          "is_critical": false
-        },
-        {
-          "step": 2,
-          "play_id": "40187304863",
-          "qtr": 1,
-          "clock": "14:54",
-          "home_wp": 0.6963,
-          "delta_wp": 0.0012,
-          "label": "(Shotgun) D.Lock pass short middle to J.Smith-Njigba to SEA 42 for 5 yards (Ma.Wilson) [W.",
-          "is_critical": false
-        },
-        {
-          "step": 3,
-          "play_id": "40187304888",
-          "qtr": 1,
-          "clock": "14:32",
-          "home_wp": 0.6833,
-          "delta_wp": -0.013,
-          "label": "(No Huddle) D.Lock pass incomplete short left to J.Smith-Njigba.",
-          "is_critical": false
-        },
-        {
-          "step": 4,
-          "play_id": "401873048111",
-          "qtr": 1,
-          "clock": "14:30",
-          "home_wp": 0.6524,
-          "delta_wp": -0.0309,
-          "label": "(No Huddle, Shotgun) D.Lock pass incomplete deep middle to J.Smith-Njigba (K.King).",
-          "is_critical": false
-        },
-        {
-          "step": 5,
-          "play_id": "401873048134",
-          "qtr": 1,
-          "clock": "14:26",
-          "home_wp": 0.6712,
-          "delta_wp": 0.0188,
-          "label": "M.Dickson punts 57 yards to ARZ 1, Center-C.Stoll, downed by SEA-C.Surratt.",
-          "is_critical": false
-        },
-        {
-          "step": 6,
-          "play_id": "401873048154",
-          "qtr": 1,
-          "clock": "14:15",
-          "home_wp": 0.6769,
-          "delta_wp": 0.0057,
-          "label": "T.Allgeier up the middle to ARZ 6 for 5 yards (D.Thomas; T.Okada).",
-          "is_critical": false
-        },
-        {
-          "step": 7,
-          "play_id": "401873048176",
-          "qtr": 1,
-          "clock": "13:35",
-          "home_wp": 0.6847,
-          "delta_wp": 0.0078,
-          "label": "T.Allgeier left tackle to ARZ 7 for 1 yard (D.Thomas; B.Murphy).",
-          "is_critical": false
-        },
-        {
-          "step": 8,
-          "play_id": "401873048198",
-          "qtr": 1,
-          "clock": "12:53",
-          "home_wp": 0.6389,
-          "delta_wp": -0.0458,
-          "label": "(Shotgun) G.Minshew pass deep left to R.Virgil ran ob at ARZ 32 for 25 yards.Seattle chall",
-          "is_critical": false
-        },
-        {
-          "step": 9,
-          "play_id": "401873048228",
-          "qtr": 1,
-          "clock": "12:36",
-          "home_wp": 0.6166,
-          "delta_wp": -0.0223,
-          "label": "(Shotgun) G.Minshew pass deep right to Mi.Wilson to ARZ 49 for 17 yards (D.Witherspoon).",
-          "is_critical": false
-        },
-        {
-          "step": 10,
-          "play_id": "401873048293",
-          "qtr": 1,
-          "clock": "12:00",
-          "home_wp": 0.5884,
-          "delta_wp": -0.0282,
-          "label": "T.Allgeier left tackle to SEA 34 for 17 yards (J.Love).",
-          "is_critical": false
-        },
-        {
-          "step": 11,
-          "play_id": "401873048315",
-          "qtr": 1,
-          "clock": "11:14",
-          "home_wp": 0.5449,
-          "delta_wp": -0.0435,
-          "label": "(Shotgun) G.Minshew pass short right to T.McBride to SEA 29 for 5 yards (T.Okada; E.Jones)",
-          "is_critical": false
-        },
-        {
-          "step": 12,
-          "play_id": "401873048352",
-          "qtr": 1,
-          "clock": "10:49",
-          "home_wp": 0.571,
-          "delta_wp": 0.0261,
-          "label": "T.Allgeier right guard to SEA 13 for 1 yard (E.Jones; M.Morris).",
-          "is_critical": false
-        },
-        {
-          "step": 13,
-          "play_id": "401873048374",
-          "qtr": 1,
-          "clock": "10:11",
-          "home_wp": 0.5869,
-          "delta_wp": 0.0159,
-          "label": "(Shotgun) G.Minshew pass incomplete short right to T.Allgeier.",
-          "is_critical": false
-        },
-        {
-          "step": 14,
-          "play_id": "401873048397",
-          "qtr": 1,
-          "clock": "10:07",
-          "home_wp": 0.6109,
-          "delta_wp": 0.024,
-          "label": "(Shotgun) G.Minshew pass short right to T.Allgeier pushed ob at SEA 10 for 3 yards (J.Love",
-          "is_critical": false
-        },
-        {
-          "step": 15,
-          "play_id": "401873048427",
-          "qtr": 1,
-          "clock": "9:23",
-          "home_wp": 0.5997,
-          "delta_wp": -0.0112,
-          "label": "C.Ryland 28 yard field goal is GOOD, Center-C.Kreiter, Holder-B.Gillikin.",
-          "is_critical": false
-        },
-        {
-          "step": 16,
-          "play_id": "401873048437",
-          "qtr": 1,
-          "clock": "9:23",
-          "home_wp": 0.5997,
-          "delta_wp": 0.0,
-          "label": "Official Timeout at 09:23.",
-          "is_critical": false
-        },
-        {
-          "step": 17,
-          "play_id": "401873048447",
-          "qtr": 1,
-          "clock": "9:23",
-          "home_wp": 0.5997,
-          "delta_wp": 0.0,
-          "label": "C.Ryland kicks 65 yards from ARZ 35 to SEA 0. J.Price to SEA 22 for 22 yards (D.Taylor-Dem",
-          "is_critical": false
-        },
-        {
-          "step": 18,
-          "play_id": "401873048477",
-          "qtr": 1,
-          "clock": "9:19",
-          "home_wp": 0.5878,
-          "delta_wp": -0.0119,
-          "label": "Z.Charbonnet left tackle to SEA 24 for 2 yards (M.Melton).",
-          "is_critical": false
-        },
-        {
-          "step": 19,
-          "play_id": "401873048499",
-          "qtr": 1,
-          "clock": "8:41",
-          "home_wp": 0.5815,
-          "delta_wp": -0.0063,
-          "label": "(Shotgun) D.Lock pass short right to J.Smith-Njigba to SEA 26 for 2 yards (D.Burke).",
-          "is_critical": false
-        },
-        {
-          "step": 20,
-          "play_id": "401873048524",
-          "qtr": 1,
-          "clock": "8:04",
-          "home_wp": 0.6263,
-          "delta_wp": 0.0448,
-          "label": "(Shotgun) D.Lock scrambles right end ran ob at SEA 40 for 14 yards (Ma.Wilson).PENALTY on ",
+          "home_wp": 0.7897,
+          "delta_wp": -0.0143,
+          "label": "C.Williams pass incomplete short right to C.Loveland (A.Winfield).",
           "is_critical": false
         },
         {
           "step": 21,
-          "play_id": "401873048562",
+          "play_id": "401873050524",
           "qtr": 1,
-          "clock": "7:36",
-          "home_wp": 0.643,
-          "delta_wp": 0.0167,
-          "label": "D.Lock pass short middle to J.Smith-Njigba to ARZ 47 for 8 yards (A.Wingard).",
+          "clock": "6:49",
+          "home_wp": 0.7863,
+          "delta_wp": -0.0034,
+          "label": "D.Swift up the middle to CHI 44 for 2 yards (D.Walker; J.Trotter).",
           "is_critical": false
         },
         {
           "step": 22,
-          "play_id": "401873048592",
+          "play_id": "401873050546",
           "qtr": 1,
-          "clock": "7:06",
-          "home_wp": 0.6157,
-          "delta_wp": -0.0273,
-          "label": "(No Huddle) Z.Charbonnet right guard to ARZ 49 for -2 yards (R.Lopez, D.Stills).",
+          "clock": "6:00",
+          "home_wp": 0.8807,
+          "delta_wp": 0.0944,
+          "label": "(Shotgun) C.Williams pass short middle to L.Burden for 56 yards, TOUCHDOWN. C.Santos extra",
           "is_critical": false
         },
         {
           "step": 23,
-          "play_id": "401873048614",
+          "play_id": "401873050580",
           "qtr": 1,
-          "clock": "6:26",
-          "home_wp": 0.5696,
-          "delta_wp": -0.0461,
-          "label": "(Shotgun) D.Lock pass incomplete short middle to Z.Charbonnet [Ma.Wilson].",
-          "is_critical": false
-        },
-        {
-          "step": 24,
-          "play_id": "401873048637",
-          "qtr": 1,
-          "clock": "6:23",
-          "home_wp": 0.5657,
-          "delta_wp": -0.0039,
-          "label": "M.Dickson punts 36 yards to ARZ 13, Center-C.Stoll. D.Duvernay ran ob at ARZ 20 for 7 yard",
-          "is_critical": false
-        },
-        {
-          "step": 25,
-          "play_id": "401873048668",
-          "qtr": 1,
-          "clock": "6:15",
-          "home_wp": 0.5654,
-          "delta_wp": -0.0003,
-          "label": "Official Timeout at 06:15.",
-          "is_critical": false
-        },
-        {
-          "step": 26,
-          "play_id": "401873048675",
-          "qtr": 1,
-          "clock": "6:15",
-          "home_wp": 0.5658,
-          "delta_wp": 0.0004,
-          "label": "(Shotgun) G.Minshew pass short left to D.Duvernay to ARZ 25 for 5 yards (T.Okada).",
-          "is_critical": false
-        },
-        {
-          "step": 27,
-          "play_id": "401873048700",
-          "qtr": 1,
-          "clock": "5:31",
-          "home_wp": 0.5688,
-          "delta_wp": 0.003,
-          "label": "(Shotgun) T.Allgeier left end pushed ob at ARZ 27 for 2 yards (J.Jobe).",
-          "is_critical": false
-        },
-        {
-          "step": 28,
-          "play_id": "401873048727",
-          "qtr": 1,
-          "clock": "4:51",
-          "home_wp": 0.6184,
-          "delta_wp": 0.0496,
-          "label": "(Shotgun) G.Minshew pass incomplete deep left [N.Emmanwori].PENALTY on ARZ-G.Minshew, Inte",
-          "is_critical": false
-        },
-        {
-          "step": 29,
-          "play_id": "401873048750",
-          "qtr": 1,
-          "clock": "4:46",
-          "home_wp": 0.617,
-          "delta_wp": -0.0014,
-          "label": "B.Gillikin punts 41 yards to SEA 42, Center-C.Kreiter, fair catch by T.Horton.",
-          "is_critical": false
-        },
-        {
-          "step": 30,
-          "play_id": "401873048782",
-          "qtr": 1,
-          "clock": "4:40",
-          "home_wp": 0.6168,
-          "delta_wp": -0.0002,
-          "label": "Official Timeout at 04:40.",
-          "is_critical": false
-        },
-        {
-          "step": 31,
-          "play_id": "401873048789",
-          "qtr": 1,
-          "clock": "4:40",
-          "home_wp": 0.6037,
-          "delta_wp": -0.0131,
-          "label": "J.Price left guard to SEA 44 for 2 yards (D.Burke; B.Browning).",
-          "is_critical": false
-        },
-        {
-          "step": 32,
-          "play_id": "401873048811",
-          "qtr": 1,
-          "clock": "4:02",
-          "home_wp": 0.5886,
-          "delta_wp": -0.0151,
-          "label": "D.Lock pass incomplete short right to A.Barner.",
-          "is_critical": false
-        },
-        {
-          "step": 33,
-          "play_id": "401873048834",
-          "qtr": 1,
-          "clock": "3:58",
-          "home_wp": 0.6399,
-          "delta_wp": 0.0513,
-          "label": "(Shotgun) D.Lock pass short left to J.Price pushed ob at ARZ 41 for 15 yards (B.Browning).",
-          "is_critical": false
-        },
-        {
-          "step": 34,
-          "play_id": "401873048864",
-          "qtr": 1,
-          "clock": "3:38",
-          "home_wp": 0.628,
-          "delta_wp": -0.0119,
-          "label": "(No Huddle) J.Price right end to ARZ 38 for 3 yards (A.Wingard). ARZ-R.Lopez was injured d",
-          "is_critical": false
-        },
-        {
-          "step": 35,
-          "play_id": "401873048889",
-          "qtr": 1,
-          "clock": "3:12",
-          "home_wp": 0.6597,
-          "delta_wp": 0.0317,
-          "label": "(Shotgun) Z.Charbonnet right end to ARZ 32 for 6 yards (J.Gibbens).",
-          "is_critical": false
-        },
-        {
-          "step": 36,
-          "play_id": "401873048911",
-          "qtr": 1,
-          "clock": "2:43",
-          "home_wp": 0.6668,
-          "delta_wp": 0.0071,
-          "label": "(No Huddle, Shotgun) Z.Charbonnet up the middle to ARZ 24 for 8 yards (M.Melton; Ma.Wilson",
-          "is_critical": false
-        },
-        {
-          "step": 37,
-          "play_id": "401873048933",
-          "qtr": 1,
-          "clock": "2:05",
-          "home_wp": 0.7061,
-          "delta_wp": 0.0393,
-          "label": "D.Lock pass short middle to Z.Charbonnet to ARZ 15 for 9 yards (B.Baker).",
-          "is_critical": false
-        },
-        {
-          "step": 38,
-          "play_id": "401873048958",
-          "qtr": 1,
-          "clock": "1:27",
-          "home_wp": 0.6947,
-          "delta_wp": -0.0114,
-          "label": "(Shotgun) J.Price up the middle to ARZ 11 for 4 yards (A.Wingard).",
-          "is_critical": false
-        },
-        {
-          "step": 39,
-          "play_id": "401873048980",
-          "qtr": 1,
-          "clock": "0:45",
-          "home_wp": 0.6937,
-          "delta_wp": -0.001,
-          "label": "Z.Charbonnet left guard to ARZ 5 for 6 yards (A.Wingard; J.Gibbens).",
-          "is_critical": false
-        },
-        {
-          "step": 40,
-          "play_id": "4018730481002",
-          "qtr": 1,
-          "clock": "0:02",
-          "home_wp": 0.7058,
-          "delta_wp": 0.0121,
-          "label": "PENALTY on ARZ-A.Billings, Encroachment, 3 yards, enforced at ARZ 5 - No Play.",
-          "is_critical": false
-        },
-        {
-          "step": 41,
-          "play_id": "4018730481046",
-          "qtr": 2,
-          "clock": "15:00",
-          "home_wp": 0.7108,
-          "delta_wp": 0.005,
-          "label": "B.Hart and O.Oluwatimi reported in as eligible. Direct snap to A.Barner.  A.Barner up the ",
-          "is_critical": false
-        },
-        {
-          "step": 42,
-          "play_id": "4018730481074",
-          "qtr": 2,
-          "clock": "14:23",
-          "home_wp": 0.7306,
-          "delta_wp": 0.0198,
-          "label": "B.Hart and O.Oluwatimi reported in as eligible. Direct snap to A.Barner.  A.Barner up the ",
-          "is_critical": false
-        },
-        {
-          "step": 43,
-          "play_id": "4018730481111",
-          "qtr": 2,
-          "clock": "14:23",
-          "home_wp": 0.7306,
+          "clock": "6:00",
+          "home_wp": 0.8807,
           "delta_wp": 0.0,
-          "label": "Official Timeout at 14:23.",
-          "is_critical": false
-        },
-        {
-          "step": 44,
-          "play_id": "4018730481118",
-          "qtr": 2,
-          "clock": "14:23",
-          "home_wp": 0.7364,
-          "delta_wp": 0.0058,
-          "label": "J.Myers kicks 62 yards from SEA 35 to ARZ 3. D.Duvernay to ARZ 33 for 30 yards (M.Morris).",
-          "is_critical": false
-        },
-        {
-          "step": 45,
-          "play_id": "4018730481159",
-          "qtr": 2,
-          "clock": "14:17",
-          "home_wp": 0.7306,
-          "delta_wp": -0.0058,
-          "label": "G.Minshew pass short middle to T.McBride to ARZ 20 for 3 yards (E.Jones).\nPENALTY on SEA-D",
-          "is_critical": false
-        },
-        {
-          "step": 46,
-          "play_id": "4018730481200",
-          "qtr": 2,
-          "clock": "13:54",
-          "home_wp": 0.7428,
-          "delta_wp": 0.0122,
-          "label": "T.Allgeier right tackle to ARZ 23 for 1 yard (D.Witherspoon).",
+          "label": "Official Timeout at 06:00.",
           "is_critical": false
         }
       ]
@@ -5914,6 +4059,1943 @@
           "home_wp": 0.001,
           "delta_wp": 0.0,
           "label": "B.Nix kneels to CAR 47 for -1 yards.",
+          "is_critical": false
+        }
+      ]
+    },
+    {
+      "event_id": "401873046",
+      "week": 9,
+      "season_type": "REG",
+      "name": "Houston Texans at Los Angeles Chargers",
+      "short_name": "HOU @ LAC",
+      "date": "2026-11-08T21:05Z",
+      "status": {
+        "state": "post",
+        "detail": "Final",
+        "period": 4,
+        "clock": "0:00",
+        "completed": true
+      },
+      "home_team": {
+        "id": "24",
+        "abbreviation": "LAC",
+        "name": "Los Angeles Chargers",
+        "score": 22,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/lac.png"
+      },
+      "away_team": {
+        "id": "34",
+        "abbreviation": "HOU",
+        "name": "Houston Texans",
+        "score": 44,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/hou.png"
+      },
+      "win_probability": {
+        "home_wp": 0.0,
+        "away_wp": 1.0
+      },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873046/texans-chargers",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873046",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873046"
+      },
+      "critical_moments": [
+        {
+          "play_id": "4018730461689",
+          "qtr": 2,
+          "clock": "4:28",
+          "description": "(Shotgun) C.Stroud pass deep right to T.Dell for 63 yards, TOUCHDOWN. K.Fairbairn extra point is GOOD, Center-A.Brinkman, Holder-K.Kroeger.",
+          "home_wp_before": 0.3493,
+          "home_wp_after": 0.2096,
+          "delta_wp": -0.1397,
+          "abs_delta_wp": 0.1397,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873046",
+          "play_label": "C.J. Stroud a Tank Dell TD (63 yds)",
+          "video_query": "C.J. Stroud Tank Dell 63 yard touchdown Texans Chargers",
+          "video_query_v2": "C.J. Stroud Tank Dell 63 yard touchdown Texans Chargers",
+          "video_url": "https://espnmedia-cdn.akamaized.net/espn/media/16x9/wsc/2026/1108/34c28508-e0bf-4ba2-bb64-6c15ff81c156/34c28508-e0bf-4ba2-bb64-6c15ff81c156.mp4",
+          "video_source": "ESPN Video Oficial",
+          "video_title": "C.J. Stroud connects with Tank Dell for a beautiful 63-yard TD",
+          "has_direct_video": true,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=C.J.+Stroud+Tank+Dell+63+yard+touchdown+Texans+Chargers&sp=EgIYAQ%3D%3D",
+          "x_video_url": "https://x.com/search?q=C.J.+Stroud+Tank+Dell+63+yard+touchdown+Texans+Chargers&f=video"
+        }
+      ],
+      "hinge_play": {
+        "play_id": "4018730461689",
+        "qtr": 2,
+        "clock": "4:28",
+        "description": "(Shotgun) C.Stroud pass deep right to T.Dell for 63 yards, TOUCHDOWN. K.Fairbairn extra point is GOOD, Center-A.Brinkman, Holder-K.Kroeger.",
+        "home_wp_before": 0.3493,
+        "home_wp_after": 0.2096,
+        "delta_wp": -0.1397,
+        "abs_delta_wp": 0.1397,
+        "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873046",
+        "play_label": "C.J. Stroud a Tank Dell TD (63 yds)",
+        "video_query": "C.J. Stroud Tank Dell 63 yard touchdown Texans Chargers",
+        "video_query_v2": "C.J. Stroud Tank Dell 63 yard touchdown Texans Chargers",
+        "video_url": "https://espnmedia-cdn.akamaized.net/espn/media/16x9/wsc/2026/1108/34c28508-e0bf-4ba2-bb64-6c15ff81c156/34c28508-e0bf-4ba2-bb64-6c15ff81c156.mp4",
+        "video_source": "ESPN Video Oficial",
+        "video_title": "C.J. Stroud connects with Tank Dell for a beautiful 63-yard TD",
+        "has_direct_video": true,
+        "youtube_search_url": "https://www.youtube.com/results?search_query=C.J.+Stroud+Tank+Dell+63+yard+touchdown+Texans+Chargers&sp=EgIYAQ%3D%3D",
+        "x_video_url": "https://x.com/search?q=C.J.+Stroud+Tank+Dell+63+yard+touchdown+Texans+Chargers&f=video",
+        "exceeds_threshold": true
+      },
+      "wp_timeline": [
+        {
+          "step": 0,
+          "qtr": 1,
+          "clock": "15:00",
+          "home_wp": 0.5,
+          "delta_wp": 0.0,
+          "label": "Kickoff",
+          "is_critical": false
+        },
+        {
+          "step": 1,
+          "play_id": "40187304640",
+          "qtr": 1,
+          "clock": "15:00",
+          "home_wp": 0.3598,
+          "delta_wp": -0.0194,
+          "label": "C.Dicker kicks 60 yards from LAC 35 to HST 5. T.Smith to HST 27 for 22 yards (D.Phillips).",
+          "is_critical": false
+        },
+        {
+          "step": 2,
+          "play_id": "401873046198",
+          "qtr": 1,
+          "clock": "12:29",
+          "home_wp": 0.288,
+          "delta_wp": -0.023,
+          "label": "(Shotgun) C.Stroud pass short right to E.Demercado to LAC 21 for 8 yards (T.Still).",
+          "is_critical": false
+        },
+        {
+          "step": 3,
+          "play_id": "401873046336",
+          "qtr": 1,
+          "clock": "10:16",
+          "home_wp": 0.2499,
+          "delta_wp": 0.0104,
+          "label": "K.Fairbairn kicks 60 yards from HST 35 to LAC 5. K.Mitchell to LAC 32 for 27 yards (J.Ingr",
+          "is_critical": false
+        },
+        {
+          "step": 4,
+          "play_id": "401873046505",
+          "qtr": 1,
+          "clock": "8:01",
+          "home_wp": 0.2642,
+          "delta_wp": -0.0178,
+          "label": "(Shotgun) O.Hampton right end to HST 40 for 1 yard (J.Pitre).",
+          "is_critical": false
+        },
+        {
+          "step": 5,
+          "play_id": "401873046623",
+          "qtr": 1,
+          "clock": "6:09",
+          "home_wp": 0.2806,
+          "delta_wp": 0.0163,
+          "label": "B.Fisher reported in as eligible.  C.Stroud pass incomplete deep right to T.Dell.",
+          "is_critical": false
+        },
+        {
+          "step": 6,
+          "play_id": "401873046778",
+          "qtr": 1,
+          "clock": "3:24",
+          "home_wp": 0.2582,
+          "delta_wp": 0.015,
+          "label": "(Shotgun) C.Stroud pass incomplete deep right to T.Dell.",
+          "is_critical": false
+        },
+        {
+          "step": 7,
+          "play_id": "401873046895",
+          "qtr": 1,
+          "clock": "2:40",
+          "home_wp": 0.2432,
+          "delta_wp": -0.0116,
+          "label": "(Shotgun) J.Herbert pass incomplete deep right to O.Gadsden.",
+          "is_critical": false
+        },
+        {
+          "step": 8,
+          "play_id": "4018730461023",
+          "qtr": 1,
+          "clock": "0:40",
+          "home_wp": 0.2312,
+          "delta_wp": -0.0001,
+          "label": "Official Timeout at 00:40.",
+          "is_critical": false
+        },
+        {
+          "step": 9,
+          "play_id": "4018730461162",
+          "qtr": 2,
+          "clock": "13:33",
+          "home_wp": 0.2922,
+          "delta_wp": 0.0236,
+          "label": "(Shotgun) K.Vidal left end to HST 42 for 9 yards (C.Bullock).  The first down was assisted",
+          "is_critical": false
+        },
+        {
+          "step": 10,
+          "play_id": "4018730461317",
+          "qtr": 2,
+          "clock": "10:21",
+          "home_wp": 0.3226,
+          "delta_wp": -0.0033,
+          "label": "O.Hampton left end to HST 8 for 1 yard (T.Togiai; A.Al-Shaair).",
+          "is_critical": false
+        },
+        {
+          "step": 11,
+          "play_id": "4018730461439",
+          "qtr": 2,
+          "clock": "8:08",
+          "home_wp": 0.2562,
+          "delta_wp": -0.0161,
+          "label": "(Shotgun) C.Stroud pass short middle to N.Collins to HST 45 for 14 yards (T.Still; M.Wax).",
+          "is_critical": false
+        },
+        {
+          "step": 12,
+          "play_id": "4018730461464",
+          "qtr": 2,
+          "clock": "7:32",
+          "home_wp": 0.364,
+          "delta_wp": 0.1078,
+          "label": "(Shotgun) C.Stroud pass short middle intended for K.Boutte INTERCEPTED by D.Henley (M.Wax)",
+          "is_critical": false
+        },
+        {
+          "step": 13,
+          "play_id": "4018730461588",
+          "qtr": 2,
+          "clock": "5:19",
+          "home_wp": 0.3409,
+          "delta_wp": -0.0282,
+          "label": "(Shotgun) J.Herbert pass incomplete deep left to Q.Johnston (K.Lassiter).",
+          "is_critical": false
+        },
+        {
+          "step": 14,
+          "play_id": "4018730461664",
+          "qtr": 2,
+          "clock": "5:06",
+          "home_wp": 0.3493,
+          "delta_wp": -0.0023,
+          "label": "(Shotgun) C.Stroud pass short left to M.Harrison pushed ob at HST 37 for 5 yards (C.Hart).",
+          "is_critical": false
+        },
+        {
+          "step": 15,
+          "play_id": "4018730461689",
+          "qtr": 2,
+          "clock": "4:28",
+          "home_wp": 0.2096,
+          "delta_wp": -0.1397,
+          "label": "C.J. Stroud a Tank Dell TD (63 yds)",
+          "is_critical": true
+        },
+        {
+          "step": 16,
+          "play_id": "4018730461718",
+          "qtr": 2,
+          "clock": "4:28",
+          "home_wp": 0.2079,
+          "delta_wp": -0.0017,
+          "label": "Official Timeout at 04:28.",
+          "is_critical": false
+        },
+        {
+          "step": 17,
+          "play_id": "4018730461867",
+          "qtr": 2,
+          "clock": "3:01",
+          "home_wp": 0.1851,
+          "delta_wp": 0.0117,
+          "label": "J.Scott punts 53 yards to HST 25, Center-J.Harris. T.Dell to HST 26 for 1 yard (R.Shelley)",
+          "is_critical": false
+        },
+        {
+          "step": 18,
+          "play_id": "4018730462013",
+          "qtr": 2,
+          "clock": "1:49",
+          "home_wp": 0.2113,
+          "delta_wp": 0.0132,
+          "label": "(Shotgun) C.Stroud pass incomplete deep middle to X.Hutchinson.",
+          "is_critical": false
+        },
+        {
+          "step": 19,
+          "play_id": "4018730462143",
+          "qtr": 2,
+          "clock": "1:24",
+          "home_wp": 0.1626,
+          "delta_wp": -0.0233,
+          "label": "(Shotgun) J.Herbert sacked at LAC 21 for -6 yards (S.Rankins).",
+          "is_critical": false
+        },
+        {
+          "step": 20,
+          "play_id": "4018730462296",
+          "qtr": 2,
+          "clock": "0:46",
+          "home_wp": 0.1752,
+          "delta_wp": 0.0153,
+          "label": "(Shotgun) C.Stroud pass incomplete short left to X.Hutchinson.",
+          "is_critical": false
+        },
+        {
+          "step": 21,
+          "play_id": "4018730462469",
+          "qtr": 2,
+          "clock": "0:16",
+          "home_wp": 0.0734,
+          "delta_wp": -0.0037,
+          "label": "(Shotgun) J.Herbert sacked at LAC 26 for -9 yards (S.Rankins).",
+          "is_critical": false
+        },
+        {
+          "step": 22,
+          "play_id": "4018730462643",
+          "qtr": 3,
+          "clock": "13:03",
+          "home_wp": 0.0719,
+          "delta_wp": -0.0075,
+          "label": "J.Herbert pass incomplete deep left to T.Harris (K.Lassiter). LAC-T.Harris was injured dur",
+          "is_critical": false
+        },
+        {
+          "step": 23,
+          "play_id": "4018730462799",
+          "qtr": 3,
+          "clock": "12:24",
+          "home_wp": 0.0617,
+          "delta_wp": -0.0196,
+          "label": "(Shotgun) W.Marks up the middle to HST 29 for 14 yards (E.Molden; T.Jefferson).",
+          "is_critical": false
+        },
+        {
+          "step": 24,
+          "play_id": "4018730462940",
+          "qtr": 3,
+          "clock": "9:08",
+          "home_wp": 0.0315,
+          "delta_wp": -0.0009,
+          "label": "(Shotgun) W.Marks right end to LAC 13 for 4 yards (D.Phillips; D.Henley).",
+          "is_critical": false
+        },
+        {
+          "step": 25,
+          "play_id": "4018730463078",
+          "qtr": 3,
+          "clock": "7:34",
+          "home_wp": 0.0151,
+          "delta_wp": -0.0038,
+          "label": "(Shotgun) O.Hampton up the middle to LAC 38 for -1 yards (J.Pitre).",
+          "is_critical": false
+        },
+        {
+          "step": 26,
+          "play_id": "4018730463197",
+          "qtr": 3,
+          "clock": "5:37",
+          "home_wp": 0.0112,
+          "delta_wp": -0.0007,
+          "label": "(Shotgun) C.Stroud pass short right to D.Ogunbowale to LAC 45 for 3 yards (D.Henley).",
+          "is_critical": false
+        },
+        {
+          "step": 27,
+          "play_id": "4018730463316",
+          "qtr": 3,
+          "clock": "2:41",
+          "home_wp": 0.0178,
+          "delta_wp": 0.011,
+          "label": "J.Herbert pass deep left to K.Lambert-Smith to HST 30 for 50 yards (C.Bullock).",
+          "is_critical": false
+        },
+        {
+          "step": 28,
+          "play_id": "4018730463500",
+          "qtr": 4,
+          "clock": "15:00",
+          "home_wp": 0.0042,
+          "delta_wp": 0.0009,
+          "label": "(Shotgun) W.Marks up the middle to HST 37 for -2 yards (D.Tomlinson).",
+          "is_critical": false
+        },
+        {
+          "step": 29,
+          "play_id": "4018730463660",
+          "qtr": 4,
+          "clock": "12:47",
+          "home_wp": 0.0025,
+          "delta_wp": 0.0015,
+          "label": "(Shotgun) J.Herbert pass short right to Q.Johnston for 58 yards, TOUCHDOWN. TWO-POINT CONV",
+          "is_critical": false
+        },
+        {
+          "step": 30,
+          "play_id": "4018730463819",
+          "qtr": 4,
+          "clock": "10:13",
+          "home_wp": 0.001,
+          "delta_wp": 0.0,
+          "label": "W.Marks up the middle to LAC 20 for -1 yards (T.Jefferson).",
+          "is_critical": false
+        },
+        {
+          "step": 31,
+          "play_id": "4018730463936",
+          "qtr": 4,
+          "clock": "8:46",
+          "home_wp": 0.001,
+          "delta_wp": 0.0,
+          "label": "O.Hampton right tackle to LAC 35 for 6 yards (N.Jones; A.Al-Shaair).",
+          "is_critical": false
+        },
+        {
+          "step": 32,
+          "play_id": "4018730464090",
+          "qtr": 4,
+          "clock": "5:56",
+          "home_wp": 0.001,
+          "delta_wp": 0.0,
+          "label": "O.Hampton right tackle to HST 12 for 32 yards (D.Stingley). HST-D.Stingley was injured dur",
+          "is_critical": false
+        },
+        {
+          "step": 33,
+          "play_id": "4018730464246",
+          "qtr": 4,
+          "clock": "4:19",
+          "home_wp": 0.001,
+          "delta_wp": 0.0,
+          "label": "C.Dicker kicks onside 9 yards from LAC 35 to LAC 44. M.Stewart (didn't try to advance) to ",
+          "is_critical": false
+        },
+        {
+          "step": 34,
+          "play_id": "4018730464396",
+          "qtr": 4,
+          "clock": "2:27",
+          "home_wp": 0.001,
+          "delta_wp": 0.0,
+          "label": "(Shotgun) D.Mills pass incomplete short right to E.Demercado.",
+          "is_critical": false
+        },
+        {
+          "step": 35,
+          "play_id": "4018730464543",
+          "qtr": 4,
+          "clock": "1:56",
+          "home_wp": 0.001,
+          "delta_wp": 0.0,
+          "label": "(Shotgun) PENALTY on LAC-S.Matlock, False Start, 5 yards, enforced at LAC 34 - No Play.",
+          "is_critical": false
+        },
+        {
+          "step": 36,
+          "play_id": "4018730464634",
+          "qtr": 4,
+          "clock": "0:37",
+          "home_wp": 0.001,
+          "delta_wp": 0.0,
+          "label": "D.Mills kneels to LAC 37 for -1 yards.",
+          "is_critical": false
+        }
+      ]
+    },
+    {
+      "event_id": "401873049",
+      "week": 9,
+      "season_type": "REG",
+      "name": "Green Bay Packers at New England Patriots",
+      "short_name": "GB @ NE",
+      "date": "2026-11-08T21:25Z",
+      "status": {
+        "state": "post",
+        "detail": "Final",
+        "period": 4,
+        "clock": "0:00",
+        "completed": true
+      },
+      "home_team": {
+        "id": "17",
+        "abbreviation": "NE",
+        "name": "New England Patriots",
+        "score": 27,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/ne.png"
+      },
+      "away_team": {
+        "id": "9",
+        "abbreviation": "GB",
+        "name": "Green Bay Packers",
+        "score": 45,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/gb.png"
+      },
+      "win_probability": {
+        "home_wp": 0.0,
+        "away_wp": 1.0
+      },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873049/packers-patriots",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873049",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873049"
+      },
+      "critical_moments": [
+        {
+          "play_id": "40187304998",
+          "qtr": 1,
+          "clock": "14:32",
+          "description": "D.Maye pass deep left intended for M.Hollins INTERCEPTED by X.McKinney at 50. X.McKinney pushed ob at NE 14 for 36 yards (M.Pryor).",
+          "home_wp_before": 0.5702,
+          "home_wp_after": 0.4459,
+          "delta_wp": -0.1243,
+          "abs_delta_wp": 0.1243,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873049",
+          "play_label": "Xavier McKinney INT a Drake Maye",
+          "video_query": "Xavier McKinney Drake Maye interception Packers Patriots",
+          "video_query_v2": "Xavier McKinney Drake Maye interception Packers Patriots",
+          "video_url": "https://www.youtube.com/results?search_query=Xavier+McKinney+Drake+Maye+interception+Packers+Patriots&sp=EgIYAQ%3D%3D",
+          "video_source": "Clip Puntual (<4m)",
+          "video_title": "Jugada Puntual: Xavier McKinney INT a Drake Maye (GB @ NE Q1)",
+          "has_direct_video": false,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=Xavier+McKinney+Drake+Maye+interception+Packers+Patriots&sp=EgIYAQ%3D%3D",
+          "x_video_url": "https://x.com/search?q=Xavier+McKinney+Drake+Maye+interception+Packers+Patriots&f=video"
+        }
+      ],
+      "hinge_play": {
+        "play_id": "40187304998",
+        "qtr": 1,
+        "clock": "14:32",
+        "description": "D.Maye pass deep left intended for M.Hollins INTERCEPTED by X.McKinney at 50. X.McKinney pushed ob at NE 14 for 36 yards (M.Pryor).",
+        "home_wp_before": 0.5702,
+        "home_wp_after": 0.4459,
+        "delta_wp": -0.1243,
+        "abs_delta_wp": 0.1243,
+        "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873049",
+        "play_label": "Xavier McKinney INT a Drake Maye",
+        "video_query": "Xavier McKinney Drake Maye interception Packers Patriots",
+        "video_query_v2": "Xavier McKinney Drake Maye interception Packers Patriots",
+        "video_url": "https://www.youtube.com/results?search_query=Xavier+McKinney+Drake+Maye+interception+Packers+Patriots&sp=EgIYAQ%3D%3D",
+        "video_source": "Clip Puntual (<4m)",
+        "video_title": "Jugada Puntual: Xavier McKinney INT a Drake Maye (GB @ NE Q1)",
+        "has_direct_video": false,
+        "youtube_search_url": "https://www.youtube.com/results?search_query=Xavier+McKinney+Drake+Maye+interception+Packers+Patriots&sp=EgIYAQ%3D%3D",
+        "x_video_url": "https://x.com/search?q=Xavier+McKinney+Drake+Maye+interception+Packers+Patriots&f=video",
+        "exceeds_threshold": true
+      },
+      "wp_timeline": [
+        {
+          "step": 0,
+          "qtr": 1,
+          "clock": "15:00",
+          "home_wp": 0.5,
+          "delta_wp": 0.0,
+          "label": "Kickoff",
+          "is_critical": false
+        },
+        {
+          "step": 1,
+          "play_id": "40187304940",
+          "qtr": 1,
+          "clock": "15:00",
+          "home_wp": 0.5857,
+          "delta_wp": 0.018,
+          "label": "T.Smack kicks 60 yards from GB 35 to NE 5. C.Kiner to NE 25 for 20 yards (B.Melton).",
+          "is_critical": false
+        },
+        {
+          "step": 2,
+          "play_id": "40187304963",
+          "qtr": 1,
+          "clock": "14:52",
+          "home_wp": 0.5702,
+          "delta_wp": -0.0155,
+          "label": "C.Lomu reported in as eligible.  R.Stevenson left tackle to NE 26 for 1 yard (B.Sorrell; J",
+          "is_critical": false
+        },
+        {
+          "step": 3,
+          "play_id": "40187304998",
+          "qtr": 1,
+          "clock": "14:32",
+          "home_wp": 0.4459,
+          "delta_wp": -0.1243,
+          "label": "Xavier McKinney INT a Drake Maye",
+          "is_critical": true
+        },
+        {
+          "step": 4,
+          "play_id": "401873049190",
+          "qtr": 1,
+          "clock": "13:19",
+          "home_wp": 0.4182,
+          "delta_wp": 0.014,
+          "label": "T.Smack kicks 54 yards from GB 35 to NE 11. C.Kiner to NE 34 for 23 yards (K.Welch; D.Denn",
+          "is_critical": false
+        },
+        {
+          "step": 5,
+          "play_id": "401873049303",
+          "qtr": 1,
+          "clock": "11:44",
+          "home_wp": 0.3911,
+          "delta_wp": 0.0088,
+          "label": "J.Jacobs up the middle to GB 17 for 3 yards (J.Reed; C.Elliss).",
+          "is_critical": false
+        },
+        {
+          "step": 6,
+          "play_id": "401873049448",
+          "qtr": 1,
+          "clock": "9:15",
+          "home_wp": 0.2785,
+          "delta_wp": -0.0027,
+          "label": "(Shotgun) J.Jacobs right guard to NE 7 for 2 yards (C.Durden; C.Elliss).",
+          "is_critical": false
+        },
+        {
+          "step": 7,
+          "play_id": "401873049577",
+          "qtr": 1,
+          "clock": "7:53",
+          "home_wp": 0.2346,
+          "delta_wp": 0.0018,
+          "label": "(Shotgun) D.Maye pass short right to M.Hollins to NE 35 for 5 yards (K.Nixon).",
+          "is_critical": false
+        },
+        {
+          "step": 8,
+          "play_id": "401873049709",
+          "qtr": 1,
+          "clock": "6:19",
+          "home_wp": 0.2215,
+          "delta_wp": -0.0348,
+          "label": "C.Lomu reported in as eligible.  R.Stevenson left end to NE 48 for -6 yards (I.McDuffie, B",
+          "is_critical": false
+        },
+        {
+          "step": 9,
+          "play_id": "401873049799",
+          "qtr": 1,
+          "clock": "5:13",
+          "home_wp": 0.2277,
+          "delta_wp": 0.0102,
+          "label": "P.Strong left guard to GB 5 for 3 yards (L.Taylor; J.Reed).",
+          "is_critical": false
+        },
+        {
+          "step": 10,
+          "play_id": "401873049941",
+          "qtr": 1,
+          "clock": "2:36",
+          "home_wp": 0.1907,
+          "delta_wp": -0.0208,
+          "label": "(Shotgun) PENALTY on NE-G.Jacas, Neutral Zone Infraction, 5 yards, enforced at GB 20 - No ",
+          "is_critical": false
+        },
+        {
+          "step": 11,
+          "play_id": "4018730491089",
+          "qtr": 2,
+          "clock": "15:00",
+          "home_wp": 0.131,
+          "delta_wp": 0.0023,
+          "label": "P.Strong up the middle to NE 14 for 2 yards (K.Byard).",
+          "is_critical": false
+        },
+        {
+          "step": 12,
+          "play_id": "4018730491181",
+          "qtr": 2,
+          "clock": "13:31",
+          "home_wp": 0.1584,
+          "delta_wp": 0.0109,
+          "label": "R.Stevenson left end to NE 40 for 12 yards (I.McDuffie; X.McKinney).",
+          "is_critical": false
+        },
+        {
+          "step": 13,
+          "play_id": "4018730491285",
+          "qtr": 2,
+          "clock": "11:55",
+          "home_wp": 0.1519,
+          "delta_wp": -0.005,
+          "label": "(Shotgun) J.Love pass short middle to P.Strong to GB 22 for 7 yards (M.Jones; C.Barmore).",
+          "is_critical": false
+        },
+        {
+          "step": 14,
+          "play_id": "4018730491389",
+          "qtr": 2,
+          "clock": "9:40",
+          "home_wp": 0.1697,
+          "delta_wp": -0.0148,
+          "label": "C.Lomu reported in as eligible.  D.Maye pass incomplete short left [K.Brooks].",
+          "is_critical": false
+        },
+        {
+          "step": 15,
+          "play_id": "4018730491518",
+          "qtr": 2,
+          "clock": "9:17",
+          "home_wp": 0.2326,
+          "delta_wp": -0.0145,
+          "label": "S.Williams left end pushed ob at GB 46 for 13 yards (C.Woodson).",
+          "is_critical": false
+        },
+        {
+          "step": 16,
+          "play_id": "4018730491688",
+          "qtr": 2,
+          "clock": "7:15",
+          "home_wp": 0.2729,
+          "delta_wp": 0.0028,
+          "label": "D.Whelan punts 50 yards to end zone, Center-M.Orzech, Touchback.",
+          "is_critical": false
+        },
+        {
+          "step": 17,
+          "play_id": "4018730491776",
+          "qtr": 2,
+          "clock": "5:38",
+          "home_wp": 0.238,
+          "delta_wp": -0.0005,
+          "label": "Official Timeout at 05:38.",
+          "is_critical": false
+        },
+        {
+          "step": 18,
+          "play_id": "4018730492052",
+          "qtr": 2,
+          "clock": "4:39",
+          "home_wp": 0.1448,
+          "delta_wp": 0.0168,
+          "label": "(Shotgun) D.Maye pass short right to M.Hollins pushed ob at NE 45 for 9 yards (I.McDuffie)",
+          "is_critical": false
+        },
+        {
+          "step": 19,
+          "play_id": "4018730492198",
+          "qtr": 2,
+          "clock": "2:29",
+          "home_wp": 0.2234,
+          "delta_wp": 0.0179,
+          "label": "J.Love pass incomplete deep left.",
+          "is_critical": false
+        },
+        {
+          "step": 20,
+          "play_id": "4018730492324",
+          "qtr": 2,
+          "clock": "1:48",
+          "home_wp": 0.3117,
+          "delta_wp": 0.0234,
+          "label": "(Shotgun) D.Maye pass short middle to D.Douglas to GB 49 for 8 yards (E.Williams).  10-sec",
+          "is_critical": false
+        },
+        {
+          "step": 21,
+          "play_id": "4018730492473",
+          "qtr": 2,
+          "clock": "0:59",
+          "home_wp": 0.237,
+          "delta_wp": 0.0006,
+          "label": "M.Wishnowsky punts 31 yards to GB 15, Center-J.Ashby, fair catch by C.Owen.",
+          "is_critical": false
+        },
+        {
+          "step": 22,
+          "play_id": "4018730492608",
+          "qtr": 3,
+          "clock": "14:23",
+          "home_wp": 0.1922,
+          "delta_wp": 0.0046,
+          "label": "(Shotgun) PENALTY on NE-C.Durden, Encroachment, 5 yards, enforced at GB 39 - No Play.",
+          "is_critical": false
+        },
+        {
+          "step": 23,
+          "play_id": "4018730492759",
+          "qtr": 3,
+          "clock": "11:42",
+          "home_wp": 0.1421,
+          "delta_wp": -0.0087,
+          "label": "(Shotgun) J.Love pass short right to P.Strong to NE 10 for 4 yards (M.Jones; K.Prunty).",
+          "is_critical": false
+        },
+        {
+          "step": 24,
+          "play_id": "4018730492892",
+          "qtr": 3,
+          "clock": "10:08",
+          "home_wp": 0.0693,
+          "delta_wp": -0.0179,
+          "label": "D.Maye sacked at NE 30 for -6 yards (K.Brooks).",
+          "is_critical": false
+        },
+        {
+          "step": 25,
+          "play_id": "4018730493013",
+          "qtr": 3,
+          "clock": "8:04",
+          "home_wp": 0.058,
+          "delta_wp": -0.012,
+          "label": "(Shotgun) J.Love pass short middle to S.Williams to GB 30 for 7 yards (M.Jones).",
+          "is_critical": false
+        },
+        {
+          "step": 26,
+          "play_id": "4018730493147",
+          "qtr": 3,
+          "clock": "5:13",
+          "home_wp": 0.0313,
+          "delta_wp": -0.0144,
+          "label": "T.Smack 51 yard field goal is GOOD, Center-M.Orzech, Holder-D.Whelan.",
+          "is_critical": false
+        },
+        {
+          "step": 27,
+          "play_id": "4018730493243",
+          "qtr": 3,
+          "clock": "4:16",
+          "home_wp": 0.0138,
+          "delta_wp": -0.0003,
+          "label": "Official Timeout at 04:16.",
+          "is_critical": false
+        },
+        {
+          "step": 28,
+          "play_id": "4018730493370",
+          "qtr": 3,
+          "clock": "3:29",
+          "home_wp": 0.0027,
+          "delta_wp": -0.0003,
+          "label": "(Shotgun) D.Maye pass short left to R.Stevenson to NE 37 for 6 yards (I.McDuffie). NE-R.St",
+          "is_critical": false
+        },
+        {
+          "step": 29,
+          "play_id": "4018730493481",
+          "qtr": 3,
+          "clock": "1:53",
+          "home_wp": 0.0036,
+          "delta_wp": 0.0015,
+          "label": "(Shotgun) D.Maye pass deep middle to H.Henry to GB 22 for 21 yards (K.Oladapo).",
+          "is_critical": false
+        },
+        {
+          "step": 30,
+          "play_id": "4018730493655",
+          "qtr": 4,
+          "clock": "15:00",
+          "home_wp": 0.0042,
+          "delta_wp": -0.0022,
+          "label": "K.Johnson up the middle to NE 29 for 34 yards (K.Byard).",
+          "is_critical": false
+        },
+        {
+          "step": 31,
+          "play_id": "4018730493785",
+          "qtr": 4,
+          "clock": "12:42",
+          "home_wp": 0.003,
+          "delta_wp": 0.0015,
+          "label": "Direct snap to T.Kraft.  T.Kraft up the middle to NE 20 for no gain (R.Spillane; C.Elliss)",
+          "is_critical": false
+        },
+        {
+          "step": 32,
+          "play_id": "4018730493887",
+          "qtr": 4,
+          "clock": "11:39",
+          "home_wp": 0.0024,
+          "delta_wp": 0.001,
+          "label": "(Shotgun) D.Maye pass short middle to E.Raridon to NE 39 for 9 yards (N.Niemann).",
+          "is_critical": false
+        },
+        {
+          "step": 33,
+          "play_id": "4018730494016",
+          "qtr": 4,
+          "clock": "10:00",
+          "home_wp": 0.001,
+          "delta_wp": -0.0003,
+          "label": "(Shotgun) D.Maye sacked at GB 47 for -10 yards (K.Brooks).",
+          "is_critical": false
+        },
+        {
+          "step": 34,
+          "play_id": "4018730494107",
+          "qtr": 4,
+          "clock": "7:55",
+          "home_wp": 0.001,
+          "delta_wp": 0.0,
+          "label": "(Shotgun) K.Johnson left tackle to GB 15 for -3 yards (C.Elliss).",
+          "is_critical": false
+        },
+        {
+          "step": 35,
+          "play_id": "4018730494246",
+          "qtr": 4,
+          "clock": "5:24",
+          "home_wp": 0.001,
+          "delta_wp": 0.0,
+          "label": "C.Kiner up the middle to GB 29 for 5 yards (I.McDuffie; J.Riley).",
+          "is_critical": false
+        },
+        {
+          "step": 36,
+          "play_id": "4018730494373",
+          "qtr": 4,
+          "clock": "3:54",
+          "home_wp": 0.001,
+          "delta_wp": 0.0,
+          "label": "C.Kiner left end for 4 yards, TOUCHDOWN. GB-I.McDuffie was injured during the play. TWO-PO",
+          "is_critical": false
+        },
+        {
+          "step": 37,
+          "play_id": "4018730494535",
+          "qtr": 4,
+          "clock": "3:01",
+          "home_wp": 0.001,
+          "delta_wp": 0.0,
+          "label": "P.Strong up the middle to GB 36 for -3 yards (D.Muasau).",
+          "is_critical": false
+        },
+        {
+          "step": 38,
+          "play_id": "4018730494651",
+          "qtr": 4,
+          "clock": "0:35",
+          "home_wp": 0.001,
+          "delta_wp": 0.0,
+          "label": "C.Kiner up the middle to NE 41 for 1 yard (J.Riley; N.Niemann).",
+          "is_critical": false
+        }
+      ]
+    },
+    {
+      "event_id": "401873047",
+      "week": 9,
+      "season_type": "REG",
+      "name": "Las Vegas Raiders at San Francisco 49ers",
+      "short_name": "LV @ SF",
+      "date": "2026-11-08T21:25Z",
+      "status": {
+        "state": "post",
+        "detail": "Final",
+        "period": 4,
+        "clock": "0:00",
+        "completed": true
+      },
+      "home_team": {
+        "id": "25",
+        "abbreviation": "SF",
+        "name": "San Francisco 49ers",
+        "score": 38,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/sf.png"
+      },
+      "away_team": {
+        "id": "13",
+        "abbreviation": "LV",
+        "name": "Las Vegas Raiders",
+        "score": 17,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/lv.png"
+      },
+      "win_probability": {
+        "home_wp": 1.0,
+        "away_wp": 0.0
+      },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873047/raiders-49ers",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873047",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873047"
+      },
+      "critical_moments": [
+        {
+          "play_id": "4018730473719",
+          "qtr": 4,
+          "clock": "3:57",
+          "description": "Official Timeout at 03:57.",
+          "home_wp_before": 0.999,
+          "home_wp_after": 0.6693,
+          "delta_wp": -0.3297,
+          "abs_delta_wp": 0.3297,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873047",
+          "play_label": "Jugada:",
+          "video_query": "run Raiders 49ers",
+          "video_query_v2": "run Raiders 49ers",
+          "video_url": "https://www.youtube.com/results?search_query=run+Raiders+49ers&sp=EgIYAQ%3D%3D",
+          "video_source": "Clip Puntual (<4m)",
+          "video_title": "Jugada Puntual: Jugada: (LV @ SF Q4)",
+          "has_direct_video": false,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=run+Raiders+49ers&sp=EgIYAQ%3D%3D",
+          "x_video_url": "https://x.com/search?q=run+Raiders+49ers&f=video"
+        },
+        {
+          "play_id": "4018730473735",
+          "qtr": 4,
+          "clock": "3:57",
+          "description": "(Shotgun) K.Cousins pass deep middle intended for T.Tucker INTERCEPTED by M.Mustapha [D.Buckner] at SF 27. M.Mustapha to SF 27 for no gain (T.Tucker).",
+          "home_wp_before": 0.6693,
+          "home_wp_after": 0.999,
+          "delta_wp": 0.3297,
+          "abs_delta_wp": 0.3297,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873047",
+          "play_label": "Malik Mustapha INT a Kirk Cousins",
+          "video_query": "Malik Mustapha Kirk Cousins interception Raiders 49ers",
+          "video_query_v2": "Malik Mustapha Kirk Cousins interception Raiders 49ers",
+          "video_url": "https://www.youtube.com/results?search_query=Malik+Mustapha+Kirk+Cousins+interception+Raiders+49ers&sp=EgIYAQ%3D%3D",
+          "video_source": "Clip Puntual (<4m)",
+          "video_title": "Jugada Puntual: Malik Mustapha INT a Kirk Cousins (LV @ SF Q4)",
+          "has_direct_video": false,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=Malik+Mustapha+Kirk+Cousins+interception+Raiders+49ers&sp=EgIYAQ%3D%3D",
+          "x_video_url": "https://x.com/search?q=Malik+Mustapha+Kirk+Cousins+interception+Raiders+49ers&f=video"
+        }
+      ],
+      "hinge_play": {
+        "play_id": "4018730473719",
+        "qtr": 4,
+        "clock": "3:57",
+        "description": "Official Timeout at 03:57.",
+        "home_wp_before": 0.999,
+        "home_wp_after": 0.6693,
+        "delta_wp": -0.3297,
+        "abs_delta_wp": 0.3297,
+        "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873047",
+        "play_label": "Jugada:",
+        "video_query": "run Raiders 49ers",
+        "video_query_v2": "run Raiders 49ers",
+        "video_url": "https://www.youtube.com/results?search_query=run+Raiders+49ers&sp=EgIYAQ%3D%3D",
+        "video_source": "Clip Puntual (<4m)",
+        "video_title": "Jugada Puntual: Jugada: (LV @ SF Q4)",
+        "has_direct_video": false,
+        "youtube_search_url": "https://www.youtube.com/results?search_query=run+Raiders+49ers&sp=EgIYAQ%3D%3D",
+        "x_video_url": "https://x.com/search?q=run+Raiders+49ers&f=video",
+        "exceeds_threshold": true
+      },
+      "wp_timeline": [
+        {
+          "step": 0,
+          "qtr": 1,
+          "clock": "15:00",
+          "home_wp": 0.5,
+          "delta_wp": 0.0,
+          "label": "Kickoff",
+          "is_critical": false
+        },
+        {
+          "step": 1,
+          "play_id": "40187304740",
+          "qtr": 1,
+          "clock": "15:00",
+          "home_wp": 0.8532,
+          "delta_wp": 0.0133,
+          "label": "M.Gay kicks 65 yards from LV 35 to SF 0. K.Black to SF 31 for 31 yards (D.Young).",
+          "is_critical": false
+        },
+        {
+          "step": 2,
+          "play_id": "401873047144",
+          "qtr": 1,
+          "clock": "14:00",
+          "home_wp": 0.8646,
+          "delta_wp": 0.0012,
+          "label": "(No Huddle) C.McCaffrey right end to LV 45 for 3 yards (T.Eichenberg).",
+          "is_critical": false
+        },
+        {
+          "step": 3,
+          "play_id": "401873047236",
+          "qtr": 1,
+          "clock": "12:12",
+          "home_wp": 0.878,
+          "delta_wp": 0.014,
+          "label": "K.Black right end to LV 29 for 9 yards (J.Chinn).",
+          "is_critical": false
+        },
+        {
+          "step": 4,
+          "play_id": "401873047333",
+          "qtr": 1,
+          "clock": "10:11",
+          "home_wp": 0.8968,
+          "delta_wp": 0.0027,
+          "label": "K.Juszczyk up the middle to LV 1 for 4 yards (Q.Walker).",
+          "is_critical": false
+        },
+        {
+          "step": 5,
+          "play_id": "401873047454",
+          "qtr": 1,
+          "clock": "9:19",
+          "home_wp": 0.8989,
+          "delta_wp": -0.0067,
+          "label": "A.Jeanty up the middle to LV 44 for 7 yards (D.Buckner).",
+          "is_critical": false
+        },
+        {
+          "step": 6,
+          "play_id": "401873047518",
+          "qtr": 1,
+          "clock": "8:21",
+          "home_wp": 0.9254,
+          "delta_wp": 0.0158,
+          "label": "(Shotgun) B.Purdy pass deep middle to G.Kittle pushed ob at SF 48 for 37 yards (J.Chinn).",
+          "is_critical": false
+        },
+        {
+          "step": 7,
+          "play_id": "401873047631",
+          "qtr": 1,
+          "clock": "6:50",
+          "home_wp": 0.934,
+          "delta_wp": 0.0018,
+          "label": "B.Purdy up the middle to LV 31 for 2 yards (N.Dean).",
+          "is_critical": false
+        },
+        {
+          "step": 8,
+          "play_id": "401873047741",
+          "qtr": 1,
+          "clock": "4:40",
+          "home_wp": 0.9299,
+          "delta_wp": -0.0106,
+          "label": "PENALTY on SF-J.Watkins, False Start, 5 yards, enforced at LV 18 - No Play.",
+          "is_critical": false
+        },
+        {
+          "step": 9,
+          "play_id": "401873047836",
+          "qtr": 1,
+          "clock": "2:39",
+          "home_wp": 0.948,
+          "delta_wp": 0.0056,
+          "label": "B.Purdy pass incomplete short left to J.Cowing (E.Stokes).PENALTY on LV-E.Stokes, Defensiv",
+          "is_critical": false
+        },
+        {
+          "step": 10,
+          "play_id": "401873047930",
+          "qtr": 1,
+          "clock": "1:52",
+          "home_wp": 0.9493,
+          "delta_wp": -0.0047,
+          "label": "E.Pineiro kicks 57 yards from SF 35 to LV 8. D.Laube to LV 38 for 30 yards (L.Gifford; B.W",
+          "is_critical": false
+        },
+        {
+          "step": 11,
+          "play_id": "4018730471037",
+          "qtr": 1,
+          "clock": "0:18",
+          "home_wp": 0.9312,
+          "delta_wp": -0.0051,
+          "label": "(No Huddle, Shotgun) K.Cousins pass short left to J.Nailor ran ob at SF 23 for 6 yards.",
+          "is_critical": false
+        },
+        {
+          "step": 12,
+          "play_id": "4018730471163",
+          "qtr": 2,
+          "clock": "13:39",
+          "home_wp": 0.9168,
+          "delta_wp": -0.0026,
+          "label": "A.Jeanty up the middle to SF 2 for 4 yards (S.Valdez; M.Sigle).",
+          "is_critical": false
+        },
+        {
+          "step": 13,
+          "play_id": "4018730471263",
+          "qtr": 2,
+          "clock": "12:41",
+          "home_wp": 0.9021,
+          "delta_wp": -0.0029,
+          "label": "M.Gay kicks 60 yards from LV 35 to SF 5. J.James MUFFS catch, and recovers at SF 6. J.Jame",
+          "is_critical": false
+        },
+        {
+          "step": 14,
+          "play_id": "4018730471372",
+          "qtr": 2,
+          "clock": "10:41",
+          "home_wp": 0.9173,
+          "delta_wp": 0.011,
+          "label": "B.Purdy pass deep middle to J.Watkins to LV 49 for 24 yards (E.Stokes).",
+          "is_critical": false
+        },
+        {
+          "step": 15,
+          "play_id": "4018730471466",
+          "qtr": 2,
+          "clock": "7:51",
+          "home_wp": 0.9144,
+          "delta_wp": -0.0141,
+          "label": "(Shotgun) C.McCaffrey up the middle to LV 23 for 2 yards (N.Dean).",
+          "is_critical": false
+        },
+        {
+          "step": 16,
+          "play_id": "4018730471559",
+          "qtr": 2,
+          "clock": "5:15",
+          "home_wp": 0.956,
+          "delta_wp": 0.0199,
+          "label": "(Shotgun) B.Purdy pass short left to C.McCaffrey for 12 yards, TOUCHDOWN. E.Pineiro extra ",
+          "is_critical": false
+        },
+        {
+          "step": 17,
+          "play_id": "4018730471652",
+          "qtr": 2,
+          "clock": "4:39",
+          "home_wp": 0.9433,
+          "delta_wp": -0.0022,
+          "label": "K.Cousins pass short left to J.Nailor to SF 37 for 3 yards (R.Green).",
+          "is_critical": false
+        },
+        {
+          "step": 18,
+          "play_id": "4018730471750",
+          "qtr": 2,
+          "clock": "2:00",
+          "home_wp": 0.9492,
+          "delta_wp": -0.0077,
+          "label": "(Shotgun) A.Jeanty up the middle to SF 31 for 9 yards (D.Greenlaw; U.Stout).",
+          "is_critical": false
+        },
+        {
+          "step": 19,
+          "play_id": "4018730471823",
+          "qtr": 2,
+          "clock": "1:12",
+          "home_wp": 0.9304,
+          "delta_wp": -0.0131,
+          "label": "(Shotgun) B.Purdy sacked at SF 27 for -8 yards (M.Crosby).",
+          "is_critical": false
+        },
+        {
+          "step": 20,
+          "play_id": "4018730471980",
+          "qtr": 3,
+          "clock": "14:43",
+          "home_wp": 0.9785,
+          "delta_wp": 0.0004,
+          "label": "Official Timeout at 14:43.",
+          "is_critical": false
+        },
+        {
+          "step": 21,
+          "play_id": "4018730472064",
+          "qtr": 3,
+          "clock": "13:21",
+          "home_wp": 0.9748,
+          "delta_wp": -0.0011,
+          "label": "K.Cousins pass short left to A.Jeanty pushed ob at LV 42 for 3 yards (D.Lenoir) [O.Odighiz",
+          "is_critical": false
+        },
+        {
+          "step": 22,
+          "play_id": "4018730472166",
+          "qtr": 3,
+          "clock": "10:58",
+          "home_wp": 0.9674,
+          "delta_wp": -0.004,
+          "label": "(Shotgun) K.Cousins pass short right to B.Bowers to SF 27 for 9 yards (D.Lenoir).",
+          "is_critical": false
+        },
+        {
+          "step": 23,
+          "play_id": "4018730472257",
+          "qtr": 3,
+          "clock": "9:29",
+          "home_wp": 0.9461,
+          "delta_wp": 0.001,
+          "label": "M.Gay kicks 62 yards from LV 35 to SF 3. J.James to SF 24 for 21 yards (T.Eichenberg; D.Yo",
+          "is_critical": false
+        },
+        {
+          "step": 24,
+          "play_id": "4018730472348",
+          "qtr": 3,
+          "clock": "7:46",
+          "home_wp": 0.9078,
+          "delta_wp": 0.0002,
+          "label": "Official Timeout at 07:46.",
+          "is_critical": false
+        },
+        {
+          "step": 25,
+          "play_id": "4018730472432",
+          "qtr": 3,
+          "clock": "7:31",
+          "home_wp": 0.9422,
+          "delta_wp": -0.009,
+          "label": "C.McCaffrey left end to SF 29 for -2 yards (N.Dean, H.Masses).",
+          "is_critical": false
+        },
+        {
+          "step": 26,
+          "play_id": "4018730472522",
+          "qtr": 3,
+          "clock": "5:30",
+          "home_wp": 0.9162,
+          "delta_wp": 0.0,
+          "label": "Official Timeout at 05:30.",
+          "is_critical": false
+        },
+        {
+          "step": 27,
+          "play_id": "4018730472614",
+          "qtr": 3,
+          "clock": "4:11",
+          "home_wp": 0.9481,
+          "delta_wp": 0.0002,
+          "label": "Official Timeout at 04:11.",
+          "is_critical": false
+        },
+        {
+          "step": 28,
+          "play_id": "4018730472717",
+          "qtr": 3,
+          "clock": "2:54",
+          "home_wp": 0.9644,
+          "delta_wp": 0.0115,
+          "label": "(Shotgun) B.Purdy pass short left to G.Kittle pushed ob at LV 44 for 12 yards (J.Chinn).",
+          "is_critical": false
+        },
+        {
+          "step": 29,
+          "play_id": "4018730472832",
+          "qtr": 3,
+          "clock": "0:36",
+          "home_wp": 0.9874,
+          "delta_wp": -0.0009,
+          "label": "E.Pineiro kicks 59 yards from SF 35 to LV 6. D.Laube to LV 30 for 24 yards (L.Farrell; L.G",
+          "is_critical": false
+        },
+        {
+          "step": 30,
+          "play_id": "4018730472961",
+          "qtr": 4,
+          "clock": "14:14",
+          "home_wp": 0.9816,
+          "delta_wp": -0.0045,
+          "label": "(Shotgun) K.Cousins pass deep left to B.Bowers to SF 35 for 17 yards (R.Green).",
+          "is_critical": false
+        },
+        {
+          "step": 31,
+          "play_id": "4018730473061",
+          "qtr": 4,
+          "clock": "12:39",
+          "home_wp": 0.9729,
+          "delta_wp": 0.004,
+          "label": "(No Huddle) K.Cousins up the middle to SF 3 for -2 yards (D.Greenlaw).",
+          "is_critical": false
+        },
+        {
+          "step": 32,
+          "play_id": "4018730473162",
+          "qtr": 4,
+          "clock": "11:55",
+          "home_wp": 0.9949,
+          "delta_wp": -0.0002,
+          "label": "(Shotgun) B.Purdy pass short right to G.Kittle to SF 25 for 5 yards (T.Stukes).",
+          "is_critical": false
+        },
+        {
+          "step": 33,
+          "play_id": "4018730473277",
+          "qtr": 4,
+          "clock": "9:51",
+          "home_wp": 0.9972,
+          "delta_wp": 0.0,
+          "label": "(Shotgun) K.Black left end to SF 37 for no gain (N.Dean; Q.Walker).",
+          "is_critical": false
+        },
+        {
+          "step": 34,
+          "play_id": "4018730473393",
+          "qtr": 4,
+          "clock": "7:33",
+          "home_wp": 0.999,
+          "delta_wp": 0.0,
+          "label": "B.Purdy pass short middle to J.Watkins to LV 39 for 6 yards (N.Dean; T.Johnson).",
+          "is_critical": false
+        },
+        {
+          "step": 35,
+          "play_id": "4018730473495",
+          "qtr": 4,
+          "clock": "5:29",
+          "home_wp": 0.999,
+          "delta_wp": 0.0,
+          "label": "(Shotgun) B.Purdy pass incomplete deep left to D.Robinson (J.McCoy).",
+          "is_critical": false
+        },
+        {
+          "step": 36,
+          "play_id": "4018730473583",
+          "qtr": 4,
+          "clock": "5:12",
+          "home_wp": 0.999,
+          "delta_wp": 0.0,
+          "label": "(Shotgun) K.Cousins pass short right to A.Jeanty to LV 15 for -7 yards (F.Warner).",
+          "is_critical": false
+        },
+        {
+          "step": 37,
+          "play_id": "4018730473679",
+          "qtr": 4,
+          "clock": "4:06",
+          "home_wp": 0.999,
+          "delta_wp": 0.0,
+          "label": "(Shotgun) K.Cousins pass incomplete short middle to J.Bech.",
+          "is_critical": false
+        },
+        {
+          "step": 38,
+          "play_id": "4018730473702",
+          "qtr": 4,
+          "clock": "4:03",
+          "home_wp": 0.999,
+          "delta_wp": 0.0,
+          "label": "(Shotgun) K.Cousins pass short left to A.Jeanty pushed ob at LV 31 for -1 yards (D.Greenla",
+          "is_critical": false
+        },
+        {
+          "step": 39,
+          "play_id": "4018730473719",
+          "qtr": 4,
+          "clock": "3:57",
+          "home_wp": 0.6693,
+          "delta_wp": -0.3297,
+          "label": "Jugada:",
+          "is_critical": true
+        },
+        {
+          "step": 40,
+          "play_id": "4018730473735",
+          "qtr": 4,
+          "clock": "3:57",
+          "home_wp": 0.999,
+          "delta_wp": 0.3297,
+          "label": "Malik Mustapha INT a Kirk Cousins",
+          "is_critical": true
+        },
+        {
+          "step": 41,
+          "play_id": "4018730473769",
+          "qtr": 4,
+          "clock": "3:50",
+          "home_wp": 0.999,
+          "delta_wp": 0.0,
+          "label": "J.James up the middle to SF 29 for 2 yards (T.Johnson; N.Dean).",
+          "is_critical": false
+        },
+        {
+          "step": 42,
+          "play_id": "4018730473864",
+          "qtr": 4,
+          "clock": "1:19",
+          "home_wp": 0.999,
+          "delta_wp": 0.0,
+          "label": "M.Jones kneels to SF 36 for -1 yards.",
+          "is_critical": false
+        },
+        {
+          "step": 43,
+          "play_id": "4018730473886",
+          "qtr": 4,
+          "clock": "0:38",
+          "home_wp": 0.999,
+          "delta_wp": 0.0,
+          "label": "M.Jones kneels to SF 35 for -1 yards.",
+          "is_critical": false
+        }
+      ]
+    },
+    {
+      "event_id": "401873048",
+      "week": 9,
+      "season_type": "REG",
+      "name": "Arizona Cardinals at Seattle Seahawks",
+      "short_name": "ARI @ SEA",
+      "date": "2026-11-08T21:25Z",
+      "status": {
+        "state": "post",
+        "detail": "Final",
+        "period": 4,
+        "clock": "0:00",
+        "completed": true
+      },
+      "home_team": {
+        "id": "26",
+        "abbreviation": "SEA",
+        "name": "Seattle Seahawks",
+        "score": 17,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/sea.png"
+      },
+      "away_team": {
+        "id": "22",
+        "abbreviation": "ARI",
+        "name": "Arizona Cardinals",
+        "score": 3,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/ari.png"
+      },
+      "win_probability": {
+        "home_wp": 1.0,
+        "away_wp": 0.0
+      },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873048/cardinals-seahawks",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873048",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873048"
+      },
+      "critical_moments": [],
+      "hinge_play": {
+        "play_id": "4018730482046",
+        "qtr": 2,
+        "clock": "0:15",
+        "description": "(Shotgun) D.Lock pass short middle to A.Barner for 7 yards, TOUCHDOWN.The Replay Official reviewed the pass completion ruling, and the play was Upheld. The ruling on the field stands. J.Myers extra point is GOOD, Center-C.Stoll, Holder-M.Dickson.",
+        "home_wp_before": 0.8246,
+        "home_wp_after": 0.8846,
+        "delta_wp": 0.06,
+        "abs_delta_wp": 0.06,
+        "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873048",
+        "play_label": "Drew Lock a AJ Barner TD (7 yds)",
+        "video_query": "Drew Lock AJ Barner 7 yard touchdown Cardinals Seahawks",
+        "video_query_v2": "Drew Lock AJ Barner 7 yard touchdown Cardinals Seahawks",
+        "video_url": "https://www.youtube.com/results?search_query=Drew+Lock+AJ+Barner+7+yard+touchdown+Cardinals+Seahawks&sp=EgIYAQ%3D%3D",
+        "video_source": "Clip Puntual (<4m)",
+        "video_title": "Jugada Puntual: Drew Lock a AJ Barner TD (7 yds) (ARI @ SEA Q2)",
+        "has_direct_video": false,
+        "youtube_search_url": "https://www.youtube.com/results?search_query=Drew+Lock+AJ+Barner+7+yard+touchdown+Cardinals+Seahawks&sp=EgIYAQ%3D%3D",
+        "x_video_url": "https://x.com/search?q=Drew+Lock+AJ+Barner+7+yard+touchdown+Cardinals+Seahawks&f=video",
+        "exceeds_threshold": false
+      },
+      "wp_timeline": [
+        {
+          "step": 0,
+          "qtr": 1,
+          "clock": "15:00",
+          "home_wp": 0.5,
+          "delta_wp": 0.0,
+          "label": "Kickoff",
+          "is_critical": false
+        },
+        {
+          "step": 1,
+          "play_id": "40187304840",
+          "qtr": 1,
+          "clock": "15:00",
+          "home_wp": 0.6951,
+          "delta_wp": 0.0288,
+          "label": "C.Ryland kicks 62 yards from ARZ 35 to SEA 3. J.Price to SEA 37 for 34 yards (K.King).",
+          "is_critical": false
+        },
+        {
+          "step": 2,
+          "play_id": "401873048134",
+          "qtr": 1,
+          "clock": "14:26",
+          "home_wp": 0.6712,
+          "delta_wp": 0.0188,
+          "label": "M.Dickson punts 57 yards to ARZ 1, Center-C.Stoll, downed by SEA-C.Surratt.",
+          "is_critical": false
+        },
+        {
+          "step": 3,
+          "play_id": "401873048228",
+          "qtr": 1,
+          "clock": "12:36",
+          "home_wp": 0.6166,
+          "delta_wp": -0.0223,
+          "label": "(Shotgun) G.Minshew pass deep right to Mi.Wilson to ARZ 49 for 17 yards (D.Witherspoon).",
+          "is_critical": false
+        },
+        {
+          "step": 4,
+          "play_id": "401873048374",
+          "qtr": 1,
+          "clock": "10:11",
+          "home_wp": 0.5869,
+          "delta_wp": 0.0159,
+          "label": "(Shotgun) G.Minshew pass incomplete short right to T.Allgeier.",
+          "is_critical": false
+        },
+        {
+          "step": 5,
+          "play_id": "401873048447",
+          "qtr": 1,
+          "clock": "9:23",
+          "home_wp": 0.5997,
+          "delta_wp": 0.0,
+          "label": "C.Ryland kicks 65 yards from ARZ 35 to SEA 0. J.Price to SEA 22 for 22 yards (D.Taylor-Dem",
+          "is_critical": false
+        },
+        {
+          "step": 6,
+          "play_id": "401873048562",
+          "qtr": 1,
+          "clock": "7:36",
+          "home_wp": 0.643,
+          "delta_wp": 0.0167,
+          "label": "D.Lock pass short middle to J.Smith-Njigba to ARZ 47 for 8 yards (A.Wingard).",
+          "is_critical": false
+        },
+        {
+          "step": 7,
+          "play_id": "401873048668",
+          "qtr": 1,
+          "clock": "6:15",
+          "home_wp": 0.5654,
+          "delta_wp": -0.0003,
+          "label": "Official Timeout at 06:15.",
+          "is_critical": false
+        },
+        {
+          "step": 8,
+          "play_id": "401873048750",
+          "qtr": 1,
+          "clock": "4:46",
+          "home_wp": 0.617,
+          "delta_wp": -0.0014,
+          "label": "B.Gillikin punts 41 yards to SEA 42, Center-C.Kreiter, fair catch by T.Horton.",
+          "is_critical": false
+        },
+        {
+          "step": 9,
+          "play_id": "401873048834",
+          "qtr": 1,
+          "clock": "3:58",
+          "home_wp": 0.6399,
+          "delta_wp": 0.0513,
+          "label": "(Shotgun) D.Lock pass short left to J.Price pushed ob at ARZ 41 for 15 yards (B.Browning).",
+          "is_critical": false
+        },
+        {
+          "step": 10,
+          "play_id": "401873048933",
+          "qtr": 1,
+          "clock": "2:05",
+          "home_wp": 0.7061,
+          "delta_wp": 0.0393,
+          "label": "D.Lock pass short middle to Z.Charbonnet to ARZ 15 for 9 yards (B.Baker).",
+          "is_critical": false
+        },
+        {
+          "step": 11,
+          "play_id": "4018730481046",
+          "qtr": 2,
+          "clock": "15:00",
+          "home_wp": 0.7108,
+          "delta_wp": 0.005,
+          "label": "B.Hart and O.Oluwatimi reported in as eligible. Direct snap to A.Barner.  A.Barner up the ",
+          "is_critical": false
+        },
+        {
+          "step": 12,
+          "play_id": "4018730481159",
+          "qtr": 2,
+          "clock": "14:17",
+          "home_wp": 0.7306,
+          "delta_wp": -0.0058,
+          "label": "G.Minshew pass short middle to T.McBride to ARZ 20 for 3 yards (E.Jones).PENALTY on SEA-D.",
+          "is_critical": false
+        },
+        {
+          "step": 13,
+          "play_id": "4018730481271",
+          "qtr": 2,
+          "clock": "12:25",
+          "home_wp": 0.7692,
+          "delta_wp": -0.0011,
+          "label": "(Shotgun) T.Allgeier up the middle to ARZ 21 for 6 yards (C.O'Toole; D.Hall).",
+          "is_critical": false
+        },
+        {
+          "step": 14,
+          "play_id": "4018730481360",
+          "qtr": 2,
+          "clock": "11:04",
+          "home_wp": 0.7434,
+          "delta_wp": 0.0117,
+          "label": "(Shotgun) D.Lock pass short right to J.Price to SEA 22 for 6 yards (C.Simon).",
+          "is_critical": false
+        },
+        {
+          "step": 15,
+          "play_id": "4018730481447",
+          "qtr": 2,
+          "clock": "9:34",
+          "home_wp": 0.7153,
+          "delta_wp": -0.0066,
+          "label": "T.Allgeier left tackle to ARZ 33 for 6 yards (E.Jones).",
+          "is_critical": false
+        },
+        {
+          "step": 16,
+          "play_id": "4018730481546",
+          "qtr": 2,
+          "clock": "7:01",
+          "home_wp": 0.6954,
+          "delta_wp": 0.0232,
+          "label": "(Shotgun) T.Allgeier left end to SEA 37 for -2 yards (D.Hall).",
+          "is_critical": false
+        },
+        {
+          "step": 17,
+          "play_id": "4018730481622",
+          "qtr": 2,
+          "clock": "5:29",
+          "home_wp": 0.7548,
+          "delta_wp": 0.0196,
+          "label": "D.Lock pass short left to J.Price to SEA 26 for 17 yards (Ma.Wilson; B.Baker).",
+          "is_critical": false
+        },
+        {
+          "step": 18,
+          "play_id": "4018730481717",
+          "qtr": 2,
+          "clock": "3:22",
+          "home_wp": 0.7211,
+          "delta_wp": 0.0052,
+          "label": "M.Dickson punts 42 yards to ARZ 28, Center-C.Stoll, downed by SEA-E.Saubert.",
+          "is_critical": false
+        },
+        {
+          "step": 19,
+          "play_id": "4018730481794",
+          "qtr": 2,
+          "clock": "2:00",
+          "home_wp": 0.7632,
+          "delta_wp": 0.019,
+          "label": "(Shotgun) G.Minshew pass incomplete deep right to R.Virgil (E.Jones).",
+          "is_critical": false
+        },
+        {
+          "step": 20,
+          "play_id": "4018730481905",
+          "qtr": 2,
+          "clock": "1:02",
+          "home_wp": 0.7626,
+          "delta_wp": 0.0081,
+          "label": "(Shotgun) Z.Charbonnet right tackle to SEA 33 for 5 yards (M.Melton; B.Baker).",
+          "is_critical": false
+        },
+        {
+          "step": 21,
+          "play_id": "4018730482016",
+          "qtr": 2,
+          "clock": "0:26",
+          "home_wp": 0.8246,
+          "delta_wp": 0.0156,
+          "label": "(Shotgun) D.Lock pass short middle to J.Smith-Njigba pushed ob at ARZ 7 for 18 yards (B.Ba",
+          "is_critical": false
+        },
+        {
+          "step": 22,
+          "play_id": "4018730482207",
+          "qtr": 3,
+          "clock": "15:00",
+          "home_wp": 0.8701,
+          "delta_wp": -0.0156,
+          "label": "J.Myers kicks 60 yards from SEA 35 to ARZ 5. D.Duvernay to ARZ 22 for 17 yards (G.Holani).",
+          "is_critical": false
+        },
+        {
+          "step": 23,
+          "play_id": "4018730482299",
+          "qtr": 3,
+          "clock": "12:56",
+          "home_wp": 0.8839,
+          "delta_wp": 0.0127,
+          "label": "G.Minshew pass incomplete short right to E.Hull (J.Jobe).",
+          "is_critical": false
+        },
+        {
+          "step": 24,
+          "play_id": "4018730482387",
+          "qtr": 3,
+          "clock": "11:25",
+          "home_wp": 0.8931,
+          "delta_wp": 0.0003,
+          "label": "Official Timeout at 11:25.",
+          "is_critical": false
+        },
+        {
+          "step": 25,
+          "play_id": "4018730482478",
+          "qtr": 3,
+          "clock": "10:36",
+          "home_wp": 0.9111,
+          "delta_wp": -0.0012,
+          "label": "J.Price up the middle to SEA 42 for 5 yards (Ma.Wilson; Z.Collins).",
+          "is_critical": false
+        },
+        {
+          "step": 26,
+          "play_id": "4018730482583",
+          "qtr": 3,
+          "clock": "8:06",
+          "home_wp": 0.9152,
+          "delta_wp": 0.0022,
+          "label": "(Shotgun) Z.Charbonnet left end ran ob at ARZ 41 for 3 yards (Z.Collins).",
+          "is_critical": false
+        },
+        {
+          "step": 27,
+          "play_id": "4018730482702",
+          "qtr": 3,
+          "clock": "5:21",
+          "home_wp": 0.9237,
+          "delta_wp": 0.0015,
+          "label": "(Shotgun) Z.Charbonnet left tackle to ARZ 34 for 2 yards (J.Sweat).",
+          "is_critical": false
+        },
+        {
+          "step": 28,
+          "play_id": "4018730482783",
+          "qtr": 3,
+          "clock": "3:50",
+          "home_wp": 0.9349,
+          "delta_wp": -0.012,
+          "label": "J.Myers kicks 65 yards from SEA 35 to end zone, Touchback to the ARZ 35.PENALTY on SEA, Il",
+          "is_critical": false
+        },
+        {
+          "step": 29,
+          "play_id": "4018730482889",
+          "qtr": 3,
+          "clock": "1:50",
+          "home_wp": 0.9289,
+          "delta_wp": -0.0024,
+          "label": "(Shotgun) G.Minshew pass short middle to T.McBride to SEA 43 for 6 yards (D.Lawrence; T.Ok",
+          "is_critical": false
+        },
+        {
+          "step": 30,
+          "play_id": "4018730483000",
+          "qtr": 3,
+          "clock": "0:07",
+          "home_wp": 0.9581,
+          "delta_wp": -0.0003,
+          "label": "Z.Charbonnet up the middle to SEA 16 for 4 yards (L.Collier; A.Wingard).",
+          "is_critical": false
+        },
+        {
+          "step": 31,
+          "play_id": "4018730483112",
+          "qtr": 4,
+          "clock": "13:37",
+          "home_wp": 0.9656,
+          "delta_wp": 0.0053,
+          "label": "(Shotgun) PENALTY on ARZ-D.Robinson, Defensive Offside, 5 yards, enforced at SEA 26 - No P",
+          "is_critical": false
+        },
+        {
+          "step": 32,
+          "play_id": "4018730483205",
+          "qtr": 4,
+          "clock": "11:32",
+          "home_wp": 0.9697,
+          "delta_wp": -0.008,
+          "label": "(Shotgun) D.Lock pass short right to Z.Charbonnet to ARZ 22 for 25 yards (D.Burke).PENALTY",
+          "is_critical": false
+        },
+        {
+          "step": 33,
+          "play_id": "4018730483294",
+          "qtr": 4,
+          "clock": "10:43",
+          "home_wp": 0.9622,
+          "delta_wp": -0.0092,
+          "label": "(Shotgun) G.Minshew pass short right to T.McBride pushed ob at ARZ 42 for 19 yards (J.Love",
+          "is_critical": false
+        },
+        {
+          "step": 34,
+          "play_id": "4018730483419",
+          "qtr": 4,
+          "clock": "8:46",
+          "home_wp": 0.9517,
+          "delta_wp": -0.0076,
+          "label": "(Shotgun) G.Minshew pass short middle to E.Higgins to SEA 34 for 7 yards (J.Love).",
+          "is_critical": false
+        },
+        {
+          "step": 35,
+          "play_id": "4018730483531",
+          "qtr": 4,
+          "clock": "7:16",
+          "home_wp": 0.9257,
+          "delta_wp": -0.0193,
+          "label": "(Shotgun) G.Minshew pass short middle to Mi.Wilson to SEA 8 for 9 yards (D.Witherspoon; E.",
+          "is_critical": false
+        },
+        {
+          "step": 36,
+          "play_id": "4018730483626",
+          "qtr": 4,
+          "clock": "5:24",
+          "home_wp": 0.9515,
+          "delta_wp": 0.003,
+          "label": "(Shotgun) G.Minshew up the middle to SEA 2 for 4 yards (D.Witherspoon).",
+          "is_critical": false
+        },
+        {
+          "step": 37,
+          "play_id": "4018730483718",
+          "qtr": 4,
+          "clock": "4:35",
+          "home_wp": 0.9933,
+          "delta_wp": 0.0002,
+          "label": "Official Timeout at 04:35.",
+          "is_critical": false
+        },
+        {
+          "step": 38,
+          "play_id": "4018730483829",
+          "qtr": 4,
+          "clock": "4:12",
+          "home_wp": 0.9962,
+          "delta_wp": -0.0018,
+          "label": "Z.Charbonnet up the middle to SEA 31 for 2 yards (W.Nolen).",
+          "is_critical": false
+        },
+        {
+          "step": 39,
+          "play_id": "4018730483944",
+          "qtr": 4,
+          "clock": "1:18",
+          "home_wp": 0.999,
+          "delta_wp": 0.0,
+          "label": "D.Lock kneels to SEA 38 for -1 yards.",
+          "is_critical": false
+        },
+        {
+          "step": 40,
+          "play_id": "4018730483966",
+          "qtr": 4,
+          "clock": "0:38",
+          "home_wp": 0.999,
+          "delta_wp": 0.0,
+          "label": "D.Lock kneels to SEA 37 for -1 yards.",
           "is_critical": false
         }
       ]
@@ -40558,66 +40640,6 @@
           "home_wp": 1.0,
           "delta_wp": 0.0914,
           "label": "Resultado Final",
-          "is_critical": false
-        }
-      ]
-    },
-    {
-      "event_id": "401873050",
-      "week": 9,
-      "season_type": "REG",
-      "name": "Tampa Bay Buccaneers at Chicago Bears",
-      "short_name": "TB @ CHI",
-      "date": "2026-11-09T01:20Z",
-      "status": {
-        "state": "pre",
-        "detail": "11/8 - 8:20 PM EST",
-        "period": 0,
-        "clock": "0:00",
-        "completed": false
-      },
-      "home_team": {
-        "id": "3",
-        "abbreviation": "CHI",
-        "name": "Chicago Bears",
-        "score": 0,
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/chi.png"
-      },
-      "away_team": {
-        "id": "27",
-        "abbreviation": "TB",
-        "name": "Tampa Bay Buccaneers",
-        "score": 0,
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/tb.png"
-      },
-      "win_probability": {
-        "home_wp": 0.5,
-        "away_wp": 0.5
-      },
-      "game_links": {
-        "summary": "https://www.espn.com/nfl/game/_/gameId/401873050/buccaneers-bears",
-        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873050",
-        "recap": "https://www.espn.com/nfl/recap?gameId=401873050"
-      },
-      "critical_moments": [],
-      "hinge_play": null,
-      "wp_timeline": [
-        {
-          "step": 0,
-          "qtr": 1,
-          "clock": "15:00",
-          "home_wp": 0.5,
-          "delta_wp": 0.0,
-          "label": "Kickoff (Inicio 50/50)",
-          "is_critical": false
-        },
-        {
-          "step": 1,
-          "qtr": 4,
-          "clock": "0:00",
-          "home_wp": 0.5,
-          "delta_wp": 0.0,
-          "label": "Final del partido",
           "is_critical": false
         }
       ]
