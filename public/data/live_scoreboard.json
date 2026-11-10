@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-09T05:40:14.966440+00:00",
+  "updated_at": "2026-11-10T06:48:59.697440+00:00",
   "source": "ESPN JSON API",
   "season": 2026,
   "season_type": "REG",
@@ -17,7 +17,7 @@
     9
   ],
   "total_games": 136,
-  "completed_games": 135,
+  "completed_games": 136,
   "hinge_games_count": 96,
   "games": [
     {
@@ -6648,6 +6648,457 @@
           "home_wp": 1.0,
           "delta_wp": 0.0763,
           "label": "C.Santos 38 yard field goal is GOOD, Center-S.Daly, Holder-T.Taylor.\nPenalty on TB-A.Robin",
+          "is_critical": false
+        }
+      ]
+    },
+    {
+      "event_id": "401873051",
+      "week": 9,
+      "season_type": "REG",
+      "name": "Buffalo Bills at Minnesota Vikings",
+      "short_name": "BUF @ MIN",
+      "date": "2026-11-10T01:15Z",
+      "status": {
+        "state": "post",
+        "detail": "Final",
+        "period": 4,
+        "clock": "0:00",
+        "completed": true
+      },
+      "home_team": {
+        "id": "16",
+        "abbreviation": "MIN",
+        "name": "Minnesota Vikings",
+        "score": 6,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/min.png"
+      },
+      "away_team": {
+        "id": "2",
+        "abbreviation": "BUF",
+        "name": "Buffalo Bills",
+        "score": 23,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/buf.png"
+      },
+      "win_probability": {
+        "home_wp": 0.0,
+        "away_wp": 1.0
+      },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873051/bills-vikings",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873051",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873051"
+      },
+      "critical_moments": [],
+      "hinge_play": {
+        "play_id": "401873051569",
+        "qtr": 1,
+        "clock": "5:30",
+        "description": "C.Wentz pass incomplete short right to J.Jefferson.Buffalo challenged the forward pass ruling, and the play was REVERSED.C.Wentz FUMBLES (Aborted) at MIN 43, RECOVERED by BUF-G.Rousseau at MIN 44.",
+        "home_wp_before": 0.402,
+        "home_wp_after": 0.2985,
+        "delta_wp": -0.1035,
+        "abs_delta_wp": 0.1035,
+        "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873051",
+        "play_label": "Fumble: Carson Wentz / Greg Rousseau",
+        "video_query": "Carson Wentz Greg Rousseau fumble Bills Vikings",
+        "video_query_v2": "Carson Wentz Greg Rousseau fumble Bills Vikings",
+        "video_url": "https://www.youtube.com/results?search_query=Carson+Wentz+Greg+Rousseau+fumble+Bills+Vikings&sp=EgIYAQ%3D%3D",
+        "video_source": "Clip Puntual (<4m)",
+        "video_title": "Jugada Puntual: Fumble: Carson Wentz / Greg Rousseau (BUF @ MIN Q1)",
+        "has_direct_video": false,
+        "youtube_search_url": "https://www.youtube.com/results?search_query=Carson+Wentz+Greg+Rousseau+fumble+Bills+Vikings&sp=EgIYAQ%3D%3D",
+        "x_video_url": "https://x.com/search?q=Carson+Wentz+Greg+Rousseau+fumble+Bills+Vikings&f=video",
+        "exceeds_threshold": false
+      },
+      "wp_timeline": [
+        {
+          "step": 0,
+          "qtr": 1,
+          "clock": "15:00",
+          "home_wp": 0.5,
+          "delta_wp": 0.0,
+          "label": "Kickoff",
+          "is_critical": false
+        },
+        {
+          "step": 1,
+          "play_id": "40187305140",
+          "qtr": 1,
+          "clock": "15:00",
+          "home_wp": 0.2784,
+          "delta_wp": -0.0641,
+          "label": "W.Reichard kicks 59 yards from MIN 35 to BUF 6. G.Dortch to MIN 36 for 58 yards (I.Pace).",
+          "is_critical": false
+        },
+        {
+          "step": 2,
+          "play_id": "401873051152",
+          "qtr": 1,
+          "clock": "13:11",
+          "home_wp": 0.356,
+          "delta_wp": 0.0052,
+          "label": "T.Doman punts 47 yards to end zone, Center-R.Ferguson, Touchback.",
+          "is_critical": false
+        },
+        {
+          "step": 3,
+          "play_id": "401873051253",
+          "qtr": 1,
+          "clock": "11:33",
+          "home_wp": 0.3211,
+          "delta_wp": 0.0001,
+          "label": "Official Timeout at 11:33.",
+          "is_critical": false
+        },
+        {
+          "step": 4,
+          "play_id": "401873051365",
+          "qtr": 1,
+          "clock": "9:36",
+          "home_wp": 0.32,
+          "delta_wp": 0.0068,
+          "label": "(Shotgun) J.Cook left tackle to MIN 45 for 2 yards (B.Cashman).",
+          "is_critical": false
+        },
+        {
+          "step": 5,
+          "play_id": "401873051478",
+          "qtr": 1,
+          "clock": "6:34",
+          "home_wp": 0.328,
+          "delta_wp": 0.0619,
+          "label": "J.Allen pass incomplete short right [A.Van Ginkel].PENALTY on BUF-J.Allen, Intentional Gro",
+          "is_critical": false
+        },
+        {
+          "step": 6,
+          "play_id": "401873051556",
+          "qtr": 1,
+          "clock": "5:30",
+          "home_wp": 0.402,
+          "delta_wp": 0.0005,
+          "label": "Official Timeout at 05:30.",
+          "is_critical": false
+        },
+        {
+          "step": 7,
+          "play_id": "401873051569",
+          "qtr": 1,
+          "clock": "5:30",
+          "home_wp": 0.2985,
+          "delta_wp": -0.1035,
+          "label": "C.Wentz pass incomplete short right to J.Jefferson.Buffalo challenged the forward pass rul",
+          "is_critical": false
+        },
+        {
+          "step": 8,
+          "play_id": "401873051584",
+          "qtr": 1,
+          "clock": "5:27",
+          "home_wp": 0.2986,
+          "delta_wp": 0.0001,
+          "label": "Official Timeout at 05:27.",
+          "is_critical": false
+        },
+        {
+          "step": 9,
+          "play_id": "401873051746",
+          "qtr": 1,
+          "clock": "2:59",
+          "home_wp": 0.2621,
+          "delta_wp": -0.0283,
+          "label": "J.Allen pass short right to D.Knox to MIN 19 for 7 yards (J.Pierre).",
+          "is_critical": false
+        },
+        {
+          "step": 10,
+          "play_id": "401873051865",
+          "qtr": 1,
+          "clock": "1:48",
+          "home_wp": 0.3289,
+          "delta_wp": 0.0001,
+          "label": "(Shotgun) J.Mason right guard to 50 for 5 yards (D.Williams; B.Chubb).",
+          "is_critical": false
+        },
+        {
+          "step": 11,
+          "play_id": "401873051988",
+          "qtr": 1,
+          "clock": "0:53",
+          "home_wp": 0.3184,
+          "delta_wp": 0.0144,
+          "label": "J.Cook right end to BUF 12 for -1 yards (B.Cashman).",
+          "is_critical": false
+        },
+        {
+          "step": 12,
+          "play_id": "4018730511121",
+          "qtr": 2,
+          "clock": "14:14",
+          "home_wp": 0.2913,
+          "delta_wp": -0.0168,
+          "label": "(Shotgun) PENALTY on MIN-B.O'Neill, False Start, 5 yards, enforced at MIN 48 - No Play.",
+          "is_critical": false
+        },
+        {
+          "step": 13,
+          "play_id": "4018730511221",
+          "qtr": 2,
+          "clock": "13:26",
+          "home_wp": 0.3208,
+          "delta_wp": 0.0047,
+          "label": "J.Cook up the middle to BUF 9 for 1 yard (J.Redmond).",
+          "is_critical": false
+        },
+        {
+          "step": 14,
+          "play_id": "4018730511308",
+          "qtr": 2,
+          "clock": "11:55",
+          "home_wp": 0.3364,
+          "delta_wp": 0.0054,
+          "label": "C.Wentz sacked at MIN 40 for -2 yards (G.Rousseau).PENALTY on BUF-D.Hamlin, Defensive Hold",
+          "is_critical": false
+        },
+        {
+          "step": 15,
+          "play_id": "4018730511437",
+          "qtr": 2,
+          "clock": "9:00",
+          "home_wp": 0.2906,
+          "delta_wp": -0.0084,
+          "label": "(Shotgun) C.Wentz pass incomplete short right to J.Jefferson (G.Rousseau) [G.Rousseau].",
+          "is_critical": false
+        },
+        {
+          "step": 16,
+          "play_id": "4018730511539",
+          "qtr": 2,
+          "clock": "8:06",
+          "home_wp": 0.2874,
+          "delta_wp": -0.0179,
+          "label": "J.Allen pass short right to D.Knox to BUF 15 for 9 yards (J.Metellus).",
+          "is_critical": false
+        },
+        {
+          "step": 17,
+          "play_id": "4018730511639",
+          "qtr": 2,
+          "clock": "5:46",
+          "home_wp": 0.3737,
+          "delta_wp": 0.0112,
+          "label": "T.Doman punts 44 yards to BUF 46, Center-R.Ferguson. M.Price to BUF 34 for 12 yards (M.Hoe",
+          "is_critical": false
+        },
+        {
+          "step": 18,
+          "play_id": "4018730511818",
+          "qtr": 2,
+          "clock": "4:02",
+          "home_wp": 0.3686,
+          "delta_wp": 0.0028,
+          "label": "W.Reichard kicks 65 yards from MIN 35 to landing zone to end zone, Touchback to the BUF 20",
+          "is_critical": false
+        },
+        {
+          "step": 19,
+          "play_id": "4018730511936",
+          "qtr": 2,
+          "clock": "1:38",
+          "home_wp": 0.3283,
+          "delta_wp": -0.0019,
+          "label": "(No Huddle, Shotgun) J.Allen pass short right to K.Coleman to MIN 47 for 5 yards (B.Cashma",
+          "is_critical": false
+        },
+        {
+          "step": 20,
+          "play_id": "4018730512078",
+          "qtr": 2,
+          "clock": "0:44",
+          "home_wp": 0.187,
+          "delta_wp": -0.0087,
+          "label": "(Shotgun) C.Wentz pass incomplete deep middle to M.Price.",
+          "is_critical": false
+        },
+        {
+          "step": 21,
+          "play_id": "4018730512207",
+          "qtr": 2,
+          "clock": "0:14",
+          "home_wp": 0.2402,
+          "delta_wp": -0.0039,
+          "label": "(No Huddle) C.Wentz spiked the ball to stop the clock.",
+          "is_critical": false
+        },
+        {
+          "step": 22,
+          "play_id": "4018730512332",
+          "qtr": 3,
+          "clock": "15:00",
+          "home_wp": 0.3277,
+          "delta_wp": 0.0536,
+          "label": "T.Doman kicks 62 yards from BUF 35 to MIN 3. M.Price pushed ob at MIN 38 for 35 yards (T.C",
+          "is_critical": false
+        },
+        {
+          "step": 23,
+          "play_id": "4018730512469",
+          "qtr": 3,
+          "clock": "13:11",
+          "home_wp": 0.275,
+          "delta_wp": -0.0002,
+          "label": "Official Timeout at 13:11.",
+          "is_critical": false
+        },
+        {
+          "step": 24,
+          "play_id": "4018730512555",
+          "qtr": 3,
+          "clock": "11:14",
+          "home_wp": 0.2788,
+          "delta_wp": 0.0125,
+          "label": "J.Allen pass incomplete deep right to K.Coleman.",
+          "is_critical": false
+        },
+        {
+          "step": 25,
+          "play_id": "4018730512693",
+          "qtr": 3,
+          "clock": "8:59",
+          "home_wp": 0.167,
+          "delta_wp": -0.0106,
+          "label": "(Shotgun) J.Allen scrambles right guard to MIN 16 for 5 yards (L.Rodriguez; K.Van Noy).",
+          "is_critical": false
+        },
+        {
+          "step": 26,
+          "play_id": "4018730512797",
+          "qtr": 3,
+          "clock": "6:11",
+          "home_wp": 0.1695,
+          "delta_wp": -0.0001,
+          "label": "Official Timeout at 06:11.",
+          "is_critical": false
+        },
+        {
+          "step": 27,
+          "play_id": "4018730512905",
+          "qtr": 3,
+          "clock": "5:23",
+          "home_wp": 0.2261,
+          "delta_wp": 0.0079,
+          "label": "J.Mason right end pushed ob at MIN 48 for 11 yards (C.Bishop).",
+          "is_critical": false
+        },
+        {
+          "step": 28,
+          "play_id": "4018730513011",
+          "qtr": 3,
+          "clock": "3:32",
+          "home_wp": 0.163,
+          "delta_wp": 0.046,
+          "label": "(No Huddle, Shotgun) J.Allen sacked at MIN 48 for -9 yards (I.Pace).",
+          "is_critical": false
+        },
+        {
+          "step": 29,
+          "play_id": "4018730513145",
+          "qtr": 3,
+          "clock": "0:58",
+          "home_wp": 0.1696,
+          "delta_wp": 0.0029,
+          "label": "(Punt formation) PENALTY on BUF-D.Williams, False Start, 5 yards, enforced at MIN 41 - No ",
+          "is_critical": false
+        },
+        {
+          "step": 30,
+          "play_id": "4018730513285",
+          "qtr": 4,
+          "clock": "15:00",
+          "home_wp": 0.1535,
+          "delta_wp": 0.0325,
+          "label": "B.Thorson punts 66 yards to BUF 10, Center-A.DePaola. G.Dortch to BUF 16 for 6 yards (B.Ri",
+          "is_critical": false
+        },
+        {
+          "step": 31,
+          "play_id": "4018730513419",
+          "qtr": 4,
+          "clock": "12:13",
+          "home_wp": 0.097,
+          "delta_wp": -0.0223,
+          "label": "J.Cook left guard to MIN 47 for 9 yards (I.Pace; L.Rodriguez).",
+          "is_critical": false
+        },
+        {
+          "step": 32,
+          "play_id": "4018730513582",
+          "qtr": 4,
+          "clock": "9:35",
+          "home_wp": 0.0747,
+          "delta_wp": 0.0009,
+          "label": "J.Cook left guard to MIN 34 for 3 yards (E.Williams).",
+          "is_critical": false
+        },
+        {
+          "step": 33,
+          "play_id": "4018730513698",
+          "qtr": 4,
+          "clock": "6:17",
+          "home_wp": 0.0129,
+          "delta_wp": -0.0148,
+          "label": "J.Cook up the middle for 5 yards, TOUCHDOWN. T.Bass extra point is GOOD, Center-R.Ferguson",
+          "is_critical": false
+        },
+        {
+          "step": 34,
+          "play_id": "4018730513809",
+          "qtr": 4,
+          "clock": "5:47",
+          "home_wp": 0.0053,
+          "delta_wp": -0.0102,
+          "label": "(Shotgun) C.Wentz pass incomplete deep left to J.Jefferson (D.Igbinosun) [E.Oliver].",
+          "is_critical": false
+        },
+        {
+          "step": 35,
+          "play_id": "4018730513935",
+          "qtr": 4,
+          "clock": "4:40",
+          "home_wp": 0.001,
+          "delta_wp": -0.0053,
+          "label": "T.Bass 52 yard field goal is GOOD, Center-R.Ferguson, Holder-T.Doman.",
+          "is_critical": false
+        },
+        {
+          "step": 36,
+          "play_id": "4018730514045",
+          "qtr": 4,
+          "clock": "3:50",
+          "home_wp": 0.0021,
+          "delta_wp": 0.0011,
+          "label": "(Shotgun) M.Brosmer pass short right to J.Jefferson to BUF 22 for 19 yards (D.Hamlin).",
+          "is_critical": false
+        },
+        {
+          "step": 37,
+          "play_id": "4018730514179",
+          "qtr": 4,
+          "clock": "1:54",
+          "home_wp": 0.001,
+          "delta_wp": 0.0,
+          "label": "K.Allen kneels to BUF 13 for no gain.",
+          "is_critical": false
+        },
+        {
+          "step": 38,
+          "play_id": "4018730514223",
+          "qtr": 4,
+          "clock": "0:33",
+          "home_wp": 0.001,
+          "delta_wp": 0.0,
+          "label": "K.Allen kneels to BUF 11 for -1 yards.",
           "is_critical": false
         }
       ]
@@ -40821,66 +41272,6 @@
           "home_wp": 1.0,
           "delta_wp": 0.0914,
           "label": "Resultado Final",
-          "is_critical": false
-        }
-      ]
-    },
-    {
-      "event_id": "401873051",
-      "week": 9,
-      "season_type": "REG",
-      "name": "Buffalo Bills at Minnesota Vikings",
-      "short_name": "BUF @ MIN",
-      "date": "2026-11-10T01:15Z",
-      "status": {
-        "state": "pre",
-        "detail": "11/9 - 8:15 PM EST",
-        "period": 0,
-        "clock": "0:00",
-        "completed": false
-      },
-      "home_team": {
-        "id": "16",
-        "abbreviation": "MIN",
-        "name": "Minnesota Vikings",
-        "score": 0,
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/min.png"
-      },
-      "away_team": {
-        "id": "2",
-        "abbreviation": "BUF",
-        "name": "Buffalo Bills",
-        "score": 0,
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/buf.png"
-      },
-      "win_probability": {
-        "home_wp": 0.5,
-        "away_wp": 0.5
-      },
-      "game_links": {
-        "summary": "https://www.espn.com/nfl/game/_/gameId/401873051/bills-vikings",
-        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873051",
-        "recap": "https://www.espn.com/nfl/recap?gameId=401873051"
-      },
-      "critical_moments": [],
-      "hinge_play": null,
-      "wp_timeline": [
-        {
-          "step": 0,
-          "qtr": 1,
-          "clock": "15:00",
-          "home_wp": 0.5,
-          "delta_wp": 0.0,
-          "label": "Kickoff (Inicio 50/50)",
-          "is_critical": false
-        },
-        {
-          "step": 1,
-          "qtr": 4,
-          "clock": "0:00",
-          "home_wp": 0.5,
-          "delta_wp": 0.0,
-          "label": "Final del partido",
           "is_critical": false
         }
       ]
