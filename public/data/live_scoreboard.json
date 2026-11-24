@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-23T06:53:33.358904+00:00",
+  "updated_at": "2026-11-24T09:20:15.274065+00:00",
   "source": "ESPN JSON API",
   "season": 2026,
   "season_type": "REG",
@@ -19,8 +19,8 @@
     11
   ],
   "total_games": 163,
-  "completed_games": 162,
-  "hinge_games_count": 111,
+  "completed_games": 163,
+  "hinge_games_count": 112,
   "games": [
     {
       "event_id": "401873066",
@@ -5545,6 +5545,498 @@
           "home_wp": 0.999,
           "delta_wp": 0.0,
           "label": "M.Jones kneels to SF 18 for no gain.",
+          "is_critical": false
+        }
+      ]
+    },
+    {
+      "event_id": "401873078",
+      "week": 11,
+      "season_type": "REG",
+      "name": "Cincinnati Bengals at Washington Commanders",
+      "short_name": "CIN @ WSH",
+      "date": "2026-11-24T01:15Z",
+      "status": {
+        "state": "post",
+        "detail": "Final",
+        "period": 4,
+        "clock": "0:00",
+        "completed": true
+      },
+      "home_team": {
+        "id": "28",
+        "abbreviation": "WSH",
+        "name": "Washington Commanders",
+        "score": 22,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/wsh.png"
+      },
+      "away_team": {
+        "id": "4",
+        "abbreviation": "CIN",
+        "name": "Cincinnati Bengals",
+        "score": 20,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/cin.png"
+      },
+      "win_probability": {
+        "home_wp": 1.0,
+        "away_wp": 0.0
+      },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873078/bengals-commanders",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873078",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873078"
+      },
+      "critical_moments": [
+        {
+          "play_id": "4018730783966",
+          "qtr": 4,
+          "clock": "0:46",
+          "description": "E.McPherson 56 yard field goal is GOOD, Center-W.Wagner, Holder-R.Rehkow.",
+          "home_wp_before": 0.7776,
+          "home_wp_after": 0.1197,
+          "delta_wp": -0.6579,
+          "abs_delta_wp": 0.6579,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873078",
+          "play_label": "Evan McPherson FG 56 yds",
+          "video_query": "Evan McPherson 56 yard field goal Bengals Commanders",
+          "video_query_v2": "Evan McPherson 56 yard field goal Bengals Commanders",
+          "video_url": "https://www.youtube.com/results?search_query=Evan+McPherson+56+yard+field+goal+Bengals+Commanders&sp=EgIYAQ%3D%3D",
+          "video_source": "Clip Puntual (<4m)",
+          "video_title": "Jugada Puntual: Evan McPherson FG 56 yds (CIN @ WSH Q4)",
+          "has_direct_video": false,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=Evan+McPherson+56+yard+field+goal+Bengals+Commanders&sp=EgIYAQ%3D%3D",
+          "x_video_url": "https://x.com/search?q=Evan+McPherson+56+yard+field+goal+Bengals+Commanders&f=video"
+        },
+        {
+          "play_id": "4018730784070",
+          "qtr": 4,
+          "clock": "0:23",
+          "description": "(Shotgun) J.Daniels pass deep middle to A.Williams to CIN 8 for 42 yards (D.Turner).",
+          "home_wp_before": 0.2751,
+          "home_wp_after": 0.7998,
+          "delta_wp": 0.5247,
+          "abs_delta_wp": 0.5247,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873078",
+          "play_label": "Jayden Daniels a Antonio Williams (42 yds)",
+          "video_query": "Jayden Daniels Antonio Williams 42 yard catch Bengals Commanders",
+          "video_query_v2": "Jayden Daniels Antonio Williams 42 yard catch Bengals Commanders",
+          "video_url": "https://x.com/NFL/status/2125081616204599547",
+          "video_source": "ESPN Video Oficial",
+          "video_title": "Clip Oficial: found him again for a 42-yard catch-and-run",
+          "has_direct_video": true,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=Jayden+Daniels+Antonio+Williams+42+yard+catch+Bengals+Commanders&sp=EgIYAQ%3D%3D",
+          "x_video_url": "https://x.com/NFL/status/2125081616204599547"
+        },
+        {
+          "play_id": "4018730783939",
+          "qtr": 4,
+          "clock": "1:35",
+          "description": "(Shotgun) J.Burrow sacked at WAS 37 for -7 yards (sack split by N.Cross and K.Medrano). ** Injury Update: WAS-R.Douglas has returned to the game.",
+          "home_wp_before": 0.3771,
+          "home_wp_after": 0.6693,
+          "delta_wp": 0.2922,
+          "abs_delta_wp": 0.2922,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873078",
+          "play_label": "Defensa captura a Joe Burrow",
+          "video_query": "Joe Burrow sack Bengals Commanders",
+          "video_query_v2": "Joe Burrow sack Bengals Commanders",
+          "video_url": "https://www.youtube.com/results?search_query=Joe+Burrow+sack+Bengals+Commanders&sp=EgIYAQ%3D%3D",
+          "video_source": "Clip Puntual (<4m)",
+          "video_title": "Jugada Puntual: Defensa captura a Joe Burrow (CIN @ WSH Q4)",
+          "has_direct_video": false,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=Joe+Burrow+sack+Bengals+Commanders&sp=EgIYAQ%3D%3D",
+          "x_video_url": "https://x.com/search?q=Joe+Burrow+sack+Bengals+Commanders&f=video"
+        }
+      ],
+      "hinge_play": {
+        "play_id": "4018730783966",
+        "qtr": 4,
+        "clock": "0:46",
+        "description": "E.McPherson 56 yard field goal is GOOD, Center-W.Wagner, Holder-R.Rehkow.",
+        "home_wp_before": 0.7776,
+        "home_wp_after": 0.1197,
+        "delta_wp": -0.6579,
+        "abs_delta_wp": 0.6579,
+        "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873078",
+        "play_label": "Evan McPherson FG 56 yds",
+        "video_query": "Evan McPherson 56 yard field goal Bengals Commanders",
+        "video_query_v2": "Evan McPherson 56 yard field goal Bengals Commanders",
+        "video_url": "https://www.youtube.com/results?search_query=Evan+McPherson+56+yard+field+goal+Bengals+Commanders&sp=EgIYAQ%3D%3D",
+        "video_source": "Clip Puntual (<4m)",
+        "video_title": "Jugada Puntual: Evan McPherson FG 56 yds (CIN @ WSH Q4)",
+        "has_direct_video": false,
+        "youtube_search_url": "https://www.youtube.com/results?search_query=Evan+McPherson+56+yard+field+goal+Bengals+Commanders&sp=EgIYAQ%3D%3D",
+        "x_video_url": "https://x.com/search?q=Evan+McPherson+56+yard+field+goal+Bengals+Commanders&f=video",
+        "exceeds_threshold": true
+      },
+      "wp_timeline": [
+        {
+          "step": 0,
+          "qtr": 1,
+          "clock": "15:00",
+          "home_wp": 0.5,
+          "delta_wp": 0.0,
+          "label": "Kickoff",
+          "is_critical": false
+        },
+        {
+          "step": 1,
+          "play_id": "40187307840",
+          "qtr": 1,
+          "clock": "15:00",
+          "home_wp": 0.2408,
+          "delta_wp": -0.0128,
+          "label": "D.Stevens kicks 65 yards from WAS 35 to CIN 0. D.Meyers to CIN 24 for 24 yards (K.Medrano;",
+          "is_critical": false
+        },
+        {
+          "step": 2,
+          "play_id": "401873078199",
+          "qtr": 1,
+          "clock": "11:43",
+          "home_wp": 0.2312,
+          "delta_wp": -0.0141,
+          "label": "(Shotgun) J.Daniels pass incomplete short left to C.Okonkwo.",
+          "is_critical": false
+        },
+        {
+          "step": 3,
+          "play_id": "401873078359",
+          "qtr": 1,
+          "clock": "9:09",
+          "home_wp": 0.2624,
+          "delta_wp": 0.0121,
+          "label": "(Shotgun) J.Burrow pass incomplete short middle to M.Gesicki (J.Reaves).",
+          "is_critical": false
+        },
+        {
+          "step": 4,
+          "play_id": "401873078500",
+          "qtr": 1,
+          "clock": "7:26",
+          "home_wp": 0.2637,
+          "delta_wp": -0.023,
+          "label": "(Shotgun) PENALTY on WAS-J.Conerly, False Start, 5 yards, enforced at WAS 30 - No Play.",
+          "is_critical": false
+        },
+        {
+          "step": 5,
+          "play_id": "401873078673",
+          "qtr": 1,
+          "clock": "4:33",
+          "home_wp": 0.2786,
+          "delta_wp": 0.0151,
+          "label": "(Shotgun) C.Brown up the middle to CIN 19 for 1 yard (T.Settle).",
+          "is_critical": false
+        },
+        {
+          "step": 6,
+          "play_id": "401873078851",
+          "qtr": 1,
+          "clock": "0:58",
+          "home_wp": 0.3195,
+          "delta_wp": -0.0144,
+          "label": "(Shotgun) J.Daniels pass short right to A.Ekeler to CIN 43 for 2 yards (D.Hill; S.Bozeman)",
+          "is_critical": false
+        },
+        {
+          "step": 7,
+          "play_id": "4018730781017",
+          "qtr": 2,
+          "clock": "12:51",
+          "home_wp": 0.2822,
+          "delta_wp": 0.0186,
+          "label": "(Shotgun) J.Burrow pass incomplete short middle to C.Brown.",
+          "is_critical": false
+        },
+        {
+          "step": 8,
+          "play_id": "4018730781204",
+          "qtr": 2,
+          "clock": "8:39",
+          "home_wp": 0.2831,
+          "delta_wp": 0.047,
+          "label": "(Shotgun) J.Burrow pass incomplete deep left to D.Meyers.",
+          "is_critical": false
+        },
+        {
+          "step": 9,
+          "play_id": "4018730781342",
+          "qtr": 2,
+          "clock": "6:17",
+          "home_wp": 0.2492,
+          "delta_wp": 0.0076,
+          "label": "E.McPherson kicks 59 yards from CIN 35 to WAS 6. L.McCaffrey to WAS 29 for 23 yards (J.Kis",
+          "is_critical": false
+        },
+        {
+          "step": 10,
+          "play_id": "4018730781524",
+          "qtr": 2,
+          "clock": "3:02",
+          "home_wp": 0.1758,
+          "delta_wp": -0.0749,
+          "label": "(Shotgun) J.Burrow pass short middle to S.Perine pushed ob at WAS 34 for 44 yards (J.Reave",
+          "is_critical": false
+        },
+        {
+          "step": 11,
+          "play_id": "4018730781714",
+          "qtr": 2,
+          "clock": "1:39",
+          "home_wp": 0.115,
+          "delta_wp": -0.0039,
+          "label": "(Shotgun) J.Daniels pass short right to A.Ekeler to WAS 39 for 1 yard (D.Turner).",
+          "is_critical": false
+        },
+        {
+          "step": 12,
+          "play_id": "4018730781923",
+          "qtr": 2,
+          "clock": "0:12",
+          "home_wp": 0.2363,
+          "delta_wp": 0.061,
+          "label": "N.Allegretti and A.Wylie reported in as eligible.  J.Croskey-Merritt left guard for 1 yard",
+          "is_critical": false
+        },
+        {
+          "step": 13,
+          "play_id": "4018730782127",
+          "qtr": 3,
+          "clock": "12:52",
+          "home_wp": 0.3377,
+          "delta_wp": -0.0191,
+          "label": "(Shotgun) J.Croskey-Merritt right guard to CIN 13 for 1 yard (J.Allen).",
+          "is_critical": false
+        },
+        {
+          "step": 14,
+          "play_id": "4018730782246",
+          "qtr": 3,
+          "clock": "11:47",
+          "home_wp": 0.3018,
+          "delta_wp": -0.0141,
+          "label": "D.Stevens kicks 62 yards from WAS 35 to CIN 3. D.Meyers to CIN 34 for 31 yards (L.McCaffre",
+          "is_critical": false
+        },
+        {
+          "step": 15,
+          "play_id": "4018730782452",
+          "qtr": 3,
+          "clock": "8:32",
+          "home_wp": 0.2175,
+          "delta_wp": -0.0038,
+          "label": "(Shotgun) J.Burrow pass short left to C.Brown to WAS 13 for 5 yards (R.Douglas; S.Tuttle).",
+          "is_critical": false
+        },
+        {
+          "step": 16,
+          "play_id": "4018730782620",
+          "qtr": 3,
+          "clock": "5:42",
+          "home_wp": 0.205,
+          "delta_wp": 0.025,
+          "label": "(Shotgun) J.Daniels pass short left to T.Burks to CIN 39 for 13 yards (D.Turner).",
+          "is_critical": false
+        },
+        {
+          "step": 17,
+          "play_id": "4018730782769",
+          "qtr": 3,
+          "clock": "2:36",
+          "home_wp": 0.2011,
+          "delta_wp": 0.0,
+          "label": "Official Timeout at 02:36.",
+          "is_critical": false
+        },
+        {
+          "step": 18,
+          "play_id": "4018730782918",
+          "qtr": 3,
+          "clock": "0:53",
+          "home_wp": 0.2037,
+          "delta_wp": -0.0509,
+          "label": "A.Ekeler left end pushed ob at WAS 43 for 6 yards (D.Lawrence).PENALTY on WAS-J.Bates, Off",
+          "is_critical": false
+        },
+        {
+          "step": 19,
+          "play_id": "4018730783142",
+          "qtr": 4,
+          "clock": "13:09",
+          "home_wp": 0.3659,
+          "delta_wp": 0.0164,
+          "label": "J.Croskey-Merritt left guard to CIN 16 for 4 yards (J.Allen; B.Mafe).",
+          "is_critical": false
+        },
+        {
+          "step": 20,
+          "play_id": "4018730783300",
+          "qtr": 4,
+          "clock": "10:32",
+          "home_wp": 0.3042,
+          "delta_wp": 0.0,
+          "label": "Official Timeout at 10:32.",
+          "is_critical": false
+        },
+        {
+          "step": 21,
+          "play_id": "4018730783478",
+          "qtr": 4,
+          "clock": "8:38",
+          "home_wp": 0.3457,
+          "delta_wp": -0.0058,
+          "label": "R.Rehkow punts 57 yards to end zone, Center-W.Wagner, Touchback.",
+          "is_critical": false
+        },
+        {
+          "step": 22,
+          "play_id": "4018730783586",
+          "qtr": 4,
+          "clock": "6:53",
+          "home_wp": 0.2846,
+          "delta_wp": -0.0149,
+          "label": "(Shotgun) J.Daniels pass incomplete short left to J.Croskey-Merritt.",
+          "is_critical": false
+        },
+        {
+          "step": 23,
+          "play_id": "4018730783609",
+          "qtr": 4,
+          "clock": "6:48",
+          "home_wp": 0.4367,
+          "delta_wp": 0.1521,
+          "label": "(Shotgun) J.Daniels pass deep middle to S.Diggs to CIN 46 for 29 yards (J.Newton).",
+          "is_critical": true
+        },
+        {
+          "step": 24,
+          "play_id": "4018730783634",
+          "qtr": 4,
+          "clock": "6:02",
+          "home_wp": 0.4435,
+          "delta_wp": 0.0068,
+          "label": "A.Ekeler left end to CIN 42 for 4 yards (D.Lawrence; B.Carter).",
+          "is_critical": false
+        },
+        {
+          "step": 25,
+          "play_id": "4018730783800",
+          "qtr": 4,
+          "clock": "2:26",
+          "home_wp": 0.524,
+          "delta_wp": -0.0048,
+          "label": "D.Stevens kicks 61 yards from WAS 35 to CIN 4. D.Meyers to CIN 23 for 19 yards (J.Magee; C",
+          "is_critical": false
+        },
+        {
+          "step": 26,
+          "play_id": "4018730783823",
+          "qtr": 4,
+          "clock": "2:20",
+          "home_wp": 0.4753,
+          "delta_wp": -0.0487,
+          "label": "(Shotgun) J.Burrow pass short left to T.Higgins to CIN 35 for 12 yards (N.Cross).",
+          "is_critical": false
+        },
+        {
+          "step": 27,
+          "play_id": "4018730783848",
+          "qtr": 4,
+          "clock": "2:00",
+          "home_wp": 0.3417,
+          "delta_wp": -0.1363,
+          "label": "(Shotgun) J.Burrow pass deep right to M.Gesicki to WAS 33 for 32 yards (J.Reaves).",
+          "is_critical": true
+        },
+        {
+          "step": 28,
+          "play_id": "4018730783909",
+          "qtr": 4,
+          "clock": "1:39",
+          "home_wp": 0.3863,
+          "delta_wp": 0.0509,
+          "label": "(Shotgun) J.Burrow pass incomplete short left to J.Chase. WAS-R.Douglas was injured during",
+          "is_critical": false
+        },
+        {
+          "step": 29,
+          "play_id": "4018730783939",
+          "qtr": 4,
+          "clock": "1:35",
+          "home_wp": 0.6693,
+          "delta_wp": 0.2922,
+          "label": "Defensa captura a Joe Burrow",
+          "is_critical": true
+        },
+        {
+          "step": 30,
+          "play_id": "4018730783966",
+          "qtr": 4,
+          "clock": "0:46",
+          "home_wp": 0.1197,
+          "delta_wp": -0.6579,
+          "label": "Evan McPherson FG 56 yds",
+          "is_critical": true
+        },
+        {
+          "step": 31,
+          "play_id": "4018730783999",
+          "qtr": 4,
+          "clock": "0:46",
+          "home_wp": 0.1759,
+          "delta_wp": 0.0562,
+          "label": "E.McPherson kicks 59 yards from CIN 35 to WAS 6. L.McCaffrey to WAS 28 for 22 yards (R.Yea",
+          "is_critical": false
+        },
+        {
+          "step": 32,
+          "play_id": "4018730784022",
+          "qtr": 4,
+          "clock": "0:39",
+          "home_wp": 0.4015,
+          "delta_wp": 0.2256,
+          "label": "(Shotgun) J.Daniels pass deep middle to A.Williams to 50 for 22 yards (B.Cook) [J.Allen].",
+          "is_critical": true
+        },
+        {
+          "step": 33,
+          "play_id": "4018730784047",
+          "qtr": 4,
+          "clock": "0:24",
+          "home_wp": 0.2751,
+          "delta_wp": -0.1264,
+          "label": "(No Huddle) J.Daniels spiked the ball to stop the clock.",
+          "is_critical": true
+        },
+        {
+          "step": 34,
+          "play_id": "4018730784070",
+          "qtr": 4,
+          "clock": "0:23",
+          "home_wp": 0.7998,
+          "delta_wp": 0.5247,
+          "label": "Jayden Daniels a Antonio Williams (42 yds)",
+          "is_critical": true
+        },
+        {
+          "step": 35,
+          "play_id": "4018730784095",
+          "qtr": 4,
+          "clock": "0:05",
+          "home_wp": 0.9068,
+          "delta_wp": 0.107,
+          "label": "(No Huddle) J.Daniels spiked the ball to stop the clock.",
+          "is_critical": false
+        },
+        {
+          "step": 36,
+          "play_id": "4018730784118",
+          "qtr": 4,
+          "clock": "0:00",
+          "home_wp": 1.0,
+          "delta_wp": 0.0932,
+          "label": "D.Stevens 26 yard field goal is GOOD, Center-T.Ott, Holder-T.Way.",
           "is_critical": false
         }
       ]
@@ -53345,66 +53837,6 @@
           "home_wp": 1.0,
           "delta_wp": 0.0914,
           "label": "Resultado Final",
-          "is_critical": false
-        }
-      ]
-    },
-    {
-      "event_id": "401873078",
-      "week": 11,
-      "season_type": "REG",
-      "name": "Cincinnati Bengals at Washington Commanders",
-      "short_name": "CIN @ WSH",
-      "date": "2026-11-24T01:15Z",
-      "status": {
-        "state": "pre",
-        "detail": "11/23 - 8:15 PM EST",
-        "period": 0,
-        "clock": "0:00",
-        "completed": false
-      },
-      "home_team": {
-        "id": "28",
-        "abbreviation": "WSH",
-        "name": "Washington Commanders",
-        "score": 0,
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/wsh.png"
-      },
-      "away_team": {
-        "id": "4",
-        "abbreviation": "CIN",
-        "name": "Cincinnati Bengals",
-        "score": 0,
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/cin.png"
-      },
-      "win_probability": {
-        "home_wp": 0.5,
-        "away_wp": 0.5
-      },
-      "game_links": {
-        "summary": "https://www.espn.com/nfl/game/_/gameId/401873078/bengals-commanders",
-        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873078",
-        "recap": "https://www.espn.com/nfl/recap?gameId=401873078"
-      },
-      "critical_moments": [],
-      "hinge_play": null,
-      "wp_timeline": [
-        {
-          "step": 0,
-          "qtr": 1,
-          "clock": "15:00",
-          "home_wp": 0.5,
-          "delta_wp": 0.0,
-          "label": "Kickoff (Inicio 50/50)",
-          "is_critical": false
-        },
-        {
-          "step": 1,
-          "qtr": 4,
-          "clock": "0:00",
-          "home_wp": 0.5,
-          "delta_wp": 0.0,
-          "label": "Final del partido",
           "is_critical": false
         }
       ]
