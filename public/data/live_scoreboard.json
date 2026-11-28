@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-27T07:44:10.983860+00:00",
+  "updated_at": "2026-11-28T20:45:13.623626+00:00",
   "source": "ESPN JSON API",
   "season": 2026,
   "season_type": "REG",
@@ -20,8 +20,8 @@
     12
   ],
   "total_games": 179,
-  "completed_games": 167,
-  "hinge_games_count": 115,
+  "completed_games": 168,
+  "hinge_games_count": 116,
   "games": [
     {
       "event_id": "401873079",
@@ -1867,6 +1867,478 @@
           "delta_wp": 0.3858,
           "label": "Tyler Bass FG 57 yds",
           "is_critical": true
+        }
+      ]
+    },
+    {
+      "event_id": "401873083",
+      "week": 12,
+      "season_type": "REG",
+      "name": "Denver Broncos at Pittsburgh Steelers",
+      "short_name": "DEN @ PIT",
+      "date": "2026-11-27T20:00Z",
+      "status": {
+        "state": "post",
+        "detail": "Final",
+        "period": 4,
+        "clock": "0:00",
+        "completed": true
+      },
+      "home_team": {
+        "id": "23",
+        "abbreviation": "PIT",
+        "name": "Pittsburgh Steelers",
+        "score": 27,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/pit.png"
+      },
+      "away_team": {
+        "id": "7",
+        "abbreviation": "DEN",
+        "name": "Denver Broncos",
+        "score": 5,
+        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/den.png"
+      },
+      "win_probability": {
+        "home_wp": 1.0,
+        "away_wp": 0.0
+      },
+      "game_links": {
+        "summary": "https://www.espn.com/nfl/game/_/gameId/401873083/broncos-steelers",
+        "recap": "https://www.espn.com/nfl/recap?gameId=401873083",
+        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873083"
+      },
+      "critical_moments": [
+        {
+          "play_id": "401873083512",
+          "qtr": 1,
+          "clock": "6:03",
+          "description": "(Shotgun) B.Nix sacked at DEN 6 for -13 yards. FUMBLES, RECOVERED by PIT-T.Watt at DEN -3. TOUCHDOWN. C.Boswell extra point is GOOD, Center-C.Kuntz, Holder-C.Johnston.",
+          "home_wp_before": 0.5388,
+          "home_wp_after": 0.6744,
+          "delta_wp": 0.1356,
+          "abs_delta_wp": 0.1356,
+          "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873083",
+          "play_label": "Fumble: Bo Nix / T.J. Watt",
+          "video_query": "Bo Nix T.J. Watt fumble return touchdown Broncos Steelers",
+          "video_query_v2": "Bo Nix T.J. Watt fumble return touchdown Broncos Steelers",
+          "video_url": "https://espnmedia-cdn.akamaized.net/espn/media/16x9/wsc/2026/1127/f441c1ef-08ad-4933-ace8-2d4362bc1c25/f441c1ef-08ad-4933-ace8-2d4362bc1c25.mp4",
+          "video_source": "ESPN Video Oficial",
+          "video_title": "T.J. Watt recovers Bo Nix's fumble for a Steelers TD",
+          "has_direct_video": true,
+          "youtube_search_url": "https://www.youtube.com/results?search_query=Bo+Nix+T.J.+Watt+fumble+return+touchdown+Broncos+Steelers&sp=EgIYAQ%3D%3D",
+          "x_video_url": "https://x.com/search?q=Bo+Nix+T.J.+Watt+fumble+return+touchdown+Broncos+Steelers&f=video"
+        }
+      ],
+      "hinge_play": {
+        "play_id": "401873083512",
+        "qtr": 1,
+        "clock": "6:03",
+        "description": "(Shotgun) B.Nix sacked at DEN 6 for -13 yards. FUMBLES, RECOVERED by PIT-T.Watt at DEN -3. TOUCHDOWN. C.Boswell extra point is GOOD, Center-C.Kuntz, Holder-C.Johnston.",
+        "home_wp_before": 0.5388,
+        "home_wp_after": 0.6744,
+        "delta_wp": 0.1356,
+        "abs_delta_wp": 0.1356,
+        "espn_play_url": "https://www.espn.com/nfl/playbyplay/_/gameId/401873083",
+        "play_label": "Fumble: Bo Nix / T.J. Watt",
+        "video_query": "Bo Nix T.J. Watt fumble return touchdown Broncos Steelers",
+        "video_query_v2": "Bo Nix T.J. Watt fumble return touchdown Broncos Steelers",
+        "video_url": "https://espnmedia-cdn.akamaized.net/espn/media/16x9/wsc/2026/1127/f441c1ef-08ad-4933-ace8-2d4362bc1c25/f441c1ef-08ad-4933-ace8-2d4362bc1c25.mp4",
+        "video_source": "ESPN Video Oficial",
+        "video_title": "T.J. Watt recovers Bo Nix's fumble for a Steelers TD",
+        "has_direct_video": true,
+        "youtube_search_url": "https://www.youtube.com/results?search_query=Bo+Nix+T.J.+Watt+fumble+return+touchdown+Broncos+Steelers&sp=EgIYAQ%3D%3D",
+        "x_video_url": "https://x.com/search?q=Bo+Nix+T.J.+Watt+fumble+return+touchdown+Broncos+Steelers&f=video",
+        "exceeds_threshold": true
+      },
+      "wp_timeline": [
+        {
+          "step": 0,
+          "qtr": 1,
+          "clock": "15:00",
+          "home_wp": 0.5,
+          "delta_wp": 0.0,
+          "label": "Kickoff",
+          "is_critical": false
+        },
+        {
+          "step": 1,
+          "play_id": "40187308339",
+          "qtr": 1,
+          "clock": "15:00",
+          "home_wp": 0.5284,
+          "delta_wp": 0.0195,
+          "label": "W.Lutz kicks 61 yards from DEN 35 to PIT 4. M.Hurleman to PIT 26 for 22 yards (K.Abrams-Dr",
+          "is_critical": false
+        },
+        {
+          "step": 2,
+          "play_id": "401873083153",
+          "qtr": 1,
+          "clock": "12:41",
+          "home_wp": 0.5605,
+          "delta_wp": 0.0191,
+          "label": "R.Dowdle left tackle to 50 for 7 yards (T.Hufanga; T.Onyedim).",
+          "is_critical": false
+        },
+        {
+          "step": 3,
+          "play_id": "401873083254",
+          "qtr": 1,
+          "clock": "9:56",
+          "home_wp": 0.5158,
+          "delta_wp": 0.0001,
+          "label": "Official Timeout at 09:56.",
+          "is_critical": false
+        },
+        {
+          "step": 4,
+          "play_id": "401873083352",
+          "qtr": 1,
+          "clock": "8:58",
+          "home_wp": 0.5755,
+          "delta_wp": 0.0,
+          "label": "Official Timeout at 08:58.",
+          "is_critical": false
+        },
+        {
+          "step": 5,
+          "play_id": "401873083451",
+          "qtr": 1,
+          "clock": "6:54",
+          "home_wp": 0.4897,
+          "delta_wp": 0.0,
+          "label": "Official Timeout at 06:54.",
+          "is_critical": false
+        },
+        {
+          "step": 6,
+          "play_id": "401873083489",
+          "qtr": 1,
+          "clock": "6:13",
+          "home_wp": 0.5388,
+          "delta_wp": 0.0099,
+          "label": "(Shotgun) B.Nix pass incomplete short middle to E.Engram [P.Wilson].",
+          "is_critical": false
+        },
+        {
+          "step": 7,
+          "play_id": "401873083512",
+          "qtr": 1,
+          "clock": "6:03",
+          "home_wp": 0.6744,
+          "delta_wp": 0.1356,
+          "label": "Fumble: Bo Nix / T.J. Watt",
+          "is_critical": true
+        },
+        {
+          "step": 8,
+          "play_id": "401873083558",
+          "qtr": 1,
+          "clock": "6:03",
+          "home_wp": 0.6663,
+          "delta_wp": -0.0103,
+          "label": "C.Boswell kicks 55 yards from PIT 35 to DEN 10. M.Mims to DEN 30 for 20 yards (D.Slaughter",
+          "is_critical": false
+        },
+        {
+          "step": 9,
+          "play_id": "401873083670",
+          "qtr": 1,
+          "clock": "3:56",
+          "home_wp": 0.6953,
+          "delta_wp": -0.0099,
+          "label": "J.Crawshaw punts 46 yards to PIT 15, Center-M.Fraboni. M.Hurleman to PIT 15 for no gain (J",
+          "is_critical": false
+        },
+        {
+          "step": 10,
+          "play_id": "401873083807",
+          "qtr": 1,
+          "clock": "1:40",
+          "home_wp": 0.8322,
+          "delta_wp": 0.0014,
+          "label": "Official Timeout at 01:40.",
+          "is_critical": false
+        },
+        {
+          "step": 11,
+          "play_id": "401873083949",
+          "qtr": 2,
+          "clock": "15:00",
+          "home_wp": 0.809,
+          "delta_wp": 0.0035,
+          "label": "(Shotgun) B.Nix pass short left to J.Coleman to PIT 40 for 3 yards (Y.Black). ** Injury Up",
+          "is_critical": false
+        },
+        {
+          "step": 12,
+          "play_id": "4018730831071",
+          "qtr": 2,
+          "clock": "11:35",
+          "home_wp": 0.8506,
+          "delta_wp": 0.0163,
+          "label": "(Punt formation) PENALTY on DEN, Delay of Game, 5 yards, enforced at PIT 36 - No Play.",
+          "is_critical": false
+        },
+        {
+          "step": 13,
+          "play_id": "4018730831174",
+          "qtr": 2,
+          "clock": "11:06",
+          "home_wp": 0.8029,
+          "delta_wp": 0.0103,
+          "label": "(Shotgun) J.Coleman right guard to DEN 35 for 1 yard (T.Watt; Y.Black).",
+          "is_critical": false
+        },
+        {
+          "step": 14,
+          "play_id": "4018730831298",
+          "qtr": 2,
+          "clock": "7:49",
+          "home_wp": 0.7442,
+          "delta_wp": -0.0223,
+          "label": "(Shotgun) J.Coleman up the middle to PIT 32 for 8 yards (P.Wilson; D.Harmon).",
+          "is_critical": false
+        },
+        {
+          "step": 15,
+          "play_id": "4018730831409",
+          "qtr": 2,
+          "clock": "5:06",
+          "home_wp": 0.773,
+          "delta_wp": -0.0198,
+          "label": "W.Lutz 44 yard field goal is GOOD, Center-M.Fraboni, Holder-J.Crawshaw.",
+          "is_critical": false
+        },
+        {
+          "step": 16,
+          "play_id": "4018730831506",
+          "qtr": 2,
+          "clock": "3:48",
+          "home_wp": 0.779,
+          "delta_wp": -0.0138,
+          "label": "(Shotgun) M.Rudolph pass incomplete deep right to M.Pittman (R.Moss).",
+          "is_critical": false
+        },
+        {
+          "step": 17,
+          "play_id": "4018730831641",
+          "qtr": 2,
+          "clock": "2:00",
+          "home_wp": 0.7994,
+          "delta_wp": -0.0255,
+          "label": "(Shotgun) M.Rudolph pass incomplete short middle to D.Metcalf (B.Jones).",
+          "is_critical": false
+        },
+        {
+          "step": 18,
+          "play_id": "4018730831691",
+          "qtr": 2,
+          "clock": "1:51",
+          "home_wp": 0.8247,
+          "delta_wp": -0.0068,
+          "label": "C.Boswell kicks 64 yards from PIT 35 to DEN 1. M.Mims to DEN 28 for 27 yards (B.Echols; J.",
+          "is_critical": false
+        },
+        {
+          "step": 19,
+          "play_id": "4018730831714",
+          "qtr": 2,
+          "clock": "1:33",
+          "home_wp": 0.9362,
+          "delta_wp": 0.1115,
+          "label": "(Shotgun) B.Nix pass short right intended for J.Waddle INTERCEPTED by J.Ramsey at DEN 36. ",
+          "is_critical": false
+        },
+        {
+          "step": 20,
+          "play_id": "4018730831780",
+          "qtr": 2,
+          "clock": "1:26",
+          "home_wp": 0.9395,
+          "delta_wp": 0.0043,
+          "label": "(Shotgun) J.Coleman left guard to DEN 26 for 1 yard (T.Watt; C.Heyward).",
+          "is_critical": false
+        },
+        {
+          "step": 21,
+          "play_id": "4018730831929",
+          "qtr": 3,
+          "clock": "15:00",
+          "home_wp": 0.9372,
+          "delta_wp": -0.0099,
+          "label": "C.Boswell kicks 56 yards from PIT 35 to DEN 9. T.Badie to DEN 26 for 17 yards (R.Nowakowsk",
+          "is_critical": false
+        },
+        {
+          "step": 22,
+          "play_id": "4018730832035",
+          "qtr": 3,
+          "clock": "14:01",
+          "home_wp": 0.9523,
+          "delta_wp": 0.0,
+          "label": "Official Timeout at 14:01.",
+          "is_critical": false
+        },
+        {
+          "step": 23,
+          "play_id": "4018730832156",
+          "qtr": 3,
+          "clock": "12:41",
+          "home_wp": 0.9472,
+          "delta_wp": 0.0014,
+          "label": "C.Johnston punts 40 yards to DEN 26, Center-C.Kuntz, downed by PIT-K.Henry.",
+          "is_critical": false
+        },
+        {
+          "step": 24,
+          "play_id": "4018730832271",
+          "qtr": 3,
+          "clock": "11:39",
+          "home_wp": 0.9633,
+          "delta_wp": 0.002,
+          "label": "J.Crawshaw punts 52 yards to PIT 26, Center-M.Fraboni. M.Hurleman to PIT 41 for 15 yards (",
+          "is_critical": false
+        },
+        {
+          "step": 25,
+          "play_id": "4018730832377",
+          "qtr": 3,
+          "clock": "10:41",
+          "home_wp": 0.9621,
+          "delta_wp": 0.0071,
+          "label": "C.Johnston punts 45 yards to DEN 7, Center-C.Kuntz, downed by PIT-B.Echols.",
+          "is_critical": false
+        },
+        {
+          "step": 26,
+          "play_id": "4018730832511",
+          "qtr": 3,
+          "clock": "8:49",
+          "home_wp": 0.9575,
+          "delta_wp": 0.0014,
+          "label": "(Shotgun) J.Coleman up the middle to DEN 43 for 3 yards (P.Queen).",
+          "is_critical": false
+        },
+        {
+          "step": 27,
+          "play_id": "4018730832633",
+          "qtr": 3,
+          "clock": "6:15",
+          "home_wp": 0.9681,
+          "delta_wp": -0.0036,
+          "label": "J.Crawshaw punts 39 yards to PIT 10, Center-M.Fraboni, fair catch by M.Hurleman.",
+          "is_critical": false
+        },
+        {
+          "step": 28,
+          "play_id": "4018730832736",
+          "qtr": 3,
+          "clock": "4:13",
+          "home_wp": 0.9847,
+          "delta_wp": 0.0073,
+          "label": "R.Dowdle left guard to DEN 47 for 27 yards (R.Moss).",
+          "is_critical": false
+        },
+        {
+          "step": 29,
+          "play_id": "4018730832853",
+          "qtr": 3,
+          "clock": "2:14",
+          "home_wp": 0.956,
+          "delta_wp": 0.0101,
+          "label": "J.Coleman left guard to PIT 28 for 1 yard (C.Heyward).",
+          "is_critical": false
+        },
+        {
+          "step": 30,
+          "play_id": "4018730833002",
+          "qtr": 4,
+          "clock": "15:00",
+          "home_wp": 0.9886,
+          "delta_wp": 0.0086,
+          "label": "W.Lutz 53 yard field goal is No Good, Short, Center-M.Fraboni, Holder-J.Crawshaw.",
+          "is_critical": false
+        },
+        {
+          "step": 31,
+          "play_id": "4018730833095",
+          "qtr": 4,
+          "clock": "12:51",
+          "home_wp": 0.9958,
+          "delta_wp": 0.0001,
+          "label": "R.Dowdle left tackle to DEN 16 for 3 yards (T.Hufanga; T.Onyedim).",
+          "is_critical": false
+        },
+        {
+          "step": 32,
+          "play_id": "4018730833195",
+          "qtr": 4,
+          "clock": "11:16",
+          "home_wp": 0.9975,
+          "delta_wp": 0.0002,
+          "label": "C.Boswell kicks 65 yards from PIT 35 to landing zone to end zone, Touchback to the DEN 20.",
+          "is_critical": false
+        },
+        {
+          "step": 33,
+          "play_id": "4018730833327",
+          "qtr": 4,
+          "clock": "10:00",
+          "home_wp": 0.992,
+          "delta_wp": -0.0036,
+          "label": "(Shotgun) B.Nix pass short right to J.Coleman to PIT 19 for 17 yards (J.Dean).",
+          "is_critical": false
+        },
+        {
+          "step": 34,
+          "play_id": "4018730833442",
+          "qtr": 4,
+          "clock": "9:05",
+          "home_wp": 0.999,
+          "delta_wp": 0.0009,
+          "label": "(Shotgun) B.Nix pass deep left intended for C.Sutton INTERCEPTED by D.Everette at PIT 7. D",
+          "is_critical": false
+        },
+        {
+          "step": 35,
+          "play_id": "4018730833549",
+          "qtr": 4,
+          "clock": "6:40",
+          "home_wp": 0.999,
+          "delta_wp": 0.0,
+          "label": "J.Warren left guard to PIT 43 for 5 yards (D.Tillman; R.Moss).",
+          "is_critical": false
+        },
+        {
+          "step": 36,
+          "play_id": "4018730833633",
+          "qtr": 4,
+          "clock": "4:09",
+          "home_wp": 0.999,
+          "delta_wp": 0.0,
+          "label": "C.Schrader up the middle to DEN 25 for 5 yards (K.Jobity; P.Queen).",
+          "is_critical": false
+        },
+        {
+          "step": 37,
+          "play_id": "4018730833759",
+          "qtr": 4,
+          "clock": "1:15",
+          "home_wp": 0.999,
+          "delta_wp": 0.0,
+          "label": "C.Schrader left tackle to DEN 47 for 1 yard (J.Brisker).",
+          "is_critical": false
+        },
+        {
+          "step": 38,
+          "play_id": "4018730833781",
+          "qtr": 4,
+          "clock": "0:34",
+          "home_wp": 0.999,
+          "delta_wp": 0.0,
+          "label": "C.Schrader up the middle to DEN 47 for no gain (Y.Black; D.Harmon).",
+          "is_critical": false
         }
       ]
     },
@@ -55685,66 +56157,6 @@
           "home_wp": 1.0,
           "delta_wp": 0.0914,
           "label": "Resultado Final",
-          "is_critical": false
-        }
-      ]
-    },
-    {
-      "event_id": "401873083",
-      "week": 12,
-      "season_type": "REG",
-      "name": "Denver Broncos at Pittsburgh Steelers",
-      "short_name": "DEN @ PIT",
-      "date": "2026-11-27T20:00Z",
-      "status": {
-        "state": "pre",
-        "detail": "11/27 - 3:00 PM EST",
-        "period": 0,
-        "clock": "0:00",
-        "completed": false
-      },
-      "home_team": {
-        "id": "23",
-        "abbreviation": "PIT",
-        "name": "Pittsburgh Steelers",
-        "score": 0,
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/pit.png"
-      },
-      "away_team": {
-        "id": "7",
-        "abbreviation": "DEN",
-        "name": "Denver Broncos",
-        "score": 0,
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/den.png"
-      },
-      "win_probability": {
-        "home_wp": 0.5,
-        "away_wp": 0.5
-      },
-      "game_links": {
-        "summary": "https://www.espn.com/nfl/game/_/gameId/401873083/broncos-steelers",
-        "pbp": "https://www.espn.com/nfl/playbyplay/_/gameId/401873083",
-        "recap": "https://www.espn.com/nfl/recap?gameId=401873083"
-      },
-      "critical_moments": [],
-      "hinge_play": null,
-      "wp_timeline": [
-        {
-          "step": 0,
-          "qtr": 1,
-          "clock": "15:00",
-          "home_wp": 0.5,
-          "delta_wp": 0.0,
-          "label": "Kickoff (Inicio 50/50)",
-          "is_critical": false
-        },
-        {
-          "step": 1,
-          "qtr": 4,
-          "clock": "0:00",
-          "home_wp": 0.5,
-          "delta_wp": 0.0,
-          "label": "Final del partido",
           "is_critical": false
         }
       ]
